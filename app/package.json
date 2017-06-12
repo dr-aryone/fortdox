@@ -4,5 +4,8 @@
   "main": "main.js",
   "scripts": {
     "start": "electron ."
+  },
+  "dependencies": {
+    "@edgeguideab/requestor": "^1.1.2"
   }
 }
