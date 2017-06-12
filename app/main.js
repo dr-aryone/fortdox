@@ -14,12 +14,7 @@ async function createWindow() {
     slashes: true
   }))
 
-  try {
-    let response = await requestor.get('http://localhost:8000');
-    console.log(response);
-  } catch (error) {
-    console.log(error)
-  }
+  
 
   win.on('closed', () => {
     win = null
