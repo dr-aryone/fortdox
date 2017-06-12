@@ -14,8 +14,6 @@ async function createWindow() {
     slashes: true
   }))
 
-  
-
   win.on('closed', () => {
     win = null
   })
