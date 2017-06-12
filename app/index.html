@@ -9,5 +9,20 @@
     We are using node <script>document.write(process.versions.node)</script>,
     Chrome <script>document.write(process.versions.chrome)</script>,
     and Electron <script>document.write(process.versions.electron)</script>.
+
+    <h2>Hejsan</h2>
   </body>
+  <script>
+    const requestor = require('@edgeguideab/requestor')
+    async function fetchData() {
+      try {
+        let response = await requestor.get('http://localhost:8000');
+        document.body.innerHTML = response.body.message;
+      } catch (error) {
+        alert(error);
+        console.log(error)
+      }
+    }
+    fetchData();
+  </script>
 </html>
