@@ -24,8 +24,7 @@ var opts = Object.assign({}, watchify.args, browserifyOpts);
 
 var b = watchify(browserify(opts));
 b.transform(babelify.configure({
-  presets: ['es2015', 'react', 'stage-2', 'stage-0'],
-  plugins: ['syntax-async-functions', 'transform-regenerator']
+  presets: ['react', 'stage-2', 'stage-0']
 }));
 
 gulp.task('build', bundle);
@@ -38,7 +37,7 @@ function bundle(cb) {
     source('app.js'),
     gulpif(isProd, buffer()),
     gulpif(isProd, uglify()),
-    gulp.dest('public'),
+    gulp.dest('build'),
     notify('Gulp done')
   ], cb);
 }
@@ -61,7 +60,7 @@ gulp.task('styles', function() {
     .pipe(gulpif(environment === 'prod', cssnano({
       zindex: false
     })))
-    .pipe(gulp.dest('public', {
+    .pipe(gulp.dest('build', {
       overwrite: true
     }));
 });
