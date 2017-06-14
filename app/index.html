@@ -5,24 +5,21 @@
     <title>Hello World!</title>
   </head>
   <body>
-    <h1>Hello World!</h1>
-    We are using node <script>document.write(process.versions.node)</script>,
-    Chrome <script>document.write(process.versions.chrome)</script>,
-    and Electron <script>document.write(process.versions.electron)</script>.
+    <div id="Hello">
 
-    <h2>Hejsan</h2>
+    </div>
+
+    <div id="Button">
+
+    </div>
+    <br>
+    <div id="Form">
+
+    </div>
+    <div id="User"></div>
+    <script>
+      require('./build/app.js')
+    </script>
   </body>
-  <script>
-    const requestor = require('@edgeguideab/requestor')
-    async function fetchData() {
-      try {
-        let response = await requestor.get('http://localhost:8000');
-        document.body.innerHTML = response.body.message;
-      } catch (error) {
-        alert(error);
-        console.log(error)
-      }
-    }
-    fetchData();
-  </script>
+
 </html>
