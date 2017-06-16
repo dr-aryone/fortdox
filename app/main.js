@@ -6,6 +6,7 @@ const { default: installExtension, REDUX_DEVTOOLS } = require('electron-devtools
 let win;
 
 async function createWindow() {
+
   win = new BrowserWindow({width: 800, height: 600});
   installExtension(REDUX_DEVTOOLS);
 

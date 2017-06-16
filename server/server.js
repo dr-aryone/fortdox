@@ -18,8 +18,10 @@ app.post('/try', (req, res) => {
 });
 
 app.post('/user', (req, res) => {
-  console.log('The users name is: ' + req.body.msg);
-  res.send({message: req.body.msg + ' was registered!'});
+  res.send({
+    message: req.body.messege,
+    status: true
+  });
 });
 
 app.listen(8000, () => {
