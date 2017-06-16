@@ -31,6 +31,17 @@ const login = (username) => {
   };
 };
 
+const inputChange = (name, value) => {
+  return dispatch => { 
+    dispatch({
+      type: 'INPUT_CHANGE',
+      name,
+      value
+    });
+  };
+};
+
+
 async function sendLogin(username) {
   try {
     let response = await requestor.post('http://localhost:8000/user', {
@@ -47,4 +58,4 @@ async function sendLogin(username) {
   }
 }
 
-module.exports = login;
+module.exports = {login, inputChange};

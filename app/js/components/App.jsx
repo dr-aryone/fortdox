@@ -1,11 +1,9 @@
 const React = require('react');
-const Greeting = require('../containers/Greeting');
-const Login = require('../containers/Login');
+const LoginViewContainer = require('../containers/LoginViewContainer');
 
 const App = () => (
   <div>
-    <Greeting />
-    <Login />
+    <LoginViewContainer />
   </div>
 );
 
