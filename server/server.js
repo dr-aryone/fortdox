@@ -19,9 +19,10 @@ app.post('/try', (req, res) => {
 
 app.post('/user', (req, res) => {
   res.send({
-    message: req.body.messege,
+    message: req.body.username,
     status: true
   });
+  console.log('done');
 });
 
 app.listen(8000, () => {

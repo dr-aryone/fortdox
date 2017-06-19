@@ -7,7 +7,7 @@ let win;
 
 async function createWindow() {
 
-  win = new BrowserWindow({width: 800, height: 600});
+  win = new BrowserWindow({width: 1280, height: 960});
   installExtension(REDUX_DEVTOOLS);
 
   win.loadURL(url.format({

@@ -1,13 +1,13 @@
 const requestor = require('@edgeguideab/requestor');
 
-const login = (username) => {
+const login = (username, password) => {
   return async dispatch => {
     dispatch({
       type: 'VERIFY_LOGIN_CREDS_START'
     });
     let isLoggedIn;
     try {
-      isLoggedIn = await sendLogin(username);
+      isLoggedIn = await sendLogin(username, password);
     } catch (error) {
       console.error(error);
       dispatch({
@@ -20,7 +20,7 @@ const login = (username) => {
       dispatch({
         type: 'VERIFY_LOGIN_CREDS_SUCCESS',
         payload: {
-          user: isLoggedIn.body.message
+          user: isLoggedIn.body.username
         }
       });
     } else {
@@ -41,11 +41,10 @@ const inputChange = (name, value) => {
   };
 };
 
-
-async function sendLogin(username) {
+async function sendLogin(username, password) {
   try {
     let response = await requestor.post('http://localhost:8000/user', {
-      body: {messege: username}
+      body: {username: username, password: password}
     });
     return response;
   } catch (error) {
