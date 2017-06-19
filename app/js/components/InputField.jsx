@@ -1,6 +1,6 @@
 const React = require('react');
 
-const LoginView = ({label, type, value, onChange, name}) => {
+const InputField = ({label, type, value, onChange, name}) => {
   return (
     <div>
       <label>{label}</label>
@@ -14,4 +14,4 @@ const LoginView = ({label, type, value, onChange, name}) => {
   );
 };
 
-module.exports = LoginView;
+module.exports = InputField;
