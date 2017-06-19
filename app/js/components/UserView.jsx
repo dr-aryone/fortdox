@@ -1,9 +1,9 @@
 const React = require('react');
 
-const UserView = () => {
+const UserView = ({username}) => {
   return (
     <div>
-      <h1> User view </h1>
+      <h1>Welcome back, {username}!</h1>
     </div>
   );
 };
