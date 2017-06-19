@@ -6,7 +6,7 @@ const initialState = fromJS({
   username: ''
 });
 
-const login = (state = initialState, action) => {
+const register = (state = initialState, action) => {
   switch (action.type) {
     case 'INPUT_CHANGE':
       if (action.name === 'userInput') return state.set('userInputValue', fromJS(action.value));
@@ -22,4 +22,4 @@ const login = (state = initialState, action) => {
   }
 };
 
-module.exports = login;
+module.exports = register;

@@ -4,7 +4,7 @@ const InputField = require('./InputField');
 const LoginView = ({input, onChange, onClick}) => {
   return (
     <div>
-      <h1> Welcome </h1>
+      <h1>Welcome!</h1>
       <InputField
         label='Username: '
         name='userInput'
@@ -20,13 +20,21 @@ const LoginView = ({input, onChange, onClick}) => {
         onChange={onChange}
       />
       <button
+        name='login'
         onClick={(e) => {
           onClick(e, input.userInputValue, input.passwordInputValue);
         }}
       >
-        Login 
+        Login
       </button>
-      <button> Register </button>
+      <button
+        name='register'
+        onClick={(e) => {
+          onClick(e, input.userInputValue, input.passwordInputValue);
+        }}
+      >
+        Register
+      </button>
     </div>
   );
 };

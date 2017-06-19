@@ -19,7 +19,7 @@ app.post('/try', (req, res) => {
 
 app.post('/user', (req, res) => {
   res.send({
-    message: req.body.username,
+    username: req.body.username,
     status: true
   });
   console.log('done');

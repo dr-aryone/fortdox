@@ -20,7 +20,7 @@ const login = (username, password) => {
       dispatch({
         type: 'VERIFY_LOGIN_CREDS_SUCCESS',
         payload: {
-          user: isLoggedIn.body.username
+          username: isLoggedIn.body.username
         }
       });
     } else {
@@ -41,6 +41,17 @@ const inputChange = (name, value) => {
   };
 };
 
+const changeView = view => {
+  switch (view) {
+    case 'register':
+      return dispatch => {
+        dispatch({
+          type: 'CHANGE_VIEW_REGISTER'
+        });
+      };
+  }
+};
+
 async function sendLogin(username, password) {
   try {
     let response = await requestor.post('http://localhost:8000/user', {
@@ -57,4 +68,4 @@ async function sendLogin(username, password) {
   }
 }
 
-module.exports = {login, inputChange};
+module.exports = {login, inputChange, changeView};

@@ -1,6 +1,7 @@
 const {connect} = require('react-redux');
 const {inputChange} = require('../actions');
 const {login} = require('../actions');
+const {changeView} = require('../actions');
 const LoginView = require('../components/LoginView');
 
 const mapStateToProps = state => {
@@ -18,8 +19,12 @@ const mapDispatchToProps = dispatch => {
       dispatch(inputChange(event.target.name, event.target.value));
     },
     onClick: (e, username, password) => {
-      e.preventDefault();
-      dispatch(login(username, password));
+      if (e.target.name === 'login') {
+        e.preventDefault();
+        dispatch(login(username, password));
+      } else if (e.target.name === 'register') {
+        dispatch(changeView('register'));
+      }
     }
   };
 };
