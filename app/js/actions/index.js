@@ -18,21 +18,21 @@ const login = (username) => {
     }
     if (isLoggedIn.body.status) {
       dispatch({
-        type: 'VERIFY_LOGIN_CREDS_DONE',
+        type: 'VERIFY_LOGIN_CREDS_SUCCESS',
         payload: {
           user: isLoggedIn.body.message
         }
       });
     } else {
       dispatch({
-        type: 'VERIFY_LOGIN_CREDS_ERROR'
+        type: 'VERIFY_LOGIN_CREDS_FAIL'
       });
     }
   };
 };
 
 const inputChange = (name, value) => {
-  return dispatch => { 
+  return dispatch => {
     dispatch({
       type: 'INPUT_CHANGE',
       name,

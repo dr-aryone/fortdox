@@ -20,10 +20,11 @@ const login = (state = initialState, action) => {
         };
       }
       return state;
-    case 'VERIFY_LOGIN_CREDS_DONE':
+    case 'VERIFY_LOGIN_CREDS_SUCCESS':
       return {
         user: action.payload.user
       };
+    case 'VERIFY_LOGIN_CREDS_FAIL':
     case 'VERIFY_LOGIN_CREDS_ERROR':
     case 'VERIFY_LOGIN_CREDS_START':
     default:
