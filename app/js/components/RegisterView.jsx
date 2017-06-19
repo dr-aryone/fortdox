@@ -9,21 +9,21 @@ const RegisterView = ({register, onChange}) => {
         label='Username: '
         name='userInput'
         type='text'
-        value={register.userInputValue}
+        value={register.username}
         onChange={onChange}
       />
       <InputField
         label='Password: '
         name='passwordInput'
         type='password'
-        value={register.userInputValue}
+        value={register.password}
         onChange={onChange}
       />
       <InputField
         label='Re-type password: '
         name='rePasswordInput'
         type='password'
-        value={register.userInputValue}
+        value={register.reTypedPassword}
         onChange={onChange}
       />
       <button>Submit</button>
