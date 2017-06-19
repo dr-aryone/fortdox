@@ -1,7 +1,7 @@
 const React = require('react');
 const InputField = require('./InputField');
 
-const LoginView = ({input, onChange}) => {
+const LoginView = ({input, onChange, onClick}) => {
   return (
     <div>
       <h1> Welcome </h1>
@@ -19,7 +19,13 @@ const LoginView = ({input, onChange}) => {
         value={input.passwordInputValue}
         onChange={onChange}
       />
-      <button> Login </button>
+      <button
+        onClick={(e) => {
+          onClick(e, input.userInputValue, input.passwordInputValue);
+        }}
+      >
+        Login 
+      </button>
       <button> Register </button>
     </div>
   );
