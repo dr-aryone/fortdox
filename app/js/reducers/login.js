@@ -13,7 +13,11 @@ const login = (state = initialState, action) => {
       else if (action.name === 'passwordInput') return state.set('passwordInputValue', fromJS(action.value));
       return state;
     case 'VERIFY_LOGIN_CREDS_SUCCESS':
-      return state.set('username', fromJS(action.payload.username));
+      return state.merge({
+        'userInputValue': '',
+        'passwordInputValue': '',
+        'username': fromJS(action.payload.username)
+      });
     case 'VERIFY_LOGIN_CREDS_FAIL':
     case 'VERIFY_LOGIN_CREDS_ERROR':
     case 'VERIFY_LOGIN_CREDS_START':
