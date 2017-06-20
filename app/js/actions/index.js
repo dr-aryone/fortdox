@@ -97,7 +97,7 @@ const changeView = view => {
 
 async function sendLogin(username, password) {
   try {
-    let response = await requestor.post('http://localhost:8000/user', {
+    let response = await requestor.post('http://localhost:8000/login', {
       body: {username: username, password: password}
     });
     return response;
