@@ -8,10 +8,8 @@ const initialState = fromJS({
 
 const login = (state = initialState, action) => {
   switch (action.type) {
-    case 'INPUT_CHANGE':
-      if (action.name === 'userInput') return state.set('userInputValue', fromJS(action.value));
-      else if (action.name === 'passwordInput') return state.set('passwordInputValue', fromJS(action.value));
-      return state;
+    case 'INPUT_CHANGE_LOGIN':
+      return state.set(action.inputName, fromJS(action.inputValue));
     case 'VERIFY_LOGIN_CREDS_SUCCESS':
       return state.merge({
         'userInputValue': '',

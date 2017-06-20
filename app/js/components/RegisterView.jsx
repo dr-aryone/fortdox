@@ -1,32 +1,39 @@
 const React = require('react');
 const InputField = require('./InputField');
 
-const RegisterView = ({register, onChange}) => {
+const RegisterView = ({register, onChange, onClick}) => {
   return (
     <div>
       <h1>Register</h1>
       <InputField
         label='Username: '
-        name='userInput'
+        name='username'
         type='text'
         value={register.username}
         onChange={onChange}
       />
       <InputField
         label='Password: '
-        name='passwordInput'
+        name='password'
         type='password'
         value={register.password}
         onChange={onChange}
       />
       <InputField
         label='Re-type password: '
-        name='rePasswordInput'
+        name='reTypedPassword'
         type='password'
         value={register.reTypedPassword}
         onChange={onChange}
       />
-      <button>Submit</button>
+      <button
+        name='register'
+        onClick={(e) => {
+          onClick(e, register.username, register.password, register.reTypedPassword);
+        }}
+      >
+        Submit
+      </button>
     </div>
   );
 };

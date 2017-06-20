@@ -7,14 +7,14 @@ const LoginView = ({input, onChange, onClick}) => {
       <h1>Welcome!</h1>
       <InputField
         label='Username: '
-        name='userInput'
+        name='userInputValue'
         type='text'
         value={input.userInputValue}
         onChange={onChange}
       />
       <InputField
         label='Password: '
-        name='passwordInput'
+        name='passwordInputValue'
         type='password'
         value={input.passwordInputValue}
         onChange={onChange}
