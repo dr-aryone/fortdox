@@ -23,7 +23,7 @@ const register = (state = initialState, action) => {
         'username': '',
         'password': '',
         'reTypedPassword': '',
-        'error': 'true'
+        'error': true
       });
     default:
       return state;
