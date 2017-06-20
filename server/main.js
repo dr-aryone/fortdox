@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
+const users = require('./server_modules/users');
 
 app.use(bodyParser.json());
 
@@ -12,17 +13,20 @@ app.get('/test', (req, res) => {
   res.send({message: 'It is working!'});
 });
 
-app.post('/try', (req, res) => {
-  console.log(req.body);
-  res.send();
-});
-
-app.post('/user', (req, res) => {
+app.post('/login', (req, res) => {
+  let loggedIn = users.verifyUser(req.body.username, req.body.password);
   res.send({
     username: req.body.username,
-    status: true
+    status: loggedIn
   });
-  console.log('done');
+});
+
+app.post('/register', (req, res) => {
+  let userWasAdded = users.createUser(req.body.username, req.body.password);
+  res.send({
+    username: req.body.username,
+    status: userWasAdded
+  });
 });
 
 app.listen(8000, () => {
