@@ -1,8 +1,6 @@
 const {connect} = require('react-redux');
 const RegisterView = require('../components/RegisterView');
-const {inputChange} = require('../actions');
-const {clearFields} = require('../actions');
-const {registerUser} = require('../actions');
+const action = require('action');
 
 const mapStateToProps = state => {
   return {
@@ -18,13 +16,13 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     onChange: (e) => {
-      dispatch(inputChange('register_view', e.target.name, e.target.value));
+      dispatch(action.inputChange('register_view', e.target.name, e.target.value));
     },
     onClick: (e, username, password, reTypedPassword) => {
       if (password.localeCompare(reTypedPassword) === 0) {
-        dispatch(registerUser(username, password));
+        dispatch(action.registerUser(username, password));
       } else {
-        dispatch(clearFields('register_view'));
+        dispatch(action.clearFields('register_view'));
       }
     }
   };
