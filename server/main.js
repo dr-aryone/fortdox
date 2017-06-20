@@ -17,7 +17,7 @@ app.post('/login', async (req, res) => {
   let loggedIn = await users.verifyUser(req.body.username, req.body.password);
   res.send({
     username: req.body.username,
-    status: loggedIn
+    loggedIn
   });
 });
 
