@@ -9,7 +9,8 @@ const mapStateToProps = state => {
     register: {
       username: state.register.get('username'),
       password: state.register.get('password'),
-      reTypedPassword: state.register.get('reTypedPassword')
+      reTypedPassword: state.register.get('reTypedPassword'),
+      error: state.register.get('error')
     }
   };
 };

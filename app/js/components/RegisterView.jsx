@@ -2,9 +2,12 @@ const React = require('react');
 const InputField = require('./InputField');
 
 const RegisterView = ({register, onChange, onClick}) => {
+  let errorMsg = register.error ? <h2>Please chose another username, DIKSHIT</h2> : null;
+
   return (
     <div>
       <h1>Register</h1>
+      {errorMsg}
       <InputField
         label='Username: '
         name='username'

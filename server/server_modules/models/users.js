@@ -1,4 +1,3 @@
-// This model will add user to the database table users
 
 var Sequelize = require('sequelize');
 

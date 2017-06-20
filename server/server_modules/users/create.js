@@ -5,6 +5,7 @@ const saltRounds = 10;
 
 module.exports = async function (username, password) {
   let user = await db.User.findOne({where: {username: username}});
+
   if (user) {
     return false;
   }
