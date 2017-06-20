@@ -1,4 +1,5 @@
 const requestor = require('@edgeguideab/requestor');
+const views = require('views.json');
 
 const login = (username, password) => {
   return async dispatch => {
@@ -86,7 +87,7 @@ const inputChange = (view, inputName, inputValue) => {
 
 const changeView = view => {
   switch (view) {
-    case 'register':
+    case views.REGISTER_VIEW:
       return dispatch => {
         dispatch({
           type: 'CHANGE_VIEW_REGISTER'
