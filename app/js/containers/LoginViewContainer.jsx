@@ -16,7 +16,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     onChange: (event) => {
-      dispatch(inputChange(event.target.name, event.target.value));
+      dispatch(inputChange('login_view', event.target.name, event.target.value));
     },
     onClick: (e, username, password) => {
       if (e.target.name === 'login') {

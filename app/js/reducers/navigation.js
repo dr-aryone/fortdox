@@ -10,6 +10,8 @@ const navigation = (state = initialState, action) => {
       return state.set('currentView', 'USER_VIEW');
     case 'CHANGE_VIEW_REGISTER':
       return state.set('currentView', 'REGISTER_VIEW');
+    case 'REGISTER_USER_SUCCESS':
+      return state.set('currentView', 'LOGIN_VIEW');
     default:
       return state;
   }
