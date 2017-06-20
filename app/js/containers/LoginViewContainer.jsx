@@ -8,7 +8,8 @@ const mapStateToProps = state => {
   return {
     input: {
       userInputValue: state.login.get('userInputValue'),
-      passwordInputValue: state.login.get('passwordInputValue')
+      passwordInputValue: state.login.get('passwordInputValue'),
+      error: state.login.get('error')
     }
   };
 };

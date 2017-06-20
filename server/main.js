@@ -13,16 +13,16 @@ app.get('/test', (req, res) => {
   res.send({message: 'It is working!'});
 });
 
-app.post('/login', (req, res) => {
-  let loggedIn = users.verifyUser(req.body.username, req.body.password);
+app.post('/login', async (req, res) => {
+  let loggedIn = await users.verifyUser(req.body.username, req.body.password);
   res.send({
     username: req.body.username,
     status: loggedIn
   });
 });
 
-app.post('/register', (req, res) => {
-  let userWasAdded = users.createUser(req.body.username, req.body.password);
+app.post('/register', async (req, res) => {
+  let userWasAdded = await users.createUser(req.body.username, req.body.password);
   res.send({
     username: req.body.username,
     status: userWasAdded

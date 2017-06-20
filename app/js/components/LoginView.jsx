@@ -2,9 +2,12 @@ const React = require('react');
 const InputField = require('./InputField');
 
 const LoginView = ({input, onChange, onClick}) => {
+  let errorMsg = input.error ? <h2>Wrong password!</h2> : null;
+
   return (
     <div>
       <h1>Welcome!</h1>
+      {errorMsg}
       <InputField
         label='Username: '
         name='userInputValue'

@@ -3,7 +3,8 @@ const {fromJS} = require('immutable');
 const initialState = fromJS({
   userInputValue: '',
   passwordInputValue: '',
-  username: ''
+  username: '',
+  error: false
 });
 
 const login = (state = initialState, action) => {
@@ -14,9 +15,15 @@ const login = (state = initialState, action) => {
       return state.merge({
         'userInputValue': '',
         'passwordInputValue': '',
-        'username': fromJS(action.payload.username)
+        'username': fromJS(action.payload.username),
+        'error': 'false'
       });
     case 'VERIFY_LOGIN_CREDS_FAIL':
+      return state.merge({
+        'userInputValue': '',
+        'passwordInputValue': '',
+        'error': 'true'
+      });
     case 'VERIFY_LOGIN_CREDS_ERROR':
     case 'VERIFY_LOGIN_CREDS_START':
     default:

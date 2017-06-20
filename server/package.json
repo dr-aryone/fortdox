@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "main": "server.js",
   "scripts": {
-    "start": "nodemon server.js"
+    "start": "nodemon main.js",
+    "debugg": "nodemon --inspect main.js"
   },
   "dependencies": {
     "bcrypt": "^1.0.2",
