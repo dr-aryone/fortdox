@@ -4,8 +4,8 @@ const views = require('views.json');
 const login = () => {
   return async (dispatch, getState) => {
     let state = getState();
-    let username = state.login.userInputValue;
-    let password = state.login.passwordInputValue;
+    let username = state.login.get('userInputValue');
+    let password = state.login.get('passwordInputValue');
     dispatch({
       type: 'VERIFY_LOGIN_CREDS_START'
     });
