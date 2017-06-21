@@ -1,14 +1,17 @@
 const requestor = require('@edgeguideab/requestor');
 const views = require('views.json');
 
-const login = (username, password) => {
-  return async dispatch => {
+const login = () => {
+  return async (dispatch, getState) => {
+    let state = getState();
+    let username = state.login.userInputValue;
+    let password = state.login.passwordInputValue;
     dispatch({
       type: 'VERIFY_LOGIN_CREDS_START'
     });
-    let isLoggedIn;
+    let response;
     try {
-      isLoggedIn = await sendLogin(username, password);
+      response = await sendLogin(username, password);
     } catch (error) {
       console.error(error);
       dispatch({
@@ -17,11 +20,11 @@ const login = (username, password) => {
         error: true
       });
     }
-    if (isLoggedIn.body.status) {
+    if (response.body.loggedIn) {
       dispatch({
         type: 'VERIFY_LOGIN_CREDS_SUCCESS',
         payload: {
-          username: isLoggedIn.body.username
+          username: response.body.username
         }
       });
     } else {
@@ -32,8 +35,20 @@ const login = (username, password) => {
   };
 };
 
-const registerUser = (username, password) => {
-  return async dispatch => {
+const registerUser = () => {
+  return async (dispatch, getState) => {
+    let state = getState();
+    let username = state.register.get('username');
+    let password = state.register.get('password');
+    let reTypedPassword = state.register.get('reTypedPassword');
+
+    if (password !== reTypedPassword) {
+      return dispatch({
+        type: 'REGISTER_WRONG_PASSWORD',
+        payload: 'Password didn\'t match.'
+      });
+    }
+
     dispatch({
       type: 'REGISTER_USER_START'
     });
@@ -43,9 +58,7 @@ const registerUser = (username, password) => {
     } catch (error) {
       console.error(error);
       dispatch({
-        type: 'REGISTER_USER_ERROR',
-        payload: error,
-        error: true
+        type: 'REGISTER_USER_ERROR'
       });
     }
     if (registerDone.body.status) {
@@ -57,43 +70,41 @@ const registerUser = (username, password) => {
       });
     } else {
       dispatch({
-        type: 'REGISTER_USER_FAIL'
+        type: 'REGISTER_USER_FAIL',
+        payload: 'Username is already taken.',
+        error: true
       });
     }
   };
 };
 
-const inputChange = (view, inputName, inputValue) => {
-  switch (view) {
-    case 'register_view':
-      return dispatch => {
-        dispatch({
+const inputChange = (inputName, inputValue) => {
+  return (dispatch, getState) => {
+    let state = getState();
+    switch (state.navigation.get('currentView')) {
+      case views.REGISTER_VIEW:
+        return dispatch({
           type: 'INPUT_CHANGE_REGISTER',
           inputName,
           inputValue
         });
-      };
-    case 'login_view':
-      return dispatch => {
-        dispatch({
+      case views.LOGIN_VIEW:
+        return dispatch({
           type: 'INPUT_CHANGE_LOGIN',
           inputName,
           inputValue
         });
-      };
-  }
-
+    }
+  };
 };
 
-const changeView = view => {
-  switch (view) {
-    case views.REGISTER_VIEW:
-      return dispatch => {
-        dispatch({
-          type: 'CHANGE_VIEW_REGISTER'
-        });
-      };
-  }
+const changeView = nextView => {
+  return dispatch => {
+    dispatch({
+      type: 'CHANGE_VIEW',
+      payload: nextView
+    });
+  };
 };
 
 async function sendLogin(username, password) {
