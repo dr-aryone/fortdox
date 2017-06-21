@@ -94,6 +94,12 @@ const inputChange = (inputName, inputValue) => {
           inputName,
           inputValue
         });
+      case views.FORM_VIEW:
+        return dispatch({
+          type: 'INPUT_CHANGE_FORM',
+          inputName,
+          inputValue
+        });
     }
   };
 };
@@ -123,6 +129,35 @@ async function sendLogin(username, password) {
   }
 }
 
+const form = () => {
+  return async (dispatch, getState) => {
+    let state = getState();
+    let title = state.form.get('titleValue');
+    let text = state.form.get('formValue');
+    dispatch({
+      type: 'SEND_FORM_START'
+    });
+
+    try {
+      await requestor.post('http://localhost:8000/user/form', {
+        body: {
+          title: title,
+          text: text
+        }
+      });
+      dispatch({
+        type: 'SEND_FORM_SUCCESS'
+      });
+    } catch (error) {
+      console.error(error);
+      dispatch({
+        type: 'SEND_FORM_ERROR'
+      });
+    }
+  };
+};
+
+
 async function register(username, password) {
   try {
     let response = await requestor.post('http://localhost:8000/register', {
@@ -147,4 +182,4 @@ function clearFields () {
   };
 }
 
-module.exports = {login, inputChange, changeView, registerUser, clearFields};
+module.exports = {login, inputChange, changeView, registerUser, clearFields, form};

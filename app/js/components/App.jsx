@@ -2,6 +2,7 @@ const React = require('react');
 const LoginViewContainer = require('../containers/LoginViewContainer');
 const UserViewContainer = require('../containers/UserViewContainer');
 const RegisterViewContainer = require('../containers/RegisterViewContainer');
+const FormViewContainer = require('../containers/FormViewContainer');
 
 const App = (prop) => {
   switch (prop.view) {
@@ -11,6 +12,9 @@ const App = (prop) => {
       return (<div><UserViewContainer /></div>);
     case 'REGISTER_VIEW':
       return (<div><RegisterViewContainer /></div>);
+    case 'SEARCH_VIEW':
+    case 'FORM_VIEW':
+      return (<div><FormViewContainer /></div>);
     default:
       return (<div />);
   }
