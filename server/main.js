@@ -9,8 +9,8 @@ app.get('/', (req, res) => {
   res.send({message: 'Hello world'});
 });
 
-app.get('/test', (req, res) => {
-  res.send({message: 'It is working!'});
+app.post('/user/form', (req, res) => {
+  res.send();
 });
 
 app.post('/login', async (req, res) => {
