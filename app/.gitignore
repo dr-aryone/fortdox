@@ -1,3 +1,4 @@
 build/*
 !build/.keepme
 .sass-cache
+config.json

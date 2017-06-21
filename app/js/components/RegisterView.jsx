@@ -1,9 +1,8 @@
 const React = require('react');
 const InputField = require('./InputField');
 
-const RegisterView = ({register, onChange, onClick}) => {
-  let errorMsg = register.error ? <h2>Please chose another username, DIKSHIT</h2> : null;
-
+const RegisterView = ({register, onChange, onRegister, onBack}) => {
+  let errorMsg = register.error ? <h2>{register.errorMsg}</h2> : null;
   return (
     <div>
       <h1>Register</h1>
@@ -29,13 +28,11 @@ const RegisterView = ({register, onChange, onClick}) => {
         value={register.reTypedPassword}
         onChange={onChange}
       />
-      <button
-        name='register'
-        onClick={(e) => {
-          onClick(e, register.username, register.password, register.reTypedPassword);
-        }}
-      >
+      <button onClick={onRegister}>
         Submit
+      </button>
+      <button onClick={onBack}>
+        Back
       </button>
     </div>
   );

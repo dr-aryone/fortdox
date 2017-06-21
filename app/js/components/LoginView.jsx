@@ -1,7 +1,7 @@
 const React = require('react');
 const InputField = require('./InputField');
 
-const LoginView = ({input, onChange, onClick}) => {
+const LoginView = ({input, onChange, onLogin, onRegister, toUserView}) => {
   let errorMsg = input.error ? <h2>Wrong password!</h2> : null;
 
   return (
@@ -22,21 +22,14 @@ const LoginView = ({input, onChange, onClick}) => {
         value={input.passwordInputValue}
         onChange={onChange}
       />
-      <button
-        name='login'
-        onClick={(e) => {
-          onClick(e, input.userInputValue, input.passwordInputValue);
-        }}
-      >
+      <button onClick={onLogin}>
         Login
       </button>
-      <button
-        name='register'
-        onClick={(e) => {
-          onClick(e, input.userInputValue, input.passwordInputValue);
-        }}
-      >
+      <button onClick={onRegister}>
         Register
+      </button>
+      <button onClick={toUserView}>
+        To user view
       </button>
     </div>
   );
