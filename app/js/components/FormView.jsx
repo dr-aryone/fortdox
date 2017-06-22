@@ -1,7 +1,7 @@
 const React = require('react');
 const InputField = require('./InputField');
 
-const FormView = ({onSubmit, onChange, input}) => {
+const FormView = ({input, onChange, onSubmit, toUserView}) => {
   return (
     <div>
       <h1>Document</h1>
@@ -21,7 +21,8 @@ const FormView = ({onSubmit, onChange, input}) => {
         value={input.formValue}
       />
       <br />
-      <button onClick={onSubmit} > Submit </button>
+      <button onClick={onSubmit}>Submit</button>
+      <button onClick={toUserView}>Back</button>
     </div>
   );
 };
