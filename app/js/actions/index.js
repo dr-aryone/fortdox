@@ -58,25 +58,22 @@ const registerUser = () => {
     });
     let response;
     try {
-      // registerDone = await register(username, password);
       response = await requestor.post('http://localhost:8000/register', {
         body: {username: username, password: password}
       });
     } catch (error) {
-      console.error(error);
-      switch (response.body.status) {
+      switch (error.status) {
         case 401:
         case 409:
-          dispatch({
+          return dispatch({
             type: 'REGISTER_USER_FAIL',
-            payload: response.body.message,
+            payload: error.errorText.message,
             error: true
           });
-          break;
         case 500:
-          dispatch({
+          return dispatch({
             type: 'REGISTER_USER_ERROR',
-            payload: response.body.message,
+            payload: error.errorText.message,
             error: true
           });
       }

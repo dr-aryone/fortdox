@@ -2,7 +2,6 @@ const db = require('../models');
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 
-
 module.exports = async function (username, password) {
   let user;
   try {
