@@ -1,7 +1,9 @@
 {
-  "200": "Ok",
-  "401": "Username or password is incorrect.",
-  "404": "Username or password is incorrect.",
-  "409": "Username already exists.",
-  "500": "An error occurred. Please try again later."
+  "user" : {
+    "401": "Username or password is incorrect.",
+    "409": "Username already exists.",
+    "404": "Username or password is incorrect.",
+    "200": "Ok",
+    "500": "An error occurred. Please try again later."
+  },
 }
