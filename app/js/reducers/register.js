@@ -21,6 +21,7 @@ const register = (state = initialState, action) => {
         'error': true,
         'errorMsg': fromJS(action.payload)
       });
+    case 'REGISTER_USER_ERROR':
     case 'REGISTER_USER_FAIL':
       return state.merge({
         'username': '',

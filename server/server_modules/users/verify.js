@@ -6,17 +6,17 @@ module.exports = async function(username, password) {
   let user;
   try {
     user = await db.User.findOne({where: {username: username}});
+    if (!user) {
+      return 404;
+    }
     hash = user.password;
   } catch (error) {
     console.error(error);
     return 500;
   }
-  if (!user) {
-    return 404;
-  }
   try {
-    await bcrypt.compare(password, hash);
-    return 200;
+    let res = await bcrypt.compare(password, hash);
+    return res ? 200 : 401;
   } catch (error) {
     console.error(error);
     return 401;
