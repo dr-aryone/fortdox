@@ -1,6 +1,7 @@
 const {connect} = require('react-redux');
 const RegisterView = require('components/RegisterView');
 const action = require('actions');
+const register = require('actions/register');
 const views = require('views.json');
 
 const mapStateToProps = state => {
@@ -21,7 +22,7 @@ const mapDispatchToProps = dispatch => {
       dispatch(action.inputChange(e.target.name, e.target.value));
     },
     onRegister: () => {
-      dispatch(action.register());
+      dispatch(register());
     },
     onBack: () => {
       dispatch(action.changeView(views.LOGIN_VIEW));

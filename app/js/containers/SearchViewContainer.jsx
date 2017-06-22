@@ -1,6 +1,7 @@
 const {connect} = require('react-redux');
 const SearchView = require('components/SearchView');
 const action = require('actions');
+const search = require('actions/search');
 const views = require('views.json');
 
 const mapStateToProps = state => {
@@ -19,7 +20,7 @@ const mapDispatchToProps = dispatch => {
       dispatch(action.inputChange(e.target.name, e.target.value));
     },
     onSubmit: () => {
-      dispatch(action.search());
+      dispatch(search());
     },
     toUserView: () => {
       dispatch(action.changeView(views.USER_VIEW));
