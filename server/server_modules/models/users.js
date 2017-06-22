@@ -1,6 +1,4 @@
-
 var Sequelize = require('sequelize');
-
 var db;
 
 var users = function(sequelize) {
@@ -24,7 +22,5 @@ var users = function(sequelize) {
   });
   return usr;
 };
-
-
 
 module.exports = users;

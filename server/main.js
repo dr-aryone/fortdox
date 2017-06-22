@@ -3,6 +3,7 @@ const app = express();
 const bodyParser = require('body-parser');
 const users = require('./server_modules/users');
 const statusMsg = require('./statusMsg.json');
+const es = require('./es/elasticsearch');
 
 app.use(bodyParser.json());
 
@@ -10,8 +11,21 @@ app.get('/', (req, res) => {
   res.send({message: 'Hello world'});
 });
 
-app.post('/user/form', (req, res) => {
-  res.send();
+app.post('/user/form', async (req, res) => {
+  let response;
+  try {
+    response = await es.index({
+      index: 'document',
+      type: 'form',
+      body: {
+        title: req.body.title,
+        text: req.body.text
+      }
+    });
+    res.send(response);
+  } catch (error) {
+    console.log(error);
+  }
 });
 
 app.post('/login', async (req, res) => {
@@ -32,4 +46,15 @@ app.post('/register', async (req, res) => {
 
 app.listen(8000, () => {
   console.log('listening to port: 8000');
+});
+
+app.post('/user/search', async (req, res) => {
+  let response;
+  try {
+    response = await es.search({ q: req.body.query });
+    var hits = response.hits.hits;
+    res.send({message: hits});
+  } catch (error) {
+    console.log(error);
+  }
 });
