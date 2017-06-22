@@ -51,9 +51,19 @@ app.listen(8000, () => {
 app.post('/user/search', async (req, res) => {
   let response;
   try {
-    response = await es.search({ q: req.body.query });
-    var hits = response.hits.hits;
-    res.send({message: hits});
+    response = await es.search({
+      index: 'document',
+      type: 'form',
+      body: {
+        query: {
+          match: {
+            title: req.body.searchString
+          }
+        }
+      }
+    });
+    console.log(response.hits.hits);
+    res.send({message: response.hits.hits});
   } catch (error) {
     console.log(error);
   }
