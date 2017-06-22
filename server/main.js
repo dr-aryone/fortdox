@@ -2,7 +2,15 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 const users = require('./server_modules/users');
-const statusMsg = require('./statusMsg');
+
+
+const statusMsg = {
+  200: 'Ok',
+  401: 'Username or password is incorrect.',
+  404: 'Username or password is incorrect.',
+  409: 'Username already exists.',
+  500: 'An error occurred. Please try again later.'
+};
 
 app.use(bodyParser.json());
 
@@ -17,9 +25,10 @@ app.post('/user/form', (req, res) => {
 app.post('/login', async (req, res) => {
   let status = await users.verifyUser(req.body.username, req.body.password);
   console.log(status);
+  console.log(statusMsg[status]);
   res.status(status).send({
     username: req.body.username,
-    message:  statusMsg.status
+    message:  statusMsg[status]
   });
 });
 
@@ -27,7 +36,7 @@ app.post('/register', async (req, res) => {
   let status = await users.createUser(req.body.username, req.body.password);
   res.status(status).send({
     username: req.body.username,
-    message:  statusMsg.status
+    message:  statusMsg[status]
   });
 });
 
