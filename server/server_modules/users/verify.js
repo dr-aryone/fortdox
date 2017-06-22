@@ -11,7 +11,7 @@ module.exports = async function(username, password) {
     console.error(error);
     return 500;
   }
-  if (user === undefined) {
+  if (!user) {
     return 404;
   }
   try {
