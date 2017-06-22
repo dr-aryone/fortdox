@@ -11,27 +11,32 @@ const login = () => {
     });
     let response;
     try {
-      response = await sendLogin(username, password);
+      response = await requestor.post('http://localhost:8000/login', {
+        body: {username: username, password: password}
+      });
     } catch (error) {
-      console.error(error);
-      dispatch({
-        type: 'VERIFY_LOGIN_CREDS_ERROR',
-        payload: error,
-        error: true
-      });
+      switch (error.status) {
+        case 401:
+        case 404:
+          return dispatch({
+            type: 'VERIFY_LOGIN_CREDS_ERROR',
+            payload: response.body.message,
+            error: true
+          });
+        case 500:
+          return dispatch({
+            type: 'VERIFY_LOGIN_CREDS_FAIL',
+            payload: response.body.message,
+            error: true
+          });
+      }
     }
-    if (response.body.loggedIn) {
-      dispatch({
-        type: 'VERIFY_LOGIN_CREDS_SUCCESS',
-        payload: {
-          username: response.body.username
-        }
-      });
-    } else {
-      dispatch({
-        type: 'VERIFY_LOGIN_CREDS_FAIL'
-      });
-    }
+    dispatch({
+      type: 'VERIFY_LOGIN_CREDS_SUCCESS',
+      payload: {
+        username: response.body.username
+      }
+    });
   };
 };
 
@@ -48,33 +53,40 @@ const registerUser = () => {
         payload: 'Password didn\'t match.'
       });
     }
-
     dispatch({
       type: 'REGISTER_USER_START'
     });
-    let registerDone;
+    let response;
     try {
-      registerDone = await register(username, password);
+      // registerDone = await register(username, password);
+      response = await requestor.post('http://localhost:8000/register', {
+        body: {username: username, password: password}
+      });
     } catch (error) {
       console.error(error);
-      dispatch({
-        type: 'REGISTER_USER_ERROR'
-      });
+      switch (response.body.status) {
+        case 401:
+        case 409:
+          dispatch({
+            type: 'REGISTER_USER_FAIL',
+            payload: response.body.message,
+            error: true
+          });
+          break;
+        case 500:
+          dispatch({
+            type: 'REGISTER_USER_ERROR',
+            payload: response.body.message,
+            error: true
+          });
+      }
     }
-    if (registerDone.body.status) {
-      dispatch({
-        type: 'REGISTER_USER_SUCCESS',
-        payload: {
-          username: registerDone.body.username
-        }
-      });
-    } else {
-      dispatch({
-        type: 'REGISTER_USER_FAIL',
-        payload: 'Username is already taken.',
-        error: true
-      });
-    }
+    dispatch({
+      type: 'REGISTER_USER_SUCCESS',
+      payload: {
+        username: response.body.username
+      }
+    });
   };
 };
 
@@ -113,22 +125,6 @@ const changeView = nextView => {
   };
 };
 
-async function sendLogin(username, password) {
-  try {
-    let response = await requestor.post('http://localhost:8000/login', {
-      body: {username: username, password: password}
-    });
-    return response;
-  } catch (error) {
-    console.error(error);
-    return {
-      body: {
-        status: false
-      }
-    };
-  }
-}
-
 const form = () => {
   return async (dispatch, getState) => {
     let state = getState();
@@ -137,7 +133,6 @@ const form = () => {
     dispatch({
       type: 'SEND_FORM_START'
     });
-
     try {
       await requestor.post('http://localhost:8000/user/form', {
         body: {
@@ -156,23 +151,6 @@ const form = () => {
     }
   };
 };
-
-
-async function register(username, password) {
-  try {
-    let response = await requestor.post('http://localhost:8000/register', {
-      body: {username: username, password: password}
-    });
-    return response;
-  } catch (error) {
-    console.error(error);
-    return {
-      body: {
-        status: false
-      }
-    };
-  }
-}
 
 function clearFields () {
   return dispatch => {
