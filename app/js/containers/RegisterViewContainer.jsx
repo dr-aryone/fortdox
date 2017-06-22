@@ -21,7 +21,7 @@ const mapDispatchToProps = dispatch => {
       dispatch(action.inputChange(e.target.name, e.target.value));
     },
     onRegister: () => {
-      dispatch(action.registerUser());
+      dispatch(action.register());
     },
     onBack: () => {
       dispatch(action.changeView(views.LOGIN_VIEW));

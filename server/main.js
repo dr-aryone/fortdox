@@ -11,21 +11,8 @@ app.get('/', (req, res) => {
   res.send({message: 'Hello world'});
 });
 
-app.post('/user/form', async (req, res) => {
-  let response;
-  try {
-    response = await es.index({
-      index: 'document',
-      type: 'form',
-      body: {
-        title: req.body.title,
-        text: req.body.text
-      }
-    });
-    res.send(response);
-  } catch (error) {
-    console.log(error);
-  }
+app.listen(8000, () => {
+  console.log('listening to port: 8000');
 });
 
 app.post('/login', async (req, res) => {
@@ -44,8 +31,21 @@ app.post('/register', async (req, res) => {
   });
 });
 
-app.listen(8000, () => {
-  console.log('listening to port: 8000');
+app.post('/user/form', async (req, res) => {
+  let response;
+  try {
+    response = await es.index({
+      index: 'document',
+      type: 'form',
+      body: {
+        title: req.body.title,
+        text: req.body.text
+      }
+    });
+    res.send(response);
+  } catch (error) {
+    console.log(error);
+  }
 });
 
 app.post('/user/search', async (req, res) => {
@@ -62,8 +62,7 @@ app.post('/user/search', async (req, res) => {
         }
       }
     });
-    console.log(response.hits.hits);
-    res.send({message: response.hits.hits});
+    res.send(response.hits.hits[0]._source);
   } catch (error) {
     console.log(error);
   }
