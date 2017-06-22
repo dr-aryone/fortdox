@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 const users = require('./server_modules/users');
+const statusMsg = require('./statusMsg');
 
 app.use(bodyParser.json());
 
@@ -14,18 +15,18 @@ app.post('/user/form', (req, res) => {
 });
 
 app.post('/login', async (req, res) => {
-  let loggedIn = await users.verifyUser(req.body.username, req.body.password);
-  res.send({
+  let status = await users.verifyUser(req.body.username, req.body.password);
+  res.status(status).send({
     username: req.body.username,
-    loggedIn
+    message:  statusMsg.status
   });
 });
 
 app.post('/register', async (req, res) => {
-  let userWasAdded = await users.createUser(req.body.username, req.body.password);
-  res.send({
+  let status = await users.createUser(req.body.username, req.body.password);
+  res.status(status).send({
     username: req.body.username,
-    status: userWasAdded
+    message:  statusMsg.status
   });
 });
 

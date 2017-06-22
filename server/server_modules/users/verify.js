@@ -8,13 +8,13 @@ module.exports = async function(username, password) {
     hash = user.password;
   } catch (error) {
     console.error(error);
-    return false;
+    return 404;
   }
   try {
-    let validPassword = await bcrypt.compare(password, hash);
-    return validPassword;
+    await bcrypt.compare(password, hash);
+    return 200;
   } catch (error) {
     console.error(error);
-    return false;
+    return 401;
   }
 };
