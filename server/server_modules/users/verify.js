@@ -3,11 +3,15 @@ const bcrypt = require('bcrypt');
 
 module.exports = async function(username, password) {
   let hash;
+  let user;
   try {
-    let user = await db.User.findOne({where: {username: username}});
+    user = await db.User.findOne({where: {username: username}});
     hash = user.password;
   } catch (error) {
     console.error(error);
+    return 500;
+  }
+  if (user === undefined) {
     return 404;
   }
   try {
@@ -17,4 +21,5 @@ module.exports = async function(username, password) {
     console.error(error);
     return 401;
   }
+
 };
