@@ -20,13 +20,13 @@ const login = () => {
         case 404:
           return dispatch({
             type: 'VERIFY_LOGIN_CREDS_ERROR',
-            payload: response.body.message,
+            payload: error.errorText.message,
             error: true
           });
         case 500:
           return dispatch({
             type: 'VERIFY_LOGIN_CREDS_FAIL',
-            payload: response.body.message,
+            payload: error.errorText.message,
             error: true
           });
       }

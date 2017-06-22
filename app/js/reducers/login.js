@@ -4,7 +4,8 @@ const initialState = fromJS({
   userInputValue: '',
   passwordInputValue: '',
   username: '',
-  error: false
+  error: false,
+  errorMsg: '',
 });
 
 const login = (state = initialState, action) => {
@@ -16,15 +17,17 @@ const login = (state = initialState, action) => {
         'userInputValue': '',
         'passwordInputValue': '',
         'username': fromJS(action.payload.username),
-        'error': false
+        'error': false,
+        'errorMsg': ''
       });
+    case 'VERIFY_LOGIN_CREDS_ERROR':
     case 'VERIFY_LOGIN_CREDS_FAIL':
       return state.merge({
         'userInputValue': '',
         'passwordInputValue': '',
-        'error': true
+        'error': true,
+        'errorMsg': action.payload
       });
-    case 'VERIFY_LOGIN_CREDS_ERROR':
     case 'VERIFY_LOGIN_CREDS_START':
     default:
       return state;

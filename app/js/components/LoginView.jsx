@@ -2,7 +2,7 @@ const React = require('react');
 const InputField = require('./InputField');
 
 const LoginView = ({input, onChange, onLogin, onRegister, toUserView}) => {
-  let errorMsg = input.error ? <h2>Wrong password!</h2> : null;
+  let errorMsg = input.error ? <h2>{input.errorMsg}</h2> : null;
 
   return (
     <div>
