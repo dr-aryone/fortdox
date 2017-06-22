@@ -4,8 +4,13 @@ const saltRounds = 10;
 
 
 module.exports = async function (username, password) {
-  let user = await db.User.findOne({where: {username: username}});
-
+  let user;
+  try {
+    user = await db.User.findOne({where: {username: username}});
+  } catch (error) {
+    console.error(error);
+    return 500;
+  }
   if (user) {
     return 409;
   }
