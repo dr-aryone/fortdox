@@ -32,7 +32,7 @@ app.post('/login', async (req, res) => {
   let status = await users.verifyUser(req.body.username, req.body.password);
   res.status(status).send({
     username: req.body.username,
-    message: statusMsg[status]
+    message: statusMsg.user[status]
   });
 });
 
@@ -40,7 +40,7 @@ app.post('/register', async (req, res) => {
   let status = await users.createUser(req.body.username, req.body.password);
   res.status(status).send({
     username: req.body.username,
-    message: statusMsg[status]
+    message: statusMsg.user[status]
   });
 });
 
