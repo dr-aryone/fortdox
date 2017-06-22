@@ -1,6 +1,7 @@
 const {connect} = require('react-redux');
 const FormView = require('components/FormView');
 const action = require('actions');
+const form = require('actions/form');
 const views = require('views.json');
 
 const mapStateToProps = (state) => {
@@ -19,7 +20,7 @@ const mapDispatchToProps = dispatch => {
     },
     onSubmit: (event) => {
       event.preventDefault();
-      dispatch(action.form());
+      dispatch(form());
     },
     toUserView: () => {
       dispatch(action.changeView(views.USER_VIEW));
