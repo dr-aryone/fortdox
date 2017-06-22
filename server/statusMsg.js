@@ -1,5 +1,3 @@
-
-
 const statusMsg = {
   '200': 'Ok',
   '401, 404': 'Username or password is incorrect.',
