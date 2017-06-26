@@ -32,17 +32,8 @@ app.post('/register', async (req, res) => {
 });
 
 app.post('/user/form', async (req, res) => {
-  let query = {
-    index: 'document',
-    type: 'form',
-    body: {
-      title: req.body.title,
-      text: req.body.text
-    }
-  };
-  console.log(req.body.title);
   try {
-    res.send(await es.addIndex(query));
+    res.send(await es.addIndex(req.body));
   } catch (error) {
     console.log(error);
   }
@@ -50,24 +41,20 @@ app.post('/user/form', async (req, res) => {
 
 
 app.post('/user/search', async (req, res) => {
-  let query = {
-    index: 'document',
-    searchQuery: {
-      title: req.body.searchString
-    }
-  };
   let response;
   try {
-    response = await es.search(query);
+    console.log(req.body);
+    response = await es.search(req.body);
   } catch (error) {
     console.error(error);
   }
-  res.send(response.hits.hits[0]._source);
+  res.send(response.hits.hits);
 });
-app.patch('/user/search/edit', async (req, res) => {
+app.patch('/document', async (req, res) => {
   let response;
+  console.log(req.body);
   try {
-    response = await es.update(req.body.query);
+    response = await es.update(req.body);
     res.send(response);
   } catch (error) {
     console.log(error);

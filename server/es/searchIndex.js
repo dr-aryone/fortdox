@@ -1,6 +1,5 @@
 module.exports = client => {
   const addIndex = async query => {
-    console.log('Query is: ' + query);
     let response;
     try {
       response = await client.index({
@@ -11,7 +10,7 @@ module.exports = client => {
       return response;
     } catch (error) {
       console.error(error);
-      return 501;
+      return 500;
     }
   };
 
