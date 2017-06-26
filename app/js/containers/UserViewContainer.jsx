@@ -11,8 +11,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    toFormView : () => {
-      dispatch(action.changeView(views.FORM_VIEW));
+    toCreateDocView : () => {
+      dispatch(action.changeView(views.CREATE_DOC_VIEW));
     },
     toSearchView: () => {
       dispatch(action.changeView(views.SEARCH_VIEW));

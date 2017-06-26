@@ -17,10 +17,24 @@ const search = () => {
     }
     return dispatch ({
       type: 'SEARCH_FOUND',
-      title: response.body.title,
-      text: response.body.text
+      payload: response.body
     });
   };
 };
 
-module.exports = search;
+const setUpdateDocument = id => {
+  return async (dispatch, getState) => {
+    let state = getState();
+    let searchResult = state.search.get('result').toJS();
+    let doc = searchResult.find((item) => {
+      return item._id === id;
+    });
+    dispatch({
+      type: 'UPDATE_DOCUMENT',
+      payload: doc
+    });
+  };
+};
+
+
+module.exports = {search, setUpdateDocument};

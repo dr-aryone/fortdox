@@ -1,10 +1,10 @@
 const React = require('react');
 const InputField = require('./InputField');
 
-const FormView = ({input, onChange, onSubmit, toUserView}) => {
+const Form = ({header, input, onChange}) => {
   return (
     <div>
-      <h1>Document</h1>
+      <h1>{header}</h1>
       <InputField
         label='Title: '
         name='titleValue'
@@ -17,14 +17,11 @@ const FormView = ({input, onChange, onSubmit, toUserView}) => {
         rows='10'
         cols='50'
         required onChange={onChange}
-        name='formValue'
-        value={input.formValue}
+        name='textValue'
+        value={input.textValue}
       />
-      <br />
-      <button onClick={onSubmit}>Submit</button>
-      <button onClick={toUserView}>Back</button>
     </div>
   );
 };
 
-module.exports = FormView;
+module.exports = Form;

@@ -30,6 +30,8 @@ const register = (state = initialState, action) => {
         'errorMsg': fromJS(action.payload),
         'error': true
       });
+    case 'REGISTER_VIEW_TO_DEFAULT':
+      return initialState;
     default:
       return state;
   }
