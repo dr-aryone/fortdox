@@ -9,7 +9,7 @@ const createDocument = () => {
       type: 'SEND_FORM_START'
     });
     try {
-      await requestor.post('http://localhost:8000/user/createDocument', {
+      await requestor.post('http://localhost:8000/user/document/create', {
         body: {
           title,
           text
@@ -30,18 +30,19 @@ const createDocument = () => {
 const updateDocument = () => {
   return async (dispatch, getState) => {
     let state = getState();
-    let document = state.search.get('documentToUpdate');
+    let doc = state.search.get('documentToUpdate');
     dispatch({
       type: 'UPDATE_DOCUMENT_START'
     });
     debugger;
     try {
-      await requestor.post('http://localhost:8000/user/updateDocument', {
-        index: document.get('_index'),
-        type: document.get('_type'),
-        source: {
-          title: document.getIn(['_source', 'title']),
-          text: document.getIn(['_source', 'text'])
+      await requestor.post('http://localhost:8000/user/search/edit', {
+        index: doc.get('_index'),
+        type: doc.get('_type'),
+        id: doc.get('_id'),
+        updateQuery: {
+          title: doc.getIn(['_source', 'title']),
+          text: doc.getIn(['_source', 'text'])
         }
       });
     } catch (error) {
