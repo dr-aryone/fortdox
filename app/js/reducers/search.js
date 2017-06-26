@@ -2,10 +2,8 @@ const {fromJS} = require('immutable');
 
 const initialState = fromJS({
   searchString: '',
-  result: {
-    title: '',
-    text: ''
-  },
+  result: [],
+  documentToUpdate: null,
   error: false,
   errorMsg: ''
 });
@@ -17,18 +15,21 @@ const register = (state = initialState, action) => {
     case 'SEARCH_FOUND':
       return state.merge({
         'searchString': '',
-        'result': {
-          'title': action.title,
-          'text': action.text
-        },
-        error: false,
-        errorMsg: ''
+        'result': fromJS(action.payload),
+        'error': false,
+        'errorMsg': ''
       });
     case 'SEARCH_NOT_FOUND':
       return state.merge({
+        'result': [],
+        'documentToUpdate': null,
         'error': true,
-        'errorMsg': ''
+        'errorMsg': action.payload
       });
+    case 'UPDATE_DOCUMENT':
+      return state.set('documentToUpdate', fromJS(action.payload));
+    case 'SEARCH_VIEW_TO_DEFAULT':
+      return initialState;
     default:
       return state;
   }

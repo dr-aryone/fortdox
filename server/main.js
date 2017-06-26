@@ -62,7 +62,6 @@ app.post('/user/search', async (req, res) => {
         }
       }
     });
-    console.log(response.fields);
     res.send(response.hits.hits[0]._source);
   } catch (error) {
     console.log(error);

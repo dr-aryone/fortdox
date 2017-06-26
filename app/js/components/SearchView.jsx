@@ -1,7 +1,19 @@
 const React = require('react');
 const InputField = require('./InputField');
+const SearchItem = require('./SearchItem');
 
-const SearchView = ({searchString, onChange, onSubmit, toUserView, result}) => {
+const SearchView = ({result, onUpdate, searchString, onChange, onSearch, toUserView}) => {
+  let searchResult = [];
+  result.forEach((item) => {
+    searchResult.push(
+      <SearchItem
+        title={item.getIn(['_source', 'title'])}
+        text={item.getIn(['_source', 'text'])}
+        key={item.get('_id')}
+        onUpdate={() => onUpdate(item.get('_id'))}
+      />);
+  });
+
   return (
     <div>
       <h1>Search</h1>
@@ -12,10 +24,9 @@ const SearchView = ({searchString, onChange, onSubmit, toUserView, result}) => {
         value={searchString}
         onChange={onChange}
       />
-      <button onClick={onSubmit}>Search</button>
       <button onClick={toUserView}>Back</button>
-      <h2>{result.title}</h2>
-      <h2>{result.text}</h2>
+      <button onClick={onSearch}>Search</button>
+      {searchResult}
     </div>
   );
 };

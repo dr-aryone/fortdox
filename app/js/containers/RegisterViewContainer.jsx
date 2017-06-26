@@ -26,6 +26,7 @@ const mapDispatchToProps = dispatch => {
     },
     onBack: () => {
       dispatch(action.changeView(views.LOGIN_VIEW));
+      dispatch(action.currentViewToDefault());
     }
   };
 };

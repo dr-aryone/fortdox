@@ -1,14 +1,14 @@
 const {connect} = require('react-redux');
-const FormView = require('components/FormView');
+const CreateDocView = require('components/CreateDocView');
 const action = require('actions');
-const form = require('actions/form');
+const {createDocument} = require('actions/form');
 const views = require('views.json');
 
 const mapStateToProps = (state) => {
   return {
     input: {
-      formValue: state.form.get('formValue'),
-      titleValue: state.form.get('titleValue')
+      titleValue: state.createDocument.get('titleValue'),
+      textValue: state.createDocument.get('textValue')
     }
   };
 };
@@ -18,19 +18,20 @@ const mapDispatchToProps = dispatch => {
     onChange: (event) => {
       dispatch(action.inputChange(event.target.name, event.target.value));
     },
-    onSubmit: (event) => {
+    onCreate: (event) => {
       event.preventDefault();
-      dispatch(form());
+      dispatch(createDocument());
     },
     toUserView: () => {
+      dispatch(action.currentViewToDefault());
       dispatch(action.changeView(views.USER_VIEW));
     }
   };
 };
 
-const FormViewContainer = connect(
+const CreateDocContainer = connect(
   mapStateToProps,
   mapDispatchToProps
-)(FormView);
+)(CreateDocView);
 
-module.exports = FormViewContainer;
+module.exports = CreateDocContainer;

@@ -7,10 +7,7 @@ const views = require('views.json');
 const mapStateToProps = state => {
   return {
     searchString: state.search.get('searchString'),
-    result: {
-      title: state.search.getIn(['result', 'title']),
-      text: state.search.getIn(['result', 'text'])
-    }
+    result: state.search.get('result')
   };
 };
 
@@ -19,11 +16,16 @@ const mapDispatchToProps = dispatch => {
     onChange: (e) => {
       dispatch(action.inputChange(e.target.name, e.target.value));
     },
-    onSubmit: () => {
-      dispatch(search());
+    onSearch: () => {
+      dispatch(search.search());
     },
     toUserView: () => {
       dispatch(action.changeView(views.USER_VIEW));
+      dispatch(action.currentViewToDefault());
+    },
+    onUpdate: id => {
+      dispatch(search.setUpdateDocument(id));
+      dispatch(action.changeView(views.UPDATE_DOC_VIEW));
     }
   };
 };

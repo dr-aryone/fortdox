@@ -2,21 +2,25 @@ const React = require('react');
 const LoginViewContainer = require('containers/LoginViewContainer');
 const UserViewContainer = require('containers/UserViewContainer');
 const RegisterViewContainer = require('containers/RegisterViewContainer');
-const FormViewContainer = require('containers/FormViewContainer');
 const SearchViewContainer = require('containers/SearchViewContainer');
+const CreateDocContainer = require('containers/CreateDocContainer');
+const UpdateDocContainer = require('containers/UpdateDocContainer');
+const views = require('views.json');
 
 const App = (prop) => {
   switch (prop.view) {
-    case 'LOGIN_VIEW':
+    case views.LOGIN_VIEW:
       return (<div><LoginViewContainer /></div>);
-    case 'USER_VIEW':
+    case views.USER_VIEW:
       return (<div><UserViewContainer /></div>);
-    case 'REGISTER_VIEW':
+    case views.REGISTER_VIEW:
       return (<div><RegisterViewContainer /></div>);
-    case 'SEARCH_VIEW':
+    case views.SEARCH_VIEW:
       return (<div><SearchViewContainer /></div>);
-    case 'FORM_VIEW':
-      return (<div><FormViewContainer /></div>);
+    case views.CREATE_DOC_VIEW:
+      return (<div><CreateDocContainer /></div>);
+    case views.UPDATE_DOC_VIEW:
+      return (<div><UpdateDocContainer /></div>);
     default:
       return (<div />);
   }
