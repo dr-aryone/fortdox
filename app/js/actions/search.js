@@ -1,4 +1,4 @@
-const requestor = require('@edgeguideab/requestor');
+const requestor = require('@edgeguideab/client-request');
 
 const search = () => {
   return async (dispatch, getState) => {
@@ -7,7 +7,12 @@ const search = () => {
     let response;
     try {
       response = await requestor.post('http://localhost:8000/user/search', {
-        body: {searchString: searchString}
+        body: {
+          index: 'document',
+          searchQuery: {
+            title: searchString
+          }
+        }
       });
     } catch (error) {
       console.error(error);

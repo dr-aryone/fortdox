@@ -1,6 +1,7 @@
 module.exports = client => {
   const update = async (query) => {
     let response;
+    console.log(query);
     try {
       response = await client.update({
         index: query.index,

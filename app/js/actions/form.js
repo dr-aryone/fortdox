@@ -10,6 +10,8 @@ const createDocument = () => {
     });
     try {
       await requestor.post('http://localhost:8000/user/document/create', {
+        index: 'document',
+        type: 'form',
         body: {
           title,
           text
@@ -31,18 +33,20 @@ const updateDocument = () => {
   return async (dispatch, getState) => {
     let state = getState();
     let doc = state.search.get('documentToUpdate');
+    let newDoc = state.updateDocument;
     dispatch({
       type: 'UPDATE_DOCUMENT_START'
     });
-    debugger;
     try {
-      await requestor.post('http://localhost:8000/user/search/edit', {
-        index: doc.get('_index'),
-        type: doc.get('_type'),
-        id: doc.get('_id'),
-        updateQuery: {
-          title: doc.getIn(['_source', 'title']),
-          text: doc.getIn(['_source', 'text'])
+      await requestor.patch('http://localhost:8000/document', {
+        body:{
+          index: doc.get('_index'),
+          type: doc.get('_type'),
+          id: doc.get('_id'),
+          updateQuery: {
+            title: newDoc.get('titleValue'),
+            text: newDoc.get('textValue')
+          }
         }
       });
     } catch (error) {
