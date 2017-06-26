@@ -3,12 +3,12 @@ const app = express();
 const bodyParser = require('body-parser');
 const users = require('./server_modules/users');
 const statusMsg = require('./statusMsg.json');
-const es = require('./es/elasticsearch');
+const es = require('./es');
 
 app.use(bodyParser.json());
 
 app.get('/', (req, res) => {
-  res.send({message: 'Hello world'});
+  res.send();
 });
 
 app.listen(8000, () => {
@@ -32,38 +32,45 @@ app.post('/register', async (req, res) => {
 });
 
 app.post('/user/form', async (req, res) => {
-  let response;
+  let query = {
+    index: 'document',
+    type: 'form',
+    body: {
+      title: req.body.title,
+      text: req.body.text
+    }
+  };
+  console.log(req.body.title);
   try {
-    response = await es.index({
-      index: 'document',
-      type: 'form',
-      body: {
-        title: req.body.title,
-        text: req.body.text
-      }
-    });
-    res.send(response);
+    res.send(await es.addIndex(query));
   } catch (error) {
     console.log(error);
   }
 });
 
+
 app.post('/user/search', async (req, res) => {
+  let query = {
+    index: 'document',
+    searchQuery: {
+      title: req.body.searchString
+    }
+  };
   let response;
   try {
-    response = await es.search({
-      index: 'document',
-      type: 'form',
-      body: {
-        query: {
-          match: {
-            title: req.body.searchString
-          }
-        }
-      }
-    });
-    res.send(response.hits.hits[0]._source);
+    response = await es.search(query);
+  } catch (error) {
+    console.error(error);
+  }
+  res.send(response.hits.hits[0]._source);
+});
+app.patch('/user/search/edit', async (req, res) => {
+  let response;
+  try {
+    response = await es.update(req.body.query);
+    res.send(response);
   } catch (error) {
     console.log(error);
+    res.status(500);
   }
 });
