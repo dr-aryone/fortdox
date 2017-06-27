@@ -2,6 +2,7 @@ const {connect} = require('react-redux');
 const UpdateDocView = require('components/document/UpdateDocView');
 const action = require('actions');
 const {updateDocument} = require('actions/document');
+const {deleteDocument} = require('actions/document');
 const views = require('views.json');
 
 const mapStateToProps = (state) => {
@@ -27,7 +28,7 @@ const mapDispatchToProps = dispatch => {
       dispatch(action.changeView(views.SEARCH_VIEW));
     },
     onDelete: () => {
-
+      dispatch(deleteDocument());
     }
   };
 };
