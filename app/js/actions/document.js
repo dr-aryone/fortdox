@@ -63,4 +63,31 @@ const updateDocument = () => {
   };
 };
 
-module.exports = {updateDocument, createDocument};
+const deleteDocument = () => {
+  return async (dispatch, getState) => {
+    let state = getState();
+    let doc = state.search.get('documentToUpdate');
+    dispatch({
+      type: 'DELETE_DOCUMENT_START'
+    });
+    try {
+      await requestor.delete('http://localhost:8000/documents', {
+        body:{
+          index: doc.get('_index'),
+          type: doc.get('_type'),
+          id: doc.get('_id')
+        }
+      });
+    } catch (error) {
+      console.error(error);
+      dispatch({
+        type: 'DELETE_DOCUMENT_ERROR'
+      });
+    }
+    dispatch({
+      type: 'DELETE_DOCUMENT_SUCCESS'
+    });
+  };
+};
+
+module.exports = {updateDocument, createDocument, deleteDocument};
