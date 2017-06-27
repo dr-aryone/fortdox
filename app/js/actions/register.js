@@ -1,4 +1,4 @@
-const requestor = require('@edgeguideab/requestor');
+const requestor = require('@edgeguideab/client-request');
 
 const register = () => {
   return async (dispatch, getState) => {

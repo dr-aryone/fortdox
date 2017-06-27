@@ -31,7 +31,7 @@ app.post('/register', async (req, res) => {
   });
 });
 
-app.post('/user/form', async (req, res) => {
+app.post('/documents', async (req, res) => {
   try {
     res.send(await es.addIndex(req.body));
   } catch (error) {
@@ -40,17 +40,25 @@ app.post('/user/form', async (req, res) => {
 });
 
 
-app.post('/user/search', async (req, res) => {
+app.get('/documents', async (req, res) => {
   let response;
+  let searchQuery = {};
   try {
-    console.log(req.body);
-    response = await es.search(req.body);
+    console.log(req.query);
+    let index = req.query.index;
+    (req.query.title !== '') ? searchQuery['title'] = req.query.title : null;
+
+    response = await es.search({
+      index,
+      searchQuery
+    });
   } catch (error) {
     console.error(error);
   }
   res.send(response.hits.hits);
 });
-app.patch('/document', async (req, res) => {
+
+app.patch('/documents', async (req, res) => {
   let response;
   console.log(req.body);
   try {

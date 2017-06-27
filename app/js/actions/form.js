@@ -1,4 +1,4 @@
-const requestor = require('@edgeguideab/requestor');
+const requestor = require('@edgeguideab/client-request');
 
 const createDocument = () => {
   return async (dispatch, getState) => {
@@ -9,7 +9,7 @@ const createDocument = () => {
       type: 'SEND_FORM_START'
     });
     try {
-      await requestor.post('http://localhost:8000/user/document/create', {
+      await requestor.post('http://localhost:8000/documents', {
         index: 'document',
         type: 'form',
         body: {
@@ -38,7 +38,7 @@ const updateDocument = () => {
       type: 'UPDATE_DOCUMENT_START'
     });
     try {
-      await requestor.patch('http://localhost:8000/document', {
+      await requestor.patch('http://localhost:8000/documents', {
         body:{
           index: doc.get('_index'),
           type: doc.get('_type'),
