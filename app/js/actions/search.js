@@ -6,12 +6,10 @@ const search = () => {
     let searchString = state.search.get('searchString');
     let response;
     try {
-      response = await requestor.post('http://localhost:8000/user/search', {
-        body: {
+      response = await requestor.get('http://localhost:8000/documents', {
+        query: {
           index: 'document',
-          searchQuery: {
-            title: searchString
-          }
+          title: searchString
         }
       });
     } catch (error) {
