@@ -3,27 +3,29 @@ const requestor = require('@edgeguideab/client-request');
 const createDocument = () => {
   return async (dispatch, getState) => {
     let state = getState();
-    let title = state.form.get('titleValue');
-    let text = state.form.get('textValue');
+    let title = state.createDocument.get('titleValue');
+    let text = state.createDocument.get('textValue');
     dispatch({
-      type: 'SEND_FORM_START'
+      type: 'CREATE_DOCUMENT_START'
     });
     try {
       await requestor.post('http://localhost:8000/documents', {
-        index: 'document',
-        type: 'form',
         body: {
-          title,
-          text
+          index: 'document',
+          type: 'form',
+          body: {
+            title,
+            text
+          }
         }
       });
       dispatch({
-        type: 'SEND_FORM_SUCCESS'
+        type: 'CREATE_DOCUMENT_SUCCESS'
       });
     } catch (error) {
       console.error(error);
       dispatch({
-        type: 'SEND_FORM_ERROR'
+        type: 'CREATE_DOCUMENT_ERROR'
       });
     }
   };

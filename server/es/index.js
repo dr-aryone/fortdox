@@ -7,11 +7,13 @@ const client = new elasticsearch.Client({
 const {search, searchAll} = require('./search.js')(client);
 const update = require('./update.js')(client);
 const addIndex = require('./searchIndex.js')(client);
+const deleteDocument = require('./delete.js')(client);
 
 module.exports = {
   client,
   searchAll,
   search,
   update,
-  addIndex
+  addIndex,
+  deleteDocument
 };

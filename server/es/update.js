@@ -7,6 +7,7 @@ module.exports = client => {
         index: query.index,
         type: query.type,
         id: query.id,
+        refresh: true,
         body: {
           doc: query.updateQuery
         }

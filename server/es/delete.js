@@ -1,11 +1,13 @@
+
 module.exports = client => {
-  const addIndex = async query => {
+
+  const deleteDocument = async (query) => {
     let response;
     try {
-      response = await client.index({
+      response = await client.delete({
         index: query.index,
         type: query.type,
-        body: query.body,
+        id: query.id,
         refresh: true
       });
       return response;
@@ -14,6 +16,5 @@ module.exports = client => {
       return 500;
     }
   };
-
-  return addIndex;
+  return deleteDocument;
 };
