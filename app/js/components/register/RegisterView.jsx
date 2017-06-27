@@ -1,5 +1,5 @@
 const React = require('react');
-const InputField = require('./InputField');
+const InputField = require('components/general/InputField');
 
 const RegisterView = ({register, onChange, onRegister, onBack}) => {
   let errorMsg = register.error ? <h2>{register.errorMsg}</h2> : null;

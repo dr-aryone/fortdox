@@ -1,5 +1,5 @@
 const React = require('react');
-const Form = require('./Form');
+const Form = require('components/general/Form');
 
 const CreateDocView = ({input, onChange, onCreate, toUserView}) => {
   return (

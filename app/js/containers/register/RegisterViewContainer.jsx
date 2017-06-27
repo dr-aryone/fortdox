@@ -1,5 +1,5 @@
 const {connect} = require('react-redux');
-const RegisterView = require('components/RegisterView');
+const RegisterView = require('components/register/RegisterView');
 const action = require('actions');
 const register = require('actions/register');
 const views = require('views.json');

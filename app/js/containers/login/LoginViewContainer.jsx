@@ -1,5 +1,5 @@
 const {connect} = require('react-redux');
-const LoginView = require('components/LoginView');
+const LoginView = require('components/login/LoginView');
 const action = require('actions');
 const login = require('actions/login');
 const views = require('views.json');

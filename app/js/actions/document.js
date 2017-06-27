@@ -61,10 +61,4 @@ const updateDocument = () => {
   };
 };
 
-// const form = () => {
-//   return (dispatch, getState) => {
-//     let state = getState();
-//     return state.search.get('documentToUpdate') === null ? createDocument() : updateDocument();
-//   };
-// };
 module.exports = {updateDocument, createDocument};
