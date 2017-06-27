@@ -80,10 +80,10 @@ app.patch('/documents', async (req, res) => {
 app.delete('/documents', async (req,res) => {
   let response;
   let deleteQuery = {};
-  deleteQuery['index'] = req.body.index;
-  deleteQuery['type'] = req.body.type;
-  deleteQuery['id'] = req.body.id;
-
+  deleteQuery['index'] = req.query.index;
+  deleteQuery['type'] = req.query.type;
+  deleteQuery['id'] = req.query.id;
+  console.log(req.query);
   try {
     response = await es.deleteDocument(deleteQuery);
     res.send(response);

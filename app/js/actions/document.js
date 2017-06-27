@@ -72,7 +72,7 @@ const deleteDocument = () => {
     });
     try {
       await requestor.delete('http://localhost:8000/documents', {
-        body:{
+        query:{
           index: doc.get('_index'),
           type: doc.get('_type'),
           id: doc.get('_id')
