@@ -1,7 +1,7 @@
 const {connect} = require('react-redux');
-const UpdateDocView = require('components/UpdateDocView');
+const UpdateDocView = require('components/document/UpdateDocView');
 const action = require('actions');
-const {updateDocument} = require('actions/form');
+const {updateDocument} = require('actions/document');
 const views = require('views.json');
 
 const mapStateToProps = (state) => {
@@ -25,6 +25,9 @@ const mapDispatchToProps = dispatch => {
     toSearchView: () => {
       dispatch(action.currentViewToDefault());
       dispatch(action.changeView(views.SEARCH_VIEW));
+    },
+    onDelete: () => {
+
     }
   };
 };

@@ -9,7 +9,7 @@ const SearchItem = ({title, text, onUpdate}) => {
       Text:
       <p>{text}</p>
       <button onClick={onUpdate}>
-        Update
+        Edit
       </button>
     </div>
   );

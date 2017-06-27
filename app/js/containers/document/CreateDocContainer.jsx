@@ -1,7 +1,7 @@
 const {connect} = require('react-redux');
-const CreateDocView = require('components/CreateDocView');
+const CreateDocView = require('components/document/CreateDocView');
 const action = require('actions');
-const {createDocument} = require('actions/form');
+const {createDocument} = require('actions/document');
 const views = require('views.json');
 
 const mapStateToProps = (state) => {

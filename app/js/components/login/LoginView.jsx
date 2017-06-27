@@ -1,5 +1,5 @@
 const React = require('react');
-const InputField = require('./InputField');
+const InputField = require('components/general/InputField');
 
 const LoginView = ({input, onChange, onLogin, onRegister, toUserView}) => {
   let errorMsg = input.error ? <h2>{input.errorMsg}</h2> : null;

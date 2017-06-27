@@ -1,5 +1,5 @@
 const React = require('react');
-const InputField = require('./InputField');
+const InputField = require('components/general/InputField');
 const SearchItem = require('./SearchItem');
 
 const SearchView = ({result, onUpdate, searchString, onChange, onSearch, toUserView}) => {

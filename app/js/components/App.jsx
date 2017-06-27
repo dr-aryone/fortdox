@@ -1,10 +1,10 @@
 const React = require('react');
-const LoginViewContainer = require('containers/LoginViewContainer');
-const UserViewContainer = require('containers/UserViewContainer');
-const RegisterViewContainer = require('containers/RegisterViewContainer');
-const SearchViewContainer = require('containers/SearchViewContainer');
-const CreateDocContainer = require('containers/CreateDocContainer');
-const UpdateDocContainer = require('containers/UpdateDocContainer');
+const LoginViewContainer = require('containers/login/LoginViewContainer');
+const UserViewContainer = require('containers/user/UserViewContainer');
+const RegisterViewContainer = require('containers/register/RegisterViewContainer');
+const SearchViewContainer = require('containers/search/SearchViewContainer');
+const CreateDocContainer = require('containers/document/CreateDocContainer');
+const UpdateDocContainer = require('containers/document/UpdateDocContainer');
 const views = require('views.json');
 
 const App = (prop) => {
