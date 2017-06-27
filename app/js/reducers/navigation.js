@@ -12,6 +12,7 @@ const navigation = (state = initialState, action) => {
     case 'UPDATE_DOCUMENT':
       return state.set('currentView', fromJS(views.UPDATE_DOC_VIEW));
     case 'UPDATE_DOCUMENT_SUCCESS':
+    case 'DELETE_DOCUMENT_SUCCESS':
       return state.set('currentView', fromJS(views.SEARCH_VIEW));
     case 'VERIFY_LOGIN_CREDS_SUCCESS':
     case 'CREATE_DOCUMENT_SUCCESS':

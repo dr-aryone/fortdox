@@ -30,6 +30,7 @@ const register = (state = initialState, action) => {
       return state.set('documentToUpdate', fromJS(action.payload));
     case 'SEARCH_VIEW_TO_DEFAULT':
     case 'UPDATE_DOCUMENT_SUCCESS':
+    case 'DELETE_DOCUMENT_SUCCESS':
       return initialState;
     default:
       return state;
