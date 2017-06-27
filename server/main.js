@@ -32,6 +32,13 @@ app.post('/register', async (req, res) => {
 });
 
 app.post('/documents', async (req, res) => {
+  // let document = {};
+  // let index = req.body.index;
+  // let type = req.body.type;
+  //
+  // (req.body.title !== null) ? document['title'] = req.body.title : null;
+  //   (req.body.title !== null) ? document['title'] = req.body.text : null;
+  console.log(req.body);
   try {
     res.send(await es.addIndex(req.body));
   } catch (error) {
@@ -67,5 +74,21 @@ app.patch('/documents', async (req, res) => {
   } catch (error) {
     console.log(error);
     res.status(500);
+  }
+});
+
+app.delete('/documents', async (req,res) => {
+  let response;
+  let deleteQuery = {};
+  deleteQuery['index'] = req.body.index;
+  deleteQuery['type'] = req.body.type;
+  deleteQuery['id'] = req.body.id;
+
+  try {
+    response = await es.deleteDocument(deleteQuery);
+    res.send(response);
+  } catch (error) {
+    console.error(error);
+    res.sendStatus(500);
   }
 });
