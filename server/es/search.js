@@ -7,7 +7,9 @@ module.exports = client => {
         index: query.index,
         body: {
           query: {
-            match: query.searchQuery
+            wildcard: {
+              _all: `*${query.searchQuery.title}*`
+            }
           }
         }
       });
