@@ -8,8 +8,20 @@ module.exports = client => {
         'index': 'document',
         'body': {
           'query': {
-            query_string: {
-              'query': `*${query.searchString}*~`
+            'bool': {
+              'should': [{
+                'query_string': {
+                  'query': `*${query.searchString}*~`
+                }
+              }, {
+                'regexp': {
+                  '_all': '.*' + query.searchString + '.*'
+                }
+              }, {
+                'fuzzy': {
+                  '_all': query.searchString
+                }
+              }]
             }
           }
         }
