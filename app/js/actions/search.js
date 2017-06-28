@@ -9,7 +9,7 @@ const search = () => {
       response = await requestor.get('http://localhost:8000/documents', {
         query: {
           index: 'document',
-          title: searchString
+          searchString
         }
       });
     } catch (error) {

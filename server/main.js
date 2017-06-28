@@ -49,15 +49,12 @@ app.post('/documents', async (req, res) => {
 
 app.get('/documents', async (req, res) => {
   let response;
-  let searchQuery = {};
+  let searchString = req.query.searchString;
+  console.log(req.query);
   try {
-    console.log(req.query);
-    let index = req.query.index;
-    (req.query.title !== '') ? searchQuery['title'] = req.query.title : null;
-
+    //searchString = (req.query.title !== '') ? req.query.searchString : null;
     response = await es.search({
-      index,
-      searchQuery
+      searchString
     });
   } catch (error) {
     console.error(error);
