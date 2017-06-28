@@ -4,6 +4,8 @@ const bodyParser = require('body-parser');
 const users = require('./server_modules/users');
 const statusMsg = require('./statusMsg.json');
 const es = require('./es');
+const keygen = require('./keygen');
+const fs = require('fs');
 
 app.use(bodyParser.json());
 
@@ -13,6 +15,11 @@ app.get('/', (req, res) => {
 
 app.listen(8000, () => {
   console.log('listening to port: 8000');
+  // keygen();
+  keygen.genMasterPassword();
+  let publicKey = fs.readFileSync('./public_key.pem', 'utf-8');
+  keygen.encryptMasterPassword(publicKey);
+  console.log('done');
 });
 
 app.post('/login', async (req, res) => {
