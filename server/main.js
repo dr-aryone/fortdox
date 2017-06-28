@@ -6,6 +6,7 @@ const statusMsg = require('./statusMsg.json');
 const es = require('./es');
 const keygen = require('./keygen');
 const fs = require('fs');
+const {promisify} = require('util');
 
 app.use(bodyParser.json());
 
@@ -13,12 +14,27 @@ app.get('/', (req, res) => {
   res.send();
 });
 
-app.listen(8000, () => {
+app.listen(8000, async () => {
   console.log('listening to port: 8000');
-  // keygen();
-  keygen.genMasterPassword();
-  let publicKey = fs.readFileSync('./public_key.pem', 'utf-8');
-  keygen.encryptMasterPassword(publicKey);
+  // try {
+  //   await keygen.genKeyPair();
+  // } catch (error) {
+  //   console.log(error);
+  // }
+  // keygen.genMasterPassword();
+  let readFileAsync = promisify(fs.readFile);
+  let publicKey;
+  try {
+    publicKey = await readFileAsync('./public_key.pem', 'utf-8');
+  } catch (error) {
+    console.log(error);
+  }
+
+  try {
+    await keygen.encryptMasterPassword(publicKey);
+  } catch (error) {
+    console.log(error);
+  }
   console.log('done');
 });
 
