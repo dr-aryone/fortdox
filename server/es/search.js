@@ -1,14 +1,24 @@
 
 module.exports = client => {
   const search = async (query) => {
+    console.log(query);
     let response;
     try {
       response = await client.search({
-        index: query.index,
-        body: {
-          query: {
-            wildcard: {
-              _all: `*${query.searchQuery.title}*`
+        'index': 'document',
+        'body': {
+          'query': {
+            'bool': {
+              'should': [{
+                'fuzzy': {
+                  '_all': query.searchString,
+                }
+              },
+              {
+                'wildcard': {
+                  '_all': `*${query.searchString}*`
+                }
+              }]
             }
           }
         }
