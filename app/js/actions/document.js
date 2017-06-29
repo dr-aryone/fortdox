@@ -1,5 +1,6 @@
 const requestor = require('@edgeguideab/client-request');
 const fs = window.require('fs');
+const privateKey = fs.readFileSync('./js/private_key.pem', 'utf-8');
 
 const createDocument = () => {
   return async (dispatch, getState) => {
@@ -9,7 +10,7 @@ const createDocument = () => {
     dispatch({
       type: 'CREATE_DOCUMENT_START'
     });
-    let privateKey = fs.readFileSync('./js/private_key.pem', 'utf-8');
+
     try {
       await requestor.post('http://localhost:8000/documents', {
         body: {
@@ -51,7 +52,8 @@ const updateDocument = () => {
           updateQuery: {
             title: newDoc.get('titleValue'),
             text: newDoc.get('textValue')
-          }
+          },
+          privateKey
         }
       });
     } catch (error) {
