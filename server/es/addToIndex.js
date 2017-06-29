@@ -1,7 +1,7 @@
-const encryptDocument = require('../authentication/cryptDocument');
+const {encryptDocument} = require('../authentication/cryptDocument');
 
 module.exports = client => {
-  const addIndex = async query => {
+  const addToIndex = async query => {
     let response;
     let privateKey = query.privateKey;
     let data = query.body.text;
@@ -26,5 +26,5 @@ module.exports = client => {
     }
   };
 
-  return addIndex;
+  return addToIndex;
 };

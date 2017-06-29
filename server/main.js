@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const users = require('./server_modules/users');
 const statusMsg = require('./statusMsg.json');
 const es = require('./es');
+const {decryptDocument} = require('./authentication/cryptDocument');
 
 app.use(bodyParser.json());
 
@@ -33,22 +34,25 @@ app.post('/register', async (req, res) => {
 
 app.post('/documents', async (req, res) => {
   try {
-    res.send(await es.addIndex(req.body));
+    res.send(await es.addToIndex(req.body));
   } catch (error) {
     console.log(error);
   }
 });
 
-
 app.get('/documents', async (req, res) => {
   let response;
   let searchString = req.query.searchString;
-  console.log(req.query);
   try {
     //searchString = (req.query.title !== '') ? req.query.searchString : null;
     response = await es.search({
       searchString
     });
+  } catch (error) {
+    console.error(error);
+  }
+  try {
+    response.hits.hits = await decryptDocument(response.hits.hits, req.query.privateKey);
   } catch (error) {
     console.error(error);
   }

@@ -3,10 +3,9 @@ const client = new elasticsearch.Client({
   host: 'localhost:9200',
   log: 'trace'
 });
-
 const {search, searchAll} = require('./search.js')(client);
 const update = require('./update.js')(client);
-const addIndex = require('./searchIndex.js')(client);
+const addToIndex = require('./addToIndex.js')(client);
 const deleteDocument = require('./delete.js')(client);
 
 module.exports = {
@@ -14,6 +13,6 @@ module.exports = {
   searchAll,
   search,
   update,
-  addIndex,
+  addToIndex,
   deleteDocument
 };
