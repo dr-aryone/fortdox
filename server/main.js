@@ -4,7 +4,6 @@ const bodyParser = require('body-parser');
 const users = require('./server_modules/users');
 const statusMsg = require('./statusMsg.json');
 const es = require('./es');
-const keygen = require('./authentication/keygen');
 
 app.use(bodyParser.json());
 
@@ -12,14 +11,8 @@ app.get('/', (req, res) => {
   res.send();
 });
 
-app.listen(8000, async () => {
+app.listen(8000, () => {
   console.log('listening to port: 8000');
-  try {
-    await keygen.encryptMasterPassword();
-  } catch (error) {
-    console.error(error);
-    return;
-  }
 });
 
 app.post('/login', async (req, res) => {
