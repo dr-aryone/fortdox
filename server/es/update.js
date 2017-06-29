@@ -1,7 +1,15 @@
+const {encryptDocument} = require('../authentication/cryptDocument');
+
 module.exports = client => {
   const update = async (query) => {
+    let encryptedText;
+    try {
+      encryptedText = await encryptDocument(query.updateQuery.text, query.privateKey);
+    } catch (error) {
+      console.err(error);
+    }
+    query.updateQuery.text = encryptedText.toString('base64');
     let response;
-    console.log(query);
     try {
       response = await client.update({
         index: query.index,

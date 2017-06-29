@@ -61,7 +61,6 @@ app.get('/documents', async (req, res) => {
 
 app.patch('/documents', async (req, res) => {
   let response;
-  console.log(req.body);
   try {
     response = await es.update(req.body);
     res.send(response);
