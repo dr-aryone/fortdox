@@ -11,7 +11,7 @@ module.exports = client => {
     } catch (error) {
       console.error(error);
     }
-    query.body.text = encryptedData;
+    query.body.text = encryptedData.toString('base64');
     try {
       response = await client.index({
         index: query.index,

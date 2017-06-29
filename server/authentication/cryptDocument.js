@@ -5,7 +5,8 @@ const aes = require('./aes');
 const encryptDocument = async (data, privateKey) => {
   try {
     let masterPassword = await keygen.decryptMasterPassword(privateKey);
-    return await aes.encrypt(data, masterPassword).toString('base64');
+    let encryptedData = await aes.encrypt({password: masterPassword, message: data});
+    return encryptedData;
   } catch (error) {
     console.error(error);
     return;

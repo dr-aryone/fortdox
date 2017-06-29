@@ -46,29 +46,35 @@ const genPublicKey = () => {
   });
 };
 
-const genMasterPassword = () => {
+const genMasterPassword = async () => {
   let masterPassword = crypto.randomBytes(32).toString('base64');
   let writeFileAsync = promisify(fs.writeFile);
   try {
-    writeFileAsync('master_password', masterPassword);
+    await writeFileAsync('master_password', masterPassword);
   } catch (error) {
     console.log(error);
   }
 };
 
-const encryptMasterPassword = async publicKey => {
+const encryptMasterPassword = async () => {
   let readFileAsync = promisify(fs.readFile);
   let writeFileAsync = promisify(fs.writeFile);
   let masterPassword;
+  let publicKey;
+
   try {
+    publicKey = await readFileAsync('./public_key.pem');
+    publicKey = publicKey.toString();
     masterPassword = await readFileAsync('./master_password');
+    masterPassword = Buffer.from(masterPassword.toString(), 'base64');
   } catch (error) {
     console.log(error);
   }
 
   let encryptedData = crypto.publicEncrypt(publicKey, masterPassword).toString('base64');
+  console.log(encryptedData);
   try {
-    writeFileAsync('./encrypted_master_password', encryptedData);
+    await writeFileAsync('./encrypted_master_password', encryptedData);
   } catch (error) {
     console.error(error);
     return;
@@ -80,13 +86,14 @@ const decryptMasterPassword = async (privateKey) => {
   let encryptedMasterPassword;
   try {
     encryptedMasterPassword = await readFileAsync('./encrypted_master_password');
-
+    console.log('');
+    console.log(encryptedMasterPassword.toString());
+    encryptedMasterPassword = Buffer.from(encryptedMasterPassword.toString(), 'base64');
+    console.log('Length: ' + encryptedMasterPassword.length);
   } catch (error) {
     console.error(error);
     return;
   }
-  console.log(privateKey);
-  console.log(encryptedMasterPassword);
   return crypto.privateDecrypt(privateKey, encryptedMasterPassword);
 
 };
