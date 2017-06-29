@@ -48,7 +48,6 @@ const genPublicKey = () => {
 
 const genMasterPassword = () => {
   let masterPassword = crypto.randomBytes(32).toString('base64');
-  console.log(masterPassword);
   let writeFileAsync = promisify(fs.writeFile);
   try {
     writeFileAsync('master_password', masterPassword);
@@ -59,22 +58,38 @@ const genMasterPassword = () => {
 
 const encryptMasterPassword = async publicKey => {
   let readFileAsync = promisify(fs.readFile);
+  let writeFileAsync = promisify(fs.writeFile);
   let masterPassword;
-  let privateKey;
   try {
     masterPassword = await readFileAsync('./master_password');
-    privateKey = await readFileAsync('./private_key.pem', 'utf-8');
   } catch (error) {
     console.log(error);
   }
 
-  let encryptedData = crypto.publicEncrypt(publicKey, masterPassword);
-  let decryptedData = crypto.privateDecrypt(privateKey, encryptedData);
+  let encryptedData = crypto.publicEncrypt(publicKey, masterPassword).toString('base64');
+  try {
+    writeFileAsync('./encrypted_master_password', encryptedData);
+  } catch (error) {
+    console.error(error);
+    return;
+  }
+};
 
-  console.log(encryptedData);
-  console.log(decryptedData);
+const decryptMasterPassword = async (privateKey) => {
+  let readFileAsync = promisify(fs.readFile);
+  let encryptedMasterPassword;
+  try {
+    encryptedMasterPassword = await readFileAsync('./encrypted_master_password');
+
+  } catch (error) {
+    console.error(error);
+    return;
+  }
+  console.log(privateKey);
+  console.log(encryptedMasterPassword);
+  return crypto.privateDecrypt(privateKey, encryptedMasterPassword);
 
 };
 
 
-module.exports = {genKeyPair, genMasterPassword, encryptMasterPassword};
+module.exports = {genKeyPair, genMasterPassword, encryptMasterPassword, decryptMasterPassword};
