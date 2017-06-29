@@ -1,11 +1,10 @@
 const keygen = require('./keygen');
 const aes = require('./aes');
 
-
 const encryptDocument = async (data, privateKey) => {
   try {
     let masterPassword = await keygen.decryptMasterPassword(privateKey);
-    let encryptedData = await aes.encrypt({password: masterPassword, message: data});
+    let encryptedData = await aes.encrypt(masterPassword, data);
     return encryptedData;
   } catch (error) {
     console.error(error);

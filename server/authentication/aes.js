@@ -7,7 +7,7 @@ module.exports = {
   decrypt
 };
 
-async function encrypt({password, message}) {
+async function encrypt(password, message) {
   let initVector;
   message = Buffer.from(message);
   try {
@@ -23,7 +23,7 @@ async function encrypt({password, message}) {
   return encryptedBuffer;
 }
 
-function decrypt({password, message}) {
+function decrypt(password, message) {
   let initVector = message.slice(0, BLOCK_SIZE_BYTES);
   message = message.slice(BLOCK_SIZE_BYTES);
   let cipher = crypto.createDecipheriv(cipherType, password, initVector);
