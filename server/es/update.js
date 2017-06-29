@@ -18,6 +18,5 @@ module.exports = client => {
       return 501;
     }
   };
-
   return update;
 };

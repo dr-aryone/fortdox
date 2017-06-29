@@ -1,4 +1,3 @@
-
 module.exports = client => {
   const search = async (query) => {
     console.log(query);
@@ -29,7 +28,6 @@ module.exports = client => {
       return response;
     } catch (error) {
       console.error(error);
-
     }
   };
 

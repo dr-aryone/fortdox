@@ -1,4 +1,3 @@
-
 module.exports = client => {
 
   const deleteDocument = async (query) => {
