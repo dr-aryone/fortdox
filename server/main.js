@@ -5,6 +5,7 @@ const users = require('./server_modules/users');
 const statusMsg = require('./statusMsg.json');
 const es = require('./es');
 const {decryptDocument} = require('./authentication/cryptDocument');
+const verifyPrivateKey = require('./authentication/verifyPrivateKey');
 
 app.use(bodyParser.json());
 
@@ -17,9 +18,14 @@ app.listen(8000, () => {
 });
 
 app.post('/login', async (req, res) => {
-  let status = await users.verifyUser(req.body.username, req.body.password);
+  let status;
+  try {
+    status = await verifyPrivateKey(req.body.privateKey);
+  } catch (error) {
+    console.error(error);
+    status = 500;
+  }
   res.status(status).send({
-    username: req.body.username,
     message: statusMsg.user[status]
   });
 });
