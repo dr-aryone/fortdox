@@ -11,6 +11,7 @@ const App = (prop) => {
     case views.SEARCH_VIEW:
     case views.USER_VIEW:
     case views.CREATE_DOC_VIEW:
+    case views.UPDATE_DOC_VIEW:
       return (<div><UserViewContainer /></div>);
     case views.REGISTER_VIEW:
       return (<div><RegisterViewContainer /></div>);

@@ -9,6 +9,7 @@ $btn-color: #FFF;
   font-size: 1em;
   text-decoration: none;
   box-sizing: border-box;
+  cursor: pointer;
 
   &:hover {
     background: lighten($primary-color, 5%);
