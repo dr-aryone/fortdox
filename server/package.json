@@ -16,6 +16,7 @@
     "sequelize": "^4.1.0"
   },
   "devDependencies": {
+    "@edgeguideab/expect": "^1.7.8",
     "babel-eslint": "^7.2.3",
     "eslint": "^4.0.0",
     "eslint-plugin-jasmine": "^2.2.0"

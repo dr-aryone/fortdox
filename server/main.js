@@ -6,6 +6,7 @@ const statusMsg = require('./statusMsg.json');
 const es = require('./server_modules/es');
 const {decryptDocuments} = require('./server_modules/crypt/authentication/cryptDocument');
 const {decryptMasterPassword} = require('./server_modules/crypt/keys/cryptMasterPassword');
+const expect = require('@edgeguideab/expect');
 
 app.use(bodyParser.json());
 
@@ -40,12 +41,23 @@ app.post('/register', async (req, res) => {
 });
 
 app.post('/documents', async (req, res) => {
-  try {
-    res.send(await es.addToIndex(req.body));
-  } catch (error) {
-    console.log(error);
-    res.send(500).send({msg: 'Internal Server Error'});
+  let expectations = expect({
+    index: 'string',
+    type: 'string'
+  }, req.body);
+  let privateKey = new Buffer(req.headers.authorization.split('FortDoks ')[1], 'base64').toString();
+
+  if (!expectations.wereMet()) {
+    res.status(400).send({msg: 'Bad data format, please priovide atleast index, type, id'});
+  } else {
+    try {
+      res.send(await es.addToIndex(req.body, privateKey));
+    } catch (error) {
+      console.log(error);
+      res.send(500).send({msg: 'Internal Server Error'});
+    }
   }
+
 });
 
 app.get('/documents', async (req, res) => {
@@ -70,27 +82,43 @@ app.get('/documents', async (req, res) => {
 });
 
 app.patch('/documents', async (req, res) => {
+  let privateKey =  new Buffer(req.headers.authorization.split('FortDoks ')[1], 'base64').toString();
   let response;
-  try {
-    response = await es.update(req.body);
-    res.send(response);
-  } catch (error) {
-    console.log(error);
-    res.status(500).send({msg: 'Internal Server Error'});
+  let expectations = expect({
+    index: 'string',
+    type: 'string',
+    id: 'string',
+    updateQuery: 'object'
+  }, req.body);
+  if (!expectations.wereMet()) {
+    res.status(400).send({msg: 'Bad data format, please priovide atleast index, type, id'});
+  } else {
+    try {
+      response = await es.update(req.body, privateKey);
+      res.send(response);
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({msg: 'Internal Server Error'});
+    }
   }
 });
 
 app.delete('/documents', async (req,res) => {
   let response;
-  let deleteQuery = {};
-  deleteQuery['index'] = req.query.index;
-  deleteQuery['type'] = req.query.type;
-  deleteQuery['id'] = req.query.id;
-  try {
-    response = await es.deleteDocument(deleteQuery);
-    res.send(response);
-  } catch (error) {
-    console.error(error);
-    res.status(500).send();
+  let expectations = expect({
+    index: 'string',
+    type: 'string',
+    id: 'string'
+  }, req.query);
+  if (!expectations.wereMet()) {
+    res.status(400).send({msg: 'Bad data format, please priovide atleast index, type, id'});
+  } else {
+    try {
+      response = await es.deleteDocument(req.query);
+      res.send(response);
+    } catch (error) {
+      console.error(error);
+      res.status(500).send();
+    }
   }
 });
