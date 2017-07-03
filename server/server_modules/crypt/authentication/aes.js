@@ -1,10 +1,14 @@
 const crypto = require('crypto');
 const cipherType = 'aes-256-cbc';
 const BLOCK_SIZE_BYTES = 16;
+const PADDING_ROUNDS = 100000;
+const PADDED_KEY_LENGTH = 32;
+const PADDING_HASH = 'sha512';
 
 module.exports = {
   encrypt,
-  decrypt
+  decrypt,
+  generatePaddedKey
 };
 
 async function encrypt(password, message) {
@@ -40,6 +44,21 @@ function randomBuffer(bytes) {
         return reject(err);
       }
       resolve(buf);
+    });
+  });
+}
+
+function generatePaddedKey(key, salt) {
+  return new Promise((resolve, reject) => {
+    salt = salt ? salt : crypto.randomBytes(32);
+    crypto.pbkdf2(key, salt, PADDING_ROUNDS, PADDED_KEY_LENGTH, PADDING_HASH, (err, derivedKey) => {
+      if (err) {
+        reject(err);
+      }
+      resolve({
+        key: derivedKey,
+        salt: Buffer.from(salt).toString('base64')
+      });
     });
   });
 }

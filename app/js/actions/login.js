@@ -1,17 +1,32 @@
 const requestor = require('@edgeguideab/client-request');
-
+const aes = window.require('../server/server_modules/crypt/authentication/aes.js');
+const fs = window.require('fs');
+let encryptedPrivateKey = fs.readFileSync('./js/local_storage/encryptedPrivateKey', 'utf-8');
+let salt = fs.readFileSync('./js/local_storage/salt', 'utf-8');
 const login = () => {
   return async (dispatch, getState) => {
     let state = getState();
-    let username = state.login.get('userInputValue');
+    //let username = state.login.get('userInputValue');
     let password = state.login.get('passwordInputValue');
     dispatch({
       type: 'VERIFY_LOGIN_CREDS_START'
     });
-    let response;
+    let privateKey;
     try {
-      response = await requestor.post('http://localhost:8000/login', {
-        body: {username: username, password: password}
+      let key = (await aes.generatePaddedKey(password, salt)).key;
+      privateKey = (await aes.decrypt(new window.Buffer(key, 'base64'), new window.Buffer(encryptedPrivateKey, 'base64'))).toString();
+    } catch (error) {
+      return dispatch({
+        type: 'VERIFY_LOGIN_CREDS_ERROR',
+        payload: 'Wrong password!',
+        error: true
+      });
+    }
+    try {
+      await requestor.post('http://localhost:8000/login', {
+        body: {
+          privateKey
+        }
       });
     } catch (error) {
       switch (error.status) {
@@ -33,7 +48,7 @@ const login = () => {
     dispatch({
       type: 'VERIFY_LOGIN_CREDS_SUCCESS',
       payload: {
-        username: response.body.username
+        username: 'testuser'
       }
     });
   };

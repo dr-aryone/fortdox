@@ -8,6 +8,7 @@
   "dependencies": {
     "@edgeguideab/client-request": "^1.4.5",
     "@edgeguideab/requestor": "^1.1.2",
+    "electron": "^1.6.11",
     "electron-devtools-installer": "^2.2.0",
     "immutable": "^3.8.1",
     "react-redux": "^5.0.5",
