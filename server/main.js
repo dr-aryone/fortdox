@@ -51,6 +51,8 @@ app.post('/documents', async (req, res) => {
 app.get('/documents', async (req, res) => {
   let response;
   let searchString = req.query.searchString;
+  let privateKey = decodeURIComponent(req.headers.authorization).split('FortDoks ')[1];
+  debugger;
   try {
     response = await es.search({
       searchString
@@ -60,7 +62,7 @@ app.get('/documents', async (req, res) => {
     return res.status(500).send({msg: 'Internal Server Error'});
   }
   try {
-    response.hits.hits = await decryptDocuments(response.hits.hits, req.query.privateKey);
+    response.hits.hits = await decryptDocuments(response.hits.hits, privateKey);
   } catch (error) {
     console.error(error);
     return res.status(500).send({msg: 'Internal Server Error'});
@@ -85,7 +87,6 @@ app.delete('/documents', async (req,res) => {
   deleteQuery['index'] = req.query.index;
   deleteQuery['type'] = req.query.type;
   deleteQuery['id'] = req.query.id;
-  console.log(req.query);
   try {
     response = await es.deleteDocument(deleteQuery);
     res.send(response);
