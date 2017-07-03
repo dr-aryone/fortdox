@@ -3,6 +3,7 @@ const SideNavContainer = require('containers/user/SideNavContainer');
 const views = require('views.json');
 const UserViewFrontPage = require('./userViewFrontPage');
 const CreateDocContainer = require('containers/document/CreateDocContainer');
+const UpdateDocContainer = require('containers/document/UpdateDocContainer');
 const SearchViewContainer = require('containers/search/SearchViewContainer');
 
 const UserView = ({currentView, username}) => {
@@ -16,6 +17,9 @@ const UserView = ({currentView, username}) => {
       break;
     case views.CREATE_DOC_VIEW:
       page = <CreateDocContainer />;
+      break;
+    case views.UPDATE_DOC_VIEW:
+      page = <UpdateDocContainer />;
       break;
   }
 

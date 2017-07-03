@@ -27,7 +27,9 @@ const SearchView = ({result, onUpdate, searchString, onChange, onSearch}) => {
           />
           <a onClick={onSearch} className='btn'>Search</a>
         </div>
-        {searchResult}
+        <div className='row'>
+          {searchResult}
+        </div>
       </div>
     </div>
   );

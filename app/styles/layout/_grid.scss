@@ -3,7 +3,7 @@
   left: 0;
   width: 100%;
   height: 100vh;
-  background-color: #f2f2f2;
+  background-color: $background-color;
 }
 
 
@@ -14,10 +14,12 @@
   box-sizing: border-box;
   margin-left: $side-nav-width;
   margin-right: auto;
+  padding-top: 25px;
 }
 
-.row {
 
+.col-sm-3 {
+  width: percentage(3/12);
 }
 
 .col-sm-4 {

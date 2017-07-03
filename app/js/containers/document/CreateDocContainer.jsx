@@ -2,7 +2,6 @@ const {connect} = require('react-redux');
 const CreateDocView = require('components/document/CreateDocView');
 const action = require('actions');
 const {createDocument} = require('actions/document');
-const views = require('views.json');
 
 const mapStateToProps = (state) => {
   return {
@@ -21,10 +20,6 @@ const mapDispatchToProps = dispatch => {
     onCreate: (event) => {
       event.preventDefault();
       dispatch(createDocument());
-    },
-    toUserView: () => {
-      dispatch(action.currentViewToDefault());
-      dispatch(action.changeView(views.USER_VIEW));
     }
   };
 };
