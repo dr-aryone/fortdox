@@ -1,6 +1,6 @@
 const requestor = require('@edgeguideab/client-request');
 const fs = window.require('fs');
-const privateKey = fs.readFileSync('./js/local_storage/private_key.pem', 'utf-8');
+const privateKey = fs.readFileSync('./js/local_storage/private_key.pem', 'base64');
 
 const createDocument = () => {
   return async (dispatch, getState) => {
@@ -19,8 +19,10 @@ const createDocument = () => {
           body: {
             title,
             text
-          },
-          privateKey
+          }
+        },
+        headers: {
+          'Authorization': `FortDoks ${privateKey}`
         }
       });
       dispatch({
@@ -52,8 +54,10 @@ const updateDocument = () => {
           updateQuery: {
             title: newDoc.get('titleValue'),
             text: newDoc.get('textValue')
-          },
-          privateKey
+          }
+        },
+        headers: {
+          'Authorization': `FortDoks ${privateKey}`
         }
       });
     } catch (error) {
