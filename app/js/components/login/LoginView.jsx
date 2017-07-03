@@ -1,6 +1,6 @@
 const React = require('react');
 
-const LoginView = ({input, onChange, onLogin}) => {
+const LoginView = ({input, onChange, onLogin, toUserView}) => {
   let errorMsg = input.error ? <h2>{input.errorMsg}</h2> : null;
 
   return (
@@ -25,8 +25,11 @@ const LoginView = ({input, onChange, onLogin}) => {
             onChange={onChange}
             className='input-block'
           />
-          <a onClick={onLogin} className={'btn' + ' ' + 'btn-block'}>
+          <a onClick={onLogin} className='btn btn-block'>
             Login
+          </a>
+          <a onClick={toUserView} className='btn btn-block'>
+            Fusk knapp!
           </a>
         </div>
       </div>

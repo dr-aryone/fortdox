@@ -2,6 +2,7 @@ const {connect} = require('react-redux');
 const LoginView = require('components/login/LoginView');
 const action = require('actions');
 const login = require('actions/login');
+const views = require('views.json');
 
 const mapStateToProps = state => {
   return {
@@ -22,6 +23,9 @@ const mapDispatchToProps = dispatch => {
     onLogin: (event) => {
       event.preventDefault();
       dispatch(login());
+    },
+    toUserView: () => {
+      dispatch(action.changeView(views.USER_VIEW));
     }
   };
 };
