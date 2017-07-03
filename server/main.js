@@ -51,8 +51,7 @@ app.post('/documents', async (req, res) => {
 app.get('/documents', async (req, res) => {
   let response;
   let searchString = req.query.searchString;
-  let privateKey = decodeURIComponent(req.headers.authorization).split('FortDoks ')[1];
-  debugger;
+  let privateKey = new Buffer(req.headers.authorization.split('FortDoks ')[1], 'base64').toString();
   try {
     response = await es.search({
       searchString
