@@ -1,8 +1,7 @@
 const React = require('react');
-const InputField = require('components/general/InputField');
 const SearchItem = require('./SearchItem');
 
-const SearchView = ({result, onUpdate, searchString, onChange, onSearch, toUserView}) => {
+const SearchView = ({result, onUpdate, searchString, onChange, onSearch}) => {
   let searchResult = [];
   result.forEach((item) => {
     searchResult.push(
@@ -15,18 +14,21 @@ const SearchView = ({result, onUpdate, searchString, onChange, onSearch, toUserV
   });
 
   return (
-    <div>
-      <h1>Search</h1>
-      <InputField
-        label='Search: '
-        name='searchString'
-        type='text'
-        value={searchString}
-        onChange={onChange}
-      />
-      <button onClick={toUserView}>Back</button>
-      <button onClick={onSearch}>Search</button>
-      {searchResult}
+    <div className='container-fluid'>
+      <div className='col-sm-10 col-sm-offset-1'>
+        <h1>Search</h1>
+        <div className='search'>
+          <input
+            name='searchString'
+            type='text'
+            value={searchString}
+            onChange={onChange}
+            placeholder='Search'
+          />
+          <a onClick={onSearch} className='btn'>Search</a>
+        </div>
+        {searchResult}
+      </div>
     </div>
   );
 };
