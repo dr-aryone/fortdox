@@ -1,8 +1,8 @@
 const requestor = require('@edgeguideab/client-request');
 const aes = window.require('../server/server_modules/crypt/authentication/aes.js');
 const fs = window.require('fs');
-let encryptedPrivateKey = fs.readFileSync('./js/encryptedPrivateKey', 'utf-8');
-let salt = fs.readFileSync('./js/salt', 'utf-8');
+let encryptedPrivateKey = fs.readFileSync('./js/local_storage/encryptedPrivateKey', 'utf-8');
+let salt = fs.readFileSync('./js/local_storage/salt', 'utf-8');
 const login = () => {
   return async (dispatch, getState) => {
     let state = getState();
