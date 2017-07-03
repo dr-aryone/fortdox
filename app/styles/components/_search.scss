@@ -1,0 +1,13 @@
+.search {
+  @extend .box;
+  display: flex;
+
+  input {
+    flex-grow: 1;
+    margin: 10px 14px 10px 14px;
+  }
+
+  .btn {
+    padding: 10px 10px;
+  }
+}

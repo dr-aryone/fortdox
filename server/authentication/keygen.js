@@ -63,8 +63,8 @@ const encryptMasterPassword = async () => {
   let publicKey;
   try {
     publicKey = await readFileAsync('./public_key.pem', 'utf-8');
-    masterPassword = await readFileAsync('./master_password');
-    masterPassword = Buffer.from(masterPassword.toString(), 'base64');
+    masterPassword = await readFileAsync('./master_password', 'utf-8');
+    masterPassword = Buffer.from(masterPassword, 'base64');
   } catch (error) {
     console.log(error);
   }
@@ -81,8 +81,8 @@ const decryptMasterPassword = async (privateKey) => {
   let readFileAsync = promisify(fs.readFile);
   let encryptedMasterPassword;
   try {
-    encryptedMasterPassword = await readFileAsync('./encrypted_master_password');
-    encryptedMasterPassword = Buffer.from(encryptedMasterPassword.toString(), 'base64');
+    encryptedMasterPassword = await readFileAsync('./encrypted_master_password', 'utf-8');
+    encryptedMasterPassword = Buffer.from(encryptedMasterPassword, 'base64');
   } catch (error) {
     console.error(error);
     return;

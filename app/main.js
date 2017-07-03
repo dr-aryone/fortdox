@@ -1,3 +1,4 @@
+// const electron = require('electron');
 const {app, BrowserWindow} = require('electron');
 const path = require('path');
 const url = require('url');
@@ -6,8 +7,9 @@ const { default: installExtension, REDUX_DEVTOOLS } = require('electron-devtools
 let win;
 
 async function createWindow() {
+  // let {width, height} = electron.screen.getPrimaryDisplay().workAreaSize;
+  win = new BrowserWindow({width: 1280, height: 720});
 
-  win = new BrowserWindow({width: 1280, height: 960});
   installExtension(REDUX_DEVTOOLS);
 
   win.loadURL(url.format({

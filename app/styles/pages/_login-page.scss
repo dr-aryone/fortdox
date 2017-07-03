@@ -1,0 +1,23 @@
+.login-panel {
+  @extend .box;
+  font-family: 'Open Sans', 'Arial', sans-serif;
+  font-size: 12px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 33%;
+  background-color: #FFF;
+}
+
+.login-outer {
+  display: table;
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  left: 0;
+}
+
+.login-middle {
+  display: table-cell;
+  vertical-align: middle;
+}
