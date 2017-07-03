@@ -11,8 +11,10 @@ const search = () => {
       response = await requestor.get('http://localhost:8000/documents', {
         query: {
           index: 'document',
-          searchString,
-          privateKey
+          searchString
+        },
+        headers: {
+          'Authorization': `FortDoks ${encodeURIComponent(privateKey)}`
         }
       });
     } catch (error) {
