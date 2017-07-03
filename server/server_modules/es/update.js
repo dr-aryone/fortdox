@@ -1,4 +1,4 @@
-const {encryptDocument} = require('../authentication/cryptDocument');
+const {encryptDocument} = require('../crypt/authentication/cryptDocument');
 
 module.exports = client => {
   const update = async (query) => {

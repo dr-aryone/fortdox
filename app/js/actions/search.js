@@ -6,13 +6,15 @@ const search = () => {
     let state = getState();
     let searchString = state.search.get('searchString');
     let response;
-    let privateKey = fs.readFileSync('./js/private_key.pem', 'utf-8');
+    let privateKey = fs.readFileSync('./js/local_storage/private_key.pem', 'base64');
     try {
       response = await requestor.get('http://localhost:8000/documents', {
         query: {
           index: 'document',
-          searchString,
-          privateKey
+          searchString
+        },
+        headers: {
+          'Authorization': `FortDoks ${privateKey}`
         }
       });
     } catch (error) {
