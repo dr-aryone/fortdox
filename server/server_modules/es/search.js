@@ -1,6 +1,5 @@
 module.exports = client => {
   const search = async (query) => {
-    console.log(query);
     let response;
     try {
       response = await client.search({
