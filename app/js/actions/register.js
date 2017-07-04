@@ -47,4 +47,32 @@ const register = () => {
   };
 };
 
-module.exports = register;
+const registerTeamName = () => {
+  return async (dispatch, getState) => {
+    let state = getState();
+    let organization = state.register.get('organizationInputValue');
+    let username = state.register.get('usernameInputValue');
+    dispatch({
+      type: 'REGISTER_TEAM_START'
+    });
+    try {
+      await requestor.post('http://localhost:8000/register', {
+        body: {
+          organization,
+          username
+        }
+      });
+    } catch (error) {
+      return dispatch ({
+        type: 'REGISTER_TEAM_ERROR'
+      });
+    }
+    return dispatch({
+      type: 'REGISTER_TEAM_SUCCESS'
+    });
+
+
+  };
+};
+
+module.exports = {register, registerTeamName};
