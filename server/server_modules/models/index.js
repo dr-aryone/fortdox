@@ -3,7 +3,7 @@ var fs = require('fs');
 var path = require('path');
 var Sequelize = require('sequelize');
 var basename = path.basename(module.filename);
-var sqlConfig = require('app/config.json').sqlConfig;
+var sqlConfig = require('../config.json').sqlConfig;
 var db = {};
 var sequelize = new Sequelize(sqlConfig.database, sqlConfig.username, sqlConfig.password, {
   host: sqlConfig.host,

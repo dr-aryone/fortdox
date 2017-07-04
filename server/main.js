@@ -2,10 +2,13 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 const users = require('./server_modules/users');
+const keygen = require('./server_modules/crypt/keys/keygen');
+const orgs = require('./server_modules/organizations');
 const statusMsg = require('./statusMsg.json');
 const es = require('./server_modules/es');
 const {decryptDocuments} = require('./server_modules/crypt/authentication/cryptDocument');
 const {decryptMasterPassword} = require('./server_modules/crypt/keys/cryptMasterPassword');
+const {encryptMasterPassword} = require('./server_modules/crypt/keys/cryptMasterPassword');
 const expect = require('@edgeguideab/expect');
 
 app.use(bodyParser.json());
@@ -33,11 +36,28 @@ app.post('/login', async (req, res) => {
 });
 
 app.post('/register', async (req, res) => {
-  let status = await users.createUser(req.body.username, req.body.password);
-  res.status(status).send({
-    username: req.body.username,
-    message: statusMsg.user[status]
-  });
+  try {
+    await orgs.createOrganization(req.body.organization);
+  } catch (error) {
+    return res.status(error).send();
+  }
+  let keypair;
+  try {
+    keypair = await keygen.genKeyPair();
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send();
+  }
+  let masterPassword = keygen.genMasterPassword();
+  let encryptedMasterPassword = encryptMasterPassword(keypair.publicKey, masterPassword);
+
+  try {
+    await users.createUser(req.body.username, encryptedMasterPassword);
+    return res.send({privateKey: keypair.privateKey});
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send();
+  }
 });
 
 app.post('/documents', async (req, res) => {
