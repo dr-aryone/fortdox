@@ -1,0 +1,7 @@
+const path = require('path');
+
+module.exports = {
+  config: path.resolve(process.cwd(), 'server_modules', 'config.json'),
+  env: 'sqlConfig',
+  modelsPath: path.resolve(process.cwd(), 'server_modules', 'models')
+}

@@ -1,0 +1,10 @@
+{
+  "sqlConfig": {
+    "username": "{you username}",
+    "password": "{your password}",
+    "database": "FortDoks",
+    "host": "127.0.0.1",
+    "dialect": "mysql",
+    "logging": false
+  }
+}
