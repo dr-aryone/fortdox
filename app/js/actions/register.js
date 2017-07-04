@@ -55,8 +55,9 @@ const registerTeamName = () => {
     dispatch({
       type: 'REGISTER_TEAM_START'
     });
+    let response;
     try {
-      await requestor.post('http://localhost:8000/register', {
+      response = await requestor.post('http://localhost:8000/register', {
         body: {
           organization,
           username
