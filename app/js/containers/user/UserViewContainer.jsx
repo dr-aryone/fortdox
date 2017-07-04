@@ -1,23 +1,15 @@
 const {connect} = require('react-redux');
 const UserView = require('components/user/UserView');
-const action = require('actions');
-const views = require('views.json');
 
 const mapStateToProps = state => {
   return {
-    username: state.login.get('username')
+    username: state.login.get('username'),
+    currentView: state.navigation.get('currentView')
   };
 };
 
-const mapDispatchToProps = dispatch => {
-  return {
-    toCreateDocView : () => {
-      dispatch(action.changeView(views.CREATE_DOC_VIEW));
-    },
-    toSearchView: () => {
-      dispatch(action.changeView(views.SEARCH_VIEW));
-    }
-  };
+const mapDispatchToProps = () => {
+  return {};
 };
 
 const UserViewContainer = connect(

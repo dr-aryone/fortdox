@@ -2,7 +2,6 @@ const {connect} = require('react-redux');
 const SearchView = require('components/search/SearchView');
 const action = require('actions');
 const search = require('actions/search');
-const views = require('views.json');
 
 const mapStateToProps = state => {
   return {
@@ -18,10 +17,6 @@ const mapDispatchToProps = dispatch => {
     },
     onSearch: () => {
       dispatch(search.search());
-    },
-    toUserView: () => {
-      dispatch(action.currentViewToDefault());
-      dispatch(action.changeView(views.USER_VIEW));
     },
     onUpdate: id => {
       dispatch(search.setUpdateDocument(id));

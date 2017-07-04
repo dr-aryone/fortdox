@@ -1,0 +1,24 @@
+.side-nav {
+  position: fixed;
+  height: 100%;
+  width: $side-nav-width;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1;
+  padding-top: 50px;
+  background-color: #FFF;
+
+  &-item {
+    display: block;
+    font-family: 'PT Sans', 'Arial', sans-serif;
+    font-size: 18px;
+    padding: 15px 0 15px 20px;
+    color: $text-color;
+
+    &:hover {
+      background-color: lighten($primary-color, 5%);
+      cursor: pointer;
+    }
+  }
+}
