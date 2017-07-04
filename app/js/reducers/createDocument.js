@@ -1,8 +1,8 @@
 const {fromJS} = require('immutable');
 
 let initialState = fromJS({
-  titleValue: '',
-  textValue: ''
+  'titleValue': '',
+  'textValue': ''
 });
 
 const form = (state = initialState, action) => {

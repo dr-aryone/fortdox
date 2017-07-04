@@ -2,7 +2,7 @@ const {fromJS} = require('immutable');
 const views = require('views.json');
 
 const initialState = fromJS({
-  currentView: views.LOGIN_VIEW,
+  'currentView': views.LOGIN_VIEW,
 });
 
 const navigation = (state = initialState, action) => {
@@ -17,7 +17,9 @@ const navigation = (state = initialState, action) => {
     case 'VERIFY_LOGIN_CREDS_SUCCESS':
     case 'CREATE_DOCUMENT_SUCCESS':
       return state.set('currentView', fromJS(views.USER_VIEW));
-    case 'REGISTER_USER_SUCCESS':
+    case 'REGISTER_TEAM_SUCCESS':
+      return state.set('currentView', fromJS(views.REGISTER_VERIFY_VIEW));
+    case 'REGISTER_ORGANIZATION_SUCCESS':
       return state.set('currentView', fromJS(views.LOGIN_VIEW));
     default:
       return state;

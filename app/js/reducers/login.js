@@ -1,11 +1,11 @@
 const {fromJS} = require('immutable');
 
 const initialState = fromJS({
-  userInputValue: '',
-  passwordInputValue: '',
-  username: '',
-  error: false,
-  errorMsg: '',
+  'userInputValue': '',
+  'passwordInputValue': '',
+  'username': '',
+  'error': false,
+  'errorMsg': '',
 });
 
 const login = (state = initialState, action) => {
