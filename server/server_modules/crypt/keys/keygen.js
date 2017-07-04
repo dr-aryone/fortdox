@@ -20,7 +20,7 @@ const genKeyPair = () => {
     });
 
     genPublicKey.stdout.on('data', data => {
-      keypair.privateKey = data;
+      keypair.publicKey = data;
     });
 
     genPublicKey.on('close', exitCode => {
@@ -34,7 +34,7 @@ const genKeyPair = () => {
 };
 
 const genMasterPassword = () => {
-  let masterPassword = crypto.randomBytes(32).toString('base64');
+  let masterPassword = crypto.randomBytes(32);
   return masterPassword;
 };
 

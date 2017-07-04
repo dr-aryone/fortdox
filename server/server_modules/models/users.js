@@ -4,17 +4,25 @@ var db;
 var users = function(sequelize) {
   db = sequelize;
   var usr = db.define('User', {
-    id : {
-      type: Sequelize.INTEGER,
-      primaryKey:  true,
-      autoIncrement: true
+    id: {
+      allowNull: false,
+      autoIncrement: true,
+      primaryKey: true,
+      type: Sequelize.INTEGER
     },
     username: {
-      type: Sequelize.STRING,
-      unique: true
+      unique: true,
+      allowNull: false,
+      type: Sequelize.STRING
+    },
+    email: {
+      unique: true,
+      allowNull: false,
+      type: Sequelize.STRING
     },
     password: {
-      type: Sequelize.STRING
+      allowNull: false,
+      type: Sequelize.BLOB
     }
   },
   {

@@ -1,6 +1,4 @@
-const db = require('../models');
-const bcrypt = require('bcrypt');
-const saltRounds = 10;
+const db = require('app/models');
 
 module.exports = function (username, password) {
   return new Promise(async (resolve, reject) => {
@@ -15,9 +13,8 @@ module.exports = function (username, password) {
       return reject(409);
     }
     try {
-      let hash = await bcrypt.hash(password, saltRounds);
-      await db.User.create({username: username, password: hash});
-      return resolve(200);
+      await db.User.create({username: username, email: 'derp', password: password});
+      return resolve(201);
     } catch (error) {
       console.error(error);
       return reject(401);

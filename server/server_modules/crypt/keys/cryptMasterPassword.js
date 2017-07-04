@@ -4,7 +4,7 @@ const {promisify} = require('util');
 
 
 const encryptMasterPassword = (publicKey, masterPassword) => {
-  let encryptedMasterPassword = crypto.publicEncrypt(publicKey, masterPassword).toString('base64');
+  let encryptedMasterPassword = crypto.publicEncrypt(publicKey, masterPassword);
   return encryptedMasterPassword;
 };
 

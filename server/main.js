@@ -53,10 +53,10 @@ app.post('/register', async (req, res) => {
 
   try {
     await users.createUser(req.body.username, encryptedMasterPassword);
-    return res.send({privateKey: keypair.privateKey});
+    return res.send({privateKey: keypair.privateKey.toString('base64')});
   } catch (error) {
     console.log(error);
-    return res.status(500).send();
+    return res.status(error).send();
   }
 });
 
