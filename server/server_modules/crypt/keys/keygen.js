@@ -1,59 +1,41 @@
 const {spawn} = require('child_process');
 const crypto = require('crypto');
-const fs = require('fs');
-const {promisify} = require('util');
+
 
 const genKeyPair = () => {
-  return new Promise(async (resolve, reject) => {
-    try {
-      await genPrivateKey();
-      await genPublicKey();
-      resolve();
-    } catch (error) {
-      console.log(error);
-      return reject(error);
-    }
-  });
-};
-
-const genPrivateKey = () => {
   return new Promise((resolve, reject) => {
-    const openssl = spawn('openssl', [
+    let keypair = {};
+    const genPrivateKey = spawn('openssl', [
       'genrsa',
-      '-out',
-      'private_key.pem',
       '4096'
     ]);
-    openssl.on('close', exitCode => {
-      exitCode === 0 ? resolve() : reject('Failed generating private key.');
-    });
-  });
-};
-
-const genPublicKey = () => {
-  return new Promise((resolve, reject) => {
-    const openssl = spawn('openssl', [
+    const genPublicKey = spawn('openssl', [
       'rsa',
-      '-pubout',
-      '-in',
-      'private_key.pem',
-      '-out',
-      'public_key.pem'
+      '-pubout'
     ]);
-    openssl.on('close', exitCode => {
-      exitCode === 0 ? resolve() : reject('Failed generating public key.');
+
+    genPrivateKey.stdout.on('data', data => {
+      keypair.privateKey = data;
+      genPublicKey.stdin.write(data);
+    });
+
+    genPublicKey.stdout.on('data', data => {
+      keypair.privateKey = data;
+    });
+
+    genPublicKey.on('close', exitCode => {
+      exitCode === 0 ? resolve(keypair) : reject('Failed generating public key.');
+    });
+
+    genPrivateKey.on('close', exitCode => {
+      exitCode === 0 ? null : reject('Failed generating private key.');
     });
   });
 };
 
-const genMasterPassword = async () => {
+const genMasterPassword = () => {
   let masterPassword = crypto.randomBytes(32).toString('base64');
-  let writeFileAsync = promisify(fs.writeFile);
-  try {
-    await writeFileAsync('master_password', masterPassword);
-  } catch (error) {
-    console.log(error);
-  }
+  return masterPassword;
 };
 
 module.exports = {genKeyPair, genMasterPassword};
