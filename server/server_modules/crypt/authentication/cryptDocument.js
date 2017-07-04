@@ -1,15 +1,17 @@
 const cryptMP = require('../keys/cryptMasterPassword.js');
 const aes = require('./aes');
 
-const encryptDocument = async (data, privateKey) => {
-  try {
-    let masterPassword = await cryptMP.decryptMasterPassword(privateKey);
-    let encryptedData = await aes.encrypt(masterPassword, data);
-    return encryptedData;
-  } catch (error) {
-    console.error(error);
-    return;
-  }
+const encryptDocument = (data, privateKey) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let masterPassword = await cryptMP.decryptMasterPassword(privateKey);
+      let encryptedData = await aes.encrypt(masterPassword, data);
+      return resolve(encryptedData);
+    } catch (error) {
+      console.error(error);
+      return reject(409);
+    }
+  });
 };
 
 const decryptDocuments = (encryptedDataList, privateKey) => {
