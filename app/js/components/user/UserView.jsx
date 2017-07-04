@@ -5,6 +5,7 @@ const UserViewFrontPage = require('./userViewFrontPage');
 const CreateDocContainer = require('containers/document/CreateDocContainer');
 const UpdateDocContainer = require('containers/document/UpdateDocContainer');
 const SearchViewContainer = require('containers/search/SearchViewContainer');
+const Header = require('components/user/Header');
 
 const UserView = ({currentView, username}) => {
   let page;
@@ -26,6 +27,7 @@ const UserView = ({currentView, username}) => {
   return (
     <div className='wrapper'>
       <SideNavContainer />
+      <Header />
       {page}
     </div>
   );
