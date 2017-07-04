@@ -24,9 +24,6 @@ const mapDispatchToProps = dispatch => {
       event.preventDefault();
       dispatch(login());
     },
-    onRegister: () => {
-      dispatch(action.changeView(views.REGISTER_VIEW));
-    },
     toUserView: () => {
       dispatch(action.changeView(views.USER_VIEW));
     }

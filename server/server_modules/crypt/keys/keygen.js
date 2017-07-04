@@ -56,7 +56,4 @@ const genMasterPassword = async () => {
   }
 };
 
-
-
-
 module.exports = {genKeyPair, genMasterPassword};

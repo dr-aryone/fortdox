@@ -1,3 +1,25 @@
-.test {
-  color: red;
+@import
+  'abstracts/variables',
+  'abstracts/mixins',
+  'abstracts/typography';
+
+@import
+  'components/box',
+  'components/buttons',
+  'components/input',
+  'components/search';
+
+@import
+  'layout/grid',
+  'layout/header',
+  'layout/side-nav';
+
+@import
+  'pages/login-page',
+  'pages/user-page';
+
+body {
+  margin: 0px;
+  font-family: 'Open Sans', 'Arial', sans-serif;
+  font-size: 12px;
 }
