@@ -1,6 +1,6 @@
 const React = require('react');
 
-const RegisterTeamView = ({register, onChange, onVerify, toLoginView}) => {
+const RegisterOrgView = ({register, onChange, onVerify, toLoginView}) => {
   let errorMsg = register.teamNameError ? <h2>{register.errorMsg}</h2> : null;
   return (
     <div className='login-panel'>
@@ -18,7 +18,16 @@ const RegisterTeamView = ({register, onChange, onVerify, toLoginView}) => {
       <input
         name='usernameInputValue'
         type='text'
-        value={register.userna}
+        value={register.usernameInputValue}
+        onChange={onChange}
+        className='input-block'
+      />
+
+      <label>E-mail:</label>
+      <input
+        name='emailInputValue'
+        type='text'
+        value={register.emailInputValue}
         onChange={onChange}
         className='input-block'
       />
@@ -32,4 +41,4 @@ const RegisterTeamView = ({register, onChange, onVerify, toLoginView}) => {
   );
 };
 
-module.exports = RegisterTeamView;
+module.exports = RegisterOrgView;

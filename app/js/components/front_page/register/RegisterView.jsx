@@ -1,15 +1,15 @@
 const React = require('react');
-const RegisterTeamView = require('./RegisterOrgView');
+const RegisterOrgView = require('./RegisterOrgView');
 const RegisterVerifyView = require('./RegisterVerifyView');
 const views = require('views.json');
 
-const RegisterView = ({currentView, register, onChange, onVerify, toLoginView, onRegister, toRegisterTeamView}) => {
+const RegisterView = ({currentView, register, onChange, onVerify, toLoginView, onRegister, toRegisterView}) => {
   let view;
   switch (currentView) {
     case views.REGISTER_VIEW:
     case views.REGISTER_ORGANIZATION_VIEW:
       view = (
-        <RegisterTeamView
+        <RegisterOrgView
           register={register}
           onChange={onChange}
           onVerify={onVerify}
@@ -23,7 +23,7 @@ const RegisterView = ({currentView, register, onChange, onVerify, toLoginView, o
           register={register}
           onChange={onChange}
           onRegister={onRegister}
-          toRegisterTeamView={toRegisterTeamView}
+          toRegisterView={toRegisterView}
         />
       );
       break;

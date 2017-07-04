@@ -1,38 +1,34 @@
 const {fromJS} = require('immutable');
 
 const initialState = fromJS({
-  organizationInputValue: '',
-  usernameInputvalue: '',
-  passwordInputValue: '',
-  reTypedPasswordInputValue: '',
-  teamNameError: false,
-  verifyError: false
+  'organizationInputValue': '',
+  'usernameInputValue': '',
+  'emailInputValue': '',
+  'passwordInputValue': '',
+  'reTypedPasswordInputValue': '',
+  'teamNameError': false,
+  'verifyError': false,
+  'errorMsg': '',
+  'privateKey': ''
 });
 
 const register = (state = initialState, action) => {
   switch (action.type) {
     case 'INPUT_CHANGE_REGISTER':
       return state.set(action.inputName, fromJS(action.inputValue));
-    case 'REGISTER_USER_SUCCESS':
+    case 'REGISTER_ORGANIZATION_SUCCESS':
       return initialState;
-    case 'REGISTER_WRONG_PASSWORD':
+    case 'REGISTER_PASSWORD_MISSMATCH':
       return state.merge({
         'password': '',
         'reTypedPassword': '',
-        'error': true,
+        'verifyError': true,
         'errorMsg': fromJS(action.payload)
-      });
-    case 'REGISTER_USER_ERROR':
-    case 'REGISTER_USER_FAIL':
-      return state.merge({
-        'username': '',
-        'password': '',
-        'reTypedPassword': '',
-        'errorMsg': fromJS(action.payload),
-        'error': true
       });
     case 'REGISTER_VIEW_TO_DEFAULT':
       return initialState;
+    case 'REGISTER_TEAM_ERROR':
+    case 'REGISTER_TEAM_FAIL':
     default:
       return state;
   }
