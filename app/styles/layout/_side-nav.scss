@@ -7,14 +7,14 @@
   left: 0;
   z-index: 1;
   padding-top: 50px;
-  background-color: #FFF;
+  background: $primary-color;
 
   &-item {
     display: block;
-    font-family: 'PT Sans', 'Arial', sans-serif;
+    font-family: 'Roboto Condensed', 'Arial', sans-serif;
     font-size: 18px;
     padding: 15px 0 15px 20px;
-    color: $text-color;
+    color: #FFF;
 
     &:hover {
       background-color: lighten($primary-color, 5%);
