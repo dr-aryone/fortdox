@@ -1,17 +1,20 @@
 const {connect} = require('react-redux');
-const RegisterView = require('components/register/RegisterView');
+const RegisterView = require('components/front_page/register/RegisterView');
 const action = require('actions');
 const register = require('actions/register');
 const views = require('views.json');
 
 const mapStateToProps = state => {
   return {
+    currentView: state.navigation.get('currentView'),
     register: {
-      username: state.register.get('username'),
-      password: state.register.get('password'),
-      reTypedPassword: state.register.get('reTypedPassword'),
+      organisationInputValue: state.register.get('organisationInputValue'),
+      usernameInputValue: state.register.get('usernameInputValue'),
+      passwordInputValue: state.register.get('passwordInputValue'),
+      reTypedPassword: state.register.get('reTypedPasswordInputValue'),
       errorMsg: state.register.get('errorMsg'),
-      error: state.register.get('error')
+      teamNameError: state.register.get('teamNameError'),
+      verifyError: state.register.get('verifyError')
     }
   };
 };
@@ -21,12 +24,18 @@ const mapDispatchToProps = dispatch => {
     onChange: (e) => {
       dispatch(action.inputChange(e.target.name, e.target.value));
     },
+    onVerify: () => {
+      dispatch(register.registerTeamName());
+    },
     onRegister: () => {
       dispatch(register());
     },
-    onBack: () => {
+    toLoginView: () => {
       dispatch(action.changeView(views.LOGIN_VIEW));
       dispatch(action.currentViewToDefault());
+    },
+    toRegisterView: () => {
+      dispatch(action.changeView(views.REGISTER_TEAM_VIEW));
     }
   };
 };

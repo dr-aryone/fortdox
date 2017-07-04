@@ -1,11 +1,12 @@
 const {fromJS} = require('immutable');
 
 const initialState = fromJS({
-  username: '',
-  password: '',
-  reTypedPassword: '',
-  error: false,
-  errorMsg: ''
+  organizationInputValue: '',
+  usernameInputvalue: '',
+  passwordInputValue: '',
+  reTypedPasswordInputValue: '',
+  teamNameError: false,
+  verifyError: false
 });
 
 const register = (state = initialState, action) => {
