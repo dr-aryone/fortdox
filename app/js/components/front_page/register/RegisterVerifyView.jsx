@@ -1,35 +1,35 @@
 const React = require('react');
 
-const RegisterTeamView = ({register, onChange, onRegister, toRegisterTeamView}) => {
+const RegisterVerifyView = ({register, onChange, onRegister, toRegisterView}) => {
   let errorMsg = register.verifyError ? <h2>{register.errorMsg}</h2> : null;
   return (
     <div className='login-panel'>
-      <h1>Create a New Team</h1>
+      <h1>{register.organizationInputValue}</h1>
       {errorMsg}
       <label>Password:</label>
       <input
         name='passwordInputValue'
         type='password'
-        value={register.passwordInputValue}
         onChange={onChange}
+        value={register.passwordInputValue}
         className='input-block'
       />
       <label>Re-type password:</label>
       <input
         name='reTypedPasswordInputValue'
         type='password'
-        value={register.reTypedPasswordInputValue}
         onChange={onChange}
+        value={register.reTypedPasswordInputValue}
         className='input-block'
       />
-      <a onClick={onRegister} className='btn'>
-        Next
+      <a onClick={onRegister} className='btn btn-block'>
+        Register
       </a>
-      <a onClick={toRegisterTeamView} className='btn'>
+      <a onClick={toRegisterView} className='btn btn-block'>
         Back
       </a>
     </div>
   );
 };
 
-module.exports = RegisterTeamView;
+module.exports = RegisterVerifyView;
