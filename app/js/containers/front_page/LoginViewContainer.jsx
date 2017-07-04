@@ -1,5 +1,5 @@
 const {connect} = require('react-redux');
-const LoginView = require('components/login/LoginView');
+const LoginView = require('components/front_page/login/LoginView');
 const action = require('actions');
 const login = require('actions/login');
 const views = require('views.json');
@@ -26,6 +26,9 @@ const mapDispatchToProps = dispatch => {
     },
     toUserView: () => {
       dispatch(action.changeView(views.USER_VIEW));
+    },
+    toRegisterView: () => {
+      dispatch(action.changeView(views.REGISTER_VIEW));
     }
   };
 };
