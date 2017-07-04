@@ -3,12 +3,12 @@ var fs = require('fs');
 var path = require('path');
 var Sequelize = require('sequelize');
 var basename = path.basename(module.filename);
-//var config = require('app/config.json').sqlConfig;
+var sqlConfig = require('app/config.json').sqlConfig;
 var db = {};
-var sequelize = new Sequelize('docApp', 'root', 'edgeguide', {
-  host: 'localhost',
-  dialect: 'mysql',
-  logging: false
+var sequelize = new Sequelize(sqlConfig.database, sqlConfig.username, sqlConfig.password, {
+  host: sqlConfig.host,
+  dialect: sqlConfig.dialect,
+  logging: sqlConfig.logging
 });
 loadModels(__dirname);
 function loadModels(directory) {
