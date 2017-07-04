@@ -4,6 +4,7 @@ const inputChange = (inputName, inputValue) => {
   return (dispatch, getState) => {
     let state = getState();
     switch (state.navigation.get('currentView')) {
+      case views.REGISTER_VERIFY_VIEW:
       case views.REGISTER_VIEW:
         return dispatch({
           type: 'INPUT_CHANGE_REGISTER',

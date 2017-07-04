@@ -8,10 +8,11 @@ const mapStateToProps = state => {
   return {
     currentView: state.navigation.get('currentView'),
     register: {
-      organisationInputValue: state.register.get('organisationInputValue'),
+      organizationInputValue: state.register.get('organizationInputValue'),
       usernameInputValue: state.register.get('usernameInputValue'),
+      emailInputValue: state.register.get('emailInputValue'),
       passwordInputValue: state.register.get('passwordInputValue'),
-      reTypedPassword: state.register.get('reTypedPasswordInputValue'),
+      reTypedPasswordInputValue: state.register.get('reTypedPasswordInputValue'),
       errorMsg: state.register.get('errorMsg'),
       teamNameError: state.register.get('teamNameError'),
       verifyError: state.register.get('verifyError')
@@ -28,14 +29,13 @@ const mapDispatchToProps = dispatch => {
       dispatch(register.registerTeamName());
     },
     onRegister: () => {
-      dispatch(register());
+      dispatch(register.register());
     },
     toLoginView: () => {
       dispatch(action.changeView(views.LOGIN_VIEW));
-      dispatch(action.currentViewToDefault());
     },
     toRegisterView: () => {
-      dispatch(action.changeView(views.REGISTER_TEAM_VIEW));
+      dispatch(action.changeView(views.REGISTER_VIEW));
     }
   };
 };

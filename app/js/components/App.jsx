@@ -7,6 +7,7 @@ const App = (prop) => {
   switch (prop.view) {
     case views.LOGIN_VIEW:
     case views.REGISTER_VIEW:
+    case views.REGISTER_VERIFY_VIEW:
       return (<div><FrontPageViewContainer /></div>);
     case views.SEARCH_VIEW:
     case views.USER_VIEW:

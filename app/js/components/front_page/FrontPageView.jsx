@@ -10,6 +10,7 @@ const FrontPageView = ({currentView}) => {
       view = <LoginViewContainer />;
       break;
     case views.REGISTER_VIEW:
+    case views.REGISTER_VERIFY_VIEW:
       view = <RegisterViewContainer />;
       break;
   }
