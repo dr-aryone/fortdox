@@ -1,7 +1,7 @@
 const React = require('react');
 
 const RegisterOrgView = ({register, onChange, onVerify, toLoginView}) => {
-  let errorMsg = register.teamNameError ? <h2>{register.errorMsg}</h2> : null;
+  let errorMsg = register.orgNameError ? <h2>{register.errorMsg}</h2> : null;
   return (
     <div className='login-panel'>
       <h1 className='text-center'>Create a New Team</h1>

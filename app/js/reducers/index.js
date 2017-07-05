@@ -5,11 +5,13 @@ const register = require('./register');
 const search = require('./search');
 const createDocument = require('./createDocument');
 const updateDocument = require('./updateDocument');
+const user = require('./user');
 
 const docApp = combineReducers({
   navigation,
   login,
   register,
+  user,
   search,
   createDocument,
   updateDocument

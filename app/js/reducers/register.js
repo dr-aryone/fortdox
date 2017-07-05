@@ -6,7 +6,7 @@ const initialState = fromJS({
   'emailInputValue': '',
   'passwordInputValue': '',
   'reTypedPasswordInputValue': '',
-  'teamNameError': false,
+  'orgNameError': false,
   'verifyError': false,
   'errorMsg': '',
   'privateKey': ''
@@ -19,7 +19,11 @@ const register = (state = initialState, action) => {
     case 'REGISTER_ORGANIZATION_SUCCESS':
       return initialState;
     case 'REGISTER_ORGANIZATION_NAME_SUCCESS':
-      return state.set('privateKey', fromJS(action.payload));
+      return state.merge({
+        'orgNameError': false,
+        'errorMsg': false,
+        'privateKey': fromJS(action.payload)
+      });
     case 'REGISTER_PASSWORD_MISSMATCH':
       return state.merge({
         'password': '',
@@ -33,6 +37,10 @@ const register = (state = initialState, action) => {
     case 'REGISTER_ORGANIZATION_ERROR':
     case 'REGISTER_ORGANIZATION_NAME_ERROR':
     case 'REGISTER_ORGANIZATION_NAME_FAIL':
+      return state.merge({
+        'orgNameError': true,
+        'errorMsg': fromJS(action.payload)
+      });
     default:
       return state;
   }
