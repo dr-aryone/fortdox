@@ -4,7 +4,7 @@ const RegisterVerifyView = ({register, onChange, onRegister, toRegisterView}) =>
   let errorMsg = register.verifyError ? <h2>{register.errorMsg}</h2> : null;
   return (
     <div className='login-panel'>
-      <h1>{register.organizationInputValue}</h1>
+      <h1 className='text-center'>{register.organizationInputValue}</h1>
       {errorMsg}
       <label>Password:</label>
       <input

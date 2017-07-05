@@ -4,7 +4,7 @@ const RegisterOrgView = ({register, onChange, onVerify, toLoginView}) => {
   let errorMsg = register.teamNameError ? <h2>{register.errorMsg}</h2> : null;
   return (
     <div className='login-panel'>
-      <h1>Create a New Team</h1>
+      <h1 className='text-center'>Create a New Team</h1>
       {errorMsg}
       <label>Team name:</label>
       <input
