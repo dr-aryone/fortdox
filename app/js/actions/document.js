@@ -1,6 +1,5 @@
 const requestor = require('@edgeguideab/client-request');
 const fs = window.require('fs');
-const privateKey = fs.readFileSync('./js/local_storage/private_key.pem', 'base64');
 
 const createDocument = () => {
   return async (dispatch, getState) => {

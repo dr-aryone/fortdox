@@ -2,7 +2,7 @@ const {encryptDocument} = require('../crypt/authentication/cryptDocument');
 
 module.exports = client => {
   const addToIndex = (query, privateKey) => {
-    return new Promise(async(resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
       let response;
       let data = query.body.text;
       let encryptedData;
