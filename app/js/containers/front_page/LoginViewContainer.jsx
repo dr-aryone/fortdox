@@ -7,7 +7,7 @@ const views = require('views.json');
 const mapStateToProps = state => {
   return {
     input: {
-      userInputValue: state.login.get('userInputValue'),
+      emailInputValue: state.login.get('emailInputValue'),
       passwordInputValue: state.login.get('passwordInputValue'),
       error: state.login.get('error'),
       errorMsg: state.login.get('errorMsg')

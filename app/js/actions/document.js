@@ -39,7 +39,7 @@ const createDocument = () => {
 const updateDocument = () => {
   return async (dispatch, getState) => {
     let state = getState();
-    let doc = state.search.get('documentToUpdate');
+    let oldDoc = state.updateDocument.get('documentToUpdate');
     let newDoc = state.updateDocument;
     dispatch({
       type: 'UPDATE_DOCUMENT_START'
@@ -47,9 +47,9 @@ const updateDocument = () => {
     try {
       await requestor.patch('http://localhost:8000/documents', {
         body:{
-          index: doc.get('_index'),
-          type: doc.get('_type'),
-          id: doc.get('_id'),
+          index: oldDoc.get('_index'),
+          type: oldDoc.get('_type'),
+          id: oldDoc.get('_id'),
           updateQuery: {
             title: newDoc.get('titleValue'),
             text: newDoc.get('textValue')
