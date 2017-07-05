@@ -22,3 +22,31 @@
     }
   }
 }
+
+.drop-down {
+  display: block;
+  border-bottom: 1px solid #000;
+
+  .items {
+    height: 0;
+    opacity: 0;
+    transition: all 0.3s ease-in-out;
+
+    &.show {
+      height: 40px;
+      opacity: 1;
+    }
+  }
+}
+
+.drop-down:last-child {
+  border-bottom: none;
+}
+
+.sub-menu-hidden {
+  display: none;
+}
+
+.sub-menu-show {
+  display: show;
+}

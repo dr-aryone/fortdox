@@ -8,11 +8,16 @@ const mapStateToProps = () => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    onClick: (nextView) => {
+    onClick: (event, nextView) => {
+      toggle(event);
       dispatch(action.changeView(nextView));
     }
   };
 };
+
+function toggle (event) {
+  console.log(event);
+}
 
 const SideNavContainer = connect(
   mapStateToProps,
