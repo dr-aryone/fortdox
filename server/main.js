@@ -22,6 +22,7 @@ app.listen(8000, () => {
 });
 
 app.post('/login', async (req, res) => {
+  debugger;
   let status;
   let encryptedMasterPassword;
   try {
@@ -32,12 +33,12 @@ app.post('/login', async (req, res) => {
   }
 
   try {
-    let privateKey = new Buffer(req.body.privateKey);
+    let privateKey = new Buffer(req.headers.authorization.split('FortDoks ')[1], 'base64').toString();
     await decryptMasterPassword(privateKey, encryptedMasterPassword);
     status = 200;
   } catch (error) {
     console.error(error);
-    status = 401;
+    return status = 401;
   }
   res.status(status).send({
     message: statusMsg.user[status]
@@ -73,7 +74,7 @@ app.post('/register', async (req, res) => {
 
 app.post('/register/confirm', async (req, res) => {
   let email = req.body.email;
-  let privateKey = req.body.privateKey;
+  let privateKey = new Buffer(req.headers.authorization.split('FortDoks ')[1], 'base64').toString();
   try {
     privateKey = Buffer.from(privateKey, 'base64').toString();
     await users.verifyUser(email, privateKey);
