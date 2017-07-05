@@ -1,14 +1,28 @@
 const React = require('react');
 const SideNavItem = require('./SideNavItem');
-const views = require('views.json');
 
-const SideNav = ({onClick}) => {
-  return (
-    <div className='side-nav'>
-      <SideNavItem text='Search' onClick={() => onClick(views.SEARCH_VIEW)} />
-      <SideNavItem text='Create Document' onClick={() => onClick(views.CREATE_DOC_VIEW)} />
-    </div>
-  );
-};
+class SideNav extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
+    //let {children} = this.props;
+    return (
+      <div className='side-nav'>
+        <ul>
+          <SideNavItem text='Bleh'>
+            <li>Bra jobbat Lili</li>
+          </SideNavItem>
+          <SideNavItem text='Något'>
+            <li>Bra jobbat Lili</li>
+          </SideNavItem>
+        </ul>
+      </div>
+    );
+  }
+
+  handleClick = () => this.setState({isVisible: !this.state.isVisible});
+}
 
 module.exports = SideNav;
