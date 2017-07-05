@@ -1,26 +1,22 @@
-const db = require('../models');
-const bcrypt = require('bcrypt');
+const db = require('app/models');
+const {decryptMasterPassword} = require('app/crypt/keys/cryptMasterPassword');
 
-module.exports = function(username, password) {
+module.exports = function(username, privateKey) {
   return new Promise(async (resolve, reject) => {
-    let hash;
+    let encryptedMasterPassword;
     let user;
     try {
       user = await db.User.findOne({where: {username: username}});
       if (!user) {
         return reject(404);
       }
-      hash = user.password;
+      encryptedMasterPassword = user.password;
     } catch (error) {
       console.error(error);
       return reject(500);
     }
-    try {
-      let result = await bcrypt.compare(password, hash);
-      return result ? resolve(200) : reject(401);
-    } catch (error) {
-      console.error(error);
-      return reject(401);
-    }
+    let result = decryptMasterPassword(privateKey, encryptedMasterPassword);
+    return resolve(result);
+
   });
 };

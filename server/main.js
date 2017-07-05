@@ -52,12 +52,26 @@ app.post('/register', async (req, res) => {
   let encryptedMasterPassword = encryptMasterPassword(keypair.publicKey, masterPassword);
 
   try {
-    await users.createUser(req.body.username, encryptedMasterPassword);
+    await users.createUser(req.body.username, req.body.email, encryptedMasterPassword);
     return res.send({privateKey: keypair.privateKey.toString('base64')});
   } catch (error) {
     console.log(error);
     return res.status(error).send();
   }
+});
+
+app.post('/register/confirm', async (req, res) => {
+  let username = req.body.username;
+  let privateKey = req.body.privateKey;
+  try {
+    privateKey = Buffer.from(privateKey, 'base64').toString();
+    await users.verifyUser(username, privateKey);
+    return res.status(200).send();
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send();
+  }
+
 });
 
 app.post('/documents', async (req, res) => {
