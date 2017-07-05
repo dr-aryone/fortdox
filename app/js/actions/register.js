@@ -6,7 +6,7 @@ const register = () => {
   return async (dispatch, getState) => {
     let state = getState();
     let password = state.register.get('passwordInputValue');
-    let reTypedPassword = state.register.get('reTypedPasswordValue');
+    let reTypedPassword = state.register.get('reTypedPasswordInputValue');
     if (password !== reTypedPassword) {
       return dispatch ({
         type: 'REGISTER_PASSWORD_MISSMATCH',
@@ -18,13 +18,11 @@ const register = () => {
       type: 'REGISTER_USER_START'
     });
     let privateKey = state.register.get('privateKey');
-    let paddedKey;
-    let salt;
+    let result;
     try {
-      let result = await aes.generatePaddedKey(password, salt);
-      paddedKey = result.key;
-      salt = result.salt;
+      result = await aes.generatePaddedKey(password);
     } catch (error) {
+      console.error(error);
       return dispatch ({
         type: 'REGISTER_ORGAIZATION_FAIL',
         payload: 'Meep meep'
@@ -33,23 +31,27 @@ const register = () => {
 
     let encryptedKey;
     try {
-      encryptedKey = (await aes.encrypt(new window.Buffer(password, 'base64'), new window.Buffer(paddedKey, 'base64'))).toString();
+      encryptedKey = (await aes.encrypt(new window.Buffer(result.key, 'base64'), new window.Buffer(privateKey, 'base64'))).toString();
     } catch (error) {
+      console.error(error);
       return dispatch ({
         type: 'REGISTER_ORGANIZATION_FAIL',
         payload: 'Meep meep'
       });
     }
 
-    fs.writeFileSync('./js/local_storage/encryptedPrivateKey', encryptedKey.toString());
-    fs.writeFileSync('./js/local_storage/salt', salt.toString());
+    fs.writeFileSync('./js/local_storage/encryptedPrivateKey', encryptedKey.toString('base64'));
+    fs.writeFileSync('./js/local_storage/salt', result.salt.toString('base64'));
+    let username = state.register.get('usernameInputValue');
     try {
-      await requestor.post('http://localhost:8000/register', {
+      await requestor.post('http://localhost:8000/register/confirm', {
         body: {
-          privateKey
+          privateKey,
+          username
         }
       });
     } catch (error) {
+      console.error(error);
       return dispatch ({
         type: 'REGISTER_ORGANIZATION_FAIL',
         payload: 'Meep meep'
