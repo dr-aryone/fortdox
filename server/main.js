@@ -22,7 +22,6 @@ app.listen(8000, () => {
 });
 
 app.post('/login', async (req, res) => {
-  debugger;
   let status;
   let encryptedMasterPassword;
   try {
@@ -102,21 +101,22 @@ app.post('/register/confirm', async (req, res) => {
 });
 
 app.post('/documents', async (req, res) => {
-  let expectations = expect({
-    index: 'string',
-    type: 'string'
-  }, req.body);
   let privateKey = new Buffer(req.headers.authorization.split('FortDoks ')[1], 'base64').toString();
+  let encryptedMasterPassword;
+  let organization;
 
-  if (!expectations.wereMet()) {
-    res.status(400).send({msg: 'Bad data format, please priovide atleast index, type, id'});
-  } else {
-    try {
-      res.send(await es.addToIndex(req.body, privateKey));
-    } catch (error) {
-      console.log(error);
-      res.send(500).send({msg: 'Internal Server Error'});
-    }
+  try {
+    encryptedMasterPassword = await users.getPassword(req.body.email);
+    organization = await users.getOrganization(req.body.email);
+  } catch (error) {
+    res.status(409).send();
+  }
+
+  try {
+    res.send(await es.addToIndex(req.body, privateKey, encryptedMasterPassword, organization));
+  } catch (error) {
+    console.log(error);
+    res.send(500).send({msg: 'Internal Server Error'});
   }
 
 });

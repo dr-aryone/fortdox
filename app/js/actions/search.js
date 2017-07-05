@@ -1,12 +1,11 @@
 const requestor = require('@edgeguideab/client-request');
-const fs = window.require('fs');
 
 const search = () => {
   return async (dispatch, getState) => {
     let state = getState();
     let searchString = state.search.get('searchString');
     let response;
-    let privateKey = fs.readFileSync('./js/local_storage/private_key.pem', 'base64');
+    let privateKey = state.user.privateKey;
     try {
       response = await requestor.get('http://localhost:8000/documents', {
         query: {

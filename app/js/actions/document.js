@@ -1,11 +1,12 @@
 const requestor = require('@edgeguideab/client-request');
-const fs = window.require('fs');
 
 const createDocument = () => {
   return async (dispatch, getState) => {
     let state = getState();
     let title = state.createDocument.get('titleValue');
     let text = state.createDocument.get('textValue');
+    let privateKey = state.user.get('privateKey');
+    let email = state.user.get('email');
     dispatch({
       type: 'CREATE_DOCUMENT_START'
     });
@@ -13,12 +14,11 @@ const createDocument = () => {
     try {
       await requestor.post('http://localhost:8000/documents', {
         body: {
-          index: 'document',
-          type: 'form',
           body: {
             title,
             text
-          }
+          },
+          email
         },
         headers: {
           'Authorization': `FortDoks ${privateKey}`
@@ -41,6 +41,7 @@ const updateDocument = () => {
     let state = getState();
     let oldDoc = state.updateDocument.get('documentToUpdate');
     let newDoc = state.updateDocument;
+    let privateKey = state.user.privateKey;
     dispatch({
       type: 'UPDATE_DOCUMENT_START'
     });
