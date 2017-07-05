@@ -3,7 +3,7 @@ module.exports = client => {
     return new Promise(async (resolve, reject) => {
       try {
         await client.indices.create({
-          index: organizationName
+          index: organizationName.toLowerCase()
         });
         return resolve(200);
       } catch (error) {
