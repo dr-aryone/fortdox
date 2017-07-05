@@ -1,4 +1,4 @@
-const db = require('../models');
+const db = require('app/models');
 
 module.exports = organization => {
   return new Promise(async (resolve, reject) => {
@@ -12,10 +12,10 @@ module.exports = organization => {
     if (org) {
       return reject(409);
     }
-
+    let newOrganization;
     try {
-      await db.Organization.create({organization: organization});
-      return resolve(200);
+      newOrganization = await db.Organization.create({organization: organization});
+      return resolve(newOrganization);
     } catch (error) {
       console.error(error);
       return reject(500);

@@ -36,8 +36,9 @@ app.post('/login', async (req, res) => {
 });
 
 app.post('/register', async (req, res) => {
+  let organizationId;
   try {
-    await orgs.createOrganization(req.body.organization);
+    organizationId = (await orgs.createOrganization(req.body.organization)).id;
   } catch (error) {
     return res.status(error).send();
   }
@@ -52,7 +53,7 @@ app.post('/register', async (req, res) => {
   let encryptedMasterPassword = encryptMasterPassword(keypair.publicKey, masterPassword);
 
   try {
-    await users.createUser(req.body.username, req.body.email, encryptedMasterPassword);
+    await users.createUser(req.body.username, req.body.email, encryptedMasterPassword, organizationId);
     return res.send({privateKey: keypair.privateKey.toString('base64')});
   } catch (error) {
     console.log(error);
@@ -61,16 +62,31 @@ app.post('/register', async (req, res) => {
 });
 
 app.post('/register/confirm', async (req, res) => {
-  let username = req.body.username;
+  let email = req.body.email;
   let privateKey = req.body.privateKey;
   try {
     privateKey = Buffer.from(privateKey, 'base64').toString();
-    await users.verifyUser(username, privateKey);
-    return res.status(200).send();
+    await users.verifyUser(email, privateKey);
   } catch (error) {
     console.error(error);
     return res.status(500).send();
   }
+  let organizationName;
+  try {
+    organizationName = await users.getOrganization(email);
+  } catch (error) {
+    console.error(error);
+    res.status(404).send();
+  }
+
+  try {
+    await es.createIndex(organizationName);
+    res.status(200).send();
+  } catch (error) {
+    console.error(error);
+    res.status(500).send();
+  }
+
 
 });
 
