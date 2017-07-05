@@ -34,7 +34,6 @@ const login = () => {
       });
     }
     try {
-      debugger;
       await requestor.post('http://localhost:8000/login', {
         body: {
           email
@@ -62,7 +61,10 @@ const login = () => {
     }
     return dispatch({
       type: 'VERIFY_LOGIN_CREDS_SUCCESS',
-      payload: privateKey.toString('base64')
+      payload: {
+        privateKey: privateKey.toString('base64'),
+        email: email
+      }
     });
   };
 };
