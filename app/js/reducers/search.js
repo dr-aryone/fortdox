@@ -3,7 +3,6 @@ const {fromJS} = require('immutable');
 const initialState = fromJS({
   searchString: '',
   result: [],
-  documentToUpdate: null,
   error: false,
   errorMsg: ''
 });
@@ -26,8 +25,6 @@ const register = (state = initialState, action) => {
         'error': true,
         'errorMsg': action.payload
       });
-    case 'UPDATE_DOCUMENT':
-      return state.set('documentToUpdate', fromJS(action.payload));
     case 'SEARCH_VIEW_TO_DEFAULT':
     case 'UPDATE_DOCUMENT_SUCCESS':
     case 'DELETE_DOCUMENT_SUCCESS':

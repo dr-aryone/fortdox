@@ -10,7 +10,7 @@ const register = () => {
     if (password !== reTypedPassword) {
       return dispatch ({
         type: 'REGISTER_PASSWORD_MISSMATCH',
-        payload: 'Password didn\'t match.'
+        payload: 'Passwords didn\'t match. Try again.'
       });
     }
 
@@ -25,13 +25,13 @@ const register = () => {
       console.error(error);
       return dispatch ({
         type: 'REGISTER_ORGAIZATION_FAIL',
-        payload: 'Meep meep'
+        payload: 'Meep'
       });
     }
 
     let encryptedKey;
     try {
-      encryptedKey = (await aes.encrypt(new window.Buffer(result.key, 'base64'), new window.Buffer(privateKey, 'base64'))).toString();
+      encryptedKey = (await aes.encrypt(new window.Buffer(result.key, 'base64'), new window.Buffer(privateKey, 'base64')));
     } catch (error) {
       console.error(error);
       return dispatch ({
@@ -73,7 +73,7 @@ const registerTeamName = () => {
     let email = state.register.get('emailInputValue');
     let response;
     dispatch({
-      type: 'REGISTER_TEAM_START'
+      type: 'REGISTER_ORGANIZATION_NAME_START'
     });
     try {
       response = await requestor.post('http://localhost:8000/register', {
@@ -85,8 +85,8 @@ const registerTeamName = () => {
       });
     } catch (error) {
       return dispatch ({
-        type: 'REGISTER_TEAM_ERROR',
-        payload: error.Text.message
+        type: 'REGISTER_ORGANIZATION_NAME_ERROR',
+        payload: 'Team name already exists.'
       });
     }
     return dispatch({

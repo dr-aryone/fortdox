@@ -1,6 +1,7 @@
 const {fromJS} = require('immutable');
 
 let initialState = fromJS({
+  documentToUpdate: null,
   titleValue: '',
   textValue: ''
 });
@@ -11,6 +12,7 @@ const form = (state = initialState, action) => {
       return state.set(action.inputName, fromJS(action.inputValue));
     case 'UPDATE_DOCUMENT':
       return state.merge({
+        'documentToUpdate': fromJS(action.payload),
         'titleValue': fromJS(action.payload._source.title),
         'textValue': fromJS(action.payload._source.text)
       });

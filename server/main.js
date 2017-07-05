@@ -23,8 +23,17 @@ app.listen(8000, () => {
 
 app.post('/login', async (req, res) => {
   let status;
+  let encryptedMasterPassword;
   try {
-    await decryptMasterPassword(req.body.privateKey);
+    encryptedMasterPassword = await users.getPassword(req.body.email);
+  } catch (error) {
+    console.error(error);
+    return res.status(error).send();
+  }
+
+  try {
+    let privateKey = new Buffer(req.body.privateKey);
+    await decryptMasterPassword(privateKey, encryptedMasterPassword);
     status = 200;
   } catch (error) {
     console.error(error);
@@ -40,6 +49,7 @@ app.post('/register', async (req, res) => {
   try {
     organizationId = (await orgs.createOrganization(req.body.organization)).id;
   } catch (error) {
+    console.error(error);
     return res.status(error).send();
   }
   let keypair;
@@ -56,7 +66,7 @@ app.post('/register', async (req, res) => {
     await users.createUser(req.body.username, req.body.email, encryptedMasterPassword, organizationId);
     return res.send({privateKey: keypair.privateKey.toString('base64')});
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return res.status(error).send();
   }
 });

@@ -2,3 +2,4 @@
 
 node_modules
 server/server_modules/config.json
+app/js/local_storage
