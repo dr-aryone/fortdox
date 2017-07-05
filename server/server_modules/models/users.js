@@ -1,34 +1,33 @@
-var Sequelize = require('sequelize');
-var db;
-
-var users = function(sequelize) {
-  db = sequelize;
-  var usr = db.define('User', {
+module.exports = function(sequelize, DataTypes) {
+  var User = sequelize.define('User', {
     id: {
       allowNull: false,
       autoIncrement: true,
       primaryKey: true,
-      type: Sequelize.INTEGER
+      type: DataTypes.INTEGER
+    },
+    organizationId: {
+      type: DataTypes.INTEGER
     },
     username: {
       unique: true,
       allowNull: false,
-      type: Sequelize.STRING
+      type: DataTypes.STRING
     },
     email: {
       unique: true,
       allowNull: false,
-      type: Sequelize.STRING
+      type: DataTypes.STRING
     },
     password: {
       allowNull: false,
-      type: Sequelize.BLOB
+      type: DataTypes.BLOB
     }
-  },
-  {
+  }, {
     timestamps: false
   });
-  return usr;
+  User.associate = (models) => {
+    User.belongsTo(models.Organization);
+  };
+  return User;
 };
-
-module.exports = users;

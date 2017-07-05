@@ -43,11 +43,13 @@ const register = () => {
     fs.writeFileSync('./js/local_storage/encryptedPrivateKey', encryptedKey.toString('base64'));
     fs.writeFileSync('./js/local_storage/salt', result.salt.toString('base64'));
     let username = state.register.get('usernameInputValue');
+    let email = state.register.get('emailInputValue');
     try {
       await requestor.post('http://localhost:8000/register/confirm', {
         body: {
           privateKey,
-          username
+          username,
+          email
         }
       });
     } catch (error) {

@@ -1,12 +1,12 @@
 const db = require('app/models');
 const {decryptMasterPassword} = require('app/crypt/keys/cryptMasterPassword');
 
-module.exports = function(username, privateKey) {
+module.exports = function(email, privateKey) {
   return new Promise(async (resolve, reject) => {
     let encryptedMasterPassword;
     let user;
     try {
-      user = await db.User.findOne({where: {username: username}});
+      user = await db.User.findOne({where: {email: email}});
       if (!user) {
         return reject(404);
       }
