@@ -18,6 +18,8 @@ const register = (state = initialState, action) => {
       return state.set(action.inputName, fromJS(action.inputValue));
     case 'REGISTER_ORGANIZATION_SUCCESS':
       return initialState;
+    case 'REGISTER_ORGANIZATION_NAME_SUCCESS':
+      return state.set('privateKey', fromJS(action.payload));
     case 'REGISTER_PASSWORD_MISSMATCH':
       return state.merge({
         'password': '',
@@ -27,8 +29,10 @@ const register = (state = initialState, action) => {
       });
     case 'REGISTER_VIEW_TO_DEFAULT':
       return initialState;
-    case 'REGISTER_TEAM_ERROR':
-    case 'REGISTER_TEAM_FAIL':
+    case 'REGISTER_ORGANIZATION_FAIL':
+    case 'REGISTER_ORGANIZATION_ERROR':
+    case 'REGISTER_ORGANIZATION_NAME_ERROR':
+    case 'REGISTER_ORGANIZATION_NAME_FAIL':
     default:
       return state;
   }

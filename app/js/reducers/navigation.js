@@ -17,7 +17,7 @@ const navigation = (state = initialState, action) => {
     case 'VERIFY_LOGIN_CREDS_SUCCESS':
     case 'CREATE_DOCUMENT_SUCCESS':
       return state.set('currentView', fromJS(views.USER_VIEW));
-    case 'REGISTER_TEAM_SUCCESS':
+    case 'REGISTER_ORGANIZATION_NAME_SUCCESS':
       return state.set('currentView', fromJS(views.REGISTER_VERIFY_VIEW));
     case 'REGISTER_ORGANIZATION_SUCCESS':
       return state.set('currentView', fromJS(views.LOGIN_VIEW));

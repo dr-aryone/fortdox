@@ -69,7 +69,7 @@ const registerTeamName = () => {
     let email = state.register.get('emailInputValue');
     let response;
     dispatch({
-      type: 'REGISTER_TEAM_START'
+      type: 'REGISTER_ORGANIZATION_NAME_START'
     });
     try {
       response = await requestor.post('http://localhost:8000/register', {
@@ -81,12 +81,12 @@ const registerTeamName = () => {
       });
     } catch (error) {
       return dispatch ({
-        type: 'REGISTER_TEAM_ERROR',
+        type: 'REGISTER_ORGANIZATION_NAME_ERROR',
         payload: error.Text.message
       });
     }
     return dispatch({
-      type: 'REGISTER_TEAM_SUCCESS',
+      type: 'REGISTER_ORGANIZATION_NAME_SUCCESS',
       payload: response.body.privateKey
     });
   };

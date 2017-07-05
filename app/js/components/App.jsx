@@ -8,12 +8,12 @@ const App = (prop) => {
     case views.LOGIN_VIEW:
     case views.REGISTER_VIEW:
     case views.REGISTER_VERIFY_VIEW:
-      return (<div><FrontPageViewContainer /></div>);
+      return <FrontPageViewContainer />;
     case views.SEARCH_VIEW:
     case views.USER_VIEW:
     case views.CREATE_DOC_VIEW:
     case views.UPDATE_DOC_VIEW:
-      return (<div><UserViewContainer /></div>);
+      return <UserViewContainer />;
     default:
       return (<div />);
   }
