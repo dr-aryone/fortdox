@@ -14,7 +14,7 @@ const mapStateToProps = state => {
       passwordInputValue: state.register.get('passwordInputValue'),
       reTypedPasswordInputValue: state.register.get('reTypedPasswordInputValue'),
       errorMsg: state.register.get('errorMsg'),
-      teamNameError: state.register.get('teamNameError'),
+      orgNameError: state.register.get('orgNameError'),
       verifyError: state.register.get('verifyError')
     }
   };
