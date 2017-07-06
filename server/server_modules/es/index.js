@@ -7,6 +7,7 @@ const {search, searchAll} = require('./search.js')(client);
 const update = require('./update.js')(client);
 const addToIndex = require('./addToIndex.js')(client);
 const deleteDocument = require('./delete.js')(client);
+const createIndex = require('./createIndex.js')(client);
 
 module.exports = {
   client,
@@ -14,5 +15,6 @@ module.exports = {
   search,
   update,
   addToIndex,
-  deleteDocument
+  deleteDocument,
+  createIndex
 };

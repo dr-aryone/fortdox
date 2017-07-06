@@ -43,11 +43,15 @@ const register = () => {
     fs.writeFileSync('./js/local_storage/encryptedPrivateKey', encryptedKey.toString('base64'));
     fs.writeFileSync('./js/local_storage/salt', result.salt.toString('base64'));
     let username = state.register.get('usernameInputValue');
+    let email = state.register.get('emailInputValue');
     try {
       await requestor.post('http://localhost:8000/register/confirm', {
         body: {
-          privateKey,
-          username
+          username,
+          email
+        },
+        headers: {
+          'Authorization': `FortDoks ${privateKey}`
         }
       });
     } catch (error) {
@@ -82,6 +86,7 @@ const registerTeamName = () => {
         }
       });
     } catch (error) {
+      console.error(error);
       return dispatch ({
         type: 'REGISTER_ORGANIZATION_NAME_ERROR',
         payload: 'Team name already exists.'

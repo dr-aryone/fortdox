@@ -24,7 +24,6 @@ class SideNavItem extends React.Component {
   }
 
   handleClick = () => {
-    console.log(this.state.isActive);
     this.setState({isActive: !this.state.isActive});
   }
 }

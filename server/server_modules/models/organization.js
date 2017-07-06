@@ -1,24 +1,24 @@
-var Sequelize = require('sequelize');
-var db;
-
-var users = function(sequelize) {
-  db = sequelize;
-  var usr = db.define('Organization', {
+module.exports = function(sequelize, DataTypes) {
+  var Organization = sequelize.define('Organization', {
     id : {
-      type: Sequelize.INTEGER,
+      type: DataTypes.INTEGER,
       primaryKey:  true,
       autoIncrement: true
     },
     organization: {
       unique: true,
       allowNull: false,
-      type: Sequelize.STRING
+      type: DataTypes.STRING
     }
-  },
-  {
-    timestamps: false
+  }, {
+    timestamps: false,
   });
-  return usr;
-};
 
-module.exports = users;
+  Organization.associate = function(models) {
+    Organization.hasMany(models.User, {
+      as: 'users',
+      foreignKey: 'organizationId'
+    });
+  };
+  return Organization;
+};

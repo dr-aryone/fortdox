@@ -9,6 +9,15 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
+      organizationId: {
+        allowNull: true,
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'Organizations',
+          key: 'id'
+        },
+        onDelete: 'SET NULL'
+      },
       username: {
         unique: true,
         allowNull: false,
@@ -25,6 +34,7 @@ module.exports = {
       }
     });
   },
+
   down: function (queryInterface) {
     return queryInterface.dropTable('Users');
   }
