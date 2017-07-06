@@ -25,6 +25,7 @@ const login = () => {
     try {
       let paddedPassword = (await aes.generatePaddedKey(password, new window.Buffer(salt, 'base64'))).key;
       privateKey = (await aes.decrypt(new window.Buffer(paddedPassword, 'base64'), new window.Buffer(encryptedPrivateKey, 'base64')));
+      privateKey = window.Buffer.from(privateKey).toString('base64');
     } catch (error) {
       return dispatch({
         type: 'VERIFY_LOGIN_CREDS_ERROR',
@@ -35,8 +36,10 @@ const login = () => {
     try {
       await requestor.post('http://localhost:8000/login', {
         body: {
-          email,
-          privateKey
+          email
+        },
+        headers: {
+          'Authorization': `FortDoks ${privateKey}`
         }
       });
     } catch (error) {
@@ -58,7 +61,10 @@ const login = () => {
     }
     return dispatch({
       type: 'VERIFY_LOGIN_CREDS_SUCCESS',
-      payload: privateKey.toString('base64')
+      payload: {
+        privateKey: privateKey.toString('base64'),
+        email: email
+      }
     });
   };
 };

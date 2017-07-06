@@ -32,12 +32,12 @@ app.post('/login', async (req, res) => {
   }
 
   try {
-    let privateKey = new Buffer(req.body.privateKey);
+    let privateKey = new Buffer(req.headers.authorization.split('FortDoks ')[1], 'base64').toString();
     await decryptMasterPassword(privateKey, encryptedMasterPassword);
     status = 200;
   } catch (error) {
     console.error(error);
-    status = 401;
+    return status = 401;
   }
   res.status(status).send({
     message: statusMsg.user[status]
@@ -45,8 +45,9 @@ app.post('/login', async (req, res) => {
 });
 
 app.post('/register', async (req, res) => {
+  let organizationId;
   try {
-    await orgs.createOrganization(req.body.organization);
+    organizationId = (await orgs.createOrganization(req.body.organization)).id;
   } catch (error) {
     console.error(error);
     return res.status(error).send();
@@ -62,7 +63,7 @@ app.post('/register', async (req, res) => {
   let encryptedMasterPassword = encryptMasterPassword(keypair.publicKey, masterPassword);
 
   try {
-    await users.createUser(req.body.username, req.body.email, encryptedMasterPassword);
+    await users.createUser(req.body.username, req.body.email, encryptedMasterPassword, organizationId);
     return res.send({privateKey: keypair.privateKey.toString('base64')});
   } catch (error) {
     console.error(error);
@@ -71,35 +72,51 @@ app.post('/register', async (req, res) => {
 });
 
 app.post('/register/confirm', async (req, res) => {
-  let username = req.body.username;
-  let privateKey = req.body.privateKey;
+  let email = req.body.email;
+  let privateKey = new Buffer(req.headers.authorization.split('FortDoks ')[1], 'base64').toString();
   try {
     privateKey = Buffer.from(privateKey, 'base64').toString();
-    await users.verifyUser(username, privateKey);
-    return res.status(200).send();
+    await users.verifyUser(email, privateKey);
   } catch (error) {
     console.error(error);
     return res.status(500).send();
   }
+  let organizationName;
+  try {
+    organizationName = await users.getOrganization(email);
+  } catch (error) {
+    console.error(error);
+    res.status(404).send();
+  }
+
+  try {
+    await es.createIndex(organizationName);
+    res.status(200).send();
+  } catch (error) {
+    console.error(error);
+    res.status(500).send();
+  }
+
 
 });
 
 app.post('/documents', async (req, res) => {
-  let expectations = expect({
-    index: 'string',
-    type: 'string'
-  }, req.body);
   let privateKey = new Buffer(req.headers.authorization.split('FortDoks ')[1], 'base64').toString();
+  let encryptedMasterPassword;
+  let organization;
 
-  if (!expectations.wereMet()) {
-    res.status(400).send({msg: 'Bad data format, please priovide atleast index, type, id'});
-  } else {
-    try {
-      res.send(await es.addToIndex(req.body, privateKey));
-    } catch (error) {
-      console.log(error);
-      res.send(500).send({msg: 'Internal Server Error'});
-    }
+  try {
+    encryptedMasterPassword = await users.getPassword(req.body.email);
+    organization = await users.getOrganization(req.body.email);
+  } catch (error) {
+    res.status(409).send();
+  }
+
+  try {
+    res.send(await es.addToIndex(req.body, privateKey, encryptedMasterPassword, organization));
+  } catch (error) {
+    console.log(error);
+    res.send(500).send({msg: 'Internal Server Error'});
   }
 
 });
