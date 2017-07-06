@@ -1,6 +1,5 @@
 const React = require('react');
-// const SideNavContainer = require('containers/user/SideNavContainer');
-const SideNav = require('components/user/SideNav');
+const SideNavContainer = require('containers/user/SideNavContainer');
 const views = require('views.json');
 const UserViewFrontPage = require('./userViewFrontPage');
 const CreateDocContainer = require('containers/document/CreateDocContainer');
@@ -27,7 +26,7 @@ const UserView = ({currentView, username}) => {
 
   return (
     <div className='wrapper'>
-      <SideNav />
+      <SideNavContainer />
       <Header />
       {page}
     </div>
