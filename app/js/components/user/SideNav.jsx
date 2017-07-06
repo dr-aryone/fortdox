@@ -20,6 +20,13 @@ const SideNav = ({changeView}) => {
         <li className='side-nav-item' onClick={() => changeView(views.CREATE_DOC_VIEW)}>
           <a>Create Document</a>
         </li>
+        <SideNavItem text='Test'>
+          <li>Test</li>
+          <li>Test</li>
+        </SideNavItem>
+        <li className='side-nav-item' onClick={() => changeView(views.CREATE_DOC_VIEW)}>
+          <a>Create Document</a>
+        </li>
       </ul>
     </div>
   );

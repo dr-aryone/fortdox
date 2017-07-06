@@ -16,7 +16,7 @@ class SideNavItem extends React.Component {
     return (
       <li className={`side-nav-item ${this.state.isActive ? 'active' : ''}`}>
         <a onClick={this.handleClick}>{this.props.text}</a>
-        <ul className={`drop-down ${this.state.isActive ? 'show' : ''}`}>
+        <ul className={`drop-down ${this.state.isActive ? 'show' : 'hide'}`}>
           {children}
         </ul>
       </li>
@@ -24,7 +24,8 @@ class SideNavItem extends React.Component {
   }
 
   handleClick = () => {
-    this.setState({isActive: !this.state.isActive});
+    console.log(this.state.isActive);
+    return this.setState({isActive: !this.state.isActive});
   }
 }
 

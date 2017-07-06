@@ -25,11 +25,11 @@ const mapDispatchToProps = dispatch => {
     onChange: (e) => {
       dispatch(action.inputChange(e.target.name, e.target.value));
     },
-    onVerify: () => {
-      dispatch(register.registerTeamName());
+    onCreateOrganization: () => {
+      dispatch(register.registerOrganization());
     },
     onRegister: () => {
-      dispatch(register.register());
+      dispatch(register.activateOrganizaton());
     },
     toLoginView: () => {
       dispatch(action.changeView(views.LOGIN_VIEW));

@@ -27,29 +27,40 @@
         background-color: lighten($primary-color, 5%);
         cursor: pointer;
       }
-
-      &:last-child {
-        border-bottom: none;
-      }
     }
 
-    &-item .active a {
+    &-item.active a {
+      color: darken($primary-color, 50%);
+      border: none;
+    }
+
+    &-item:last-child a {
       border: none;
     }
 
     .drop-down {
       list-style-type: none;
-      height: 0;
-      opacity: 0;
-      transition: all 1s ease-in-out;
       background-color: #FFF;
       margin: 0px 35px;
-      padding: 0px;
+      padding: 0 18px;
       border-radius: 1px;
 
-      &.show {
-        height: initial;
-        opacity: 1;
+      &.show li{
+        transition: font-size .25s,
+                    margin .25s,
+                    padding .25s,
+                    opacity .5s .25s;
+      }
+
+      &.hide li{
+        font-size: 0;
+        margin: 0;
+        opacity: 0;
+        padding: 0;
+        transition: opacity .25s,
+                    font-size .5s .25s,
+                    margin .5s .25s,
+                    padding .5s .25s;
       }
 
       & li {
