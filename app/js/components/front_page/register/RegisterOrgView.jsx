@@ -1,6 +1,6 @@
 const React = require('react');
 
-const RegisterOrgView = ({register, onChange, onVerify, toLoginView}) => {
+const RegisterOrgView = ({register, onChange, onCreateOrganization, toLoginView}) => {
   let errorMsg = register.orgNameError ? <h2>{register.errorMsg}</h2> : null;
   return (
     <div className='login-panel'>
@@ -31,8 +31,8 @@ const RegisterOrgView = ({register, onChange, onVerify, toLoginView}) => {
         onChange={onChange}
         className='input-block'
       />
-      <a onClick={onVerify} className='btn btn-block'>
-        Next
+      <a onClick={onCreateOrganization} className='btn btn-block'>
+        Register Team
       </a>
       <a onClick={toLoginView} className='btn btn-block'>
         Back
