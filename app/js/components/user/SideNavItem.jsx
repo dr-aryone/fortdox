@@ -12,10 +12,16 @@ class SideNavItem extends React.Component {
 
   render() {
     let {children} = this.props;
-
+    let onClick = this.props.onClick ? this.props.onClick : null;
     return (
-      <li className={`side-nav-item ${this.state.isActive ? 'active' : ''}`}>
-        <a onClick={this.handleClick}>{this.props.text}</a>
+      <li className={`side-nav-item ${this.state.isActive && children ? 'active' : ''}`}>
+        <a onClick={onClick ? onClick : this.handleClick}>
+          <i className='material-icons nav-icon'>{this.props.icon}</i>
+          <span className='text'>{this.props.text}</span>
+          <i className='material-icons nav-drop-down'>
+            {children ? (this.state.isActive ? 'keyboard_arrow_up' : 'keyboard_arrow_down') : ''}
+          </i>
+        </a>
         <ul className={`drop-down ${this.state.isActive ? 'show' : 'hide'}`}>
           {children}
         </ul>
@@ -24,7 +30,6 @@ class SideNavItem extends React.Component {
   }
 
   handleClick = () => {
-    console.log(this.state.isActive);
     return this.setState({isActive: !this.state.isActive});
   }
 }
