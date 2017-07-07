@@ -6,27 +6,12 @@ const SideNav = ({changeView}) => {
   return (
     <div className='side-bar'>
       <ul className='side-nav'>
-        <SideNavItem text='Test'>
+        <SideNavItem text='test' icon='search'>
           <li>Test</li>
           <li>Test</li>
         </SideNavItem>
-        <SideNavItem text='Bleh'>
-          <li>Banana</li>
-          <li>Test</li>
-        </SideNavItem>
-        <li className='side-nav-item' onClick={() => changeView(views.SEARCH_VIEW)}>
-          <a>Search</a>
-        </li>
-        <li className='side-nav-item' onClick={() => changeView(views.CREATE_DOC_VIEW)}>
-          <a>Create Document</a>
-        </li>
-        <SideNavItem text='Test'>
-          <li>Test</li>
-          <li>Test</li>
-        </SideNavItem>
-        <li className='side-nav-item' onClick={() => changeView(views.CREATE_DOC_VIEW)}>
-          <a>Create Document</a>
-        </li>
+        <SideNavItem text='Search' icon='search' onClick={() => changeView(views.SEARCH_VIEW)} />
+        <SideNavItem text='Create Document' icon='description' onClick={() => changeView(views.CREATE_DOC_VIEW)} />
       </ul>
     </div>
   );
