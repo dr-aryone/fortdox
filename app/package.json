@@ -6,6 +6,7 @@
     "start": "electron ."
   },
   "dependencies": {
+    "@edgeguide/password-check": "^1.2.1",
     "@edgeguideab/client-request": "^1.4.5",
     "@edgeguideab/requestor": "^1.1.2",
     "electron": "^1.6.11",
