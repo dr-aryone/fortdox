@@ -1,7 +1,7 @@
 const React = require('react');
 
 const RegisterVerifyView = ({register, onChange, onRegister, toRegisterView}) => {
-  let errorMsg = register.verifyError ? <h2>{register.errorMsg}</h2> : null;
+  let errorMsg = register.activateError ? <h2>{register.errorMsg}</h2> : null;
   return (
     <div className='login-panel'>
       <h1 className='text-center'>{register.organizationInputValue}</h1>

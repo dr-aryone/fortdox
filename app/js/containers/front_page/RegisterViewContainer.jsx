@@ -15,7 +15,7 @@ const mapStateToProps = state => {
       reTypedPasswordInputValue: state.register.get('reTypedPasswordInputValue'),
       errorMsg: state.register.get('errorMsg'),
       orgNameError: state.register.get('orgNameError'),
-      verifyError: state.register.get('verifyError')
+      activateError: state.register.get('activateError')
     }
   };
 };
