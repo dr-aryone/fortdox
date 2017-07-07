@@ -19,7 +19,6 @@ module.exports = {
         onDelete: 'SET NULL'
       },
       username: {
-        unique: true,
         allowNull: false,
         type: Sequelize.STRING
       },
@@ -29,8 +28,11 @@ module.exports = {
         type: Sequelize.STRING
       },
       password: {
-        allowNull: false,
+        allowNull: true,
         type: Sequelize.BLOB
+      },
+      uuid: {
+        type: Sequelize.STRING
       }
     });
   },

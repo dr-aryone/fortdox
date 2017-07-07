@@ -9,7 +9,9 @@ const es = require('./server_modules/es');
 const {decryptDocuments} = require('./server_modules/crypt/authentication/cryptDocument');
 const {decryptMasterPassword} = require('./server_modules/crypt/keys/cryptMasterPassword');
 const {encryptMasterPassword} = require('./server_modules/crypt/keys/cryptMasterPassword');
+const mailer = require('./server_modules/mailer');
 const expect = require('@edgeguideab/expect');
+const uuidv1 = require('uuid/v1');
 
 app.use(bodyParser.json());
 
@@ -45,37 +47,50 @@ app.post('/login', async (req, res) => {
 });
 
 app.post('/register', async (req, res) => {
-  let organizationId;
+  let uuid = uuidv1();
+  let newUser = {
+    username: req.body.username,
+    email: req.body.email,
+    password: null,
+    organizationId: null,
+    uuid
+  };
   try {
-    organizationId = (await orgs.createOrganization(req.body.organization)).id;
+    newUser.organizationId = (await orgs.createOrganization(req.body.organization)).id;
   } catch (error) {
     console.error(error);
     return res.status(error).send();
   }
-  let keypair;
   try {
-    keypair = await keygen.genKeyPair();
+    await users.createUser(newUser);
+    let mail = {
+      to: newUser.email,
+      subject: `FortDoks registration for ${req.body.organization}`,
+      content:`<a href="FortDoks://activation?code=${uuid}"> FortDoks://activation?code=${uuid} </a>`
+    };
+    mailer.send(mail);
+    res.send();
   } catch (error) {
     console.error(error);
-    return res.status(500).send();
+    return res.status(error).send();
   }
-  let masterPassword = keygen.genMasterPassword();
-  let encryptedMasterPassword = encryptMasterPassword(keypair.publicKey, masterPassword);
+  // let keypair;
+  // return res.send({privateKey: keypair.privateKey.toString('base64')});
+  // try {
+  //   keypair = await keygen.genKeyPair();
+  // } catch (error) {
+  //   console.error(error);
+  //   return res.status(500).send();
+  // }
+  // let masterPassword = keygen.genMasterPassword();
+  // let encryptedMasterPassword = encryptMasterPassword(keypair.publicKey, masterPassword);
 
-  try {
-    await users.createUser(req.body.username, req.body.email, encryptedMasterPassword, organizationId);
-    return res.send({privateKey: keypair.privateKey.toString('base64')});
-  } catch (error) {
-    console.error(error);
-    return res.status(error).send();
-  }
 });
 
 app.post('/register/confirm', async (req, res) => {
   let email = req.body.email;
   let privateKey = new Buffer(req.headers.authorization.split('FortDoks ')[1], 'base64').toString();
   try {
-    privateKey = Buffer.from(privateKey, 'base64').toString();
     await users.verifyUser(email, privateKey);
   } catch (error) {
     console.error(error);

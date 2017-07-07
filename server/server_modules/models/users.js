@@ -10,7 +10,6 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.INTEGER
     },
     username: {
-      unique: true,
       allowNull: false,
       type: DataTypes.STRING
     },
@@ -20,8 +19,11 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING
     },
     password: {
-      allowNull: false,
+      allowNull: true,
       type: DataTypes.BLOB
+    },
+    uuid: {
+      type: DataTypes.STRING
     }
   }, {
     timestamps: false
