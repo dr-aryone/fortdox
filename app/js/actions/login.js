@@ -1,5 +1,5 @@
 const requestor = require('@edgeguideab/client-request');
-const aes = window.require('../server/server_modules/crypt/authentication/aes.js');
+const aes = window.require('./aes.js');
 const fs = window.require('fs');
 
 const login = () => {
