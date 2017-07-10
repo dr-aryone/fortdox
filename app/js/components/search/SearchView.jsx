@@ -1,7 +1,8 @@
 const React = require('react');
 const SearchItem = require('./SearchItem');
+const LoaderOverlay = require('components/general/LoaderOverlay');
 
-const SearchView = ({result, onUpdate, searchString, onChange, onSearch}) => {
+const SearchView = ({result, onUpdate, searchString, onChange, onSearch, isLoading}) => {
   let searchResult = [];
   result.forEach((item) => {
     searchResult.push(
@@ -16,6 +17,7 @@ const SearchView = ({result, onUpdate, searchString, onChange, onSearch}) => {
   return (
     <div className='container-fluid'>
       <div className='col-sm-10 col-sm-offset-1'>
+        <LoaderOverlay display={isLoading} />
         <h1>Search</h1>
         <div className='search'>
           <input

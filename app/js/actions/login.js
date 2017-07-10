@@ -33,8 +33,9 @@ const login = () => {
         error: true
       });
     }
+    let response;
     try {
-      await requestor.post('http://localhost:8000/login', {
+      response = await requestor.post('http://localhost:8000/login', {
         body: {
           email
         },
@@ -63,7 +64,9 @@ const login = () => {
       type: 'VERIFY_LOGIN_CREDS_SUCCESS',
       payload: {
         privateKey: privateKey.toString('base64'),
-        email: email
+        email: email,
+        organization: response.body.organization,
+        user: response.body.user
       }
     });
   };

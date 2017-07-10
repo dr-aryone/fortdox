@@ -2,15 +2,21 @@ const requestor = require('@edgeguideab/client-request');
 
 const search = () => {
   return async (dispatch, getState) => {
+    dispatch({
+      type: 'SEARCH_START'
+    });
     let state = getState();
     let searchString = state.search.get('searchString');
     let response;
-    let privateKey = state.user.privateKey;
+    let privateKey = state.user.get('privateKey');
+    let organization = state.user.get('organization');
+    let email = state.user.get('email');
     try {
       response = await requestor.get('http://localhost:8000/documents', {
         query: {
-          index: 'document',
-          searchString
+          searchString,
+          organization,
+          email
         },
         headers: {
           'Authorization': `FortDoks ${privateKey}`

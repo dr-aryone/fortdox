@@ -8,7 +8,8 @@ const mapStateToProps = (state) => {
     input: {
       titleValue: state.createDocument.get('titleValue'),
       textValue: state.createDocument.get('textValue')
-    }
+    },
+    isLoading: state.createDocument.get('isLoading')
   };
 };
 

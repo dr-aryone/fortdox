@@ -24,10 +24,9 @@ app.listen(8000, () => {
 });
 
 app.post('/login', async (req, res) => {
-  let status;
-  let encryptedMasterPassword;
+  let user;
   try {
-    encryptedMasterPassword = await users.getPassword(req.body.email);
+    user = await users.getUser(req.body.email);
   } catch (error) {
     console.error(error);
     return res.status(error).send();
@@ -35,15 +34,17 @@ app.post('/login', async (req, res) => {
 
   try {
     let privateKey = new Buffer(req.headers.authorization.split('FortDoks ')[1], 'base64').toString();
-    await decryptMasterPassword(privateKey, encryptedMasterPassword);
-    status = 200;
+    await decryptMasterPassword(privateKey, user.password);
+    return res.send({
+      user: user.username,
+      organization: user.Organization.organization
+    });
   } catch (error) {
     console.error(error);
-    return status = 401;
+    return res.status(401).send({
+      message: statusMsg.user[401]
+    });
   }
-  res.status(status).send({
-    message: statusMsg.user[status]
-  });
 });
 
 function sleep (ms) {
@@ -112,8 +113,6 @@ app.post('/register/confirm', async (req, res) => {
 app.post('/register/verify', async (req, res) => {
   let user;
   let keypair;
-  await sleep(2000);
-
   try {
     user = await users.verifyUUID(req.body.activationCode);
   } catch (error) {
@@ -150,7 +149,7 @@ app.post('/documents', async (req, res) => {
   let organization;
 
   try {
-    encryptedMasterPassword = await users.getPassword(req.body.email);
+    encryptedMasterPassword = (await users.getUser(req.body.email)).password;
     organization = await users.getOrganization(req.body.email);
   } catch (error) {
     res.status(409).send();
@@ -169,16 +168,26 @@ app.get('/documents', async (req, res) => {
   let response;
   let searchString = req.query.searchString;
   let privateKey = new Buffer(req.headers.authorization.split('FortDoks ')[1], 'base64').toString();
+  let organization = req.query.organization;
+  let email = req.query.email;
+  let encryptedMasterPassword;
   try {
     response = await es.search({
-      searchString
+      searchString,
+      organization
     });
   } catch (error) {
     console.error(error);
     return res.status(500).send({msg: 'Internal Server Error'});
   }
   try {
-    response.hits.hits = await decryptDocuments(response.hits.hits, privateKey);
+    encryptedMasterPassword = (await users.getUser(email)).password;
+  } catch (error) {
+    console.error(error);
+    return res.status(409).send();
+  }
+  try {
+    response.hits.hits = await decryptDocuments(response.hits.hits, privateKey, encryptedMasterPassword);
   } catch (error) {
     console.error(error);
     return res.status(500).send({msg: 'Internal Server Error'});
