@@ -4,7 +4,7 @@ module.exports = client => {
   const addToIndex = (query, privateKey, encryptedMasterPassword, Organization) => {
     return new Promise(async (resolve, reject) => {
       let response;
-      let data = new Buffer(query.body.text, 'base64');
+      let data = new Buffer(query.body.text);
       let encryptedData;
       try {
         encryptedData = await encryptDocument(data, privateKey, encryptedMasterPassword);

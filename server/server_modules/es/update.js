@@ -1,11 +1,11 @@
 const {encryptDocument} = require('../crypt/authentication/cryptDocument');
 
 module.exports = client => {
-  const update = (query, privateKey) => {
+  const update = (query, privateKey, encryptedMasterPassword) => {
     return new Promise(async (resolve, reject) => {
       let encryptedText;
       try {
-        encryptedText = await encryptDocument(query.updateQuery.text, privateKey);
+        encryptedText = await encryptDocument(query.updateQuery.text, privateKey, encryptedMasterPassword);
       } catch (error) {
         console.err(error);
         return reject(500);
