@@ -3,7 +3,7 @@ const RegisterOrgView = require('./RegisterOrgView');
 const RegisterVerifyView = require('./RegisterVerifyView');
 const views = require('views.json');
 
-const RegisterView = ({currentView, register, onChange, onVerify, toLoginView, onRegister, toRegisterView}) => {
+const RegisterView = ({currentView, register, onChange, onCreateOrganization, toLoginView, onRegister, toRegisterView}) => {
   let view;
   switch (currentView) {
     case views.REGISTER_VIEW:
@@ -12,7 +12,7 @@ const RegisterView = ({currentView, register, onChange, onVerify, toLoginView, o
         <RegisterOrgView
           register={register}
           onChange={onChange}
-          onVerify={onVerify}
+          onCreateOrganization={onCreateOrganization}
           toLoginView={toLoginView}
         />
       );

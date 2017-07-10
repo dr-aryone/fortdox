@@ -2,6 +2,6 @@
 
 node_modules
 server/server_modules/config.json
-app/js/local_storage
-app/release-build/encryptedPrivateKey
-app/release-build/salt
+app/js/local_storage/salt
+app/js/local_storage/encryptedPrivateKey
+app/release-build

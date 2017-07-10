@@ -66,7 +66,7 @@ app.post('/register', async (req, res) => {
     let mail = {
       to: newUser.email,
       subject: `FortDoks registration for ${req.body.organization}`,
-      content:`<a href="FortDoks://activation?code=${uuid}"> FortDoks://activation?code=${uuid} </a>`
+      content:`<p><a href="http://localhost:8000/activation-redirect?code=${uuid}"> http://localhost:8000/activation-redirect?code=${uuid} </a>`
     };
     mailer.send(mail);
     res.send();
@@ -112,6 +112,38 @@ app.post('/register/confirm', async (req, res) => {
     res.status(500).send();
   }
 
+
+});
+
+app.post('/register/verify', async (req, res) => {
+  let user;
+  let keypair;
+  try {
+    user = await users.verifyUUID(req.body.activationCode);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send();
+  }
+  try {
+    keypair = await keygen.genKeyPair();
+  } catch (error) {
+    console.error(error);
+  }
+  let masterPassword = keygen.genMasterPassword();
+  let encryptedMasterPassword = encryptMasterPassword(keypair.publicKey, masterPassword);
+  try {
+    await users.setPassword({
+      email: user.email,
+      organizationId: user.organizationId
+    },
+    encryptedMasterPassword);
+    res.send({
+      privateKey: keypair.privateKey.toString('base64')
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send();
+  }
 
 });
 
@@ -197,4 +229,8 @@ app.delete('/documents', async (req,res) => {
       res.status(500).send();
     }
   }
+});
+
+app.get('/activation-redirect', (req, res) => {
+  res.sendFile(__dirname + '/redirect.html');
 });
