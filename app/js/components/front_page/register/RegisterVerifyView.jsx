@@ -15,7 +15,7 @@ class RegisterVerifyView extends React.Component {
       toRegisterView
     } = this.props;
 
-    let errorMsg = register.verifyError ? <h2>{register.errorMsg}</h2> : null;
+    let errorMsg = register.activateError ? <h2>{register.errorMsg}</h2> : null;
     return (
       <div className='login-panel'>
         <h1 className='text-center'>{register.organizationInputValue}</h1>

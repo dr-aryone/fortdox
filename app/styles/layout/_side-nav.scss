@@ -7,14 +7,30 @@
   left: 0;
   z-index: 1;
   background: $primary-color;
+  display: flex;
+  flex-direction: column;
+
+  h2 {
+    margin-bottom: 0px;
+  }
+
+  h3 {
+    margin: 0.5em;
+  }
 
   .side-nav {
     list-style-type: none;
     padding: 0px;
-    margin: 50px 0px 0px 0px;
+    margin-top: 10px;
+    margin-bottom: 0px;
+    overflow: auto;
+    display: block;
+    flex-grow: 1;
 
     &-item a {
-      display: block;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       font-family: 'Roboto Condensed', 'Arial', sans-serif;
       font-size: 16px;
       color: #FFF;
@@ -71,6 +87,32 @@
 
     &-item a .text{
       vertical-align: middle;
+    }
+  }
+
+  .user-panel {
+    color: darken($primary-color, 50%);
+    text-align: center;
+    margin-top: 20px;
+
+
+    .material-icons {
+      font-size: 100px;
+    }
+  }
+
+  .logout-panel {
+    text-align: center;
+    color: darken($primary-color, 50%);
+    margin: 20px;
+
+    & a {
+      font-size: 1.5em;
+    }
+
+    & a:hover {
+      cursor: pointer;
+      color: darken($primary-color, 30%);
     }
   }
 }

@@ -1,6 +1,7 @@
 const requestor = require('@edgeguideab/client-request');
 const aes = window.require('./aes.js');
 const fs = window.require('fs');
+const pwCheck = require('@edgeguide/password-check');
 
 const activateOrganizaton = () => {
   return async (dispatch, getState) => {
@@ -14,10 +15,37 @@ const activateOrganizaton = () => {
     let reTypedPassword = state.register.get('reTypedPasswordInputValue');
     if (password !== reTypedPassword) {
       return dispatch ({
-        type: 'REGISTER_PASSWORD_MISSMATCH',
+        type: 'ACTIVATE_ORGANIZATION_ERROR',
         payload: 'Passwords didn\'t match. Try again.'
       });
     }
+    let pwResult = pwCheck.evaluate(password, {
+      length: 8,
+      allowCommon: false,
+      strict: true,
+      numeric: 1
+    });
+
+    if (!pwResult.valid) {
+      let errorMsg;
+      switch (pwResult.reason) {
+        case 'TOO_COMMON':
+          errorMsg = 'Your password is not strong enough.';
+          break;
+        case 'TOO_FEW_NUMERIC_CHARACTERS':
+          errorMsg = 'Password needs to at least have one number.';
+          break;
+        case 'TOO_SHORT':
+          errorMsg = 'Password needs to at least be 8 characters long.';
+          break;
+      }
+      return dispatch ({
+        debugger;
+        type: 'ACTIVATE_ORGANIZATION_ERROR',
+        paylaod: errorMsg
+      });
+    }
+
     let result;
     try {
       result = await aes.generatePaddedKey(password);
@@ -53,7 +81,7 @@ const activateOrganizaton = () => {
     } catch (error) {
       console.error(error);
       return dispatch ({
-        type: 'ACTIVATE_ORGANIZATION_FAIL',
+        type: 'ACTIVATE_ORGANIZATION_ERROR',
         payload: 'Meep meep'
       });
     }
@@ -109,7 +137,7 @@ const verifyActivationCode = () => {
       });
       return dispatch({
         type: 'VERIFY_ACTIVATION_CODE_SUCCESS',
-        payload: window.Buffer.from(response.body.privateKey, 'base64').toString()
+        payload: response.body.privateKey.toString('base64')
       });
     } catch (error) {
       console.error(error);

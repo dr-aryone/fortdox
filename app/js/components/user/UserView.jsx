@@ -1,17 +1,17 @@
 const React = require('react');
 const SideNavContainer = require('containers/user/SideNavContainer');
 const views = require('views.json');
-const UserViewFrontPage = require('./userViewFrontPage');
+const UserViewFrontPage = require('./UserViewFrontPage');
 const CreateDocContainer = require('containers/document/CreateDocContainer');
 const UpdateDocContainer = require('containers/document/UpdateDocContainer');
 const SearchViewContainer = require('containers/search/SearchViewContainer');
-const Header = require('components/user/Header');
+//const Header = require('components/user/Header');
 
-const UserView = ({currentView, username}) => {
+const UserView = ({currentView, changeView}) => {
   let page;
   switch (currentView) {
     case views.USER_VIEW:
-      page = <UserViewFrontPage username={username} />;
+      page = <UserViewFrontPage changeView={changeView} />;
       break;
     case views.SEARCH_VIEW:
       page = <SearchViewContainer />;
@@ -27,7 +27,7 @@ const UserView = ({currentView, username}) => {
   return (
     <div className='wrapper'>
       <SideNavContainer />
-      <Header />
+      {/* <Header /> */}
       {page}
     </div>
   );
