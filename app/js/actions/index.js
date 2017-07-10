@@ -77,4 +77,12 @@ const currentViewToDefault = () => {
   };
 };
 
-module.exports = {inputChange, changeView, currentViewToDefault};
+const logout = () => {
+  return dispatch => {
+    return dispatch ({
+      type: 'LOGOUT'
+    });
+  };
+};
+
+module.exports = {inputChange, changeView, currentViewToDefault, logout};

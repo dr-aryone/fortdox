@@ -2,7 +2,9 @@ const {fromJS} = require('immutable');
 
 let initialState = fromJS({
   privateKey: '',
-  email: ''
+  email: '',
+  organization: 'EdgeGuide',
+  username: 'TestUser'
 });
 
 const user = (state = initialState, action) => {
@@ -12,6 +14,8 @@ const user = (state = initialState, action) => {
         privateKey: fromJS(action.payload.privateKey),
         email: fromJS(action.payload.email)
       });
+    case 'LOGOUT':
+      return initialState;
     default:
       return state;
   }
