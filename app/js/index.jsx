@@ -9,6 +9,26 @@ const thunk = require('redux-thunk').default;
 let devToolsMiddleware = window.devToolsExtension ? window.devToolsExtension() : f => f;
 let middlewares = Redux.compose(Redux.applyMiddleware(thunk), devToolsMiddleware);
 const store = Redux.createStore(reducer, {}, middlewares);
+const ipcRenderer = window.require('electron').ipcRenderer;
+const url = window.require('url');
+const querystring = window.require('querystring');
+let queryParameters = querystring.parse(url.parse(window.location.href).query);
+
+if (queryParameters.activationCode) {
+  store.dispatch({
+    type: 'ACTIVATE_ORGANIZATION_CODE_RECIVED',
+    payload: queryParameters.activationCode
+  });
+
+}
+
+ipcRenderer.on('url', (event, data) => {
+  store.dispatch({
+    type: 'ACTIVATE_ORGANIZATION_CODE_RECIVED',
+    payload: data
+  });
+});
+
 
 ReactDOM.render(
   <Provider store={store}>

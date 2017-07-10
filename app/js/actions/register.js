@@ -1,25 +1,16 @@
 const requestor = require('@edgeguideab/client-request');
-const aes = window.require('../server/server_modules/crypt/authentication/aes.js');
+const aes = window.require('./aes.js');
 const fs = window.require('fs');
 const pwCheck = require('@edgeguide/password-check');
 
 const activateOrganizaton = () => {
   return async (dispatch, getState) => {
+    let state = getState();
     dispatch({
       type: 'ACTIVATE_ORGANIZATION_START'
     });
-    let response;
-    try {
-      response = requestor.get('http://localhost:8000/activate');
-    } catch (error) {
-      console.error(error);
-      return dispatch ({
-        type: 'ACTIVATE_ORGANIZATION_ERROR',
-        paylaod: 'SOMETHING WENT WRONG'
-      });
-    }
-    let privateKey = response.response.body;
-    let state = getState();
+
+    let privateKey = state.register.get('privateKey');
     let password = state.register.get('passwordInputValue');
     let reTypedPassword = state.register.get('reTypedPasswordInputValue');
     if (password !== reTypedPassword) {
@@ -49,6 +40,7 @@ const activateOrganizaton = () => {
           break;
       }
       return dispatch ({
+        debugger;
         type: 'ACTIVATE_ORGANIZATION_ERROR',
         paylaod: errorMsg
       });
@@ -129,4 +121,32 @@ const registerOrganization = () => {
   };
 };
 
-module.exports = {activateOrganizaton, registerOrganization};
+const verifyActivationCode = () => {
+  return async (dispatch, getState) => {
+    let state = getState();
+    let activationCode = state.register.get('activationCode');
+    let response;
+    dispatch({
+      type: 'VERIFY_ACTIVATION_CODE_START'
+    });
+    try {
+      response = await requestor.post('http://localhost:8000/register/verify', {
+        body: {
+          activationCode
+        }
+      });
+      return dispatch({
+        type: 'VERIFY_ACTIVATION_CODE_SUCCESS',
+        payload: response.body.privateKey.toString('base64')
+      });
+    } catch (error) {
+      console.error(error);
+      return dispatch({
+        type: 'VERIFY_ACTIVATION_CODE_FAIL'
+      });
+    }
+
+  };
+};
+
+module.exports = {activateOrganizaton, registerOrganization, verifyActivationCode};
