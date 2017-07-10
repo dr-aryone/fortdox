@@ -2,3 +2,5 @@ build/*
 !build/.keepme
 .sass-cache
 config.json
+js/local_storage/encryptedPrivateKey
+js/local_storage/salt
