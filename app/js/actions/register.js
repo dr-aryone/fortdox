@@ -143,7 +143,8 @@ const verifyActivationCode = () => {
     } catch (error) {
       console.error(error);
       return dispatch({
-        type: 'VERIFY_ACTIVATION_CODE_FAIL'
+        type: 'VERIFY_ACTIVATION_CODE_FAIL',
+        payload: 'Email is already verified or the link is broken.'
       });
     }
 

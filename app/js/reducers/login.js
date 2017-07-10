@@ -5,12 +5,15 @@ const initialState = fromJS({
   'passwordInputValue': '',
   'error': false,
   'errorMsg': '',
+  'isLoading': false
 });
 
 const login = (state = initialState, action) => {
   switch (action.type) {
     case 'INPUT_CHANGE_LOGIN':
       return state.set(action.inputName, fromJS(action.inputValue));
+    case 'VERIFY_LOGIN_CREDS_START':
+      return state.set('isLoading', true);
     case 'VERIFY_LOGIN_CREDS_SUCCESS':
       return initialState;
     case 'VERIFY_LOGIN_CREDS_ERROR':
@@ -19,9 +22,9 @@ const login = (state = initialState, action) => {
         'emailInputValue': '',
         'passwordInputValue': '',
         'error': true,
-        'errorMsg': action.payload
+        'errorMsg': action.payload,
+        'isLoading': false
       });
-    case 'VERIFY_LOGIN_CREDS_START':
     default:
       return state;
   }
