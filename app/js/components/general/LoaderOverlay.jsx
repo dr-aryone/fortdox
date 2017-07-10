@@ -5,7 +5,7 @@ const LoginView = ({display}) => {
   return (
     <div className={`loader ${display ? 'show' : ''}`}>
       <div className='loader-inner'>
-        <Loader />
+        <Loader color='#FF0000' />
       </div>
     </div>
   );

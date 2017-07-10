@@ -46,6 +46,10 @@ app.post('/login', async (req, res) => {
   });
 });
 
+function sleep (ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 app.post('/register', async (req, res) => {
   let uuid = uuidv1();
   let newUser = {
@@ -74,16 +78,6 @@ app.post('/register', async (req, res) => {
     console.error(error);
     return res.status(error).send();
   }
-  // let keypair;
-  // return res.send({privateKey: keypair.privateKey.toString('base64')});
-  // try {
-  //   keypair = await keygen.genKeyPair();
-  // } catch (error) {
-  //   console.error(error);
-  //   return res.status(500).send();
-  // }
-  // let masterPassword = keygen.genMasterPassword();
-  // let encryptedMasterPassword = encryptMasterPassword(keypair.publicKey, masterPassword);
 
 });
 
@@ -118,6 +112,8 @@ app.post('/register/confirm', async (req, res) => {
 app.post('/register/verify', async (req, res) => {
   let user;
   let keypair;
+  await sleep(2000);
+
   try {
     user = await users.verifyUUID(req.body.activationCode);
   } catch (error) {
@@ -138,6 +134,7 @@ app.post('/register/verify', async (req, res) => {
     },
     encryptedMasterPassword);
     res.send({
+      email: user.email,
       privateKey: keypair.privateKey.toString('base64')
     });
   } catch (error) {
