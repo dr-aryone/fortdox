@@ -3,7 +3,7 @@ module.exports = client => {
     let response;
     try {
       response = await client.search({
-        'index': 'document',
+        'index': query.organization.toLowerCase(),
         'body': {
           'query': {
             'bool': {
