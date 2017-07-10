@@ -13,7 +13,9 @@ module.exports = function ({email, organizationId}, password) {
       if (!user) {
         return reject(404);
       }
-      await user.updateAttributes({password: password});
+      await user.updateAttributes({
+        password: password
+      });
       return resolve();
     } catch (error) {
       console.error(error);

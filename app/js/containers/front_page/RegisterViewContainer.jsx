@@ -15,7 +15,9 @@ const mapStateToProps = state => {
       reTypedPasswordInputValue: state.register.get('reTypedPasswordInputValue'),
       errorMsg: state.register.get('errorMsg'),
       orgNameError: state.register.get('orgNameError'),
-      activateError: state.register.get('activateError')
+      activateError: state.register.get('activateError'),
+      isLoading: state.register.get('isLoading'),
+      isVerified: state.register.get('isVerified')
     }
   };
 };
@@ -35,10 +37,8 @@ const mapDispatchToProps = dispatch => {
       dispatch(register.activateOrganizaton());
     },
     toLoginView: () => {
+      dispatch(action.currentViewToDefault());
       dispatch(action.changeView(views.LOGIN_VIEW));
-    },
-    toRegisterView: () => {
-      dispatch(action.changeView(views.REGISTER_VIEW));
     }
   };
 };
