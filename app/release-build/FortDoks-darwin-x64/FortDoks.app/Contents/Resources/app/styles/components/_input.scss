@@ -1,0 +1,36 @@
+input {
+  box-sizing: border-box;
+  color: $text-color;
+  border: none;
+  border-bottom: 1px solid $background-color;
+  outline: 0px;
+  font-size: $font-size;
+  margin-bottom: 10px;
+  margin-top: 10px;
+  background-color: #FFF;
+
+  &:focus {
+    border-bottom: 1px solid $primary-color;
+  }
+
+  &.input-block {
+    display: block;
+    width: 100%;
+  }
+}
+
+textarea {
+  width: 100%;
+  box-sizing: border-box;
+  display: block;
+  color: $text-color;
+  border: 1px solid $background-color;
+  outline: 0px;
+  font-size: $font-size;
+  background-color: #FFF;
+  height: 10em;
+
+  &:focus {
+    border: 1px solid $primary-color;
+  }
+}

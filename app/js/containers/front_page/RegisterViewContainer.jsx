@@ -22,6 +22,9 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
+    onMount: () => {
+      dispatch(register.verifyActivationCode());
+    },
     onChange: (e) => {
       dispatch(action.inputChange(e.target.name, e.target.value));
     },

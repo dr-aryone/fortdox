@@ -24,6 +24,10 @@ const register = (state = initialState, action) => {
         'activateError': true,
         'errorMsg': fromJS(action.payload)
       });
+    case 'ACTIVATE_ORGANIZATION_CODE_RECIVED':
+      return initialState.set('activationCode', fromJS(action.payload));
+    case 'VERIFY_ACTIVATION_CODE_SUCCESS':
+      return state.set('privateKey', fromJS(action.payload));
     case 'ACTIVATE_ORGANIZATION_SUCCESS':
     case 'REGISTER_ORGANIZATION_NAME_SUCCESS':
     case 'REGISTER_VIEW_TO_DEFAULT':

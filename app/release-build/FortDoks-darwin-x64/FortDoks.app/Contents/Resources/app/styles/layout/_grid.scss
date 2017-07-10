@@ -1,0 +1,38 @@
+.wrapper {
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background-color: $background-color;
+}
+
+
+.container {
+}
+
+.container-fluid {
+  box-sizing: border-box;
+  margin-left: $side-nav-width;
+  margin-right: auto;
+}
+
+
+.col-sm-3 {
+  width: percentage(3/12);
+}
+
+.col-sm-4 {
+  width: percentage(4/12);
+}
+
+.col-sm-10 {
+  width: percentage(10/12);
+}
+
+.col-sm-offset-1 {
+  margin-left: percentage(1/12);
+}
+
+.col-sm-offset-4 {
+  margin-left: percentage(4/12);
+}

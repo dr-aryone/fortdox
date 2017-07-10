@@ -1,0 +1,13 @@
+.search {
+  @extend .box;
+  display: flex;
+
+  input {
+    flex-grow: 1;
+    margin: 0px 5px 0px 0px;
+  }
+}
+
+.search-item {
+  cursor: pointer;
+}
