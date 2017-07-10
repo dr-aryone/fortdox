@@ -194,6 +194,8 @@ app.get('/documents', async (req, res) => {
 app.patch('/documents', async (req, res) => {
   let privateKey =  new Buffer(req.headers.authorization.split('FortDoks ')[1], 'base64').toString();
   let response;
+  let email = req.body.email;
+  let encryptedMasterPassword;
   let expectations = expect({
     index: 'string',
     type: 'string',
@@ -204,7 +206,13 @@ app.patch('/documents', async (req, res) => {
     res.status(400).send({msg: 'Bad data format, please priovide atleast index, type, id'});
   } else {
     try {
-      response = await es.update(req.body, privateKey);
+      encryptedMasterPassword = (await users.getUser(email)).password;
+    } catch (error) {
+      console.error(error);
+      return res.status(409).send();
+    }
+    try {
+      response = await es.update(req.body, privateKey, encryptedMasterPassword);
       res.send(response);
     } catch (error) {
       console.log(error);
