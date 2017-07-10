@@ -74,16 +74,6 @@ app.post('/register', async (req, res) => {
     console.error(error);
     return res.status(error).send();
   }
-  // let keypair;
-  // return res.send({privateKey: keypair.privateKey.toString('base64')});
-  // try {
-  //   keypair = await keygen.genKeyPair();
-  // } catch (error) {
-  //   console.error(error);
-  //   return res.status(500).send();
-  // }
-  // let masterPassword = keygen.genMasterPassword();
-  // let encryptedMasterPassword = encryptMasterPassword(keypair.publicKey, masterPassword);
 
 });
 
@@ -93,6 +83,7 @@ app.post('/register/confirm', async (req, res) => {
   try {
     await users.verifyUser(email, privateKey);
   } catch (error) {
+    debugger;
     console.error(error);
     return res.status(500).send();
   }
@@ -100,6 +91,7 @@ app.post('/register/confirm', async (req, res) => {
   try {
     organizationName = await users.getOrganization(email);
   } catch (error) {
+    debugger;
     console.error(error);
     res.status(404).send();
   }
@@ -108,6 +100,7 @@ app.post('/register/confirm', async (req, res) => {
     await es.createIndex(organizationName);
     res.status(200).send();
   } catch (error) {
+    debugger;
     console.error(error);
     res.status(500).send();
   }
@@ -138,6 +131,7 @@ app.post('/register/verify', async (req, res) => {
     },
     encryptedMasterPassword);
     res.send({
+      email: user.email,
       privateKey: keypair.privateKey.toString('base64')
     });
   } catch (error) {
