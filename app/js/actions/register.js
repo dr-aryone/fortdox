@@ -1,7 +1,7 @@
 const requestor = require('@edgeguideab/client-request');
 const aes = window.require('./aes.js');
 const fs = window.require('fs');
-const pwCheck = require('@edgeguide/password-check');
+const pwCheck = require('@edgeguideab/password-check');
 
 const activateOrganizaton = () => {
   return async (dispatch, getState) => {
@@ -25,27 +25,25 @@ const activateOrganizaton = () => {
       strict: true,
       numeric: 1
     });
-
     if (!pwResult.valid) {
       let errorMsg;
       switch (pwResult.reason) {
+        case 'TOO_SHORT':
+          errorMsg = 'Password needs to at least be 8 characters long.';
+          break;
+        case 'CONTAINS_COMMON_PATTERNS':
         case 'TOO_COMMON':
           errorMsg = 'Your password is not strong enough.';
           break;
         case 'TOO_FEW_NUMERIC_CHARACTERS':
           errorMsg = 'Password needs to at least have one number.';
           break;
-        case 'TOO_SHORT':
-          errorMsg = 'Password needs to at least be 8 characters long.';
-          break;
       }
       return dispatch ({
-        debugger;
         type: 'ACTIVATE_ORGANIZATION_ERROR',
-        paylaod: errorMsg
+        payload: errorMsg
       });
     }
-
     let result;
     try {
       result = await aes.generatePaddedKey(password);

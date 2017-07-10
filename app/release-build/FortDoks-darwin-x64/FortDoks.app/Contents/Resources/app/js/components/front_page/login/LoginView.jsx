@@ -7,6 +7,7 @@ const LoginView = ({input, onChange, onLogin, toUserView, toRegisterView}) => {
     <div className='login-panel'>
       <h1 className='text-center'>FortDoks</h1>
       {errorMsg}
+
       <label>Email:</label>
       <input
         name='emailInputValue'

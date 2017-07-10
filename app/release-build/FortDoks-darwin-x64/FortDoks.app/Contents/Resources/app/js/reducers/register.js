@@ -7,9 +7,10 @@ const initialState = fromJS({
   'passwordInputValue': '',
   'reTypedPasswordInputValue': '',
   'orgNameError': false,
-  'verifyError': false,
+  'activateError': false,
   'errorMsg': '',
-  'privateKey': ''
+  'privateKey': '',
+  'isLoading': false
 });
 
 const register = (state = initialState, action) => {
@@ -20,19 +21,23 @@ const register = (state = initialState, action) => {
       return state.merge({
         'password': '',
         'reTypedPassword': '',
-        'verifyError': true,
+        'activateError': true,
         'errorMsg': fromJS(action.payload)
       });
     case 'ACTIVATE_ORGANIZATION_CODE_RECIVED':
-      return initialState.set('activationCode', action.payload);
+      return initialState.set('activationCode', fromJS(action.payload));
+    case 'VERIFY_ACTIVATION_CODE_SUCCESS':
+      return state.set('privateKey', fromJS(action.payload));
     case 'ACTIVATE_ORGANIZATION_SUCCESS':
     case 'REGISTER_ORGANIZATION_NAME_SUCCESS':
     case 'REGISTER_VIEW_TO_DEFAULT':
       return initialState;
-    case 'ACTIVATE_ORGANIZATION_FAIL':
     case 'ACTIVATE_ORGANIZATION_ERROR':
+      return state.merge({
+        activateError: true,
+        errorMsg: fromJS(action.payload)
+      });
     case 'REGISTER_ORGANIZATION_NAME_ERROR':
-    case 'REGISTER_ORGANIZATION_NAME_FAIL':
       return state.merge({
         'orgNameError': true,
         'errorMsg': fromJS(action.payload)
