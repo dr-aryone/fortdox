@@ -8,7 +8,7 @@ const mapStateToProps = () => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    onClick: (nextView) => {
+    changeView: (nextView) => {
       dispatch(action.changeView(nextView));
     }
   };
