@@ -3,7 +3,8 @@ const {fromJS} = require('immutable');
 let initialState = fromJS({
   documentToUpdate: null,
   titleValue: '',
-  textValue: ''
+  textValue: '',
+  isLoading: false
 });
 
 const form = (state = initialState, action) => {
@@ -16,6 +17,10 @@ const form = (state = initialState, action) => {
         'titleValue': fromJS(action.payload._source.title),
         'textValue': fromJS(action.payload._source.text)
       });
+    case 'UPDATE_DOCUMENT_START':
+      return state.set('isLoading', true);
+    case 'UPDATE_DOCUMENT_ERROR':
+      return state.set('isLoading', false);
     case 'UPDATE_DOCUMENT_SUCCESS':
     case 'UPDATE_DOC_VIEW_TO_DEFAULT':
       return initialState;

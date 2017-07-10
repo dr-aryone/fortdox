@@ -70,6 +70,7 @@ const currentViewToDefault = () => {
           type: 'LOGIN_VIEW_TO_DEFAULT'
         });
       case views.REGISTER_VIEW:
+      case views.REGISTER_VERIFY_VIEW:
         return dispatch({
           type: 'REGISTER_VIEW_TO_DEFAULT'
         });

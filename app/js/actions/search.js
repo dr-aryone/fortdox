@@ -2,6 +2,9 @@ const requestor = require('@edgeguideab/client-request');
 
 const search = () => {
   return async (dispatch, getState) => {
+    dispatch({
+      type: 'SEARCH_START'
+    });
     let state = getState();
     let searchString = state.search.get('searchString');
     let response;

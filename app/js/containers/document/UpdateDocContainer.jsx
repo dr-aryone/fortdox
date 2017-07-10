@@ -10,7 +10,8 @@ const mapStateToProps = (state) => {
     input: {
       titleValue: state.updateDocument.get('titleValue'),
       textValue: state.updateDocument.get('textValue')
-    }
+    },
+    isLoading: state.updateDocument.get('isLoading')
   };
 };
 

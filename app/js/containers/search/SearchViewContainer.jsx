@@ -6,7 +6,8 @@ const search = require('actions/search');
 const mapStateToProps = state => {
   return {
     searchString: state.search.get('searchString'),
-    result: state.search.get('result')
+    result: state.search.get('result'),
+    isLoading: state.search.get('isLoading')
   };
 };
 

@@ -47,6 +47,10 @@ app.post('/login', async (req, res) => {
   }
 });
 
+function sleep (ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 app.post('/register', async (req, res) => {
   let uuid = uuidv1();
   let newUser = {
