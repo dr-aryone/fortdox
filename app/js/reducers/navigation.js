@@ -19,6 +19,7 @@ const navigation = (state = initialState, action) => {
       return state.set('currentView', fromJS(views.USER_VIEW));
     case 'REGISTER_ORGANIZATION_NAME_SUCCESS':
     case 'ACTIVATE_ORGANIZATION_SUCCESS':
+    case 'LOGOUT':
       return state.set('currentView', fromJS(views.LOGIN_VIEW));
     default:
       return state;
