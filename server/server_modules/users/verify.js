@@ -16,6 +16,13 @@ module.exports = function(email, privateKey) {
       return reject(500);
     }
     let result = decryptMasterPassword(privateKey, encryptedMasterPassword);
+
+    try {
+      await user.updateAttributes({uuid: null});
+    } catch (error) {
+      console.error(error);
+      return reject(500);
+    }
     return resolve(result);
 
   });

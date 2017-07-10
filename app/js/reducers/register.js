@@ -44,6 +44,8 @@ const register = (state = initialState, action) => {
     case 'ACTIVATE_ORGANIZATION_ERROR':
     case 'VERIFY_ACTIVATION_CODE_FAIL':
       return state.merge({
+        'password': '',
+        'reTypedPassword': '',
         activateError: true,
         errorMsg: fromJS(action.payload),
         isLoading: false
