@@ -66,7 +66,7 @@ const activateOrganizaton = () => {
     }
     fs.writeFileSync('./js/local_storage/encryptedPrivateKey', encryptedKey.toString('base64'));
     fs.writeFileSync('./js/local_storage/salt', result.salt.toString('base64'));
-    let email;
+    let email = state.register.get('email');
     try {
       await requestor.post('http://localhost:8000/register/confirm', {
         body: {
@@ -135,7 +135,10 @@ const verifyActivationCode = () => {
       });
       return dispatch({
         type: 'VERIFY_ACTIVATION_CODE_SUCCESS',
-        payload: response.body.privateKey.toString('base64')
+        payload: {
+          email: response.body.email,
+          privateKey: response.body.privateKey.toString('base64')
+        }
       });
     } catch (error) {
       console.error(error);
