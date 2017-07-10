@@ -9,7 +9,8 @@ const initialState = fromJS({
   'orgNameError': false,
   'activateError': false,
   'errorMsg': '',
-  'privateKey': ''
+  'privateKey': '',
+  'isLoading': false
 });
 
 const register = (state = initialState, action) => {
