@@ -1,6 +1,8 @@
 'use strict';
 
 const nodemailer = require('nodemailer');
+const {firstTimeRegistration} = require('./templates.js');
+const {newUserRegistration} = require('./templates.js');
 
 let transporter = nodemailer.createTransport({
   service: 'gmail',
@@ -14,14 +16,8 @@ module.exports = {
   send
 };
 
-function send({to, subject, content} = {}) {
+function send(mailOptions) {
   return new Promise((resolve, reject) => {
-    let mailOptions = {
-      to,
-      subject,
-      text: content,
-      html: content
-    };
 
     transporter.sendMail(mailOptions, (error, info) => {
       if (error) {
@@ -31,3 +27,9 @@ function send({to, subject, content} = {}) {
     });
   });
 }
+
+module.exports = {
+  send,
+  newUserRegistration,
+  firstTimeRegistration
+};
