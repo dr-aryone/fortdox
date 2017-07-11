@@ -137,19 +137,21 @@ app.post('/register/verify', async (req, res) => {
 });
 
 app.post('/invite', async (req, res) => {
+  debugger;
   let privateKey = new Buffer(req.headers.authorization.split('FortDoks ')[1], 'base64').toString();
   let newUserEmail = req.body.newUserEmail;
   let email = req.body.email;
   let encryptedMasterPassword;
   let organizationId;
-  let keypair = keygen.genKeyPair();
+  let keypair;
   let sender;
   let uuid = uuidv1();
 
   try {
     sender = await users.getUser(req.body.email);
     encryptedMasterPassword = sender.password;
-    organizationId = await users.getUser(req.body.email).organizationId;
+    organizationId = sender.organizationId;
+    keypair = await keygen.genKeyPair();
   } catch (error) {
     return res.status(409).send();
   }
@@ -166,7 +168,7 @@ app.post('/invite', async (req, res) => {
   }
   let newUser = {
     username: null,
-    email,
+    newUserEmail,
     password: newEncryptedMasterPassword,
     organizationId,
     uuid

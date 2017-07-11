@@ -4,7 +4,7 @@ const encryptPrivateKey = (tempPassword, privateKey) => {
   return new Promise(async (resolve, reject) => {
     let encryptedPrivateKey;
     try {
-      encryptedPrivateKey = await aes.encryt(tempPassword, privateKey);
+      encryptedPrivateKey = await aes.encrypt(tempPassword, privateKey);
       return resolve(encryptedPrivateKey);
     } catch (error) {
       console.error(error);
