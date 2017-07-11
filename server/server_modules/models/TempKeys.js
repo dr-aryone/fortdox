@@ -1,11 +1,11 @@
 module.exports = function(sequelize, DataTypes) {
-  var tempKeyStore = sequelize.define('tempKeyStore', {
+  var TempKeys = sequelize.define('TempKeys', {
     uuid: {
       allowNull: false,
       autoIncrement: false,
       primaryKey: true,
       unique: true,
-      type: DataTypes.INTEGER
+      type: DataTypes.STRING
     },
     privateKey: {
       allowNull: false,
@@ -14,5 +14,5 @@ module.exports = function(sequelize, DataTypes) {
   }, {
     timestamps: false
   });
-  return tempKeyStore;
+  return TempKeys;
 };

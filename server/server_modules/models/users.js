@@ -10,7 +10,7 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.INTEGER
     },
     username: {
-      allowNull: false,
+      allowNull: true,
       type: DataTypes.STRING
     },
     email: {
@@ -23,7 +23,8 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.BLOB
     },
     uuid: {
-      type: DataTypes.STRING
+      type: DataTypes.STRING,
+      unique: true
     }
   }, {
     timestamps: false

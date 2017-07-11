@@ -4,7 +4,7 @@ const getOrganization = require('./getOrganization.js');
 const getUser = require('./getUser.js');
 const verifyUUID = require('./verifyUUID.js');
 const setPassword = require('./setPassword.js');
-const tempKeyStore = require('./tempKeyStore.js');
+const TempKeys = require('./TempKeys.js');
 module.exports = {
   createUser,
   verifyUser,
@@ -12,5 +12,5 @@ module.exports = {
   getOrganization,
   verifyUUID,
   setPassword,
-  tempKeyStore
+  TempKeys
 };

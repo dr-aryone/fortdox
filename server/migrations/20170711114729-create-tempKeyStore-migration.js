@@ -2,13 +2,12 @@
 
 module.exports = {
   up: function (queryInterface, Sequelize) {
-    return queryInterface.createTable('tempKeyStore', {
+    return queryInterface.createTable('TempKeys', {
       uuid: {
         allowNull: false,
         autoIncrement: false,
         primaryKey: true,
-        unique: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.STRING
       },
       privateKey: {
         allowNull: false,
@@ -18,6 +17,6 @@ module.exports = {
   },
 
   down: function (queryInterface) {
-    return queryInterface.dropTable('tempKeyStore');
+    return queryInterface.dropTable('TempKeys');
   }
 };
