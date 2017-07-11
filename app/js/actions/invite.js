@@ -8,6 +8,7 @@ const inviteUser = () => {
     let newUserEmail = state.invite.get('emailInputValue');
     let privateKey = state.user.get('privateKey');
     let email = state.user.get('email');
+    debugger;
     dispatch ({
       type: 'INVITE_USER_START'
     });
