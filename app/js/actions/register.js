@@ -1,7 +1,6 @@
 const requestor = require('@edgeguideab/client-request');
-const aes = window.require('./aes.js');
-const fs = window.require('fs');
-const pwCheck = require('@edgeguideab/password-check');
+const encryptPrivateKey = require('actions/utilities/encryptPrivateKey');
+const passwordCheck = require('actions/utilities/passwordCheck');
 
 const activateOrganizaton = () => {
   return async (dispatch, getState) => {
@@ -12,60 +11,21 @@ const activateOrganizaton = () => {
 
     let privateKey = state.register.get('privateKey');
     let password = state.register.get('passwordInputValue');
-    let reTypedPassword = state.register.get('reTypedPasswordInputValue');
-    if (password !== reTypedPassword) {
-      return dispatch ({
-        type: 'ACTIVATE_ORGANIZATION_ERROR',
-        payload: 'Passwords didn\'t match. Try again.'
-      });
-    }
-    let pwResult = pwCheck.evaluate(password, {
-      length: 8,
-      allowCommon: false,
-      strict: true,
-      numeric: 1
-    });
+    let retypedPassword = state.register.get('retypedPasswordInputValue');
+    let pwResult = passwordCheck(password, retypedPassword);
     if (!pwResult.valid) {
-      let errorMsg;
-      switch (pwResult.reason) {
-        case 'TOO_SHORT':
-          errorMsg = 'Password needs to at least be 8 characters long.';
-          break;
-        case 'CONTAINS_COMMON_PATTERNS':
-        case 'TOO_COMMON':
-          errorMsg = 'Your password is not strong enough.';
-          break;
-        case 'TOO_FEW_NUMERIC_CHARACTERS':
-          errorMsg = 'Password needs to at least have one number.';
-          break;
-      }
       return dispatch ({
         type: 'ACTIVATE_ORGANIZATION_ERROR',
-        payload: errorMsg
+        payload: pwResult.errorMsg
       });
     }
-    let result;
-    try {
-      result = await aes.generatePaddedKey(password);
-    } catch (error) {
-      console.error(error);
+    let result = encryptPrivateKey(privateKey, password);
+    if (!result.status) {
       return dispatch ({
         type: 'ACTIVATE_ORGANIZATION_ERROR',
-        payload: 'Meep'
+        payload: result.errorMsg
       });
     }
-    let encryptedKey;
-    try {
-      encryptedKey = (await aes.encrypt(new window.Buffer(result.key, 'base64'), new window.Buffer(privateKey, 'base64')));
-    } catch (error) {
-      console.error(error);
-      return dispatch ({
-        type: 'ACTIVATE_ORGANIZATION_ERROR',
-        payload: 'Meep meep'
-      });
-    }
-    fs.writeFileSync('./js/local_storage/encryptedPrivateKey', encryptedKey.toString('base64'));
-    fs.writeFileSync('./js/local_storage/salt', result.salt.toString('base64'));
     let email = state.register.get('email');
     try {
       await requestor.post('http://localhost:8000/register/confirm', {

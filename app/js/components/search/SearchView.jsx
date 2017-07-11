@@ -19,7 +19,7 @@ const SearchView = ({result, onUpdate, searchString, onChange, onSearch, isLoadi
       <div className='col-sm-10 col-sm-offset-1'>
         <LoaderOverlay display={isLoading} />
         <h1>Search</h1>
-        <div className='search'>
+        <div className='input-bar box'>
           <input
             name='searchString'
             type='text'
