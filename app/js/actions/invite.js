@@ -8,7 +8,6 @@ const inviteUser = () => {
     let newUserEmail = state.invite.get('emailInputValue');
     let privateKey = state.user.get('privateKey');
     let email = state.user.get('email');
-    debugger;
     dispatch ({
       type: 'INVITE_USER_START'
     });
@@ -75,8 +74,8 @@ const verifyUser = () => {
     let username = state.verifyUser.get('usernameInputValue');
     let password = state.verifyUser.get('passwordInputValue');
     let retypedPassword = state.verifyUser.get('retypedInputValue');
-    let email = state.verifyUser.get('email');
     let privateKey = state.verifyUser.get('privateKey');
+    let uuid = state.verifyUser.get('uuid');
     let pwResult = passwordCheck(password, retypedPassword);
     if (!pwResult.valid) {
       return dispatch ({
@@ -96,7 +95,7 @@ const verifyUser = () => {
     try {
       await requestor.post('http://localhost:8000/invite', {
         body: {
-          email,
+          uuid,
           username
         },
         headers: {
@@ -110,7 +109,6 @@ const verifyUser = () => {
         payload: 'SOMETHING WENT WRONG'
       });
     }
-
     dispatch ({
       type: 'VERIFY_NEW_USER_SUCCESS'
     });
