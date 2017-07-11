@@ -14,17 +14,32 @@ const url = window.require('url');
 const querystring = window.require('querystring');
 let queryParameters = querystring.parse(url.parse(window.location.href).query);
 
-if (queryParameters.activationCode) {
+if (queryParameters.activateOrganizationCode) {
   store.dispatch({
     type: 'ACTIVATE_ORGANIZATION_CODE_RECIVED',
-    payload: queryParameters.activationCode
+    payload: queryParameters.activateOrganizationCode
   });
 
 }
 
-ipcRenderer.on('url', (event, data) => {
+if (queryParameters.activateUserCode) {
+  store.dispatch({
+    type: 'ACTIVATE_USER_CODE_RECIVED',
+    payload: queryParameters.activateUserCode
+  });
+
+}
+
+ipcRenderer.on('activate-organization', (event, data) => {
   store.dispatch({
     type: 'ACTIVATE_ORGANIZATION_CODE_RECIVED',
+    payload: data
+  });
+});
+
+ipcRenderer.on('activate-user', (event, data) => {
+  store.dispatch({
+    type: 'ACTIVATE_USER_CODE_RECIVED',
     payload: data
   });
 });

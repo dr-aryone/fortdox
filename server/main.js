@@ -9,6 +9,7 @@ const es = require('./server_modules/es');
 const {decryptDocuments} = require('./server_modules/crypt/authentication/cryptDocument');
 const {decryptMasterPassword} = require('./server_modules/crypt/keys/cryptMasterPassword');
 const {encryptMasterPassword} = require('./server_modules/crypt/keys/cryptMasterPassword');
+const encryptPrivateKey = require('./server_modules/crypt/authentication/cryptPrivateKey');
 const mailer = require('./server_modules/mailer');
 const expect = require('@edgeguideab/expect');
 const uuidv1 = require('uuid/v1');
@@ -47,10 +48,6 @@ app.post('/login', async (req, res) => {
   }
 });
 
-function sleep (ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
-
 app.post('/register', async (req, res) => {
   let uuid = uuidv1();
   let newUser = {
@@ -68,11 +65,7 @@ app.post('/register', async (req, res) => {
   }
   try {
     await users.createUser(newUser);
-    let mail = {
-      to: newUser.email,
-      subject: `FortDoks registration for ${req.body.organization}`,
-      content:`<p><a href="http://localhost:8000/activation-redirect?code=${uuid}"> http://localhost:8000/activation-redirect?code=${uuid} </a>`
-    };
+    let mail = mailer.firstTimeRegistration({to: newUser.email, organization: req.body.organization, uuid: newUser.uuid});
     mailer.send(mail);
     res.send();
   } catch (error) {
@@ -124,7 +117,7 @@ app.post('/register/verify', async (req, res) => {
   } catch (error) {
     console.error(error);
   }
-  let masterPassword = keygen.genMasterPassword();
+  let masterPassword = keygen.genRandomPassword();
   let encryptedMasterPassword = encryptMasterPassword(keypair.publicKey, masterPassword);
   try {
     await users.setPassword({
@@ -140,6 +133,59 @@ app.post('/register/verify', async (req, res) => {
     console.error(error);
     res.status(500).send();
   }
+
+});
+
+app.post('/invite', async (req, res) => {
+  let privateKey = new Buffer(req.headers.authorization.split('FortDoks ')[1], 'base64').toString();
+  let newUserEmail = req.body.newUserEmail;
+  let email = req.body.email;
+  let encryptedMasterPassword;
+  let organizationId;
+  let keypair = keygen.genKeyPair();
+  let sender;
+  let uuid = uuidv1();
+
+  try {
+    sender = await users.getUser(req.body.email);
+    encryptedMasterPassword = sender.password;
+    organizationId = await users.getUser(req.body.email).organizationId;
+  } catch (error) {
+    return res.status(409).send();
+  }
+
+  let masterPassword = decryptMasterPassword(privateKey, encryptedMasterPassword);
+  let newEncryptedMasterPassword = encryptMasterPassword(keypair.publicKey, masterPassword);
+  let tempPassword = keygen.genRandomPassword();
+  let encryptedPrivateKey;
+  try {
+    encryptedPrivateKey = await encryptPrivateKey(tempPassword, privateKey);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send();
+  }
+  let newUser = {
+    username: null,
+    email,
+    password: newEncryptedMasterPassword,
+    organizationId,
+    uuid
+  };
+  try {
+    await users.createUser(newUser);
+    await users.tempKeyStore(uuid, encryptedPrivateKey);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send();
+  }
+  let mail = mailer.newUserRegistration({
+    to: newUserEmail,
+    organization: sender.Organization.organization,
+    from: sender.username,
+    uuid,
+    tempPassword
+  });
+  mailer.send(mail);
 
 });
 
@@ -247,4 +293,8 @@ app.delete('/documents', async (req,res) => {
 
 app.get('/activation-redirect', (req, res) => {
   res.sendFile(__dirname + '/redirect.html');
+});
+
+app.get('/invite-redirect', (req,res) => {
+  res.sendFile(__dirname + '/invite-redirect.html');
 });

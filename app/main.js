@@ -4,7 +4,10 @@ const urlParser = require('url');
 const querystring = require('querystring');
 const { default: installExtension, REDUX_DEVTOOLS } = require('electron-devtools-installer');
 let win;
-let activationCode;
+let activation = {
+  type: '',
+  code: null
+};
 
 async function createWindow() {
   win = new BrowserWindow({width: 1280, height: 720});
@@ -16,8 +19,14 @@ async function createWindow() {
     protocol: 'file:',
     slashes: true
   });
-  if (activationCode) {
-    openingUrl = `${openingUrl}?activationCode=${activationCode}`;
+  if (activation.code) {
+    switch (activation.type) {
+      case 'activate.organization':
+        openingUrl = `${openingUrl}?activateOrganizationCode=${activation.code}`;
+        break;
+      case 'activate.user':
+        openingUrl = `${openingUrl}?activateUserCode=${activation.code}`;
+    }
   }
   win.loadURL(openingUrl);
 
@@ -30,10 +39,16 @@ app.setAsDefaultProtocolClient('FortDoks');
 app.on('ready', createWindow);
 
 app.on('open-url', (event, url) => {
-  activationCode = querystring.parse(urlParser.parse(url).query).code;
+  activation.type = urlParser.parse(url).hostname;
+  activation.code = querystring.parse(urlParser.parse(url).query).code;
   if (win !== undefined) {
-    win.webContents.send('url', activationCode);
-    win.show();
+    if (activation.type === 'activate.organization') {
+      win.webContents.send('activate-organization', activation.code);
+      win.show();
+    } else if (activation.type === 'activate.user') {
+      win.webContents.send('activate-user', activation.code);
+      win.show();
+    }
   }
 });
 

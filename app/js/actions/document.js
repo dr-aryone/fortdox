@@ -41,7 +41,8 @@ const updateDocument = () => {
     let state = getState();
     let oldDoc = state.updateDocument.get('documentToUpdate');
     let newDoc = state.updateDocument;
-    let privateKey = state.user.privateKey;
+    let privateKey = state.user.get('privateKey');
+    let email = state.user.get('email');
     dispatch({
       type: 'UPDATE_DOCUMENT_START'
     });
@@ -54,7 +55,8 @@ const updateDocument = () => {
           updateQuery: {
             title: newDoc.get('titleValue'),
             text: newDoc.get('textValue')
-          }
+          },
+          email
         },
         headers: {
           'Authorization': `FortDoks ${privateKey}`

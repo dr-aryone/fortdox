@@ -33,9 +33,10 @@ const genKeyPair = () => {
   });
 };
 
-const genMasterPassword = () => {
+const genRandomPassword = () => {
   let masterPassword = crypto.randomBytes(32);
   return masterPassword;
 };
 
-module.exports = {genKeyPair, genMasterPassword};
+
+module.exports = {genKeyPair, genRandomPassword};
