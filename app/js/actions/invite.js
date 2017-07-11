@@ -44,7 +44,7 @@ const receivePrivateKey = () => {
     });
     let response;
     try {
-      response = await requestor.post('http://localhost:8000/invite', {
+      response = await requestor.post('http://localhost:8000/invite/verify', {
         body: {
           temporaryPassword,
           uuid
@@ -54,7 +54,7 @@ const receivePrivateKey = () => {
       console.error(error);
       return dispatch ({
         type: 'RECEIVE_PRIVATE_KEY_ERROR',
-        payload: 'Email already verified of broken link.'
+        payload: 'Email is already verified or the link is broken.'
       });
     }
 
@@ -93,7 +93,7 @@ const verifyUser = () => {
       });
     }
     try {
-      await requestor.post('http://localhost:8000/invite', {
+      await requestor.post('http://localhost:8000/invite/confirm', {
         body: {
           uuid,
           username
