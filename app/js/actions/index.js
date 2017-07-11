@@ -35,6 +35,19 @@ const inputChange = (inputName, inputValue) => {
           inputName,
           inputValue
         });
+
+      case views.INVITE_USER_VIEW:
+        return dispatch({
+          type: 'INPUT_CHANGE_INVITE_USER',
+          inputName,
+          inputValue
+        });
+      case views.VERIFY_USER_VIEW:
+        return dispatch({
+          type: 'INPUT_CHANGE_VERIFY_USER',
+          inputName,
+          inputValue
+        });
     }
   };
 };
