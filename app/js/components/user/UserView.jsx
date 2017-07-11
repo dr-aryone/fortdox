@@ -5,6 +5,7 @@ const UserViewFrontPage = require('./UserViewFrontPage');
 const CreateDocContainer = require('containers/document/CreateDocContainer');
 const UpdateDocContainer = require('containers/document/UpdateDocContainer');
 const SearchViewContainer = require('containers/search/SearchViewContainer');
+const InviteUserContainer = require('containers/invite/InviteUserContainer');
 //const Header = require('components/user/Header');
 
 const UserView = ({currentView, changeView}) => {
@@ -21,6 +22,9 @@ const UserView = ({currentView, changeView}) => {
       break;
     case views.UPDATE_DOC_VIEW:
       page = <UpdateDocContainer />;
+      break;
+    case views.INVITE_USER_VIEW:
+      page = <InviteUserContainer />;
       break;
   }
 
