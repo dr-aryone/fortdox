@@ -153,7 +153,6 @@ app.post('/invite', async (req, res) => {
   } catch (error) {
     return res.status(409).send();
   }
-
   let masterPassword = decryptMasterPassword(privateKey, encryptedMasterPassword);
   let newEncryptedMasterPassword = encryptMasterPassword(keypair.publicKey, masterPassword);
   let tempPassword = keygen.genRandomPassword();
