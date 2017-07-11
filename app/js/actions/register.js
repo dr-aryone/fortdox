@@ -14,16 +14,19 @@ const activateOrganizaton = () => {
     let retypedPassword = state.register.get('retypedPasswordInputValue');
     let pwResult = passwordCheck(password, retypedPassword);
     if (!pwResult.valid) {
+      console.error(pwResult.errorMsg);
       return dispatch ({
         type: 'ACTIVATE_ORGANIZATION_ERROR',
         payload: pwResult.errorMsg
       });
     }
-    let result = encryptPrivateKey(privateKey, password);
-    if (!result.status) {
+    try {
+      await encryptPrivateKey(privateKey, password);
+    } catch (error) {
+      console.error(error);
       return dispatch ({
         type: 'ACTIVATE_ORGANIZATION_ERROR',
-        payload: result.errorMsg
+        payload: 'Contact your administrator.'
       });
     }
     let email = state.register.get('email');

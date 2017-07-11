@@ -83,11 +83,13 @@ const verifyUser = () => {
         payload: pwResult.errorMsg
       });
     }
-    let result = encryptPrivateKey(privateKey, password);
-    if (!result.status) {
+    try {
+      await encryptPrivateKey(privateKey, password);
+    } catch (error) {
+      console.error(error);
       return dispatch ({
         type: 'VERIFY_NEW_USER_ERROR',
-        payload: result.errorMsg
+        payload: 'SOMETHING WENT WRONG'
       });
     }
     try {

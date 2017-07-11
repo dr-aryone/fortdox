@@ -2,7 +2,7 @@
 
 module.exports = {
   up: function (queryInterface, Sequelize) {
-    return queryInterface.create('tempKeyStore', {
+    return queryInterface.createTable('tempKeyStore', {
       uuid: {
         allowNull: false,
         autoIncrement: false,

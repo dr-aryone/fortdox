@@ -186,6 +186,7 @@ app.post('/invite', async (req, res) => {
     tempPassword
   });
   mailer.send(mail);
+  res.send();
 
 });
 
