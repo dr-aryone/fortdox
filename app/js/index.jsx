@@ -25,7 +25,7 @@ if (queryParameters.activateOrganizationCode) {
 if (queryParameters.activateUserCode) {
   store.dispatch({
     type: 'ACTIVATE_USER_CODE_RECIVED',
-    payload: queryParameters.activateUserCode
+    payload: queryParameters
   });
 
 }
