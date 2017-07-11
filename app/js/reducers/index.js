@@ -6,6 +6,7 @@ const search = require('./search');
 const createDocument = require('./createDocument');
 const updateDocument = require('./updateDocument');
 const user = require('./user');
+const invite = require('./invite');
 
 const docApp = combineReducers({
   navigation,
@@ -14,7 +15,8 @@ const docApp = combineReducers({
   user,
   search,
   createDocument,
-  updateDocument
+  updateDocument,
+  invite
 });
 
 

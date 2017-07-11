@@ -8,8 +8,7 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = () => {
-  return {
-  };
+  return {};
 };
 
 const LoginViewContainer = connect(

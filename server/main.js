@@ -200,7 +200,7 @@ app.post('/documents', async (req, res) => {
   } catch (error) {
     res.status(409).send();
   }
-
+  console.log(req.body);
   try {
     res.send(await es.addToIndex(req.body, privateKey, encryptedMasterPassword, organization));
   } catch (error) {

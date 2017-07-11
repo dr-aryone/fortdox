@@ -5,7 +5,7 @@ const initialState = fromJS({
   'usernameInputValue': '',
   'emailInputValue': '',
   'passwordInputValue': '',
-  'reTypedPasswordInputValue': '',
+  'retypedPasswordInputValue': '',
   'orgNameError': false,
   'activateError': false,
   'errorMsg': '',
@@ -24,7 +24,7 @@ const register = (state = initialState, action) => {
     case 'REGISTER_PASSWORD_MISSMATCH':
       return state.merge({
         'password': '',
-        'reTypedPassword': '',
+        'retypedPassword': '',
         'activateError': true,
         'errorMsg': fromJS(action.payload)
       });
@@ -45,7 +45,7 @@ const register = (state = initialState, action) => {
     case 'VERIFY_ACTIVATION_CODE_FAIL':
       return state.merge({
         'password': '',
-        'reTypedPassword': '',
+        'retypedPassword': '',
         activateError: true,
         errorMsg: fromJS(action.payload),
         isLoading: false
