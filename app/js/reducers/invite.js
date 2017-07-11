@@ -1,7 +1,7 @@
 const {fromJS} = require('immutable');
 
 const initialState = fromJS({
-  email: '',
+  emailInputValue: '',
   isLoading: false,
   error: false,
   errorMsg: ''
@@ -9,6 +9,8 @@ const initialState = fromJS({
 
 const invite = (state = initialState, action) => {
   switch (action.type) {
+    case 'INPUT_CHANGE_INVITE_USER':
+      return state.set(action.inputName, fromJS(action.inputValue));
     case 'INVITE_USER_START':
       return state.set('isLoading', true);
     case 'INVITE_USER_ERROR':
