@@ -33,10 +33,10 @@ class RegisterVerifyView extends React.Component {
           />
           <label>Re-type password:</label>
           <input
-            name='reTypedPasswordInputValue'
+            name='retypedPasswordInputValue'
             type='password'
             onChange={onChange}
-            value={register.reTypedPasswordInputValue}
+            value={register.retypedPasswordInputValue}
             className='input-block'
           />
           <a onClick={onRegister} className='btn btn-block'>

@@ -11,7 +11,8 @@ const mapStateToProps = state => {
       passwordInputValue: state.login.get('passwordInputValue'),
       error: state.login.get('error'),
       errorMsg: state.login.get('errorMsg')
-    }
+    },
+    isLoading: state.login.get('isLoading')
   };
 };
 

@@ -12,7 +12,7 @@ const mapStateToProps = state => {
       usernameInputValue: state.register.get('usernameInputValue'),
       emailInputValue: state.register.get('emailInputValue'),
       passwordInputValue: state.register.get('passwordInputValue'),
-      reTypedPasswordInputValue: state.register.get('reTypedPasswordInputValue'),
+      retypedPasswordInputValue: state.register.get('retypedPasswordInputValue'),
       errorMsg: state.register.get('errorMsg'),
       orgNameError: state.register.get('orgNameError'),
       activateError: state.register.get('activateError'),
