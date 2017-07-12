@@ -159,12 +159,11 @@ app.post('/invite', async (req, res) => {
   let tempPassword = keygen.genRandomPassword();
   let encryptedPrivateKey;
   try {
-    encryptedPrivateKey = await encryptPrivateKey(tempPassword, privateKey);
+    encryptedPrivateKey = await encryptPrivateKey(tempPassword, keypair.privateKey);
   } catch (error) {
     console.error(error);
     return res.status(500).send();
   }
-  debugger;
   let newUser = {
     username: null,
     email: newUserEmail,
@@ -174,7 +173,7 @@ app.post('/invite', async (req, res) => {
   };
   try {
     await users.createUser(newUser);
-    await users.TempKeys(uuid, encryptedPrivateKey);
+    await users.TempKeys.store(uuid, encryptedPrivateKey);
   } catch (error) {
     console.error(error);
     return res.status(500).send();
@@ -192,10 +191,9 @@ app.post('/invite', async (req, res) => {
 });
 app.post('/invite/verify', async (req, res) => {
   let uuid = req.body.uuid;
-  let tempPassword = Buffer.from(req.body.temporaryPassword, 'base64');
+  let tempPassword = Buffer.from(decodeURIComponent(req.body.temporaryPassword), 'base64');
   let encryptedPrivateKey;
   let privateKey;
-
   try {
     encryptedPrivateKey = new Buffer((await users.getEncryptedPrivateKey(uuid)), 'base64');
     privateKey = (await decryptPrivateKey(tempPassword, encryptedPrivateKey)).toString('base64');
@@ -206,7 +204,20 @@ app.post('/invite/verify', async (req, res) => {
     console.error(error);
     res.status(500).send();
   }
+});
 
+app.post('/invite/confirm', async (req, res) => {
+  let uuid = req.body.uuid;
+  let username = req.body.username;
+  let privateKey = new Buffer(req.headers.authorization.split('FortDoks ')[1], 'base64').toString();
+  try {
+    await users.verifyNewUser(uuid, privateKey, username);
+    await users.TempKeys.remove(uuid);
+    return res.send();
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send();
+  }
 
 
 });
