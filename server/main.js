@@ -164,6 +164,7 @@ app.post('/invite', async (req, res) => {
     console.error(error);
     return res.status(500).send();
   }
+  debugger;
   let newUser = {
     username: null,
     email: newUserEmail,
@@ -189,15 +190,15 @@ app.post('/invite', async (req, res) => {
   res.send();
 
 });
-app.post('./invite/verify', async (req, res) => {
+app.post('/invite/verify', async (req, res) => {
   let uuid = req.body.uuid;
-  let tempPassword = req.body.tempPassword;
+  let tempPassword = Buffer.from(req.body.temporaryPassword, 'base64');
   let encryptedPrivateKey;
   let privateKey;
 
   try {
-    encryptedPrivateKey = await users.getEncryptedPrivateKey(uuid);
-    privateKey = await decryptPrivateKey(tempPassword, encryptedPrivateKey);
+    encryptedPrivateKey = new Buffer((await users.getEncryptedPrivateKey(uuid)), 'base64');
+    privateKey = await decryptPrivateKey(tempPassword, encryptedPrivateKey).toString('base64');
     return res.send({
       privateKey
     });
