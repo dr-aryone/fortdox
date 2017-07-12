@@ -1,5 +1,5 @@
 const React = require('react');
-const SideNavContainer = require('containers/user/sideNav/SideNavContainer');
+const SideNavContainer = require('containers/user/side_nav/SideNavContainer');
 const views = require('views.json');
 const UserViewFrontPage = require('./UserViewFrontPage');
 const CreateDocContainer = require('containers/document/CreateDocContainer');

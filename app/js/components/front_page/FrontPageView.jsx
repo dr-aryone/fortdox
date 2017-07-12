@@ -18,12 +18,9 @@ const FrontPageView = ({currentView}) => {
       view = <VerifyUserContainer />;
       break;
   }
-
   return (
-    <div className='login-outer'>
-      <div className='login-middle'>
-        {view}
-      </div>
+    <div className='full-page'>
+      {view}
     </div>
   );
 };
