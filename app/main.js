@@ -41,12 +41,13 @@ app.on('ready', createWindow);
 app.on('open-url', (event, url) => {
   activation.type = urlParser.parse(url).hostname;
   activation.code = querystring.parse(urlParser.parse(url).query).code;
+  let activateUser = querystring.parse(urlParser.parse(url).query);
   if (win !== undefined) {
     if (activation.type === 'activate.organization') {
       win.webContents.send('activate-organization', activation.code);
       win.show();
     } else if (activation.type === 'activate.user') {
-      win.webContents.send('activate-user', activation.code);
+      win.webContents.send('activate-user', activateUser);
       win.show();
     }
   }

@@ -146,7 +146,6 @@ app.post('/invite', async (req, res) => {
   let keypair;
   let sender;
   let uuid = uuidv1();
-
   try {
     sender = await users.getUser(email);
     encryptedMasterPassword = sender.password;
