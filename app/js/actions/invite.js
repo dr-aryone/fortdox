@@ -60,7 +60,7 @@ const receivePrivateKey = () => {
 
     dispatch ({
       type: 'RECEIVE_PRIVATE_KEY_SUCCESS',
-      payload: response.privateKey
+      payload: response.body.privateKey
     });
   };
 };

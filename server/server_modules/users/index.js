@@ -1,5 +1,6 @@
 const createUser = require('./create.js');
-const verifyUser = require('./verify.js');
+const {verifyUser} = require('./verify.js');
+const {verifyNewUser} = require('./verify.js');
 const getOrganization = require('./getOrganization.js');
 const getUser = require('./getUser.js');
 const verifyUUID = require('./verifyUUID.js');
@@ -14,5 +15,6 @@ module.exports = {
   verifyUUID,
   setPassword,
   TempKeys,
-  getEncryptedPrivateKey
+  getEncryptedPrivateKey,
+  verifyNewUser
 };
