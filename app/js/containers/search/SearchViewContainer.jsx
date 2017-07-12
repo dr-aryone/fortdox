@@ -7,7 +7,8 @@ const mapStateToProps = state => {
   return {
     searchString: state.search.get('searchString'),
     result: state.search.get('result'),
-    isLoading: state.search.get('isLoading')
+    isLoading: state.search.get('isLoading'),
+    hasSearched: state.search.get('hasSearched')
   };
 };
 

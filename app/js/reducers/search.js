@@ -5,7 +5,8 @@ const initialState = fromJS({
   result: [],
   error: false,
   errorMsg: '',
-  isLoading: false
+  isLoading: false,
+  hasSearched: false
 });
 
 const register = (state = initialState, action) => {
@@ -20,7 +21,8 @@ const register = (state = initialState, action) => {
         'result': fromJS(action.payload),
         'error': false,
         'errorMsg': '',
-        'isLoading': false
+        'isLoading': false,
+        'hasSearched': true
       });
     case 'SEARCH_NOT_FOUND':
       return state.merge({
@@ -28,9 +30,9 @@ const register = (state = initialState, action) => {
         'documentToUpdate': null,
         'error': true,
         'errorMsg': action.payload,
-        'isLoading': false
+        'isLoading': false,
+        'hasSearched': true
       });
-    case 'SEARCH_VIEW_TO_DEFAULT':
     case 'UPDATE_DOCUMENT_SUCCESS':
     case 'DELETE_DOCUMENT_SUCCESS':
       return initialState;

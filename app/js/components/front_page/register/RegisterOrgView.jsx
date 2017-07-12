@@ -4,7 +4,7 @@ const LoaderOverlay = require('components/general/LoaderOverlay');
 const RegisterOrgView = ({register, onChange, onCreateOrganization, toLoginView}) => {
   let errorMsg = register.orgNameError ? <h2>{register.errorMsg}</h2> : null;
   return (
-    <div className='login-panel'>
+    <div className='container box'>
       <LoaderOverlay display={register.isLoading} />
       <h1 className='text-center'>Create a New Team</h1>
       {errorMsg}

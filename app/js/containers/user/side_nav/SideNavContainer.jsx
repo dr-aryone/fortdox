@@ -1,5 +1,5 @@
 const {connect} = require('react-redux');
-const SideNav = require('components/user/SideNav');
+const SideNav = require('components/user/side_nav/SideNav');
 const action = require('actions');
 
 const mapStateToProps = (state) => {

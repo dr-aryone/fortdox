@@ -1,8 +1,16 @@
 const React = require('react');
 const LoaderOverlay = require('components/general/LoaderOverlay');
 
-const InviteUserView = ({emailInputValue, error, errorMsg, onChange, onSend, isLoading}) => {
-  let message = error ? errorMsg : null;
+const InviteUserView = ({emailInputValue, message, error, errorMsg, onChange, onSend, isLoading}) => {
+  let errMsg = error ? errorMsg : null;
+  let messageBox = message ? (
+    <div className='alert alert-success'>
+      <i className='material-icons'>
+        check
+      </i>
+      {message}
+    </div>
+  ) : null;
   return (
     <div className='container-fluid'>
       <div className='col-sm-10 col-sm-offset-1'>
@@ -10,7 +18,8 @@ const InviteUserView = ({emailInputValue, error, errorMsg, onChange, onSend, isL
         <h1>Invite User</h1>
         <div className='box'>
           <p>Invite a new user to the organization.</p>
-          {message}
+          {errMsg}
+          {messageBox}
           <div className='input-bar'>
             <input
               name='emailInputValue'

@@ -6,16 +6,31 @@
   background-color: $background-color;
 }
 
-
-.container {
-}
-
 .container-fluid {
-  box-sizing: border-box;
   margin-left: $side-nav-width;
-  margin-right: auto;
-}
+  height: 100%;
 
+  &.center-middle {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    position: relative;
+
+    .alert {
+      position: absolute;
+      top: 0px;
+      width: percentage(10/12);
+      margin-top: 15px;
+    }
+  }
+
+  &.center {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+  }
+}
 
 .col-sm-3 {
   width: percentage(3/12);

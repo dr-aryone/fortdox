@@ -37,9 +37,9 @@ const register = (state = initialState, action) => {
         'isLoading': false,
         'isVerified': true
       });
+    case 'CHANGE_VIEW':
     case 'ACTIVATE_ORGANIZATION_SUCCESS':
     case 'REGISTER_ORGANIZATION_NAME_SUCCESS':
-    case 'REGISTER_VIEW_TO_DEFAULT':
       return initialState;
     case 'ACTIVATE_ORGANIZATION_ERROR':
     case 'VERIFY_ACTIVATION_CODE_FAIL':
