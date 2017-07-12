@@ -12,6 +12,9 @@ module.exports = {
       privateKey: {
         allowNull: false,
         type: Sequelize.BLOB
+      },
+      createdAt: {
+        type: Sequelize.DATE
       }
     });
   },
