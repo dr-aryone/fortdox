@@ -9,7 +9,8 @@ const initialState = fromJS({
   isLoading: false,
   uuid: '',
   temporaryPassword: '',
-  privateKey: ''
+  privateKey: '',
+  hasPrivateKey: false
 });
 
 const verifyUser = (state = initialState, action) => {
@@ -22,7 +23,10 @@ const verifyUser = (state = initialState, action) => {
         temporaryPassword: action.payload.pass
       });
     case 'RECEIVE_PRIVATE_KEY_SUCCESS':
-      return state.set('privateKey', action.payload);
+      return state.merge({
+        'privateKey': action.payload,
+        'hasPrivateKey': true
+      });
     case 'VERIFY_NEW_USER_START':
       return state.set('isLoading', true);
     case 'VERIFY_NEW_USER_ERROR':

@@ -13,7 +13,8 @@ const mapStateToProps = state => {
       error: state.verifyUser.get('error'),
       errorMsg: state.verifyUser.get('errorMsg')
     },
-    isLoading: state.login.get('isLoading')
+    isLoading: state.verifyUser.get('isLoading'),
+    hasPrivateKey: state.verifyUser.get('hasPrivateKey'),
   };
 };
 
