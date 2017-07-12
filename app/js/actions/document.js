@@ -10,7 +10,6 @@ const createDocument = () => {
     dispatch({
       type: 'CREATE_DOCUMENT_START'
     });
-
     try {
       await requestor.post('http://localhost:8000/documents', {
         body: {
@@ -24,15 +23,16 @@ const createDocument = () => {
           'Authorization': `FortDoks ${privateKey}`
         }
       });
-      dispatch({
-        type: 'CREATE_DOCUMENT_SUCCESS'
-      });
     } catch (error) {
       console.error(error);
-      dispatch({
+      return dispatch({
         type: 'CREATE_DOCUMENT_ERROR'
       });
     }
+    return dispatch({
+      type: 'CREATE_DOCUMENT_SUCCESS',
+      payload: 'Document created!'
+    });
   };
 };
 
@@ -69,7 +69,8 @@ const updateDocument = () => {
       });
     }
     return dispatch({
-      type: 'UPDATE_DOCUMENT_SUCCESS'
+      type: 'UPDATE_DOCUMENT_SUCCESS',
+      payload: 'Document updated!'
     });
   };
 };

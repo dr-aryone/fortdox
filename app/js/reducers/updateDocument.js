@@ -23,6 +23,7 @@ const form = (state = initialState, action) => {
       return state.set('isLoading', false);
     case 'UPDATE_DOCUMENT_SUCCESS':
     case 'UPDATE_DOC_VIEW_TO_DEFAULT':
+    case 'CHANGE_VIEW':
       return initialState;
     default:
       return state;
