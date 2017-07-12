@@ -198,7 +198,7 @@ app.post('/invite/verify', async (req, res) => {
 
   try {
     encryptedPrivateKey = new Buffer((await users.getEncryptedPrivateKey(uuid)), 'base64');
-    privateKey = await decryptPrivateKey(tempPassword, encryptedPrivateKey).toString('base64');
+    privateKey = (await decryptPrivateKey(tempPassword, encryptedPrivateKey)).toString('base64');
     return res.send({
       privateKey
     });
