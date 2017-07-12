@@ -2,7 +2,7 @@ const React = require('react');
 const SearchItem = require('./SearchItem');
 const LoaderOverlay = require('components/general/LoaderOverlay');
 
-const SearchView = ({result, onUpdate, searchString, onChange, onSearch, isLoading}) => {
+const SearchView = ({result, onUpdate, searchString, onChange, onSearch, isLoading, hasSearched}) => {
   let searchResult = [];
   result.forEach((item) => {
     searchResult.push(
@@ -13,6 +13,9 @@ const SearchView = ({result, onUpdate, searchString, onChange, onSearch, isLoadi
         onUpdate={() => onUpdate(item.get('_id'))}
       />);
   });
+  let searchLength = hasSearched ? (
+    <p>{searchResult.length} search result{searchResult.length == 1 ? '' : 's'} found.</p>
+  ) : null;
 
   return (
     <div className='container-fluid'>
@@ -29,6 +32,7 @@ const SearchView = ({result, onUpdate, searchString, onChange, onSearch, isLoadi
           />
           <a onClick={onSearch} className='btn'>Search</a>
         </div>
+        {searchLength}
         <div className='row'>
           {searchResult}
         </div>

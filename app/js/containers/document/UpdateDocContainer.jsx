@@ -25,7 +25,6 @@ const mapDispatchToProps = dispatch => {
       dispatch(updateDocument());
     },
     toSearchView: () => {
-      dispatch(action.currentViewToDefault());
       dispatch(action.changeView(views.SEARCH_VIEW));
     },
     onDelete: () => {

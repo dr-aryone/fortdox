@@ -29,7 +29,8 @@ const inviteUser = () => {
       });
     }
     dispatch ({
-      type: 'INVITE_USER_SUCCESS'
+      type: 'INVITE_USER_SUCCESS',
+      payload: 'Invitation has been sent to the user!'
     });
   };
 };
@@ -110,7 +111,8 @@ const verifyUser = () => {
       });
     }
     dispatch ({
-      type: 'VERIFY_NEW_USER_SUCCESS'
+      type: 'VERIFY_NEW_USER_SUCCESS',
+      payload: 'Registration complete! You can nog login.'
     });
   };
 };

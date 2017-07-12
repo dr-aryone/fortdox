@@ -12,6 +12,7 @@ const SideNav = ({changeView, username, organization, logout}) => {
       </div>
       <ul className='side-nav'>
         {/* <SideNavItem text='Users' icon='person' /> */}
+        <SideNavItem text='Home' icon='home' onClick={() => changeView(views.USER_VIEW)} />
         <SideNavItem text='Search' icon='search' onClick={() => changeView(views.SEARCH_VIEW)} />
         <SideNavItem text='Create Document' icon='description' onClick={() => changeView(views.CREATE_DOC_VIEW)} />
         <SideNavItem text='Invite User' icon='person_add' onClick={() => changeView(views.INVITE_USER_VIEW)} />
