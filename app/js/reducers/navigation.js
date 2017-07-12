@@ -11,12 +11,10 @@ const navigation = (state = initialState, action) => {
       return state.set('currentView', fromJS(action.payload));
     case 'UPDATE_DOCUMENT':
       return state.set('currentView', fromJS(views.UPDATE_DOC_VIEW));
+    case 'VERIFY_LOGIN_CREDS_SUCCESS':
     case 'UPDATE_DOCUMENT_SUCCESS':
     case 'DELETE_DOCUMENT_SUCCESS':
-      return state.set('currentView', fromJS(views.SEARCH_VIEW));
-    case 'VERIFY_LOGIN_CREDS_SUCCESS':
     case 'CREATE_DOCUMENT_SUCCESS':
-    case 'VERIFY_NEW_USER_SUCCESS':
       return state.set('currentView', fromJS(views.USER_VIEW));
     case 'REGISTER_ORGANIZATION_NAME_SUCCESS':
       return state.set('currentView', fromJS(views.LOGIN_VIEW));
@@ -26,6 +24,7 @@ const navigation = (state = initialState, action) => {
       return state.set('currentView', fromJS(views.VERIFY_USER_VIEW));
     case 'ACTIVATE_ORGANIZATION_SUCCESS':
     case 'LOGOUT':
+    case 'VERIFY_NEW_USER_SUCCESS':
       return state.set('currentView', fromJS(views.LOGIN_VIEW));
     default:
       return state;

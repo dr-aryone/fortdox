@@ -1,15 +1,22 @@
 const React = require('react');
 const LoaderOverlay = require('components/general/LoaderOverlay');
 
-const LoginView = ({input, onChange, onLogin, toUserView, toRegisterView, isLoading}) => {
+const LoginView = ({input, message, onChange, onLogin, toUserView, toRegisterView, isLoading}) => {
   let errorMsg = input.error ? <h2>{input.errorMsg}</h2> : null;
-
+  let messageBox = (
+    <div className='alert alert-success'>
+      <i className='material-icons'>
+        check
+      </i>
+      {message}
+    </div>
+  );
   return (
     <div className='login-panel'>
+      {message ? messageBox : null}
       <h1 className='text-center'>FortDoks</h1>
       <LoaderOverlay display={isLoading} />
       {errorMsg}
-
       <label>Email:</label>
       <input
         name='emailInputValue'

@@ -47,7 +47,8 @@ const activateOrganizaton = () => {
       });
     }
     return dispatch ({
-      type: 'ACTIVATE_ORGANIZATION_SUCCESS'
+      type: 'ACTIVATE_ORGANIZATION_SUCCESS',
+      payload: 'Team registration complete! You can now login.'
     });
   };
 };
@@ -77,7 +78,8 @@ const registerOrganization = () => {
       });
     }
     return dispatch({
-      type: 'REGISTER_ORGANIZATION_NAME_SUCCESS'
+      type: 'REGISTER_ORGANIZATION_NAME_SUCCESS',
+      payload: 'Please check your email to verify your registration.'
     });
   };
 };
@@ -96,13 +98,6 @@ const verifyActivationCode = () => {
           activationCode
         }
       });
-      return dispatch({
-        type: 'VERIFY_ACTIVATION_CODE_SUCCESS',
-        payload: {
-          email: response.body.email,
-          privateKey: response.body.privateKey.toString('base64')
-        }
-      });
     } catch (error) {
       console.error(error);
       return dispatch({
@@ -110,7 +105,13 @@ const verifyActivationCode = () => {
         payload: 'Email is already verified or the link is broken.'
       });
     }
-
+    return dispatch({
+      type: 'VERIFY_ACTIVATION_CODE_SUCCESS',
+      payload: {
+        email: response.body.email,
+        privateKey: response.body.privateKey.toString('base64')
+      }
+    });
   };
 };
 
