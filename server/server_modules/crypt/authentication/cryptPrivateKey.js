@@ -13,4 +13,20 @@ const encryptPrivateKey = (tempPassword, privateKey) => {
   });
 };
 
-module.exports = encryptPrivateKey;
+const decryptPrivateKey = (tempPassword, encryptedPrivateKey) => {
+  return new Promise(async (resolve, reject) => {
+    let privateKey;
+    try {
+      privateKey = await aes.decrypt(tempPassword, encryptedPrivateKey);
+      return resolve(privateKey);
+    } catch (error) {
+      console.error(error);
+      return reject(500);
+    }
+  });
+};
+
+module.exports = {
+  encryptPrivateKey,
+  decryptPrivateKey
+};

@@ -9,7 +9,8 @@ const es = require('./server_modules/es');
 const {decryptDocuments} = require('./server_modules/crypt/authentication/cryptDocument');
 const {decryptMasterPassword} = require('./server_modules/crypt/keys/cryptMasterPassword');
 const {encryptMasterPassword} = require('./server_modules/crypt/keys/cryptMasterPassword');
-const encryptPrivateKey = require('./server_modules/crypt/authentication/cryptPrivateKey');
+const {encryptPrivateKey} = require('./server_modules/crypt/authentication/cryptPrivateKey');
+const {decryptPrivateKey} = require('./server_modules/crypt/authentication/cryptPrivateKey');
 const mailer = require('./server_modules/mailer');
 const expect = require('@edgeguideab/expect');
 const uuidv1 = require('uuid/v1');
@@ -189,7 +190,26 @@ app.post('/invite', async (req, res) => {
   res.send();
 
 });
+app.post('./invite/verify', async (req, res) => {
+  let uuid = req.body.uuid;
+  let tempPassword = req.body.tempPassword;
+  let encryptedPrivateKey;
+  let privateKey;
 
+  try {
+    encryptedPrivateKey = await users.getEncryptedPrivateKey(uuid);
+    privateKey = await decryptPrivateKey(tempPassword, encryptedPrivateKey);
+    return res.send({
+      privateKey
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send();
+  }
+
+
+
+});
 app.post('/documents', async (req, res) => {
   let privateKey = new Buffer(req.headers.authorization.split('FortDoks ')[1], 'base64').toString();
   let encryptedMasterPassword;
