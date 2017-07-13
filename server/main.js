@@ -20,7 +20,7 @@ const extractPrivateKey = require('./server_modules/utilities/extractPrivateKey'
 
 const job = new CronJob('*/5 * * * *', async () => {
   try {
-    await cleanUp(3);
+    await cleanUp(30);
     console.log('cleaned');
   } catch (error) {
     console.error(error);
@@ -28,8 +28,6 @@ const job = new CronJob('*/5 * * * *', async () => {
 });
 
 job.start();
-
-
 
 app.use(bodyParser.json());
 
