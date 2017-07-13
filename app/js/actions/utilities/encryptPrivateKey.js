@@ -17,8 +17,9 @@ const encryptPrivateKey = (privateKey, password) => {
       console.error(error);
       return reject('MEEP MEEEP');
     }
-    fs.writeFileSync('./js/local_storage/encryptedPrivateKey', encryptedKey.toString('base64'));
-    fs.writeFileSync('./js/local_storage/salt', result.salt.toString('base64'));
+
+    fs.writeFileSync(window.__dirname + '/local_storage/encryptedPrivateKey', encryptedKey.toString('base64'));
+    fs.writeFileSync(window.__dirname + '/local_storage/salt', result.salt.toString('base64'));
     return resolve();
   });
 };
