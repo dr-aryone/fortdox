@@ -1,5 +1,4 @@
 const {fromJS} = require('immutable');
-
 const initialState = fromJS({
   usernameInputValue: '',
   passwordInputValue: '',
@@ -36,6 +35,7 @@ const verifyUser = (state = initialState, action) => {
         errorMsg: action.payload,
         isLoading: false
       });
+    case 'CHANGE_VIEW':
     case 'VERIFY_NEW_USER_SUCCESS':
       return initialState;
     default:

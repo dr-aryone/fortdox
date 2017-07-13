@@ -1,4 +1,5 @@
 const requestor = require('@edgeguideab/client-request');
+const config = require('../../config.json');
 
 const createDocument = () => {
   return async (dispatch, getState) => {
@@ -10,9 +11,8 @@ const createDocument = () => {
     dispatch({
       type: 'CREATE_DOCUMENT_START'
     });
-
     try {
-      await requestor.post('http://localhost:8000/documents', {
+      await requestor.post(`${config.server}/documents`, {
         body: {
           body: {
             title,
@@ -24,15 +24,16 @@ const createDocument = () => {
           'Authorization': `FortDoks ${privateKey}`
         }
       });
-      dispatch({
-        type: 'CREATE_DOCUMENT_SUCCESS'
-      });
     } catch (error) {
       console.error(error);
-      dispatch({
+      return dispatch({
         type: 'CREATE_DOCUMENT_ERROR'
       });
     }
+    return dispatch({
+      type: 'CREATE_DOCUMENT_SUCCESS',
+      payload: 'Document created!'
+    });
   };
 };
 
@@ -47,7 +48,7 @@ const updateDocument = () => {
       type: 'UPDATE_DOCUMENT_START'
     });
     try {
-      await requestor.patch('http://localhost:8000/documents', {
+      await requestor.patch(`${config.server}/documents`, {
         body:{
           index: oldDoc.get('_index'),
           type: oldDoc.get('_type'),
@@ -69,7 +70,8 @@ const updateDocument = () => {
       });
     }
     return dispatch({
-      type: 'UPDATE_DOCUMENT_SUCCESS'
+      type: 'UPDATE_DOCUMENT_SUCCESS',
+      payload: 'Document updated!'
     });
   };
 };
@@ -82,7 +84,7 @@ const deleteDocument = () => {
       type: 'DELETE_DOCUMENT_START'
     });
     try {
-      await requestor.delete('http://localhost:8000/documents', {
+      await requestor.delete(`${config.server}/documents`, {
         query:{
           index: doc.get('_index'),
           type: doc.get('_type'),

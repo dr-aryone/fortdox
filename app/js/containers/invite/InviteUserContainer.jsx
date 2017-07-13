@@ -8,7 +8,8 @@ const mapStateToProps = state => {
     emailInputValue: state.invite.get('emailInputValue'),
     isLoading: state.invite.get('isLoading'),
     error: state.invite.get('error'),
-    errorMsg: state.invite.get('errorMsg')
+    errorMsg: state.invite.get('errorMsg'),
+    message: state.invite.get('message')
   };
 };
 

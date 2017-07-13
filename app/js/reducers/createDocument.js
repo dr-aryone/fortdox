@@ -15,7 +15,7 @@ const form = (state = initialState, action) => {
     case 'CREATE_DOCUMENT_ERROR':
       return state.set('isLoading', false);
     case 'CREATE_DOCUMENT_SUCCESS':
-    case 'CREATE_DOC_VIEW_TO_DEFAULT':
+    case 'CHANGE_VIEW':
       return initialState;
     default:
       return state;

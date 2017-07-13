@@ -1,0 +1,17 @@
+.alert {
+  padding: 15px 0 15px 15px;
+  margin-bottom: 10px;
+  border-radius: 1px;
+  position: relative;
+
+  .material-icons {
+    font-size: 15px;
+    display: inline-block;
+    margin-right: 10px;
+  }
+
+  &-success {
+    background-color: #a1d36e;
+    color: #FFF;
+  }
+}

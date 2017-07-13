@@ -3,52 +3,36 @@ const views = require('views.json');
 const inputChange = (inputName, inputValue) => {
   return (dispatch, getState) => {
     let state = getState();
+    let type;
     switch (state.navigation.get('currentView')) {
       case views.REGISTER_VERIFY_VIEW:
       case views.REGISTER_VIEW:
-        return dispatch({
-          type: 'INPUT_CHANGE_REGISTER',
-          inputName,
-          inputValue
-        });
+        type = 'INPUT_CHANGE_REGISTER';
+        break;
       case views.LOGIN_VIEW:
-        return dispatch({
-          type: 'INPUT_CHANGE_LOGIN',
-          inputName,
-          inputValue
-        });
+        type = 'INPUT_CHANGE_LOGIN';
+        break;
       case views.SEARCH_VIEW:
-        return dispatch({
-          type: 'INPUT_CHANGE_SEARCH',
-          inputName,
-          inputValue
-        });
+        type = 'INPUT_CHANGE_SEARCH';
+        break;
       case views.CREATE_DOC_VIEW:
-        return dispatch({
-          type: 'INPUT_CHANGE_CREATE_DOC',
-          inputName,
-          inputValue
-        });
+        type = 'INPUT_CHANGE_CREATE_DOC';
+        break;
       case views.UPDATE_DOC_VIEW:
-        return dispatch({
-          type: 'INPUT_CHANGE_UPDATE_DOC',
-          inputName,
-          inputValue
-        });
-
+        type = 'INPUT_CHANGE_UPDATE_DOC';
+        break;
       case views.INVITE_USER_VIEW:
-        return dispatch({
-          type: 'INPUT_CHANGE_INVITE_USER',
-          inputName,
-          inputValue
-        });
+        type = 'INPUT_CHANGE_INVITE_USER';
+        break;
       case views.VERIFY_USER_VIEW:
-        return dispatch({
-          type: 'INPUT_CHANGE_VERIFY_USER',
-          inputName,
-          inputValue
-        });
+        type = 'INPUT_CHANGE_VERIFY_USER';
+        break;
     }
+    return dispatch({
+      type,
+      inputName,
+      inputValue
+    });
   };
 };
 
@@ -61,36 +45,6 @@ const changeView = nextView => {
   };
 };
 
-const currentViewToDefault = () => {
-  return (dispatch, getState) => {
-    let state = getState();
-    let currentView = state.navigation.get('currentView');
-    switch (currentView) {
-      case views.CREATE_DOC_VIEW:
-        return dispatch({
-          type: 'CREATE_DOC_VIEW_TO_DEFAULT'
-        });
-      case views.UPDATE_DOC_VIEW:
-        return dispatch({
-          type: 'UPDATE_DOC_VIEW_TO_DEFAULT'
-        });
-      case views.SEARCH_VIEW:
-        return dispatch({
-          type: 'SEARCH_VIEW_TO_DEFAULT'
-        });
-      case views.LOGIN_VIEW:
-        return dispatch({
-          type: 'LOGIN_VIEW_TO_DEFAULT'
-        });
-      case views.REGISTER_VIEW:
-      case views.REGISTER_VERIFY_VIEW:
-        return dispatch({
-          type: 'REGISTER_VIEW_TO_DEFAULT'
-        });
-    }
-  };
-};
-
 const logout = () => {
   return dispatch => {
     return dispatch ({
@@ -99,4 +53,4 @@ const logout = () => {
   };
 };
 
-module.exports = {inputChange, changeView, currentViewToDefault, logout};
+module.exports = {inputChange, changeView, logout};

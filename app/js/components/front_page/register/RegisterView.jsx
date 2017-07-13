@@ -4,11 +4,10 @@ const RegisterVerifyView = require('./RegisterVerifyView');
 const views = require('views.json');
 
 const RegisterView = ({currentView, register, onChange, onCreateOrganization, toLoginView, onRegister, onMount}) => {
-  let view;
   switch (currentView) {
     case views.REGISTER_VIEW:
     case views.REGISTER_ORGANIZATION_VIEW:
-      view = (
+      return (
         <RegisterOrgView
           register={register}
           onChange={onChange}
@@ -16,9 +15,8 @@ const RegisterView = ({currentView, register, onChange, onCreateOrganization, to
           toLoginView={toLoginView}
         />
       );
-      break;
     case views.REGISTER_VERIFY_VIEW:
-      view = (
+      return (
         <RegisterVerifyView
           register={register}
           onChange={onChange}
@@ -27,13 +25,9 @@ const RegisterView = ({currentView, register, onChange, onCreateOrganization, to
           onMount={onMount}
         />
       );
-      break;
+    default:
+      return (<div />);
   }
-  return (
-    <div>
-      {view}
-    </div>
-  );
 };
 
 module.exports = RegisterView;

@@ -4,6 +4,7 @@
   'abstracts/typography';
 
 @import
+  'components/alerts',
   'components/box',
   'components/buttons',
   'components/input',
@@ -16,11 +17,11 @@
   'layout/side-nav';
 
 @import
-  'pages/login-page',
+  'pages/full-page',
   'pages/user-page';
 
 body {
   margin: 0px;
-  font-family: 'Open Sans', 'Arial', sans-serif;
-  font-size: 12px;
+  font-family: map-deep-get($text-styles, 'text', 'font-family');
+  font-size: map-deep-get($text-styles, 'text', 'font-size');
 }

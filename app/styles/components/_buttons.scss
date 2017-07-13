@@ -16,11 +16,11 @@ $btn-color: #FFF;
     color: lighten($btn-color, 15%);
   }
 
-  &.btn-large {
+  &-large {
     padding: 12px 28px;
   }
 
-  &.btn-block {
+  &-block {
     display: block;
     width: 100%;
     text-align: center;
