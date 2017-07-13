@@ -12,6 +12,13 @@ module.exports = {
       privateKey: {
         allowNull: false,
         type: Sequelize.BLOB
+      },
+      activated: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false
+      },
+      createdAt: {
+        type: Sequelize.DATE
       }
     });
   },

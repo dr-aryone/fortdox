@@ -13,6 +13,14 @@ module.exports = {
         unique: true,
         allowNull: false,
         type: Sequelize.STRING
+      },
+      activated: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
+        defaultValue: false
+      },
+      createdAt: {
+        type: Sequelize.DATE
       }
     });
   },
