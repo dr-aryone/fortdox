@@ -225,10 +225,11 @@ app.post('/invite/confirm', async (req, res) => {
   let uuid = req.body.uuid;
   let username = req.body.username;
   let privateKey = extractPrivateKey(req.headers.authorization);
+  let metadata;
   try {
-    await users.verifyNewUser(uuid, privateKey, username);
+    metadata = await users.verifyNewUser(uuid, privateKey, username);
     await users.TempKeys.remove(uuid);
-    return res.send();
+    return res.send(metadata);
   } catch (error) {
     console.error(error);
     return res.status(500).send();
@@ -237,6 +238,9 @@ app.post('/invite/confirm', async (req, res) => {
 
 });
 app.post('/documents', async (req, res) => {
+  if (req.body.title || req.body.text === '') {
+    return res.status(400).send({msg: 'Bad format, title and/or text cannot be empty'});
+  }
   let privateKey = extractPrivateKey(req.headers.authorization);
   let encryptedMasterPassword;
   let organization;
@@ -247,12 +251,11 @@ app.post('/documents', async (req, res) => {
   } catch (error) {
     res.status(409).send();
   }
-  console.log(req.body);
   try {
     res.send(await es.addToIndex(req.body, privateKey, encryptedMasterPassword, organization));
   } catch (error) {
     console.log(error);
-    res.send(500).send({msg: 'Internal Server Error'});
+    res.send(500).send(error);
   }
 
 });
@@ -289,6 +292,9 @@ app.get('/documents', async (req, res) => {
 });
 
 app.patch('/documents', async (req, res) => {
+  if (req.body.title || req.body.text === '') {
+    return res.status(400).send({msg: 'Bad format, title and/or text cannot be empty'});
+  }
   let privateKey = extractPrivateKey(req.headers.authorization);
   let response;
   let email = req.body.email;

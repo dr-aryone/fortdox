@@ -32,6 +32,7 @@ const verifyNewUser = function(uuid, privateKey, username) {
   return new Promise(async (resolve, reject) => {
     let encryptedMasterPassword;
     let user;
+
     try {
       user = await db.User.findOne({
         where: {
@@ -46,7 +47,7 @@ const verifyNewUser = function(uuid, privateKey, username) {
       console.error(error);
       return reject(500);
     }
-    let result = decryptMasterPassword(privateKey, encryptedMasterPassword);
+    decryptMasterPassword(privateKey, encryptedMasterPassword);
 
     try {
       await user.updateAttributes({
@@ -58,7 +59,11 @@ const verifyNewUser = function(uuid, privateKey, username) {
       console.error(error);
       return reject(500);
     }
-    return resolve(result);
+    return resolve({
+      email: user.email,
+      username,
+      organization: user.Organization.organization
+    });
 
   });
 };
