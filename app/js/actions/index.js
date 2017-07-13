@@ -3,52 +3,36 @@ const views = require('views.json');
 const inputChange = (inputName, inputValue) => {
   return (dispatch, getState) => {
     let state = getState();
+    let type;
     switch (state.navigation.get('currentView')) {
       case views.REGISTER_VERIFY_VIEW:
       case views.REGISTER_VIEW:
-        return dispatch({
-          type: 'INPUT_CHANGE_REGISTER',
-          inputName,
-          inputValue
-        });
+        type = 'INPUT_CHANGE_REGISTER';
+        break;
       case views.LOGIN_VIEW:
-        return dispatch({
-          type: 'INPUT_CHANGE_LOGIN',
-          inputName,
-          inputValue
-        });
+        type = 'INPUT_CHANGE_LOGIN';
+        break;
       case views.SEARCH_VIEW:
-        return dispatch({
-          type: 'INPUT_CHANGE_SEARCH',
-          inputName,
-          inputValue
-        });
+        type = 'INPUT_CHANGE_SEARCH';
+        break;
       case views.CREATE_DOC_VIEW:
-        return dispatch({
-          type: 'INPUT_CHANGE_CREATE_DOC',
-          inputName,
-          inputValue
-        });
+        type = 'INPUT_CHANGE_CREATE_DOC';
+        break;
       case views.UPDATE_DOC_VIEW:
-        return dispatch({
-          type: 'INPUT_CHANGE_UPDATE_DOC',
-          inputName,
-          inputValue
-        });
-
+        type = 'INPUT_CHANGE_UPDATE_DOC';
+        break;
       case views.INVITE_USER_VIEW:
-        return dispatch({
-          type: 'INPUT_CHANGE_INVITE_USER',
-          inputName,
-          inputValue
-        });
+        type = 'INPUT_CHANGE_INVITE_USER';
+        break;
       case views.VERIFY_USER_VIEW:
-        return dispatch({
-          type: 'INPUT_CHANGE_VERIFY_USER',
-          inputName,
-          inputValue
-        });
+        type = 'INPUT_CHANGE_VERIFY_USER';
+        break;
     }
+    return dispatch({
+      type,
+      inputName,
+      inputValue
+    });
   };
 };
 

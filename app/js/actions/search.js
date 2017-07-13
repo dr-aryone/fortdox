@@ -1,4 +1,5 @@
 const requestor = require('@edgeguideab/client-request');
+const config = require('../../config.json');
 
 const search = () => {
   return async (dispatch, getState) => {
@@ -12,7 +13,7 @@ const search = () => {
     let organization = state.user.get('organization');
     let email = state.user.get('email');
     try {
-      response = await requestor.get('http://localhost:8000/documents', {
+      response = await requestor.get(`${config.server}/documents`, {
         query: {
           searchString,
           organization,

@@ -31,12 +31,12 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      font-family: 'Roboto Condensed', 'Arial', sans-serif;
-      font-size: 16px;
+      font-family: map-deep-get($text-styles, 'navigation', 'font-family');
+      font-size: map-deep-get($text-styles, 'navigation', 'font-size');
       color: #FFF;
       border-bottom: 1px solid $background-color;
       padding: 10px 5px;
-      margin: 0px 30px;
+      margin: 0px 22px;
       cursor: pointer;
 
       &:hover {
@@ -48,7 +48,7 @@
     .drop-down {
       list-style-type: none;
       background-color: #FFF;
-      margin: 0px 30px;
+      margin: 0px 22px;
       padding: 0px;
       border-radius: 1px;
 
@@ -107,7 +107,7 @@
     margin: 20px;
 
     & a {
-      font-size: 1.5em;
+      font-size: 1.25em;
     }
 
     & a:hover {
