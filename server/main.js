@@ -14,7 +14,22 @@ const {decryptPrivateKey} = require('./server_modules/crypt/authentication/crypt
 const mailer = require('./server_modules/mailer');
 const expect = require('@edgeguideab/expect');
 const uuidv1 = require('uuid/v1');
+const cleanUp = require('./server_modules/db_maid/cleanUp.js');
+const CronJob = require('cron').CronJob;
 const extractPrivateKey = require('./server_modules/utilities/extractPrivateKey');
+
+const job = new CronJob('*/5 * * * *', async () => {
+  try {
+    await cleanUp(3);
+    console.log('cleaned');
+  } catch (error) {
+    console.error(error);
+  }
+});
+
+job.start();
+
+
 
 app.use(bodyParser.json());
 
@@ -96,6 +111,7 @@ app.post('/register/confirm', async (req, res) => {
 
   try {
     await es.createIndex(organizationName);
+    await orgs.activateOrganization(organizationName);
     res.status(200).send();
   } catch (error) {
     console.error(error);
