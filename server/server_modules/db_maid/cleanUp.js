@@ -6,6 +6,7 @@ module.exports = (interval) => {
     let currentTime = new Date();
     let limit = interval * 60000;
     let inactiveOrganizations;
+    let notActivatedUsers;
     try {
       inactiveOrganizations = await db.Organization.findAll({
         where: {
@@ -25,9 +26,36 @@ module.exports = (interval) => {
             }
           });
           users.map(async (user) => {
+            db.TempKeys.destroy({
+              where: {
+                uuid: user.uuid
+              }
+            });
             await user.destroy();
           });
           await entry.destroy();
+        } catch (error) {
+          console.error(error);
+          return reject(500);
+        }
+      }
+    });
+
+    try {
+      notActivatedUsers = await db.TempKeys.findAll({
+        where: {
+          activated: false
+        }
+      });
+    } catch (error) {
+      console.error(error);
+      return reject(500);
+    }
+
+    notActivatedUsers.map(async (user) => {
+      if (user.createdAt < new Date(currentTime - limit)) {
+        try {
+          await user.destroy();
         } catch (error) {
           console.error(error);
           return reject(500);
