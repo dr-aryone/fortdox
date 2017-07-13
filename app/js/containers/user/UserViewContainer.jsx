@@ -4,7 +4,8 @@ const action = require('actions');
 
 const mapStateToProps = state => {
   return {
-    currentView: state.navigation.get('currentView')
+    currentView: state.navigation.get('currentView'),
+    message: state.userPage.get('message')
   };
 };
 

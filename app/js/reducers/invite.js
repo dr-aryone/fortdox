@@ -4,7 +4,8 @@ const initialState = fromJS({
   emailInputValue: '',
   isLoading: false,
   error: false,
-  errorMsg: ''
+  errorMsg: '',
+  message: null
 });
 
 const invite = (state = initialState, action) => {
@@ -16,10 +17,18 @@ const invite = (state = initialState, action) => {
     case 'INVITE_USER_ERROR':
       return state.merge({
         error: true,
-        errorMsg: action.payload,
+        errorMsg: fromJS(action.payload),
         isLoading: false
       });
     case 'INVITE_USER_SUCCESS':
+      return state.merge({
+        emailInputValue: '',
+        isLoading: false,
+        error: false,
+        errorMsg: '',
+        message: fromJS(action.payload)
+      });
+    case 'CHANGE_VIEW':
       return initialState;
     default:
       return state;

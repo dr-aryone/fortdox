@@ -14,6 +14,22 @@ const {decryptPrivateKey} = require('./server_modules/crypt/authentication/crypt
 const mailer = require('./server_modules/mailer');
 const expect = require('@edgeguideab/expect');
 const uuidv1 = require('uuid/v1');
+const cleanUp = require('./server_modules/db_maid/cleanUp.js');
+const CronJob = require('cron').CronJob;
+const extractPrivateKey = require('./server_modules/utilities/extractPrivateKey');
+
+const job = new CronJob('*/5 * * * *', async () => {
+  try {
+    await cleanUp(3);
+    console.log('cleaned');
+  } catch (error) {
+    console.error(error);
+  }
+});
+
+job.start();
+
+
 
 app.use(bodyParser.json());
 
@@ -35,7 +51,7 @@ app.post('/login', async (req, res) => {
   }
 
   try {
-    let privateKey = new Buffer(req.headers.authorization.split('FortDoks ')[1], 'base64').toString();
+    let privateKey = extractPrivateKey(req.headers.authorization);
     await decryptMasterPassword(privateKey, user.password);
     return res.send({
       user: user.username,
@@ -78,7 +94,7 @@ app.post('/register', async (req, res) => {
 
 app.post('/register/confirm', async (req, res) => {
   let email = req.body.email;
-  let privateKey = new Buffer(req.headers.authorization.split('FortDoks ')[1], 'base64').toString();
+  let privateKey = extractPrivateKey(req.headers.authorization);
   try {
     await users.verifyUser(email, privateKey);
   } catch (error) {
@@ -95,6 +111,7 @@ app.post('/register/confirm', async (req, res) => {
 
   try {
     await es.createIndex(organizationName);
+    await orgs.activateOrganization(organizationName);
     res.status(200).send();
   } catch (error) {
     console.error(error);
@@ -138,7 +155,7 @@ app.post('/register/verify', async (req, res) => {
 });
 
 app.post('/invite', async (req, res) => {
-  let privateKey = new Buffer(req.headers.authorization.split('FortDoks ')[1], 'base64').toString();
+  let privateKey = extractPrivateKey(req.headers.authorization);
   let newUserEmail = req.body.newUserEmail;
   let email = req.body.email;
   let encryptedMasterPassword;
@@ -159,7 +176,7 @@ app.post('/invite', async (req, res) => {
   let tempPassword = keygen.genRandomPassword();
   let encryptedPrivateKey;
   try {
-    encryptedPrivateKey = await encryptPrivateKey(tempPassword, privateKey);
+    encryptedPrivateKey = await encryptPrivateKey(tempPassword, keypair.privateKey);
   } catch (error) {
     console.error(error);
     return res.status(500).send();
@@ -173,7 +190,7 @@ app.post('/invite', async (req, res) => {
   };
   try {
     await users.createUser(newUser);
-    await users.TempKeys(uuid, encryptedPrivateKey);
+    await users.TempKeys.store(uuid, encryptedPrivateKey);
   } catch (error) {
     console.error(error);
     return res.status(500).send();
@@ -189,15 +206,14 @@ app.post('/invite', async (req, res) => {
   res.send();
 
 });
-app.post('./invite/verify', async (req, res) => {
+app.post('/invite/verify', async (req, res) => {
   let uuid = req.body.uuid;
-  let tempPassword = req.body.tempPassword;
+  let tempPassword = Buffer.from(decodeURIComponent(req.body.temporaryPassword), 'base64');
   let encryptedPrivateKey;
   let privateKey;
-
   try {
-    encryptedPrivateKey = await users.getEncryptedPrivateKey(uuid);
-    privateKey = await decryptPrivateKey(tempPassword, encryptedPrivateKey);
+    encryptedPrivateKey = new Buffer((await users.getEncryptedPrivateKey(uuid)), 'base64');
+    privateKey = (await decryptPrivateKey(tempPassword, encryptedPrivateKey)).toString('base64');
     return res.send({
       privateKey
     });
@@ -205,12 +221,25 @@ app.post('./invite/verify', async (req, res) => {
     console.error(error);
     res.status(500).send();
   }
+});
 
+app.post('/invite/confirm', async (req, res) => {
+  let uuid = req.body.uuid;
+  let username = req.body.username;
+  let privateKey = extractPrivateKey(req.headers.authorization);
+  try {
+    await users.verifyNewUser(uuid, privateKey, username);
+    await users.TempKeys.remove(uuid);
+    return res.send();
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send();
+  }
 
 
 });
 app.post('/documents', async (req, res) => {
-  let privateKey = new Buffer(req.headers.authorization.split('FortDoks ')[1], 'base64').toString();
+  let privateKey = extractPrivateKey(req.headers.authorization);
   let encryptedMasterPassword;
   let organization;
 
@@ -233,7 +262,7 @@ app.post('/documents', async (req, res) => {
 app.get('/documents', async (req, res) => {
   let response;
   let searchString = req.query.searchString;
-  let privateKey = new Buffer(req.headers.authorization.split('FortDoks ')[1], 'base64').toString();
+  let privateKey = extractPrivateKey(req.headers.authorization);
   let organization = req.query.organization;
   let email = req.query.email;
   let encryptedMasterPassword;
@@ -262,7 +291,7 @@ app.get('/documents', async (req, res) => {
 });
 
 app.patch('/documents', async (req, res) => {
-  let privateKey =  new Buffer(req.headers.authorization.split('FortDoks ')[1], 'base64').toString();
+  let privateKey = extractPrivateKey(req.headers.authorization);
   let response;
   let email = req.body.email;
   let encryptedMasterPassword;

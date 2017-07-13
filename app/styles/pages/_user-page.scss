@@ -2,6 +2,9 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: space-around;
+  width: 100%;
+  left: 0px;
+  position: absolute;
 
   &-inner {
     @extend .box;
@@ -9,7 +12,6 @@
     padding-top: 23%;
     margin: 20px;
     position: relative;
-    margin-top: 10%;
 
     & div {
       position: absolute;

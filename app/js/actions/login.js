@@ -1,6 +1,7 @@
 const requestor = require('@edgeguideab/client-request');
 const aes = window.require('./aes.js');
 const fs = window.require('fs');
+const config = require('../../config.json');
 
 const login = () => {
   return async (dispatch, getState) => {
@@ -13,8 +14,8 @@ const login = () => {
     let encryptedPrivateKey;
     let salt;
     try {
-      encryptedPrivateKey = fs.readFileSync('./js/local_storage/encryptedPrivateKey', 'utf-8');
-      salt = fs.readFileSync('./js/local_storage/salt', 'utf-8');
+      encryptedPrivateKey = fs.readFileSync(window.__dirname + '/local_storage/encryptedPrivateKey', 'utf-8');
+      salt = fs.readFileSync(window.__dirname + '/local_storage/salt', 'utf-8');
     } catch (error) {
       return dispatch({
         payload: 'Wrong email or password. Try again.',
@@ -35,7 +36,7 @@ const login = () => {
     }
     let response;
     try {
-      response = await requestor.post('http://localhost:8000/login', {
+      response = await requestor.post(`${config.server}/login`, {
         body: {
           email
         },
@@ -49,13 +50,13 @@ const login = () => {
         case 404:
           return dispatch({
             type: 'VERIFY_LOGIN_CREDS_ERROR',
-            payload: error.errorText.message,
+            payload: error.body.message,
             error: true
           });
         case 500:
           return dispatch({
             type: 'VERIFY_LOGIN_CREDS_FAIL',
-            payload: error.errorText.message,
+            payload: error.body.message,
             error: true
           });
       }

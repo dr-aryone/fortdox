@@ -1,6 +1,7 @@
 const requestor = require('@edgeguideab/client-request');
 const encryptPrivateKey = require('actions/utilities/encryptPrivateKey');
 const passwordCheck = require('actions/utilities/passwordCheck');
+const config = require('../../config.json');
 
 const activateOrganizaton = () => {
   return async (dispatch, getState) => {
@@ -31,7 +32,7 @@ const activateOrganizaton = () => {
     }
     let email = state.register.get('email');
     try {
-      await requestor.post('http://localhost:8000/register/confirm', {
+      await requestor.post(`${config.server}/register/confirm`, {
         body: {
           email
         },
@@ -47,7 +48,8 @@ const activateOrganizaton = () => {
       });
     }
     return dispatch ({
-      type: 'ACTIVATE_ORGANIZATION_SUCCESS'
+      type: 'ACTIVATE_ORGANIZATION_SUCCESS',
+      payload: 'Team registration complete! You can now login.'
     });
   };
 };
@@ -62,7 +64,7 @@ const registerOrganization = () => {
       type: 'REGISTER_ORGANIZATION_NAME_START'
     });
     try {
-      await requestor.post('http://localhost:8000/register', {
+      await requestor.post(`${config.server}/register`, {
         body: {
           organization,
           username,
@@ -77,7 +79,8 @@ const registerOrganization = () => {
       });
     }
     return dispatch({
-      type: 'REGISTER_ORGANIZATION_NAME_SUCCESS'
+      type: 'REGISTER_ORGANIZATION_NAME_SUCCESS',
+      payload: 'Please check your email to verify your registration.'
     });
   };
 };
@@ -91,16 +94,9 @@ const verifyActivationCode = () => {
       type: 'VERIFY_ACTIVATION_CODE_START'
     });
     try {
-      response = await requestor.post('http://localhost:8000/register/verify', {
+      response = await requestor.post(`${config.server}/register/verify`, {
         body: {
           activationCode
-        }
-      });
-      return dispatch({
-        type: 'VERIFY_ACTIVATION_CODE_SUCCESS',
-        payload: {
-          email: response.body.email,
-          privateKey: response.body.privateKey.toString('base64')
         }
       });
     } catch (error) {
@@ -110,7 +106,13 @@ const verifyActivationCode = () => {
         payload: 'Email is already verified or the link is broken.'
       });
     }
-
+    return dispatch({
+      type: 'VERIFY_ACTIVATION_CODE_SUCCESS',
+      payload: {
+        email: response.body.email,
+        privateKey: response.body.privateKey.toString('base64')
+      }
+    });
   };
 };
 

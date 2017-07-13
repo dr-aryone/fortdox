@@ -9,9 +9,14 @@ module.exports = function(sequelize, DataTypes) {
       unique: true,
       allowNull: false,
       type: DataTypes.STRING
+    },
+    activated: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false
     }
   }, {
-    timestamps: false,
+    updatedAt: false
   });
 
   Organization.associate = function(models) {

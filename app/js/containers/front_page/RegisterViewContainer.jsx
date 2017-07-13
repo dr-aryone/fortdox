@@ -17,7 +17,8 @@ const mapStateToProps = state => {
       orgNameError: state.register.get('orgNameError'),
       activateError: state.register.get('activateError'),
       isLoading: state.register.get('isLoading'),
-      isVerified: state.register.get('isVerified')
+      isVerified: state.register.get('isVerified'),
+      message: state.register.get('message')
     }
   };
 };
@@ -37,7 +38,6 @@ const mapDispatchToProps = dispatch => {
       dispatch(register.activateOrganizaton());
     },
     toLoginView: () => {
-      dispatch(action.currentViewToDefault());
       dispatch(action.changeView(views.LOGIN_VIEW));
     }
   };

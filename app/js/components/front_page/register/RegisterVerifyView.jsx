@@ -18,7 +18,7 @@ class RegisterVerifyView extends React.Component {
 
     let errorMsg = register.activateError ? <h2>{register.errorMsg}</h2> : null;
     return (
-      <div className='login-panel'>
+      <div className='container box'>
         <LoaderOverlay display={register.isLoading} />
         <h1 className='text-center'>Register Team</h1>
         {errorMsg}

@@ -1,6 +1,7 @@
 const requestor = require('@edgeguideab/client-request');
 const passwordCheck = require('actions/utilities/passwordCheck');
 const encryptPrivateKey = require('actions/utilities/encryptPrivateKey');
+const config = require('../../config.json');
 
 const inviteUser = () => {
   return async (dispatch, getState) => {
@@ -12,7 +13,7 @@ const inviteUser = () => {
       type: 'INVITE_USER_START'
     });
     try {
-      await requestor.post('http://localhost:8000/invite', {
+      await requestor.post(`${config.server}/invite`, {
         body: {
           email,
           newUserEmail
@@ -29,7 +30,8 @@ const inviteUser = () => {
       });
     }
     dispatch ({
-      type: 'INVITE_USER_SUCCESS'
+      type: 'INVITE_USER_SUCCESS',
+      payload: 'Invitation has been sent to the user!'
     });
   };
 };
@@ -44,7 +46,7 @@ const receivePrivateKey = () => {
     });
     let response;
     try {
-      response = await requestor.post('http://localhost:8000/invite/verify', {
+      response = await requestor.post(`${config.server}/invite/verify`, {
         body: {
           temporaryPassword,
           uuid
@@ -60,7 +62,7 @@ const receivePrivateKey = () => {
 
     dispatch ({
       type: 'RECEIVE_PRIVATE_KEY_SUCCESS',
-      payload: response.privateKey
+      payload: response.body.privateKey
     });
   };
 };
@@ -93,7 +95,7 @@ const verifyUser = () => {
       });
     }
     try {
-      await requestor.post('http://localhost:8000/invite/confirm', {
+      await requestor.post(`${config.server}/invite/confirm`, {
         body: {
           uuid,
           username
@@ -110,7 +112,8 @@ const verifyUser = () => {
       });
     }
     dispatch ({
-      type: 'VERIFY_NEW_USER_SUCCESS'
+      type: 'VERIFY_NEW_USER_SUCCESS',
+      payload: 'Registration complete! You can nog login.'
     });
   };
 };
