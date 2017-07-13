@@ -1,6 +1,7 @@
 const requestor = require('@edgeguideab/client-request');
 const encryptPrivateKey = require('actions/utilities/encryptPrivateKey');
 const passwordCheck = require('actions/utilities/passwordCheck');
+const config = require('../../config.json');
 
 const activateOrganizaton = () => {
   return async (dispatch, getState) => {
@@ -31,7 +32,7 @@ const activateOrganizaton = () => {
     }
     let email = state.register.get('email');
     try {
-      await requestor.post('http://localhost:8000/register/confirm', {
+      await requestor.post(`${config.server}/register/confirm`, {
         body: {
           email
         },
@@ -63,7 +64,7 @@ const registerOrganization = () => {
       type: 'REGISTER_ORGANIZATION_NAME_START'
     });
     try {
-      await requestor.post('http://localhost:8000/register', {
+      await requestor.post(`${config.server}/register`, {
         body: {
           organization,
           username,
@@ -93,7 +94,7 @@ const verifyActivationCode = () => {
       type: 'VERIFY_ACTIVATION_CODE_START'
     });
     try {
-      response = await requestor.post('http://localhost:8000/register/verify', {
+      response = await requestor.post(`${config.server}/register/verify`, {
         body: {
           activationCode
         }
