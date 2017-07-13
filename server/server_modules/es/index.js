@@ -1,7 +1,6 @@
 const elasticsearch = require('elasticsearch');
 const client = new elasticsearch.Client({
-  host: 'localhost:9200',
-  log: 'trace'
+  host: 'localhost:9200'
 });
 const {search, searchAll} = require('./search.js')(client);
 const update = require('./update.js')(client);

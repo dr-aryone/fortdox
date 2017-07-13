@@ -20,7 +20,8 @@
     "require": true,
     "module": true,
     "process": true,
-    "__dirname": true
+    "__dirname": true,
+    "Buffer": true
   },
   "rules": {
     "brace-style": "error",
