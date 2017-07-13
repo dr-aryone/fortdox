@@ -10,6 +10,10 @@ module.exports = function(sequelize, DataTypes) {
     privateKey: {
       allowNull: false,
       type: DataTypes.BLOB
+    },
+    activated: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false
     }
   },{
     updatedAt: false
