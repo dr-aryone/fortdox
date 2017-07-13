@@ -1,6 +1,7 @@
 const requestor = require('@edgeguideab/client-request');
 const passwordCheck = require('actions/utilities/passwordCheck');
 const encryptPrivateKey = require('actions/utilities/encryptPrivateKey');
+const config = require('../../config.json');
 
 const inviteUser = () => {
   return async (dispatch, getState) => {
@@ -12,7 +13,7 @@ const inviteUser = () => {
       type: 'INVITE_USER_START'
     });
     try {
-      await requestor.post('http://localhost:8000/invite', {
+      await requestor.post(`${config.server}/invite`, {
         body: {
           email,
           newUserEmail
@@ -45,7 +46,7 @@ const receivePrivateKey = () => {
     });
     let response;
     try {
-      response = await requestor.post('http://localhost:8000/invite/verify', {
+      response = await requestor.post(`${config.server}/invite/verify`, {
         body: {
           temporaryPassword,
           uuid
@@ -94,7 +95,7 @@ const verifyUser = () => {
       });
     }
     try {
-      await requestor.post('http://localhost:8000/invite/confirm', {
+      await requestor.post(`${config.server}/invite/confirm`, {
         body: {
           uuid,
           username

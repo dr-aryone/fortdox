@@ -9,6 +9,7 @@
 .container-fluid {
   margin-left: $side-nav-width;
   height: 100%;
+  overflow-y: scroll;
 
   &.center-middle {
     display: flex;
@@ -32,22 +33,10 @@
   }
 }
 
-.col-sm-3 {
-  width: percentage(3/12);
-}
-
-.col-sm-4 {
-  width: percentage(4/12);
-}
-
 .col-sm-10 {
   width: percentage(10/12);
 }
 
 .col-sm-offset-1 {
   margin-left: percentage(1/12);
-}
-
-.col-sm-offset-4 {
-  margin-left: percentage(4/12);
 }
