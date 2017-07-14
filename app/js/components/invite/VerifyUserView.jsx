@@ -20,7 +20,7 @@ class VerifyUserView extends React.Component {
     let errorMsg = input.error ? input.errorMsg : null;
 
     return (
-      <div className='container'>
+      <div className='container box'>
         <h1 className='text-center'>Register</h1>
         <LoaderOverlay display={isLoading} />
         <p>{errorMsg}</p>

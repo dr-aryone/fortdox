@@ -1,8 +1,23 @@
 const React = require('react');
-const LoaderOverlay = require('components/general/LoaderOverlay');
+const fs = window.require('fs');
 
-const LoginView = ({input, message, onChange, onLogin, toUserView, toRegisterView, isLoading}) => {
-  let errorMsg = input.error ? <h2>{input.errorMsg}</h2> : null;
+const LoginView = ({loginAs, toRegisterView, toUserView, message}) => {
+  let storage;
+  let userList = [];
+  let storagePath = window.__dirname + '/local_storage.json';
+  if (fs.existsSync(storagePath)) {
+    storage = JSON.parse(fs.readFileSync(storagePath, 'utf-8'));
+    Object.entries(storage).forEach(([email, value]) => {
+      Object.keys(value).forEach((organization) => {
+        userList.push(
+          <div onClick={() => loginAs(email, organization)} key={email+organization}>
+            <h2>{organization}</h2>
+            <h3>{email}</h3>
+          </div>
+        );
+      });
+    });
+  }
   let messageBox = (
     <div className='alert alert-success'>
       <i className='material-icons'>
@@ -14,36 +29,17 @@ const LoginView = ({input, message, onChange, onLogin, toUserView, toRegisterVie
   return (
     <div className='container'>
       {message ? messageBox : null}
-      <div className='box'>
-        <h1 className='text-center'>FortDoks</h1>
-        <LoaderOverlay display={isLoading} />
-        {errorMsg}
-        <label>Email:</label>
-        <input
-          name='emailInputValue'
-          type='text'
-          value={input.emailInputValue}
-          onChange={onChange}
-          className='input-block'
-        />
-        <label>Password:</label>
-        <input
-          name='passwordInputValue'
-          type='password'
-          value={input.passwordInputValue}
-          onChange={onChange}
-          className='input-block'
-        />
-        <a onClick={onLogin} className='btn btn-block'>
-          Login
-        </a>
-        <a onClick={toRegisterView} className='btn btn-block'>
-          Register a New Team
-        </a>
-        <a onClick={toUserView} className='btn btn-block'>
-          Fusk knapp!
-        </a>
+      <h1 className='text-center'>FortDoks</h1>
+      <div className={`box login-panel ${userList.length == 0 ? 'hide' :''}`}>
+        <h2>{userList.length > 0 ? 'Choose an account': null}</h2>
+        {userList}
       </div>
+      <a onClick={toRegisterView} className='btn btn-block'>
+          Register a New Team
+      </a>
+      <a onClick={toUserView} className='btn btn-block'>
+        Fusk knapp!
+      </a>
     </div>
   );
 };

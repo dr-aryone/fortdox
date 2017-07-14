@@ -9,8 +9,8 @@ const inputChange = (inputName, inputValue) => {
       case views.REGISTER_VIEW:
         type = 'INPUT_CHANGE_REGISTER';
         break;
-      case views.LOGIN_VIEW:
-        type = 'INPUT_CHANGE_LOGIN';
+      case views.VERIFY_LOGIN_VIEW:
+        type = 'INPUT_CHANGE_VERIFY_LOGIN';
         break;
       case views.SEARCH_VIEW:
         type = 'INPUT_CHANGE_SEARCH';
