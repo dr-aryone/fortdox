@@ -3,6 +3,7 @@
   margin-bottom: 10px;
   border-radius: 1px;
   position: relative;
+  color: #FFF;
 
   .material-icons {
     font-size: 15px;
@@ -12,6 +13,9 @@
 
   &-success {
     background-color: #a1d36e;
-    color: #FFF;
+  }
+
+  &-warning {
+    background-color: #fc6e51;
   }
 }

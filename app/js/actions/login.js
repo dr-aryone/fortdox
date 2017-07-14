@@ -33,6 +33,7 @@ const login = () => {
       privateKey = (await aes.decrypt(new window.Buffer(paddedPassword, 'base64'), new window.Buffer(encryptedPrivateKey, 'base64')));
       privateKey = window.Buffer.from(privateKey).toString('base64');
     } catch (error) {
+      console.error(error);
       return dispatch({
         type: 'VERIFY_LOGIN_CREDS_ERROR',
         payload: 'Wrong email or password. Try again.',
@@ -50,6 +51,7 @@ const login = () => {
         }
       });
     } catch (error) {
+      console.error(error);
       switch (error.status) {
         case 401:
         case 404:
