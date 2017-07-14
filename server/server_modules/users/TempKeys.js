@@ -12,7 +12,6 @@ const store = (uuid, encryptedPrivateKey) => {
       console.error(error);
       return reject(500);
     }
-
   });
 };
 

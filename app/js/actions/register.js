@@ -1,19 +1,21 @@
 const requestor = require('@edgeguideab/client-request');
 const encryptPrivateKey = require('actions/utilities/encryptPrivateKey');
 const passwordCheck = require('actions/utilities/passwordCheck');
+const storeData = require('actions/utilities/storeData');
 const config = require('../../config.json');
 
 const activateOrganizaton = () => {
   return async (dispatch, getState) => {
-    let state = getState();
     dispatch({
       type: 'ACTIVATE_ORGANIZATION_START'
     });
 
+    let state = getState();
     let privateKey = state.register.get('privateKey');
     let password = state.register.get('passwordInputValue');
     let retypedPassword = state.register.get('retypedPasswordInputValue');
     let pwResult = passwordCheck(password, retypedPassword);
+    let email = state.register.get('email');
     if (!pwResult.valid) {
       console.error(pwResult.errorMsg);
       return dispatch ({
@@ -21,8 +23,9 @@ const activateOrganizaton = () => {
         payload: pwResult.errorMsg
       });
     }
+    let result;
     try {
-      await encryptPrivateKey(privateKey, password);
+      result = await encryptPrivateKey(privateKey, password);
     } catch (error) {
       console.error(error);
       return dispatch ({
@@ -30,9 +33,10 @@ const activateOrganizaton = () => {
         payload: 'Contact your administrator.'
       });
     }
-    let email = state.register.get('email');
+
+    let response;
     try {
-      await requestor.post(`${config.server}/register/confirm`, {
+      response = await requestor.post(`${config.server}/register/confirm`, {
         body: {
           email
         },
@@ -44,9 +48,11 @@ const activateOrganizaton = () => {
       console.error(error);
       return dispatch ({
         type: 'ACTIVATE_ORGANIZATION_ERROR',
-        payload: 'Meep meep'
+        payload: 'Contact your administrator.'
       });
     }
+
+    storeData(response.body.username, result.privateKey, result.salt, response.body.organizationName, email);
     return dispatch ({
       type: 'ACTIVATE_ORGANIZATION_SUCCESS',
       payload: 'Team registration complete! You can now login.'
@@ -56,13 +62,14 @@ const activateOrganizaton = () => {
 
 const registerOrganization = () => {
   return async (dispatch, getState) => {
+    dispatch({
+      type: 'REGISTER_ORGANIZATION_NAME_START'
+    });
+
     let state = getState();
     let organization = state.register.get('organizationInputValue');
     let username = state.register.get('usernameInputValue');
     let email = state.register.get('emailInputValue');
-    dispatch({
-      type: 'REGISTER_ORGANIZATION_NAME_START'
-    });
     try {
       await requestor.post(`${config.server}/register`, {
         body: {
@@ -78,6 +85,7 @@ const registerOrganization = () => {
         payload: 'Team name already exists.'
       });
     }
+
     return dispatch({
       type: 'REGISTER_ORGANIZATION_NAME_SUCCESS',
       payload: 'Please check your email to verify your registration.'
@@ -87,12 +95,13 @@ const registerOrganization = () => {
 
 const verifyActivationCode = () => {
   return async (dispatch, getState) => {
-    let state = getState();
-    let activationCode = state.register.get('activationCode');
-    let response;
     dispatch({
       type: 'VERIFY_ACTIVATION_CODE_START'
     });
+
+    let state = getState();
+    let activationCode = state.register.get('activationCode');
+    let response;
     try {
       response = await requestor.post(`${config.server}/register/verify`, {
         body: {
@@ -106,7 +115,8 @@ const verifyActivationCode = () => {
         payload: 'Email is already verified or the link is broken.'
       });
     }
-    return dispatch({
+
+    dispatch({
       type: 'VERIFY_ACTIVATION_CODE_SUCCESS',
       payload: {
         email: response.body.email,

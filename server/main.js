@@ -52,8 +52,7 @@ app.post('/login', async (req, res) => {
     let privateKey = extractPrivateKey(req.headers.authorization);
     await decryptMasterPassword(privateKey, user.password);
     return res.send({
-      user: user.username,
-      organization: user.Organization.organization
+      username: user.username
     });
   } catch (error) {
     console.error(error);
@@ -110,13 +109,15 @@ app.post('/register/confirm', async (req, res) => {
   try {
     await es.createIndex(organizationName);
     await orgs.activateOrganization(organizationName);
-    res.status(200).send();
+    let user = await users.getUser(email);
+    res.status(200).send({
+      organizationName,
+      username: user.username
+    });
   } catch (error) {
     console.error(error);
     res.status(500).send();
   }
-
-
 });
 
 app.post('/register/verify', async (req, res) => {
@@ -228,6 +229,7 @@ app.post('/invite/confirm', async (req, res) => {
   let metadata;
   try {
     metadata = await users.verifyNewUser(uuid, privateKey, username);
+    console.log('test');
     await users.TempKeys.remove(uuid);
     return res.send(metadata);
   } catch (error) {
@@ -237,6 +239,7 @@ app.post('/invite/confirm', async (req, res) => {
 
 
 });
+
 app.post('/documents', async (req, res) => {
   if (req.body.title || req.body.text === '') {
     return res.status(400).send({msg: 'Bad format, title and/or text cannot be empty'});

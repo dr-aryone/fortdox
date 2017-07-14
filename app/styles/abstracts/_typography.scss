@@ -23,13 +23,26 @@ $text-styles: (
   text-align: center;
 }
 
-h1 {
+h1, h2, h3 {
   margin-top: 0px;
   font-family: map-deep-get($text-styles, 'header', 'font-family');
-  font-size: map-deep-get($text-styles, 'header', 'font-size');
   font-weight: map-deep-get($text-styles, 'header', 'font-weight');
-  color: $header-color;
   padding-top: 0.65em;
+}
+
+h1 {
+  font-size: map-deep-get($text-styles, 'header', 'font-size');
+  color: $header-color;
+}
+
+h2 {
+  color: darken($primary-color, 50%);
+  font-size: 1.5em;
+  margin-bottom: 0.65em;
+}
+
+h3 {
+  margin-bottom: 0.65em;
 }
 
 .material-icons {

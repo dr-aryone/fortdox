@@ -2,16 +2,18 @@ const requestor = require('@edgeguideab/client-request');
 const passwordCheck = require('actions/utilities/passwordCheck');
 const encryptPrivateKey = require('actions/utilities/encryptPrivateKey');
 const config = require('../../config.json');
+const storeData = require('actions/utilities/storeData');
 
 const inviteUser = () => {
   return async (dispatch, getState) => {
+    dispatch ({
+      type: 'INVITE_USER_START'
+    });
+
     let state = getState();
     let newUserEmail = state.invite.get('emailInputValue');
     let privateKey = state.user.get('privateKey');
     let email = state.user.get('email');
-    dispatch ({
-      type: 'INVITE_USER_START'
-    });
     try {
       await requestor.post(`${config.server}/invite`, {
         body: {
@@ -29,6 +31,7 @@ const inviteUser = () => {
         payload: 'SOMETHING WENT WRONG'
       });
     }
+
     dispatch ({
       type: 'INVITE_USER_SUCCESS',
       payload: 'Invitation has been sent to the user!'
@@ -44,6 +47,7 @@ const receivePrivateKey = () => {
     dispatch ({
       type: 'RECEIVE_PRIVATE_KEY_START'
     });
+
     let response;
     try {
       response = await requestor.post(`${config.server}/invite/verify`, {
@@ -72,6 +76,7 @@ const verifyUser = () => {
     dispatch({
       type: 'VERIFY_NEW_USER_START'
     });
+
     let state = getState();
     let username = state.verifyUser.get('usernameInputValue');
     let password = state.verifyUser.get('passwordInputValue');
@@ -85,17 +90,21 @@ const verifyUser = () => {
         payload: pwResult.errorMsg
       });
     }
+
+    let result;
     try {
-      await encryptPrivateKey(privateKey, password);
+      result = await encryptPrivateKey(privateKey, password);
     } catch (error) {
       console.error(error);
       return dispatch ({
         type: 'VERIFY_NEW_USER_ERROR',
-        payload: 'SOMETHING WENT WRONG'
+        payload: 'Link is broken.'
       });
     }
+
+    let response;
     try {
-      await requestor.post(`${config.server}/invite/confirm`, {
+      response = await requestor.post(`${config.server}/invite/confirm`, {
         body: {
           uuid,
           username
@@ -108,12 +117,22 @@ const verifyUser = () => {
       console.error(error);
       return dispatch ({
         type: 'VERIFY_NEW_USER_ERROR',
-        payload: 'SOMETHING WENT WRONG'
+        payload: 'Internal server error.'
       });
     }
+
+    let salt = result.salt;
+    let organization = response.body.organization;
+    let email = response.body.email;
+    storeData(username, privateKey, salt, organization, email);
     dispatch ({
       type: 'VERIFY_NEW_USER_SUCCESS',
-      payload: 'Registration complete! You can nog login.'
+      payload: {
+        username,
+        privateKey,
+        organization,
+        email
+      }
     });
   };
 };

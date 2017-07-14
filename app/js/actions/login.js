@@ -3,25 +3,30 @@ const aes = window.require('./aes.js');
 const fs = window.require('fs');
 const config = require('../../config.json');
 
+const loginAs = (email, organization) => {
+  return dispatch => {
+    dispatch ({
+      type: 'LOGIN_AS',
+      payload: {
+        email,
+        organization
+      }
+    });
+  };
+};
+
 const login = () => {
   return async (dispatch, getState) => {
-    let state = getState();
-    let email = state.login.get('emailInputValue');
-    let password = state.login.get('passwordInputValue');
     dispatch({
       type: 'VERIFY_LOGIN_CREDS_START'
     });
-    let encryptedPrivateKey;
-    let salt;
-    try {
-      encryptedPrivateKey = fs.readFileSync(window.__dirname + '/local_storage/encryptedPrivateKey', 'utf-8');
-      salt = fs.readFileSync(window.__dirname + '/local_storage/salt', 'utf-8');
-    } catch (error) {
-      return dispatch({
-        payload: 'Wrong email or password. Try again.',
-        error: true
-      });
-    }
+    let state = getState();
+    let email = state.login.get('email');
+    let password = state.login.get('passwordInputValue');
+    let organization = state.login.get('organization');
+    let storage = JSON.parse(fs.readFileSync(window.__dirname + '/local_storage.json', 'utf-8'));
+    let encryptedPrivateKey = storage[email][organization].privateKey;
+    let salt = storage[email][organization].salt;
     let privateKey;
     try {
       let paddedPassword = (await aes.generatePaddedKey(password, new window.Buffer(salt, 'base64'))).key;
@@ -66,11 +71,11 @@ const login = () => {
       payload: {
         privateKey: privateKey.toString('base64'),
         email: email,
-        organization: response.body.organization,
-        user: response.body.user
+        organization: organization,
+        username: response.body.username
       }
     });
   };
 };
 
-module.exports = login;
+module.exports = {login, loginAs};

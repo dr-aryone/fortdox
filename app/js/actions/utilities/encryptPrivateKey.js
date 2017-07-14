@@ -1,5 +1,4 @@
 const aes = window.require('./aes.js');
-const fs = window.require('fs');
 
 const encryptPrivateKey = (privateKey, password) => {
   return new Promise(async (resolve, reject) => {
@@ -17,10 +16,10 @@ const encryptPrivateKey = (privateKey, password) => {
       console.error(error);
       return reject('MEEP MEEEP');
     }
-
-    fs.writeFileSync(window.__dirname + '/local_storage/encryptedPrivateKey', encryptedKey.toString('base64'));
-    fs.writeFileSync(window.__dirname + '/local_storage/salt', result.salt.toString('base64'));
-    return resolve();
+    return resolve({
+      'privateKey': encryptedKey.toString('base64'),
+      'salt': result.salt.toString('base64')
+    });
   });
 };
 

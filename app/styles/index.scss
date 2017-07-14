@@ -18,10 +18,11 @@
 
 @import
   'pages/full-page',
+  'pages/login-page',
   'pages/user-page';
 
-body {
-  margin: 0px;
-  font-family: map-deep-get($text-styles, 'text', 'font-family');
-  font-size: map-deep-get($text-styles, 'text', 'font-size');
-}
+  body {
+    margin: 0px;
+    font-family: map-deep-get($text-styles, 'text', 'font-family');
+    font-size: map-deep-get($text-styles, 'text', 'font-size');
+  }
