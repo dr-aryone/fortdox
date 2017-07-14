@@ -28,7 +28,7 @@ const inviteUser = () => {
       console.error(error);
       return dispatch ({
         type: 'INVITE_USER_ERROR',
-        payload: 'SOMETHING WENT WRONG'
+        payload: 'Cannot connect to server.'
       });
     }
 
@@ -63,7 +63,6 @@ const receivePrivateKey = () => {
         payload: 'Email is already verified or the link is broken.'
       });
     }
-
     dispatch ({
       type: 'RECEIVE_PRIVATE_KEY_SUCCESS',
       payload: response.body.privateKey
@@ -124,7 +123,8 @@ const verifyUser = () => {
     let salt = result.salt;
     let organization = response.body.organization;
     let email = response.body.email;
-    storeData(username, privateKey, salt, organization, email);
+    let encryptedPrivateKey = result.privateKey;
+    storeData(username, encryptedPrivateKey, salt, organization, email);
     dispatch ({
       type: 'VERIFY_NEW_USER_SUCCESS',
       payload: {
