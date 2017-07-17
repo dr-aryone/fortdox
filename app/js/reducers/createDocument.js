@@ -1,19 +1,30 @@
 const {fromJS} = require('immutable');
 
 let initialState = fromJS({
-  'titleValue': '',
-  'textValue': '',
-  'isLoading': false
+  docFields: {
+    title: {
+      value: '',
+      error: null
+    },
+    text: {
+      value: '',
+      error: null
+    }
+  },
+  isLoading: false,
 });
 
 const form = (state = initialState, action) => {
   switch (action.type) {
     case 'INPUT_CHANGE_CREATE_DOC':
-      return state.set(action.inputName, fromJS(action.inputValue));
+      return state.setIn(['docFields', action.inputName, 'value'], fromJS(action.inputValue)).setIn(['docFields', action.inputName, 'error'], null);
     case 'CREATE_DOCUMENT_START':
       return state.set('isLoading', true);
     case 'CREATE_DOCUMENT_ERROR':
-      return state.set('isLoading', false);
+      return state.merge({
+        docFields: state.get('docFields').mergeDeepWith((oldError, newError) => newError, action.payload),
+        isLoading: false,
+      });
     case 'CREATE_DOCUMENT_SUCCESS':
     case 'CHANGE_VIEW':
       return initialState;

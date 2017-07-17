@@ -5,6 +5,7 @@
 
 @import
   'components/alerts',
+  'components/arrow-box',
   'components/box',
   'components/buttons',
   'components/input',
@@ -17,6 +18,7 @@
   'layout/side-nav';
 
 @import
+  'pages/doc-page',
   'pages/full-page',
   'pages/login-page',
   'pages/user-page';

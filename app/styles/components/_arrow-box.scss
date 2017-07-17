@@ -1,0 +1,29 @@
+.arrow_box {
+	position: relative;
+	background: $warning;
+  color: #FFF;
+  border-radius: 2px;
+  padding: 5px;
+  display: none;
+  align-items: center;
+
+  .material-icons {
+    margin-right: 5px;
+  }
+}
+
+.arrow_box:before {
+	bottom: 100%;
+	left: 10%;
+	border: solid transparent;
+	content: " ";
+	height: 0;
+	width: 0;
+	position: absolute;
+	pointer-events: none;
+}
+
+.arrow_box:before {
+	border-bottom-color: $warning;
+	border-width: 10px;
+}

@@ -29,6 +29,7 @@ textarea {
   font-size: $font-size;
   background-color: #FFF;
   height: 10em;
+  margin: 10px 0px;
 
   &:focus {
     border: 1px solid $primary-color;
