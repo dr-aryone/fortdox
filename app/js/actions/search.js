@@ -43,9 +43,19 @@ const setUpdateDocument = id => {
     let doc = searchResult.find((item) => {
       return item._id === id;
     });
+    let docFields = {};
+    Object.entries(doc._source).forEach(([key, value]) => {
+      docFields[key] = {
+        value,
+        error: null
+      };
+    });
     dispatch({
-      type: 'UPDATE_DOCUMENT',
-      payload: doc
+      type: 'SET_UPDATE_DOCUMENT',
+      payload: {
+        documentToUpdate: doc,
+        docFields
+      }
     });
   };
 };

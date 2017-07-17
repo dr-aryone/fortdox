@@ -11,11 +11,12 @@
     margin-right: 10px;
   }
 
-  &-success {
-    background-color: #a1d36e;
+  &-warning {
+    background-color: $warning;
   }
 
-  &-warning {
-    background-color: #fc6e51;
+  &-success {
+    background-color: $success;
   }
+
 }

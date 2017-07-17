@@ -1,9 +1,8 @@
 const React = require('react');
 
-const Form = ({header, input, onChange, children}) => {
+const DocumentTextArea = ({onSubmit, input, onChange, children}) => {
   return (
-    <div>
-      <h1>{header}</h1>
+    <form onSubmit={onSubmit}>
       <div className='box'>
         <label>Title</label>
         <input
@@ -23,8 +22,8 @@ const Form = ({header, input, onChange, children}) => {
         />
         {children}
       </div>
-    </div>
+    </form>
   );
 };
 
-module.exports = Form;
+module.exports = DocumentTextArea;

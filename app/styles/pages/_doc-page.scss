@@ -1,0 +1,20 @@
+.input-field {
+  display: flex;
+  flex-direction: column;
+
+  & input {
+    flex-grow: 1;
+  }
+
+  &.warning div.arrow_box {
+    display: flex;
+  }
+
+  &.warning input {
+    border-bottom: 1px solid $warning;
+  }
+
+  &.warning textarea {
+    border: 1px solid $warning;
+  }
+}

@@ -17,7 +17,6 @@ const register = (state = initialState, action) => {
       return state.set('isLoading', true);
     case 'SEARCH_FOUND':
       return state.merge({
-        'searchString': '',
         'result': fromJS(action.payload),
         'error': false,
         'errorMsg': '',

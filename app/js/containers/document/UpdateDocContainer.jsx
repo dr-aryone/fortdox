@@ -7,10 +7,7 @@ const views = require('views.json');
 
 const mapStateToProps = (state) => {
   return {
-    input: {
-      titleValue: state.updateDocument.get('titleValue'),
-      textValue: state.updateDocument.get('textValue')
-    },
+    docFields: state.updateDocument.get('docFields'),
     isLoading: state.updateDocument.get('isLoading')
   };
 };

@@ -5,10 +5,7 @@ const {createDocument} = require('actions/document');
 
 const mapStateToProps = (state) => {
   return {
-    input: {
-      titleValue: state.createDocument.get('titleValue'),
-      textValue: state.createDocument.get('textValue')
-    },
+    docFields: state.createDocument.get('docFields'),
     isLoading: state.createDocument.get('isLoading')
   };
 };
