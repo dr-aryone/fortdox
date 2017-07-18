@@ -5,7 +5,7 @@ const PasswordView = ({organization, email, input, onChange, onLogin, toLoginVie
   let errorMsg = input.error ? (
     <div className='alert alert-warning'>
       <i className='material-icons'>error_outline</i>
-      {input.errorMsg}
+      {input.error}
     </div>
   ) : null;
   return (
