@@ -1,12 +1,12 @@
 const {fromJS} = require('immutable');
 
 const initialState = fromJS({
-  'email': '',
-  'organization': '',
-  'password': '',
-  'error': null,
-  'isLoading': false,
-  'message': null
+  email: '',
+  organization: '',
+  password: '',
+  error: null,
+  isLoading: false,
+  message: null
 });
 
 const login = (state = initialState, action) => {
@@ -15,8 +15,8 @@ const login = (state = initialState, action) => {
       return state.set(action.inputName, fromJS(action.inputValue));
     case 'LOGIN_AS':
       return state.merge ({
-        'email': fromJS(action.payload.email),
-        'organization': fromJS(action.payload.organization)
+        email: fromJS(action.payload.email),
+        organization: fromJS(action.payload.organization)
       });
     case 'VERIFY_LOGIN_CREDS_START':
       return state.set('isLoading', true);
@@ -26,9 +26,9 @@ const login = (state = initialState, action) => {
     case 'VERIFY_LOGIN_CREDS_ERROR':
     case 'VERIFY_LOGIN_CREDS_FAIL':
       return state.merge({
-        'password': '',
-        'error': action.payload,
-        'isLoading': false
+        password: '',
+        error: fromJS(action.payload),
+        isLoading: false
       });
     case 'VERIFY_NEW_USER_SUCCESS':
       return state.set('message', fromJS(action.payload.message));

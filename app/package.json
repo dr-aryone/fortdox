@@ -2,7 +2,7 @@
   "name": "Fort Dox",
   "productName": "Fort Dox",
   "version": "1.0.0",
-  "main": "main.js",
+  "main.js": "main.js",
   "scripts": {
     "start": "electron .",
     "package-mac": "electron-packager . --overwrite --platform=darwin --arch=x64 --out=release-builds"

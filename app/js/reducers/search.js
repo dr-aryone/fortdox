@@ -17,20 +17,20 @@ const register = (state = initialState, action) => {
       return state.set('isLoading', true);
     case 'SEARCH_FOUND':
       return state.merge({
-        'result': fromJS(action.payload),
-        'error': false,
-        'errorMsg': '',
-        'isLoading': false,
-        'hasSearched': true
+        result: fromJS(action.payload),
+        error: false,
+        errorMsg: '',
+        isLoading: false,
+        hasSearched: true
       });
     case 'SEARCH_NOT_FOUND':
       return state.merge({
-        'result': [],
-        'documentToUpdate': null,
-        'error': true,
-        'errorMsg': action.payload,
-        'isLoading': false,
-        'hasSearched': true
+        result: [],
+        documentToUpdate: null,
+        error: true,
+        errorMsg: fromJS(action.payload),
+        isLoading: false,
+        hasSearched: true
       });
     case 'UPDATE_DOCUMENT_SUCCESS':
     case 'DELETE_DOCUMENT_SUCCESS':
