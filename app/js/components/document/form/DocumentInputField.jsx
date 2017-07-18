@@ -1,19 +1,18 @@
 const React = require('react');
 
 const DocumentInputField = ({input, onChange}) => {
-  debugger;
   return (
-    <div className={`input-field ${docFields.getIn(['title', 'error']) ? 'warning' : ''}`}>
-      <label>Title</label>
+    <div className={`input-field ${input[1].get('error') ? 'warning' : ''}`}>
+      <label>{input[1].get('label')}</label>
       <input
-        name='title'
+        name={input[0]}
         onChange={onChange}
         type='text'
-        value={docFields.getIn(['title', 'value'])}
+        value={input[1].get('value')}
       />
       <div className='arrow_box'>
         <span className='material-icons'>error_outline</span>
-        {docFields.getIn(['title', 'error'])}
+        {input[1].get('error')}
       </div>
     </div>
   );

@@ -13,7 +13,6 @@ const DocumentForm = ({onSubmit, docFields, onChange, children}) => {
     );
   });
 
-
   return (
     <form onSubmit={onSubmit} className='box'>
       {fields}

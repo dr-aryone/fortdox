@@ -1,6 +1,7 @@
 .input-field {
   display: flex;
   flex-direction: column;
+  margin-bottom: 10px;
 
   & input {
     flex-grow: 1;
