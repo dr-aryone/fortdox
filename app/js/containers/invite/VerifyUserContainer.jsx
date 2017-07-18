@@ -26,7 +26,8 @@ const mapDispatchToProps = dispatch => {
     onChange: (event) => {
       dispatch(action.inputChange(event.target.name, event.target.value));
     },
-    onSubmit: () => {
+    onSubmit: (event) => {
+      event.preventDefault();
       dispatch(verifyUser());
     },
     toLoginView: () => {

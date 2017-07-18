@@ -18,7 +18,8 @@ const mapDispatchToProps = dispatch => {
     onChange: (event) => {
       dispatch(action.inputChange(event.target.name, event.target.value));
     },
-    onSend: () => {
+    onSend: (event) => {
+      event.preventDefault();
       dispatch(inviteUser());
     }
   };

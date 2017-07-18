@@ -14,10 +14,11 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    onChange: (e) => {
-      dispatch(action.inputChange(e.target.name, e.target.value));
+    onChange: (event) => {
+      dispatch(action.inputChange(event.target.name, event.target.value));
     },
-    onSearch: () => {
+    onSearch: (event) => {
+      event.preventDefault();
       dispatch(search.search());
     },
     onUpdate: id => {

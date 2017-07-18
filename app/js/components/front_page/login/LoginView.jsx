@@ -18,6 +18,7 @@ const LoginView = ({loginAs, toRegisterView, toUserView, message}) => {
       });
     });
   }
+
   let messageBox = (
     <div className='alert alert-success'>
       <i className='material-icons'>
@@ -26,6 +27,7 @@ const LoginView = ({loginAs, toRegisterView, toUserView, message}) => {
       {message}
     </div>
   );
+
   return (
     <div className='container'>
       {message ? messageBox : null}
@@ -34,12 +36,12 @@ const LoginView = ({loginAs, toRegisterView, toUserView, message}) => {
         <h2>{userList.length > 0 ? 'Choose an account': null}</h2>
         {userList}
       </div>
-      <a onClick={toRegisterView} className='btn btn-block'>
+      <button onClick={toRegisterView} className='block'>
           Register a New Team
-      </a>
-      <a onClick={toUserView} className='btn btn-block'>
-        Fusk knapp!
-      </a>
+      </button>
+      <button onClick={toUserView} className='block'>
+        Fuskknapp!
+      </button>
     </div>
   );
 };

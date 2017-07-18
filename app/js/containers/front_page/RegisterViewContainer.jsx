@@ -28,13 +28,15 @@ const mapDispatchToProps = dispatch => {
     onMount: () => {
       dispatch(register.verifyActivationCode());
     },
-    onChange: (e) => {
-      dispatch(action.inputChange(e.target.name, e.target.value));
+    onChange: (event) => {
+      dispatch(action.inputChange(event.target.name, event.target.value));
     },
-    onCreateOrganization: () => {
+    onCreateOrganization: (event) => {
+      event.preventDefault();
       dispatch(register.registerOrganization());
     },
-    onRegister: () => {
+    onRegister: (event) => {
+      event.preventDefault();
       dispatch(register.activateOrganizaton());
     },
     toLoginView: () => {

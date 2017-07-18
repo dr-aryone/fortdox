@@ -9,7 +9,7 @@ const CreateDocView = ({docFields, onChange, onCreate, isLoading}) => {
         <LoaderOverlay display={isLoading} />
         <h1>Create Document</h1>
         <DocumentForm docFields={docFields} onChange={onChange} onSubmit={onCreate}>
-          <a onClick={onCreate} className='btn' onSubmit={onCreate}>Create</a>
+          <button onClick={onCreate} type='submit'>Create</button>
         </DocumentForm>
       </div>
     </div>

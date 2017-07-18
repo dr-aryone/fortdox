@@ -9,8 +9,8 @@ const UpdateDocView = ({docFields, onChange, onUpdate, toSearchView, isLoading})
         <LoaderOverlay display={isLoading} />
         <h1>Update Document</h1>
         <DocumentForm docFields={docFields} onChange={onChange} onSubmit={onUpdate}>
-          <a onClick={onUpdate} className='btn' onSubmit={onUpdate}>Update</a>
-          <a onClick={toSearchView} className='btn'>Back</a>
+          <button onClick={onUpdate} type='submit'>Update</button>
+          <button onClick={toSearchView} type='button'>Back</button>
         </DocumentForm>
       </div>
     </div>

@@ -10,20 +10,23 @@ const PasswordView = ({organization, email, input, onChange, onLogin, toLoginVie
       <div className='box'>
         <h2>{email}</h2>
         {errorMsg}
-        <label>Password</label>
-        <input
-          name='passwordInputValue'
-          type='password'
-          value={input.passwordInputValue}
-          onChange={onChange}
-          className='input-block'
-        />
-        <a onClick={onLogin} className='btn btn-block'>
-          Login
-        </a>
-        <a onClick={toLoginView} className='btn btn-block'>
-          Back
-        </a>
+        <form onSubmit={onLogin}>
+          <label>Password</label>
+          <input
+            name='passwordInputValue'
+            type='password'
+            value={input.passwordInputValue}
+            onChange={onChange}
+            className='input-block'
+            autoFocus
+          />
+          <button onClick={onLogin} className='block' type='submit'>
+            Login
+          </button>
+          <button onClick={toLoginView} className='block' type='button'>
+            Back
+          </button>
+        </form>
       </div>
     </div>
   );

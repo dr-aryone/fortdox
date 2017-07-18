@@ -25,37 +25,40 @@ class VerifyUserView extends React.Component {
         <LoaderOverlay display={isLoading} />
         <p>{errorMsg}</p>
         <div className={hasPrivateKey ? '' : 'hide'}>
-          <label>Username:</label>
-          <input
-            name='usernameInputValue'
-            type='text'
-            value={input.usernameInputValue}
-            onChange={onChange}
-            className='input-block'
-          />
-          <label>Password:</label>
-          <input
-            name='passwordInputValue'
-            type='password'
-            value={input.passwordInputValue}
-            onChange={onChange}
-            className='input-block'
-          />
-          <label>Re-type password:</label>
-          <input
-            name='retypedInputValue'
-            type='password'
-            value={input.retypedInputValue}
-            onChange={onChange}
-            className='input-block'
-          />
-          <a onClick={onSubmit} className='btn btn-block'>
-            Submit
-          </a>
+          <form onSubmit={onSubmit}>
+            <label>Username:</label>
+            <input
+              name='usernameInputValue'
+              type='text'
+              value={input.usernameInputValue}
+              onChange={onChange}
+              className='input-block'
+              autoFocus
+            />
+            <label>Password:</label>
+            <input
+              name='passwordInputValue'
+              type='password'
+              value={input.passwordInputValue}
+              onChange={onChange}
+              className='input-block'
+            />
+            <label>Re-type password:</label>
+            <input
+              name='retypedInputValue'
+              type='password'
+              value={input.retypedInputValue}
+              onChange={onChange}
+              className='input-block'
+            />
+            <button onClick={onSubmit} className='block' type='submit'>
+              Submit
+            </button>
+          </form>
         </div>
-        <a onClick={toLoginView} className='btn btn-block'>
+        <button onClick={toLoginView} className='block'>
           Back
-        </a>
+        </button>
       </div>
     );
   }

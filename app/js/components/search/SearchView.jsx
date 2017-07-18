@@ -22,16 +22,19 @@ const SearchView = ({result, onUpdate, searchString, onChange, onSearch, isLoadi
       <div className='col-sm-10 col-sm-offset-1'>
         <LoaderOverlay display={isLoading} />
         <h1>Search</h1>
-        <div className='input-bar box'>
+        <form onSubmit={onSearch} className='input-bar box'>
           <input
             name='searchString'
             type='text'
             value={searchString}
             onChange={onChange}
             placeholder='Search'
+            autoFocus
           />
-          <a onClick={onSearch} className='btn'>Search</a>
-        </div>
+          <button onClick={onSearch} type='submit'>
+            <i className='material-icons'>search</i>
+          </button>
+        </form>
         {searchLength}
         <div className='row'>
           {searchResult}
