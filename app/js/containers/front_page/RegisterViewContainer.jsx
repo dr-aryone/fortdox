@@ -7,18 +7,13 @@ const views = require('views.json');
 const mapStateToProps = state => {
   return {
     currentView: state.navigation.get('currentView'),
+    registerFields: state.register.get('registerFields'),
+    activateFields: state.register.get('activateFields'),
     register: {
-      organizationInputValue: state.register.get('organizationInputValue'),
-      usernameInputValue: state.register.get('usernameInputValue'),
-      emailInputValue: state.register.get('emailInputValue'),
-      passwordInputValue: state.register.get('passwordInputValue'),
-      retypedPasswordInputValue: state.register.get('retypedPasswordInputValue'),
-      errorMsg: state.register.get('errorMsg'),
-      orgNameError: state.register.get('orgNameError'),
-      activateError: state.register.get('activateError'),
-      isLoading: state.register.get('isLoading'),
-      isVerified: state.register.get('isVerified'),
-      message: state.register.get('message')
+      verifyCodeError: state.register.get('verifyCodeError'),
+      isLoading: false,
+      registerError: state.register.get('registerError'),
+      activateOrgError: state.register.get('activateOrgError')
     }
   };
 };

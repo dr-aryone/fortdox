@@ -5,9 +5,11 @@ const inputChange = (inputName, inputValue) => {
     let state = getState();
     let type;
     switch (state.navigation.get('currentView')) {
-      case views.REGISTER_VERIFY_VIEW:
+      case views.ACTIVATE_ORGANIZATION_VIEW:
+        type ='INPUT_CHANGE_ACTIVATE_ORGANIZATION';
+        break;
       case views.REGISTER_VIEW:
-        type = 'INPUT_CHANGE_REGISTER';
+        type = 'INPUT_CHANGE_REGISTER_ORGANIZATION';
         break;
       case views.VERIFY_LOGIN_VIEW:
         type = 'INPUT_CHANGE_VERIFY_LOGIN';

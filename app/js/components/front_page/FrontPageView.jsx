@@ -15,7 +15,7 @@ const FrontPageView = ({currentView}) => {
       view = <VerifyLoginContainer />;
       break;
     case views.REGISTER_VIEW:
-    case views.REGISTER_VERIFY_VIEW:
+    case views.ACTIVATE_ORGANIZATION_VIEW:
       view = <RegisterViewContainer />;
       break;
     case views.VERIFY_USER_VIEW:

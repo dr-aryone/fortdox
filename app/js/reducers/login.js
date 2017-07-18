@@ -32,8 +32,10 @@ const login = (state = initialState, action) => {
         'errorMsg': action.payload,
         'isLoading': false
       });
+    case 'VERIFY_NEW_USER_SUCCESS':
+      return state.set('message', fromJS(action.payload.message));
     case 'ACTIVATE_ORGANIZATION_SUCCESS':
-    case 'REGISTER_ORGANIZATION_NAME_SUCCESS':
+    case 'REGISTER_ORGANIZATION_SUCCESS':
       return state.set('message', fromJS(action.payload));
     default:
       return state;

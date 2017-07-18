@@ -1,13 +1,6 @@
 const requestor = require('@edgeguideab/client-request');
 const config = require('../../config.json');
-
-function checkEmptyFields(fields) {
-  let emptyFields = [];
-  fields.entrySeq().forEach((entry) => {
-    if (entry[1].get('value').trim() === '') emptyFields.push(entry);
-  });
-  return emptyFields;
-}
+const checkEmptyFields = require('actions/utilities/checkEmptyFields');
 
 const createDocument = () => {
   return async (dispatch, getState) => {
@@ -24,7 +17,7 @@ const createDocument = () => {
       let newDocFields = {};
       emptyFields.forEach((key) => {
         newDocFields[key[0]] = {
-          error: `${key[1].get('label')} can not be empty.`
+          error: `Please enter a ${key[1].get('label').toLowerCase()}.`
         };
       });
 
@@ -85,7 +78,7 @@ const updateDocument = () => {
         payload: newDocFields
       });
     }
-    
+
     let updateQuery = {};
     newDoc.entrySeq().forEach((entry) => updateQuery[entry[0]] = entry[1].get('value'));
     try {

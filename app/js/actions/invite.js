@@ -3,6 +3,7 @@ const passwordCheck = require('actions/utilities/passwordCheck');
 const encryptPrivateKey = require('actions/utilities/encryptPrivateKey');
 const config = require('../../config.json');
 const storeData = require('actions/utilities/storeData');
+const checkEmptyFields = require('actions/utilities/checkEmptyFields');
 
 const inviteUser = () => {
   return async (dispatch, getState) => {
@@ -11,7 +12,19 @@ const inviteUser = () => {
     });
 
     let state = getState();
-    let newUserEmail = state.invite.get('emailInputValue');
+    let fields = state.invite.get('fields');
+    let emptyFields = checkEmptyFields(fields);
+    if (emptyFields.length > 0) {
+      let errorField = {};
+      errorField[emptyFields[0][0]] = {
+        error: 'Please enter an email'
+      };
+      return dispatch({
+        type: 'INVITE_USER_FAIL',
+        payload: errorField
+      });
+    }
+    let newUserEmail = fields.getIn(['email', 'value']);
     let privateKey = state.user.get('privateKey');
     let email = state.user.get('email');
     try {
@@ -26,15 +39,23 @@ const inviteUser = () => {
       });
     } catch (error) {
       console.error(error);
-      return dispatch ({
-        type: 'INVITE_USER_ERROR',
-        payload: 'Cannot connect to server.'
-      });
+      switch (error.status) {
+        case 409:
+          return dispatch ({
+            type: 'INVITE_USER_ERROR',
+            payload: `${email} has already joined the team.`
+          });
+        case 500:
+          return dispatch ({
+            type: 'INVITE_USER_ERROR',
+            payload: 'Unable to connect to server. Please try again later.'
+          });
+      }
     }
 
     dispatch ({
       type: 'INVITE_USER_SUCCESS',
-      payload: 'Invitation has been sent to the user!'
+      payload: `Invitation has been sent to ${newUserEmail}!`
     });
   };
 };
@@ -77,15 +98,46 @@ const verifyUser = () => {
     });
 
     let state = getState();
-    let username = state.verifyUser.get('usernameInputValue');
-    let password = state.verifyUser.get('passwordInputValue');
-    let retypedPassword = state.verifyUser.get('retypedInputValue');
+    let fields = state.verifyUser.get('fields');
+    let emptyFields = checkEmptyFields(fields);
+    if (emptyFields.length > 0) {
+      let newFields = {};
+      emptyFields.forEach((entry) => {
+        let error;
+        switch (entry[0]) {
+          case 'username':
+            error = 'Please enter an username.';
+            break;
+          case 'password':
+            error = 'Please enter a password.';
+            break;
+          case 'retypedPassword':
+            error = 'Please re-enter your password.';
+            break;
+        }
+        newFields[entry[0]] = {
+          error: {
+            error
+          }
+        };
+      });
+      return dispatch({
+        type: 'VERIFY_NEW_USER_FAIL',
+        payload: newFields
+      });
+    }
+
+    let password = fields.getIn(['password', 'value']);
+    let retypedPassword = fields.getIn(['retypedPassword', 'value']);
     let privateKey = state.verifyUser.get('privateKey');
-    let uuid = state.verifyUser.get('uuid');
     let pwResult = passwordCheck(password, retypedPassword);
     if (!pwResult.valid) {
-      return dispatch ({
-        type: 'VERIFY_NEW_USER_ERROR',
+      if (pwResult.fault == 'password') return dispatch ({
+        type: 'VERIFY_NEW_USER_PASSWORD_FAIL',
+        payload: pwResult.errorMsg
+      });
+      if (pwResult.fault == 'retypedPassword') return dispatch ({
+        type: 'VERIFY_NEW_USER_PASSWORD_MISSMATCH_FAIL',
         payload: pwResult.errorMsg
       });
     }
@@ -102,6 +154,8 @@ const verifyUser = () => {
     }
 
     let response;
+    let username = fields.getIn(['username', 'value']);
+    let uuid = state.verifyUser.get('uuid');
     try {
       response = await requestor.post(`${config.server}/invite/confirm`, {
         body: {
@@ -116,7 +170,7 @@ const verifyUser = () => {
       console.error(error);
       return dispatch ({
         type: 'VERIFY_NEW_USER_ERROR',
-        payload: 'Internal server error.'
+        payload: 'Unable to connect to server. Please try again later.'
       });
     }
 
@@ -131,7 +185,8 @@ const verifyUser = () => {
         username,
         privateKey,
         organization,
-        email
+        email,
+        message: 'Registration complete! You can now login.'
       }
     });
   };

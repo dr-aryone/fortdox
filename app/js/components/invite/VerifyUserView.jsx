@@ -10,55 +10,77 @@ class VerifyUserView extends React.Component {
 
   render () {
     let {
-      input,
+      fields,
+      error,
       isLoading,
       onChange,
       onSubmit,
       toLoginView,
-      hasPrivateKey,
+      privateKey,
     } = this.props;
-    let errorMsg = input.error ? input.errorMsg : null;
+
+    let errorBox = error ? (
+      <div className='alert alert-warning'>
+        <span className='material-icons'>error_outline</span>
+        {error}
+      </div>
+    ) : null;
+
+    let errorMsg = {};
+    fields.entrySeq().forEach((entry) => {
+      errorMsg[entry[0]] = entry[1].get('error') ? (
+        <div className='arrow_box show'>
+          <span className='material-icons'>error_outline</span>
+          {entry[1].get('error')}
+        </div>
+      ) : null;
+    });
 
     return (
-      <div className='container box'>
-        <h1 className='text-center'>Register</h1>
+      <div className='container'>
         <LoaderOverlay display={isLoading} />
-        <p>{errorMsg}</p>
-        <div className={hasPrivateKey ? '' : 'hide'}>
-          <form onSubmit={onSubmit}>
-            <label>Username:</label>
-            <input
-              name='usernameInputValue'
-              type='text'
-              value={input.usernameInputValue}
-              onChange={onChange}
-              className='input-block'
-              autoFocus
-            />
-            <label>Password:</label>
-            <input
-              name='passwordInputValue'
-              type='password'
-              value={input.passwordInputValue}
-              onChange={onChange}
-              className='input-block'
-            />
-            <label>Re-type password:</label>
-            <input
-              name='retypedInputValue'
-              type='password'
-              value={input.retypedInputValue}
-              onChange={onChange}
-              className='input-block'
-            />
-            <button onClick={onSubmit} className='block' type='submit'>
-              Submit
-            </button>
-          </form>
+        {errorBox}
+        <h1 className='text-center'>Register</h1>
+        <div className='box'>
+          <div className={privateKey ? '' : 'hide'}>
+            <form onSubmit={onSubmit}>
+              <label>Username:</label>
+              <input
+                name='username'
+                type='text'
+                value={fields.getIn(['username', 'value'])}
+                onChange={onChange}
+                className='input-block'
+                autoFocus
+              />
+              {errorMsg.username}
+              <label>Password: (at least 8 characters long)</label>
+              <input
+                name='password'
+                type='password'
+                value={fields.getIn(['password', 'value'])}
+                onChange={onChange}
+                className='input-block'
+              />
+              {errorMsg.password}
+              <label>Re-type password:</label>
+              <input
+                name='retypedPassword'
+                type='password'
+                value={fields.getIn(['retypedPassword', 'value'])}
+                onChange={onChange}
+                className='input-block'
+              />
+              {errorMsg.retypedPassword}
+              <button onClick={onSubmit} className='block' type='submit'>
+                Submit
+              </button>
+            </form>
+          </div>
+          <button onClick={toLoginView} className='block'>
+            Back
+          </button>
         </div>
-        <button onClick={toLoginView} className='block'>
-          Back
-        </button>
       </div>
     );
   }

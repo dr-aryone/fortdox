@@ -3,6 +3,7 @@ const encryptPrivateKey = require('actions/utilities/encryptPrivateKey');
 const passwordCheck = require('actions/utilities/passwordCheck');
 const storeData = require('actions/utilities/storeData');
 const config = require('../../config.json');
+const checkEmptyFields = require('actions/utilities/checkEmptyFields');
 
 const activateOrganizaton = () => {
   return async (dispatch, getState) => {
@@ -11,18 +12,49 @@ const activateOrganizaton = () => {
     });
 
     let state = getState();
+    let fields = state.register.get('activateFields');
+    let emptyFields = checkEmptyFields(fields);
+    if (emptyFields.length > 0) {
+      let newFields = {};
+      emptyFields.forEach((entry) => {
+        let error;
+        switch (entry[0]) {
+          case 'password':
+            error = 'Please enter a password.';
+            break;
+          case 'retypedPassword':
+            error = 'Please re-enter your password.';
+            break;
+        }
+        newFields[entry[0]] = {
+          error: {
+            error
+          }
+        };
+      });
+      return dispatch({
+        type: 'ACTIVATE_ORGANIZATION_FAIL',
+        payload: newFields
+      });
+    }
+
     let privateKey = state.register.get('privateKey');
-    let password = state.register.get('passwordInputValue');
-    let retypedPassword = state.register.get('retypedPasswordInputValue');
+    let password = fields.getIn(['password', 'value']);
+    let retypedPassword = fields.getIn(['retypedPassword', 'value']);
+    let email = state.register.getIn(['registerFields', 'email', 'value']);
     let pwResult = passwordCheck(password, retypedPassword);
-    let email = state.register.get('email');
     if (!pwResult.valid) {
       console.error(pwResult.errorMsg);
-      return dispatch ({
-        type: 'ACTIVATE_ORGANIZATION_ERROR',
+      if (pwResult.fault == 'password') return dispatch ({
+        type: 'ACTIVATE_ORGANIZATION_PASSWORD_FAIL',
+        payload: pwResult.errorMsg
+      });
+      if (pwResult.fault == 'retypedPassword') return dispatch ({
+        type: 'ACTIVATE_ORGANIZATION_PASSWORD_MISSMATCH_FAIL',
         payload: pwResult.errorMsg
       });
     }
+
     let result;
     try {
       result = await encryptPrivateKey(privateKey, password);
@@ -30,7 +62,7 @@ const activateOrganizaton = () => {
       console.error(error);
       return dispatch ({
         type: 'ACTIVATE_ORGANIZATION_ERROR',
-        payload: 'Contact your administrator.'
+        payload: 'Verification of the link failed.'
       });
     }
 
@@ -48,7 +80,7 @@ const activateOrganizaton = () => {
       console.error(error);
       return dispatch ({
         type: 'ACTIVATE_ORGANIZATION_ERROR',
-        payload: 'Contact your administrator.'
+        payload: 'Unable to connect to server. Please try again later.'
       });
     }
 
@@ -63,13 +95,45 @@ const activateOrganizaton = () => {
 const registerOrganization = () => {
   return async (dispatch, getState) => {
     dispatch({
-      type: 'REGISTER_ORGANIZATION_NAME_START'
+      type: 'REGISTER_ORGANIZATION_START'
     });
 
     let state = getState();
-    let organization = state.register.get('organizationInputValue');
-    let username = state.register.get('usernameInputValue');
-    let email = state.register.get('emailInputValue');
+    let fields = state.register.get('registerFields');
+    let emptyFields = checkEmptyFields(fields);
+    if (emptyFields.length > 0) {
+      let newFields = {};
+      emptyFields.forEach((key) => {
+        let error;
+        switch (key[0]) {
+          case 'organization':
+            error = {
+              error: 'Please enter a team name.'
+            };
+            break;
+          case 'username':
+            error = {
+              error: 'Please enter an username.'
+            };
+            break;
+          case 'email':
+            error = {
+              error: 'Please enter an email.'
+            };
+            break;
+        }
+        newFields[key[0]] = error;
+      });
+
+      return dispatch({
+        type: 'REGISTER_ORGANIZATION_FAIL',
+        payload: newFields
+      });
+    }
+
+    let organization = fields.getIn(['organization', 'value']);
+    let username = fields.getIn(['username', 'value']);
+    let email = fields.getIn(['email', 'value']);
     try {
       await requestor.post(`${config.server}/register`, {
         body: {
@@ -80,14 +144,29 @@ const registerOrganization = () => {
       });
     } catch (error) {
       console.error(error);
-      return dispatch ({
-        type: 'REGISTER_ORGANIZATION_NAME_ERROR',
-        payload: 'Team name already exists.'
-      });
+      switch (error.status) {
+        case 409:
+          if (error.body == 'organization') return dispatch ({
+            type: 'REGISTER_ORGANIZATION_NAME_FAIL',
+            payload: 'Team name already exists. Please choose a different team name.'
+          });
+          if (error.body == 'user') return dispatch ({
+            type: 'REGISTER_ORGANIZATION_EMAIL_FAIL',
+            payload: 'Email already exists. Please choose a different email.'
+          });
+          break;
+        case 503:
+        case 500:
+        default:
+          return dispatch ({
+            type: 'REGISTER_ORGANIZATION_ERROR',
+            payload: 'Unable to connect to server. Please try again later.'
+          });
+      }
     }
 
     return dispatch({
-      type: 'REGISTER_ORGANIZATION_NAME_SUCCESS',
+      type: 'REGISTER_ORGANIZATION_SUCCESS',
       payload: 'Please check your email to verify your registration.'
     });
   };
@@ -110,10 +189,18 @@ const verifyActivationCode = () => {
       });
     } catch (error) {
       console.error(error);
-      return dispatch({
-        type: 'VERIFY_ACTIVATION_CODE_FAIL',
-        payload: 'Email is already verified or the link is broken.'
-      });
+      switch (error.status) {
+        case 404:
+          return dispatch({
+            type: 'VERIFY_ACTIVATION_CODE_ERROR',
+            payload: 'Email is already verified or the link is broken.'
+          });
+        case 500:
+          return dispatch({
+            type: 'VERIFY_ACTIVATION_CODE_ERROR',
+            payload: 'Unable to connect to server. Please try again later.'
+          });
+      }
     }
 
     dispatch({
