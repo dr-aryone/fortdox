@@ -89,7 +89,7 @@ const register = (state = initialState, action) => {
       });
     case 'ACTIVATE_ORGANIZATION_ERROR':
       return state.merge({
-        activateOrgError: action.payload,
+        activateOrgError: fromJS(action.payload),
         isLoading: false
       });
     default:

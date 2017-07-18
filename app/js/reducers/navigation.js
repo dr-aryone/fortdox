@@ -2,7 +2,7 @@ const {fromJS} = require('immutable');
 const views = require('views.json');
 
 const initialState = fromJS({
-  'currentView': views.LOGIN_VIEW,
+  currentView: views.LOGIN_VIEW,
 });
 
 const navigation = (state = initialState, action) => {
