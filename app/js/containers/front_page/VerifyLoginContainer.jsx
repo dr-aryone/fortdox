@@ -9,9 +9,8 @@ const mapStateToProps = state => {
     organization: state.login.get('organization'),
     email: state.login.get('email'),
     input: {
-      passwordInputValue: state.login.get('passwordInputValue'),
-      error: state.login.get('error'),
-      errorMsg: state.login.get('errorMsg')
+      password: state.login.get('password'),
+      error: state.login.get('error')
     },
     isLoading: state.login.get('isLoading'),
     message: state.login.get('message')

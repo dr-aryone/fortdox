@@ -21,7 +21,6 @@ const extractPrivateKey = require('./server_modules/utilities/extractPrivateKey'
 const job = new CronJob('*/5 * * * *', async () => {
   try {
     await cleanUp(30);
-    console.log('cleaned');
   } catch (error) {
     console.error(error);
   }
@@ -36,7 +35,7 @@ app.get('/', (req, res) => {
 });
 
 app.listen(8000, () => {
-  console.log('listening to port: 8000');
+  console.error('listening to port: 8000');
 });
 
 app.post('/login', async (req, res) => {
@@ -265,7 +264,7 @@ app.post('/documents', async (req, res) => {
   try {
     res.send(await es.addToIndex(req.body, privateKey, encryptedMasterPassword, organization));
   } catch (error) {
-    console.log(error);
+    console.error(error);
     res.send(500).send(error);
   }
 
@@ -329,7 +328,7 @@ app.patch('/documents', async (req, res) => {
       response = await es.update(req.body, privateKey, encryptedMasterPassword);
       res.send(response);
     } catch (error) {
-      console.log(error);
+      console.error(error);
       res.status(500).send({msg: 'Internal Server Error'});
     }
   }
