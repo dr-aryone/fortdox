@@ -75,16 +75,25 @@ app.post('/register', async (req, res) => {
     newUser.organizationId = (await orgs.createOrganization(req.body.organization)).id;
   } catch (error) {
     console.error(error);
-    return res.status(error).send();
+    return res.status(error).send('organization');
   }
   try {
     await users.createUser(newUser);
-    let mail = mailer.firstTimeRegistration({to: newUser.email, organization: req.body.organization, uuid: newUser.uuid});
+  } catch (error) {
+    console.error(error);
+    return res.status(error).send('user');
+  }
+  try {
+    let mail = mailer.firstTimeRegistration({
+      to: newUser.email,
+      organization: req.body.organization,
+      uuid: newUser.uuid
+    });
     mailer.send(mail);
     res.send();
   } catch (error) {
     console.error(error);
-    return res.status(error).send();
+    return res.status(error).send('mail');
   }
 
 });
@@ -127,7 +136,7 @@ app.post('/register/verify', async (req, res) => {
     user = await users.verifyUUID(req.body.activationCode);
   } catch (error) {
     console.error(error);
-    res.status(500).send();
+    res.status(error).send();
   }
   try {
     keypair = await keygen.genKeyPair();
@@ -203,8 +212,8 @@ app.post('/invite', async (req, res) => {
   });
   mailer.send(mail);
   res.send();
-
 });
+
 app.post('/invite/verify', async (req, res) => {
   let uuid = req.body.uuid;
   let tempPassword = Buffer.from(decodeURIComponent(req.body.temporaryPassword), 'base64');
@@ -229,7 +238,6 @@ app.post('/invite/confirm', async (req, res) => {
   let metadata;
   try {
     metadata = await users.verifyNewUser(uuid, privateKey, username);
-    console.log('test');
     await users.TempKeys.remove(uuid);
     return res.send(metadata);
   } catch (error) {

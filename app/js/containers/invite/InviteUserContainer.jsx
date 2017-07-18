@@ -5,11 +5,10 @@ const {inviteUser} = require('actions/invite');
 
 const mapStateToProps = state => {
   return {
-    emailInputValue: state.invite.get('emailInputValue'),
+    fields: state.invite.get('fields'),
     isLoading: state.invite.get('isLoading'),
-    error: state.invite.get('error'),
-    errorMsg: state.invite.get('errorMsg'),
-    message: state.invite.get('message')
+    message: state.invite.get('message'),
+    error: state.invite.get('error')
   };
 };
 

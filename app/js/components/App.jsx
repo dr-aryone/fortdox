@@ -9,7 +9,7 @@ const App = (prop) => {
     case views.LOGIN_VIEW:
     case views.VERIFY_LOGIN_VIEW:
     case views.REGISTER_VIEW:
-    case views.REGISTER_VERIFY_VIEW:
+    case views.ACTIVATE_ORGANIZATION_VIEW:
       return <FrontPageViewContainer />;
     case views.INVITE_USER_VIEW:
     case views.SEARCH_VIEW:

@@ -19,12 +19,13 @@ let initialState = fromJS({
 const form = (state = initialState, action) => {
   switch (action.type) {
     case 'INPUT_CHANGE_CREATE_DOC':
-      return state.setIn(['docFields', action.inputName, 'value'], fromJS(action.inputValue)).setIn(['docFields', action.inputName, 'error'], null);
+      return state.setIn(['docFields', action.inputName, 'value'], fromJS(action.inputValue))
+        .setIn(['docFields', action.inputName, 'error'], null);
     case 'CREATE_DOCUMENT_START':
       return state.set('isLoading', true);
     case 'CREATE_DOCUMENT_ERROR':
       return state.merge({
-        docFields: state.get('docFields').mergeDeepWith((oldError, newError) => newError, action.payload),
+        docFields: state.get('docFields').mergeDeepWith((oldError, newError) => newError ? newError : oldError, action.payload),
         isLoading: false,
       });
     case 'CREATE_DOCUMENT_SUCCESS':

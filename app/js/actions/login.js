@@ -36,7 +36,7 @@ const login = () => {
       console.error(error);
       return dispatch({
         type: 'VERIFY_LOGIN_CREDS_ERROR',
-        payload: 'Wrong email or password. Try again.',
+        payload: 'Wrong password. Please try again.',
         error: true
       });
     }

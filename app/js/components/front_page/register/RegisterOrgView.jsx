@@ -1,39 +1,58 @@
 const React = require('react');
 const LoaderOverlay = require('components/general/LoaderOverlay');
 
-const RegisterOrgView = ({register, onChange, onCreateOrganization, toLoginView}) => {
-  let errorMsg = register.orgNameError ? <h2>{register.errorMsg}</h2> : null;
+const RegisterOrgView = ({registerFields, register, onChange, onCreateOrganization, toLoginView}) => {
+  let errorMsg = {};
+  registerFields.entrySeq().forEach((entry) => {
+    errorMsg[entry[0]] = entry[1].get('error') ? (
+      <div className='arrow_box show'>
+        <span className='material-icons'>error_outline</span>
+        {entry[1].get('error')}
+      </div>
+    ) : null;
+  });
+
+  let errorBox = register.registerError ? (
+    <div className='alert alert-warning show'>
+      <span className='material-icons'>error_outline</span>
+      {register.registerError}
+    </div>
+  ) : null;
+
   return (
-    <div className='container box'>
+    <div className='container'>
       <LoaderOverlay display={register.isLoading} />
+      {errorBox}
       <h1 className='text-center'>Create a New Team</h1>
-      {errorMsg}
-      <form onSubmit={onCreateOrganization}>
+      <form className='box' onSubmit={onCreateOrganization}>
         <label>Team name:</label>
         <input
-          name='organizationInputValue'
+          name='organization'
           type='text'
-          value={register.organizationInputValue}
+          value={registerFields.getIn(['organization', 'value'])}
           onChange={onChange}
           className='input-block'
           autoFocus
         />
+        {errorMsg.organization}
         <label>Username:</label>
         <input
-          name='usernameInputValue'
+          name='username'
           type='text'
-          value={register.usernameInputValue}
+          value={registerFields.getIn(['username', 'value'])}
           onChange={onChange}
           className='input-block'
         />
-        <label>E-mail:</label>
+        {errorMsg.username}
+        <label>Email:</label>
         <input
-          name='emailInputValue'
+          name='email'
           type='text'
-          value={register.emailInputValue}
+          value={registerFields.getIn(['email', 'value'])}
           onChange={onChange}
           className='input-block'
         />
+        {errorMsg.email}
         <button onClick={onCreateOrganization} className='block' type='submit'>
           Register Team
         </button>

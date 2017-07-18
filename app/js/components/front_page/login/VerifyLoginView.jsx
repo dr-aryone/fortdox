@@ -2,14 +2,19 @@ const React = require('react');
 const LoaderOverlay = require('components/general/LoaderOverlay');
 
 const PasswordView = ({organization, email, input, onChange, onLogin, toLoginView, isLoading}) => {
-  let errorMsg = input.error ? <h2>{input.errorMsg}</h2> : null;
+  let errorMsg = input.error ? (
+    <div className='alert alert-warning'>
+      <i className='material-icons'>error_outline</i>
+      {input.errorMsg}
+    </div>
+  ) : null;
   return (
     <div className='container'>
       <LoaderOverlay display={isLoading} />
+      {errorMsg}
       <h1 className='text-center'>{organization}</h1>
       <div className='box'>
         <h2>{email}</h2>
-        {errorMsg}
         <form onSubmit={onLogin}>
           <label>Password</label>
           <input

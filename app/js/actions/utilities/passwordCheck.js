@@ -4,6 +4,7 @@ const passwordCheck = (password, retypedPassword) => {
   if (password !== retypedPassword) {
     return {
       valid: false,
+      fault: 'retypedPassword',
       errorMsg: 'Passwords didn\'t match.'
     };
   }
@@ -29,11 +30,13 @@ const passwordCheck = (password, retypedPassword) => {
     }
     return {
       valid: false,
+      fault: 'password',
       errorMsg
     };
   }
   return {
     valid: true,
+    fault: null,
     errorMsg: null
   };
 };
