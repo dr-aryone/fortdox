@@ -23,29 +23,32 @@ class RegisterVerifyView extends React.Component {
         <h1 className='text-center'>Register Team</h1>
         {errorMsg}
         <div className={register.isVerified ? '' : 'hide'}>
-          <label>Password:</label>
-          <input
-            name='passwordInputValue'
-            type='password'
-            onChange={onChange}
-            value={register.passwordInputValue}
-            className='input-block'
-          />
-          <label>Re-type password:</label>
-          <input
-            name='retypedPasswordInputValue'
-            type='password'
-            onChange={onChange}
-            value={register.retypedPasswordInputValue}
-            className='input-block'
-          />
-          <a onClick={onRegister} className='btn btn-block'>
-            Register
-          </a>
+          <form onSubmit={onRegister}>
+            <label>Password:</label>
+            <input
+              name='passwordInputValue'
+              type='password'
+              onChange={onChange}
+              value={register.passwordInputValue}
+              className='input-block'
+              autoFocus
+            />
+            <label>Re-type password:</label>
+            <input
+              name='retypedPasswordInputValue'
+              type='password'
+              onChange={onChange}
+              value={register.retypedPasswordInputValue}
+              className='input-block'
+            />
+            <button onClick={onRegister} className='block' type='submit'>
+              Register
+            </button>
+          </form>
         </div>
-        <a onClick={toLoginView} className='btn btn-block'>
+        <button onClick={toLoginView} className='block' type='button'>
           Back
-        </a>
+        </button>
       </div>
     );
   }

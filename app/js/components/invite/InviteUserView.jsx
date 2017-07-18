@@ -20,7 +20,7 @@ const InviteUserView = ({emailInputValue, message, error, errorMsg, onChange, on
           <p>Invite a new user to the organization.</p>
           {errMsg}
           {messageBox}
-          <div className='input-bar'>
+          <form onSubmit={onSend} className='input-bar'>
             <input
               name='emailInputValue'
               type='text'
@@ -28,9 +28,10 @@ const InviteUserView = ({emailInputValue, message, error, errorMsg, onChange, on
               onChange={onChange}
               placeholder='Email'
               className='block'
+              autoFocus
             />
-            <a onClick={onSend} className='btn'>Send</a>
-          </div>
+            <button onClick={onSend}>Send</button>
+          </form>
         </div>
       </div>
     </div>

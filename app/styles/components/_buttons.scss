@@ -1,6 +1,6 @@
 $btn-color: #FFF;
 
-.btn {
+button {
   display: inline-block;
   padding: 10px 15px;
   background: $primary-color;
@@ -10,17 +10,22 @@ $btn-color: #FFF;
   text-decoration: none;
   box-sizing: border-box;
   cursor: pointer;
+  border: none;
 
   &:hover {
     background: lighten($primary-color, 5%);
     color: lighten($btn-color, 15%);
   }
 
-  &-large {
+  &:active, &:focus {
+    outline: none;
+  }
+
+  .large {
     padding: 12px 28px;
   }
 
-  &-block {
+  &.block {
     display: block;
     width: 100%;
     text-align: center;

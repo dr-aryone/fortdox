@@ -23,7 +23,8 @@ const mapDispatchToProps = dispatch => {
     onChange: (event) => {
       dispatch(action.inputChange(event.target.name, event.target.value));
     },
-    onLogin: () => {
+    onLogin: (event) => {
+      event.preventDefault();
       dispatch(login());
     },
     toLoginView: () => {
