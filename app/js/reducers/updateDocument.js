@@ -2,16 +2,7 @@ const {fromJS} = require('immutable');
 
 let initialState = fromJS({
   documentToUpdate: null,
-  docFields: {
-    title: {
-      value: '',
-      error: null,
-    },
-    text: {
-      value: '',
-      error: null
-    }
-  },
+  docFields: {},
   isLoading: false
 });
 

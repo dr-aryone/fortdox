@@ -45,8 +45,10 @@ const setUpdateDocument = id => {
     });
     let docFields = {};
     Object.entries(doc._source).forEach(([key, value]) => {
+      let label = key == 'title' ? 'Title' : 'Text';
       docFields[key] = {
         value,
+        label,
         error: null
       };
     });

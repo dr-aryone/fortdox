@@ -1,28 +1,19 @@
 const React = require('react');
 
-const DocumentTextArea = ({onSubmit, input, onChange, children}) => {
+const DocumentTextArea = ({input, onChange}) => {
   return (
-    <form onSubmit={onSubmit}>
-      <div className='box'>
-        <label>Title</label>
-        <input
-          name='titleValue'
-          type='text'
-          value={input.titleValue}
-          onChange={onChange}
-          className='input-block'
-        />
-        <label>Text</label>
-        <textarea
-          rows='10'
-          cols='50'
-          required onChange={onChange}
-          name='textValue'
-          value={input.textValue}
-        />
-        {children}
+    <div className={`input-field ${input[1].get('error') ? 'warning' : ''}`}>
+      <label>{input[1].get('label')}</label>
+      <textarea
+        name={input[0]}
+        onChange={onChange}
+        value={input[1].get('value')}
+      />
+      <div className='arrow_box'>
+        <span className='material-icons'>error_outline</span>
+        {input[1].get('error')}
       </div>
-    </form>
+    </div>
   );
 };
 

@@ -29,7 +29,7 @@ const LoginView = ({loginAs, toRegisterView, toUserView, message}) => {
   return (
     <div className='container'>
       {message ? messageBox : null}
-      <h1 className='text-center'>FortDoks</h1>
+      <h1 className='text-center'>FortDox</h1>
       <div className={`box login-panel ${userList.length == 0 ? 'hide' :''}`}>
         <h2>{userList.length > 0 ? 'Choose an account': null}</h2>
         {userList}

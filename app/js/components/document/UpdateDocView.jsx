@@ -1,34 +1,17 @@
 const React = require('react');
 const LoaderOverlay = require('components/general/LoaderOverlay');
+const DocumentForm = require('./form/DocumentForm');
 
-const UpdateDocView = ({docFields, onChange, onUpdate, onDelete, toSearchView, isLoading}) => {
+const UpdateDocView = ({docFields, onChange, onUpdate, toSearchView, isLoading}) => {
   return (
     <div className='container-fluid'>
       <div className='col-sm-10 col-sm-offset-1'>
         <LoaderOverlay display={isLoading} />
         <h1>Update Document</h1>
-        <form className='box' onSubmit={onUpdate}>
-          <label>Title</label>
-          <div>
-            <input
-              name='title'
-              onChange={onChange}
-              type='text'
-              value={docFields.getIn(['title', 'value'])}
-              className='input-block'
-            />
-          </div>
-          <label>Text</label>
-          <textarea
-            name='text'
-            required onChange={onChange}
-            value={docFields.getIn(['text', 'value'])}
-          />
-          <br />
-          <button type='submit' className='btn'>Update</button>
+        <DocumentForm docFields={docFields} onChange={onChange} onSubmit={onUpdate}>
+          <a onClick={onUpdate} className='btn' onSubmit={onUpdate}>Update</a>
           <a onClick={toSearchView} className='btn'>Back</a>
-          <a onClick={onDelete} className='btn'>Delete</a>
-        </form>
+        </DocumentForm>
       </div>
     </div>
   );

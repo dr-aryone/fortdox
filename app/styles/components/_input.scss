@@ -1,12 +1,12 @@
 input {
   box-sizing: border-box;
-  color: $text-color;
   border: none;
   border-bottom: 1px solid $background-color;
   outline: 0px;
-  font-size: $font-size;
-  margin-bottom: 10px;
-  margin-top: 10px;
+  font-size: map-deep-get($text-styles, 'text', 'font-size');
+  font-family: map-deep-get($text-styles, 'text', 'font-family');
+  color: map-deep-get($text-styles, 'text', 'color');
+  margin: 10px 0px;
   background-color: #FFF;
 
   &:focus {
@@ -23,13 +23,15 @@ textarea {
   width: 100%;
   box-sizing: border-box;
   display: block;
-  color: $text-color;
   border: 1px solid $background-color;
   outline: 0px;
-  font-size: $font-size;
   background-color: #FFF;
   height: 10em;
-  margin: 10px 0px;
+  margin: 5px 0px;
+  resize: vertical;
+  font-size: map-deep-get($text-styles, 'text', 'font-size');
+  font-family: map-deep-get($text-styles, 'text', 'font-family');
+  color: map-deep-get($text-styles, 'text', 'color');
 
   &:focus {
     border: 1px solid $primary-color;
@@ -43,4 +45,8 @@ textarea {
     flex-grow: 1;
     margin: 0px 5px 0px 0px;
   }
+}
+
+label {
+  color: darken($primary-color, 50%);
 }

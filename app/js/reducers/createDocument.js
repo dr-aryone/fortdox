@@ -4,10 +4,12 @@ let initialState = fromJS({
   docFields: {
     title: {
       value: '',
+      label: 'Title',
       error: null
     },
     text: {
       value: '',
+      label: 'Text',
       error: null
     }
   },
