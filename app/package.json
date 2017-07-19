@@ -1,8 +1,8 @@
 {
-  "name": "Fort Dox",
-  "productName": "Fort Dox",
+  "name": "FortDox",
+  "productName": "FortDox",
   "version": "1.0.0",
-  "main.js": "main.js",
+  "main": "main.js",
   "scripts": {
     "start": "electron .",
     "package-mac": "electron-packager . --overwrite --platform=darwin --arch=x64 --out=release-builds"
@@ -56,9 +56,9 @@
   },
   "build": {
     "protocols": {
-      "name": "FortDoks",
+      "name": "FortDox",
       "schemes": [
-        "FortDoks"
+        "FortDox"
       ]
     }
   }

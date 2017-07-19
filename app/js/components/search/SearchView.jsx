@@ -2,7 +2,7 @@ const React = require('react');
 const SearchItem = require('./SearchItem');
 const LoaderOverlay = require('components/general/LoaderOverlay');
 
-const SearchView = ({result, onUpdate, searchString, onChange, onSearch, isLoading, hasSearched}) => {
+const SearchView = ({result, error, onUpdate, searchString, onChange, onSearch, isLoading, hasSearched}) => {
   let searchResult = [];
   result.forEach((item) => {
     searchResult.push(
@@ -13,14 +13,23 @@ const SearchView = ({result, onUpdate, searchString, onChange, onSearch, isLoadi
         onUpdate={() => onUpdate(item.get('_id'))}
       />);
   });
+
   let searchLength = hasSearched ? (
     <p>{searchResult.length} search result{searchResult.length == 1 ? '' : 's'} found.</p>
+  ) : null;
+
+  let errorBox = error ? (
+    <div className='alert alert-warning'>
+      <i className='material-icons'>error_outline</i>
+      {error}
+    </div>
   ) : null;
 
   return (
     <div className='container-fluid'>
       <div className='col-sm-10 col-sm-offset-1'>
         <LoaderOverlay display={isLoading} />
+        {errorBox}
         <h1>Search</h1>
         <form onSubmit={onSearch} className='input-bar box'>
           <input

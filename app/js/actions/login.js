@@ -1,11 +1,12 @@
 const requestor = require('@edgeguideab/client-request');
 const aes = window.require('./aes.js');
-const fs = window.require('fs');
 const config = require('../../config.json');
+const {readStorage} = require('actions/utilities/storage');
+const embedPrivateKey = require('actions/utilities/embedPrivateKey');
 
 const loginAs = (email, organization) => {
   return dispatch => {
-    dispatch ({
+    dispatch({
       type: 'LOGIN_AS',
       payload: {
         email,
@@ -15,16 +16,18 @@ const loginAs = (email, organization) => {
   };
 };
 
+
 const login = () => {
   return async (dispatch, getState) => {
     dispatch({
       type: 'VERIFY_LOGIN_CREDS_START'
     });
+
     let state = getState();
     let email = state.login.get('email');
     let password = state.login.get('passwordInputValue');
     let organization = state.login.get('organization');
-    let storage = JSON.parse(fs.readFileSync(window.__dirname + '/local_storage.json', 'utf-8'));
+    let storage = readStorage();
     let encryptedPrivateKey = storage[email][organization].privateKey;
     let salt = storage[email][organization].salt;
     let privateKey;
@@ -46,25 +49,23 @@ const login = () => {
         body: {
           email
         },
-        headers: {
-          'Authorization': `FortDoks ${privateKey}`
-        }
+        headers: embedPrivateKey(privateKey)
       });
     } catch (error) {
       console.error(error);
       switch (error.status) {
+        case 400:
         case 401:
         case 404:
           return dispatch({
             type: 'VERIFY_LOGIN_CREDS_ERROR',
-            payload: error.body.message,
-            error: true
+            payload: 'Wrong password. Please try again.'
           });
+        case 408:
         case 500:
           return dispatch({
-            type: 'VERIFY_LOGIN_CREDS_FAIL',
-            payload: error.body.message,
-            error: true
+            type: 'VERIFY_LOGIN_CREDS_ERROR',
+            payload: 'Unable to connect to server. Please try again later.'
           });
       }
     }

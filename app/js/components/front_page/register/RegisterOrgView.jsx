@@ -18,7 +18,7 @@ const RegisterOrgView = ({registerFields, register, onChange, onCreateOrganizati
       {register.registerError}
     </div>
   ) : null;
-
+  
   return (
     <div className='container'>
       <LoaderOverlay display={register.isLoading} />
