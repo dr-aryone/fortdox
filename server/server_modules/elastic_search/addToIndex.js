@@ -1,7 +1,7 @@
 const {encryptDocument} = require('../crypt/authentication/cryptDocument');
 
 module.exports = client => {
-  const addToIndex = (query, privateKey, encryptedMasterPassword, Organization) => {
+  const addToIndex = (query, privateKey, encryptedMasterPassword, organization) => {
     return new Promise(async (resolve, reject) => {
       let response;
       let data = new Buffer(query.body.text);
@@ -15,7 +15,7 @@ module.exports = client => {
       query.body.text = encryptedData.toString('base64');
       try {
         response = await client.index({
-          index: Organization.toLowerCase(),
+          index: organization.toLowerCase(),
           type: 'document',
           body: query.body,
           refresh: true

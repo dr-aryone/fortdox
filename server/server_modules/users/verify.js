@@ -57,11 +57,10 @@ const verifyNewUser = function(uuid, privateKey, username) {
       console.error(error);
       return reject(500);
     }
-    console.log(user);
     return resolve({
       email: user.email,
       username,
-      organization: user.Organization.organization
+      organization: user.Organization.name
     });
 
   });

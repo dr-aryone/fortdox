@@ -1,4 +1,6 @@
 {
+  "name": "FortDox",
+  "server": "http://54.246.221.36:8000",
   "sqlConfig": {
     "username": "{you username}",
     "password": "{your password}",

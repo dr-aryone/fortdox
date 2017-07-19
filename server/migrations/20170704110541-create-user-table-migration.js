@@ -32,7 +32,7 @@ module.exports = {
         type: Sequelize.BLOB
       },
       uuid: {
-        type: Sequelize.STRING,
+        type: Sequelize.UUID,
         unique: true
       }
     });

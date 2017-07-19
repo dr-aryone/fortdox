@@ -6,7 +6,7 @@ module.exports = organization => {
     try {
       org = await db.Organization.findOne({
         where: {
-          organization: organization,
+          name: organization,
           activated: false
         }
       });

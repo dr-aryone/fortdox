@@ -5,7 +5,7 @@ module.exports = function(sequelize, DataTypes) {
       primaryKey:  true,
       autoIncrement: true
     },
-    organization: {
+    name: {
       unique: true,
       allowNull: false,
       type: DataTypes.STRING

@@ -1,6 +1,5 @@
 const db = require('app/models');
 
-
 module.exports = (interval) => {
   return new Promise(async (resolve, reject) => {
     let currentTime = new Date();

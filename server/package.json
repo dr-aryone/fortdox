@@ -1,7 +1,7 @@
 {
-  "name": "docapp",
+  "name": "FortDox",
   "version": "1.0.0",
-  "main": "server.js",
+  "main.js": "server.js",
   "scripts": {
     "start": "nodemon main.js",
     "debugg": "nodemon --inspect main.js",
