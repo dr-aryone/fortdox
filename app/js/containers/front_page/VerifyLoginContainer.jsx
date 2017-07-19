@@ -2,7 +2,6 @@ const {connect} = require('react-redux');
 const VerifyLoginView = require('components/front_page/login/VerifyLoginView');
 const action = require('actions');
 const {login} = require('actions/login');
-const views = require('views.json');
 
 const mapStateToProps = state => {
   return {
@@ -27,7 +26,7 @@ const mapDispatchToProps = dispatch => {
       dispatch(login());
     },
     toLoginView: () => {
-      dispatch(action.changeView(views.LOGIN_VIEW));
+      dispatch(action.changeView('LOGIN_VIEW'));
     }
   };
 };

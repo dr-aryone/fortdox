@@ -3,7 +3,6 @@ const UpdateDocView = require('components/document/UpdateDocView');
 const action = require('actions');
 const {updateDocument} = require('actions/document');
 const {deleteDocument} = require('actions/document');
-const views = require('views.json');
 
 const mapStateToProps = (state) => {
   return {
@@ -22,7 +21,7 @@ const mapDispatchToProps = dispatch => {
       dispatch(updateDocument());
     },
     toSearchView: () => {
-      dispatch(action.changeView(views.SEARCH_VIEW));
+      dispatch(action.changeView('SEARCH_VIEW'));
     },
     onDelete: () => {
       dispatch(deleteDocument());

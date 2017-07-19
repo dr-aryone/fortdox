@@ -1,7 +1,6 @@
 const React = require('react');
 const RegisterOrgView = require('./RegisterOrgView');
 const ActivateOrgView = require('./ActivateOrgView');
-const views = require('views.json');
 
 const RegisterView = ({
   currentView,
@@ -15,7 +14,7 @@ const RegisterView = ({
   onMount
 }) => {
   switch (currentView) {
-    case views.REGISTER_VIEW:
+    case 'REGISTER_VIEW':
     case views.REGISTER_ORGANIZATION_VIEW:
       return (
         <RegisterOrgView
@@ -26,7 +25,7 @@ const RegisterView = ({
           toLoginView={toLoginView}
         />
       );
-    case views.ACTIVATE_ORGANIZATION_VIEW:
+    case 'ACTIVATE_ORGANIZATION_VIEW':
       return (
         <ActivateOrgView
           activateFields={activateFields}
