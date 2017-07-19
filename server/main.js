@@ -327,7 +327,6 @@ app.get('/documents', async (req, res) => {
 });
 
 app.patch('/documents', async (req, res) => {
-  debugger;
   if (req.body.title || req.body.text === '') {
     return res.status(400).send({msg: 'Bad format, title and/or text cannot be empty'});
   }

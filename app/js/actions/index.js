@@ -1,32 +1,30 @@
-const views = require('views.json');
-
 const inputChange = (inputName, inputValue) => {
   return (dispatch, getState) => {
     let state = getState();
     let type;
     switch (state.navigation.get('currentView')) {
-      case views.ACTIVATE_ORGANIZATION_VIEW:
+      case 'ACTIVATE_ORGANIZATION_VIEW':
         type ='INPUT_CHANGE_ACTIVATE_ORGANIZATION';
         break;
-      case views.REGISTER_VIEW:
+      case 'REGISTER_VIEW':
         type = 'INPUT_CHANGE_REGISTER_ORGANIZATION';
         break;
-      case views.VERIFY_LOGIN_VIEW:
+      case 'VERIFY_LOGIN_VIEW':
         type = 'INPUT_CHANGE_VERIFY_LOGIN';
         break;
-      case views.SEARCH_VIEW:
+      case 'SEARCH_VIEW':
         type = 'INPUT_CHANGE_SEARCH';
         break;
-      case views.CREATE_DOC_VIEW:
+      case 'CREATE_DOC_VIEW':
         type = 'INPUT_CHANGE_CREATE_DOC';
         break;
-      case views.UPDATE_DOC_VIEW:
+      case 'UPDATE_DOC_VIEW':
         type = 'INPUT_CHANGE_UPDATE_DOC';
         break;
-      case views.INVITE_USER_VIEW:
+      case 'INVITE_USER_VIEW':
         type = 'INPUT_CHANGE_INVITE_USER';
         break;
-      case views.VERIFY_USER_VIEW:
+      case 'VERIFY_USER_VIEW':
         type = 'INPUT_CHANGE_VERIFY_USER';
         break;
     }

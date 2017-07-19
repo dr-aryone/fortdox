@@ -2,7 +2,6 @@ const {connect} = require('react-redux');
 const RegisterView = require('components/front_page/register/RegisterView');
 const action = require('actions');
 const register = require('actions/register');
-const views = require('views.json');
 
 const mapStateToProps = state => {
   return {
@@ -35,7 +34,7 @@ const mapDispatchToProps = dispatch => {
       dispatch(register.activateOrganizaton());
     },
     toLoginView: () => {
-      dispatch(action.changeView(views.LOGIN_VIEW));
+      dispatch(action.changeView('LOGIN_VIEW'));
     }
   };
 };
