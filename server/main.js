@@ -5,7 +5,7 @@ const users = require('./server_modules/users');
 const keygen = require('./server_modules/crypt/keys/keygen');
 const orgs = require('./server_modules/organizations');
 const statusMsg = require('./statusMsg.json');
-const es = require('./server_modules/es');
+const es = require('./server_modules/elastic_search');
 const {decryptDocuments} = require('./server_modules/crypt/authentication/cryptDocument');
 const {decryptMasterPassword} = require('./server_modules/crypt/keys/cryptMasterPassword');
 const {encryptMasterPassword} = require('./server_modules/crypt/keys/cryptMasterPassword');
@@ -14,13 +14,13 @@ const {decryptPrivateKey} = require('./server_modules/crypt/authentication/crypt
 const mailer = require('./server_modules/mailer');
 const expect = require('@edgeguideab/expect');
 const uuidv1 = require('uuid/v1');
-const cleanUp = require('./server_modules/db_maid/cleanUp.js');
+const cleanup = require('./server_modules/database_cleanup/cleanup.js');
 const CronJob = require('cron').CronJob;
 const extractPrivateKey = require('./server_modules/utilities/extractPrivateKey');
 
 const job = new CronJob('*/5 * * * *', async () => {
   try {
-    await cleanUp(30);
+    await cleanup(30);
   } catch (error) {
     console.error(error);
   }
@@ -35,7 +35,6 @@ app.get('/', (req, res) => {
 });
 
 app.listen(8000, () => {
-  console.error('listening to port: 8000');
 });
 
 app.post('/login', async (req, res) => {
@@ -46,9 +45,13 @@ app.post('/login', async (req, res) => {
     console.error(error);
     return res.status(error).send();
   }
-
+  let privateKey;
   try {
-    let privateKey = extractPrivateKey(req.headers.authorization);
+    privateKey = extractPrivateKey(req.headers.authorization);
+  } catch (error) {
+    return res.status(400).send();
+  }
+  try {
     await decryptMasterPassword(privateKey, user.password);
     return res.send({
       username: user.username
@@ -99,7 +102,12 @@ app.post('/register', async (req, res) => {
 
 app.post('/register/confirm', async (req, res) => {
   let email = req.body.email;
-  let privateKey = extractPrivateKey(req.headers.authorization);
+  let privateKey;
+  try {
+    privateKey = extractPrivateKey(req.headers.authorization);
+  } catch (error) {
+    return res.status(400).send();
+  }
   try {
     await users.verifyUser(email, privateKey);
   } catch (error) {
@@ -108,12 +116,11 @@ app.post('/register/confirm', async (req, res) => {
   }
   let organizationName;
   try {
-    organizationName = await users.getOrganization(email);
+    organizationName = await users.getOrganizationName(email);
   } catch (error) {
     console.error(error);
     res.status(404).send();
   }
-
   try {
     await es.createIndex(organizationName);
     await orgs.activateOrganization(organizationName);
@@ -162,7 +169,12 @@ app.post('/register/verify', async (req, res) => {
 });
 
 app.post('/invite', async (req, res) => {
-  let privateKey = extractPrivateKey(req.headers.authorization);
+  let privateKey;
+  try {
+    privateKey = extractPrivateKey(req.headers.authorization);
+  } catch (error) {
+    return res.status(400).send();
+  }
   let newUserEmail = req.body.newUserEmail;
   let email = req.body.email;
   let encryptedMasterPassword;
@@ -204,7 +216,7 @@ app.post('/invite', async (req, res) => {
   }
   let mail = mailer.newUserRegistration({
     to: newUserEmail,
-    organization: sender.Organization.organization,
+    organization: sender.Organization.name,
     from: sender.username,
     uuid,
     tempPassword: tempPassword.toString('base64')
@@ -233,7 +245,12 @@ app.post('/invite/verify', async (req, res) => {
 app.post('/invite/confirm', async (req, res) => {
   let uuid = req.body.uuid;
   let username = req.body.username;
-  let privateKey = extractPrivateKey(req.headers.authorization);
+  let privateKey;
+  try {
+    privateKey = extractPrivateKey(req.headers.authorization);
+  } catch (error) {
+    return res.status(400).send();
+  }
   let metadata;
   try {
     metadata = await users.verifyNewUser(uuid, privateKey, username);
@@ -251,15 +268,19 @@ app.post('/documents', async (req, res) => {
   if (req.body.title || req.body.text === '') {
     return res.status(400).send({msg: 'Bad format, title and/or text cannot be empty'});
   }
-  let privateKey = extractPrivateKey(req.headers.authorization);
+  let privateKey;
+  try {
+    privateKey = extractPrivateKey(req.headers.authorization);
+  } catch (error) {
+    return res.status(400).send();
+  }
   let encryptedMasterPassword;
   let organization;
-
   try {
     encryptedMasterPassword = (await users.getUser(req.body.email)).password;
-    organization = await users.getOrganization(req.body.email);
+    organization = await users.getOrganizationName(req.body.email);
   } catch (error) {
-    res.status(409).send();
+    res.status(404).send();
   }
   try {
     res.send(await es.addToIndex(req.body, privateKey, encryptedMasterPassword, organization));
@@ -267,13 +288,17 @@ app.post('/documents', async (req, res) => {
     console.error(error);
     res.send(500).send(error);
   }
-
 });
 
 app.get('/documents', async (req, res) => {
   let response;
   let searchString = req.query.searchString;
-  let privateKey = extractPrivateKey(req.headers.authorization);
+  let privateKey;
+  try {
+    privateKey = extractPrivateKey(req.headers.authorization);
+  } catch (error) {
+    return res.status(400).send();
+  }
   let organization = req.query.organization;
   let email = req.query.email;
   let encryptedMasterPassword;
@@ -284,13 +309,13 @@ app.get('/documents', async (req, res) => {
     });
   } catch (error) {
     console.error(error);
-    return res.status(500).send({msg: 'Internal Server Error'});
+    return res.status(500).send();
   }
   try {
     encryptedMasterPassword = (await users.getUser(email)).password;
   } catch (error) {
     console.error(error);
-    return res.status(409).send();
+    return res.status(404).send();
   }
   try {
     response.hits.hits = await decryptDocuments(response.hits.hits, privateKey, encryptedMasterPassword);
@@ -302,10 +327,16 @@ app.get('/documents', async (req, res) => {
 });
 
 app.patch('/documents', async (req, res) => {
+  debugger;
   if (req.body.title || req.body.text === '') {
     return res.status(400).send({msg: 'Bad format, title and/or text cannot be empty'});
   }
-  let privateKey = extractPrivateKey(req.headers.authorization);
+  let privateKey;
+  try {
+    privateKey = extractPrivateKey(req.headers.authorization);
+  } catch (error) {
+    return res.status(400).send();
+  }
   let response;
   let email = req.body.email;
   let encryptedMasterPassword;
@@ -322,7 +353,7 @@ app.patch('/documents', async (req, res) => {
       encryptedMasterPassword = (await users.getUser(email)).password;
     } catch (error) {
       console.error(error);
-      return res.status(409).send();
+      return res.status(404).send();
     }
     try {
       response = await es.update(req.body, privateKey, encryptedMasterPassword);

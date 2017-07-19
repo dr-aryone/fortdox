@@ -4,7 +4,7 @@ module.exports = organization => {
   return new Promise(async (resolve, reject) => {
     let org;
     try {
-      org = await db.Organization.findOne({where: {organization: organization}});
+      org = await db.Organization.findOne({where: {name: organization}});
     } catch (error) {
       console.error(error);
       return reject(500);
@@ -14,7 +14,7 @@ module.exports = organization => {
     }
     let newOrganization;
     try {
-      newOrganization = await db.Organization.create({organization: organization});
+      newOrganization = await db.Organization.create({name: organization});
       return resolve(newOrganization);
     } catch (error) {
       console.error(error);

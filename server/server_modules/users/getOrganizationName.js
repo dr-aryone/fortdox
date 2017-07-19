@@ -13,7 +13,7 @@ module.exports = email => {
       if (!user) {
         return reject(404);
       }
-      return resolve(user.Organization.organization);
+      return resolve(user.Organization.name);
     } catch (error) {
       console.error(error);
       return reject(500);
