@@ -1,6 +1,7 @@
 const requestor = require('@edgeguideab/client-request');
 const config = require('../../config.json');
 const checkEmptyFields = require('actions/utilities/checkEmptyFields');
+const embedPrivateKey = require('actions/utilities/embedPrivateKey');
 
 const createDocument = () => {
   return async (dispatch, getState) => {
@@ -35,16 +36,26 @@ const createDocument = () => {
           body,
           email
         },
-        headers: {
-          'Authorization': `FortDoks ${privateKey}`
-        }
+        headers: embedPrivateKey(privateKey)
       });
     } catch (error) {
       console.error(error);
-      return dispatch({
-        type: 'CREATE_DOCUMENT_ERROR',
-        payload: 'Cannot connect to the server. Try again later.'
-      });
+      switch (error.status) {
+        case 400:
+        case 409:
+        case 404:
+          return dispatch({
+            type: 'CREATE_DOCUMENT_ERROR',
+            payload: 'Bad request. Please try again.'
+          });
+        case 408:
+        case 500:
+          return dispatch({
+            type: 'CREATE_DOCUMENT_ERROR',
+            payload: 'Cannot connect to the server. Please try again later.'
+          });
+
+      }
     }
 
     return dispatch({
@@ -90,15 +101,24 @@ const updateDocument = () => {
           updateQuery,
           email
         },
-        headers: {
-          'Authorization': `FortDoks ${privateKey}`
-        }
+        headers: embedPrivateKey(privateKey)
       });
     } catch (error) {
       console.error(error);
-      return dispatch({
-        type: 'UPDATE_DOCUMENT_ERROR'
-      });
+      switch (error.status) {
+        case 400:
+        case 404:
+          return dispatch({
+            type: 'UPDATE_DOCUMENT_ERROR',
+            payload: 'Bad request. Please try again later.'
+          });
+        case 408:
+        case 500:
+          return dispatch({
+            type: 'UPDATE_DOCUMENT_ERROR',
+            payload: 'Unable to connect to server. Please try again later.'
+          });
+      }
     }
 
     return dispatch({

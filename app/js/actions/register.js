@@ -1,9 +1,10 @@
 const requestor = require('@edgeguideab/client-request');
 const encryptPrivateKey = require('actions/utilities/encryptPrivateKey');
 const passwordCheck = require('actions/utilities/passwordCheck');
-const storeData = require('actions/utilities/storeData');
+const {writeStorage} = require('actions/utilities/storage');
 const config = require('../../config.json');
 const checkEmptyFields = require('actions/utilities/checkEmptyFields');
+const embedPrivateKey = require('actions/utilities/embedPrivateKey');
 
 const activateOrganizaton = () => {
   return async (dispatch, getState) => {
@@ -45,11 +46,11 @@ const activateOrganizaton = () => {
     let pwResult = passwordCheck(password, retypedPassword);
     if (!pwResult.valid) {
       console.error(pwResult.errorMsg);
-      if (pwResult.fault == 'password') return dispatch ({
+      if (pwResult.fault == 'password') return dispatch({
         type: 'ACTIVATE_ORGANIZATION_PASSWORD_FAIL',
         payload: pwResult.errorMsg
       });
-      if (pwResult.fault == 'retypedPassword') return dispatch ({
+      if (pwResult.fault == 'retypedPassword') return dispatch({
         type: 'ACTIVATE_ORGANIZATION_PASSWORD_MISSMATCH_FAIL',
         payload: pwResult.errorMsg
       });
@@ -60,7 +61,7 @@ const activateOrganizaton = () => {
       result = await encryptPrivateKey(privateKey, password);
     } catch (error) {
       console.error(error);
-      return dispatch ({
+      return dispatch({
         type: 'ACTIVATE_ORGANIZATION_ERROR',
         payload: 'Verification of the link failed.'
       });
@@ -72,20 +73,28 @@ const activateOrganizaton = () => {
         body: {
           email
         },
-        headers: {
-          'Authorization': `FortDoks ${privateKey}`
-        }
+        headers: embedPrivateKey(privateKey)
       });
     } catch (error) {
       console.error(error);
-      return dispatch ({
-        type: 'ACTIVATE_ORGANIZATION_ERROR',
-        payload: 'Unable to connect to server. Please try again later.'
-      });
+      switch (error.status) {
+        case 400:
+        case 404:
+          return dispatch({
+            type: 'ACTIVATE_ORGANIZATION_ERROR',
+            payload: 'Bad request. Please try again.'
+          });
+        case 408:
+        case 500:
+          return dispatch({
+            type: 'ACTIVATE_ORGANIZATION_ERROR',
+            payload: 'Unable to connect to server. Please try again later.'
+          });
+      }
     }
 
-    storeData(response.body.username, result.privateKey, result.salt, response.body.organizationName, email);
-    return dispatch ({
+    writeStorage(response.body.username, result.privateKey, result.salt, response.body.organizationName, email);
+    return dispatch({
       type: 'ACTIVATE_ORGANIZATION_SUCCESS',
       payload: 'Team registration complete! You can now login.'
     });
@@ -145,20 +154,26 @@ const registerOrganization = () => {
     } catch (error) {
       console.error(error);
       switch (error.status) {
+        case 400:
+          return dispatch({
+            type: 'REGISTER_ORGANIZATION_ERROR',
+            payload: 'Bad request. Please try again.'
+          });
         case 409:
-          if (error.body == 'organization') return dispatch ({
+          if (error.body == 'organization') return dispatch({
             type: 'REGISTER_ORGANIZATION_NAME_FAIL',
             payload: 'Team name already exists. Please choose a different team name.'
           });
-          if (error.body == 'user') return dispatch ({
+          if (error.body == 'user') return dispatch({
             type: 'REGISTER_ORGANIZATION_EMAIL_FAIL',
             payload: 'Email already exists. Please choose a different email.'
           });
           break;
+        case 408:
         case 503:
         case 500:
         default:
-          return dispatch ({
+          return dispatch({
             type: 'REGISTER_ORGANIZATION_ERROR',
             payload: 'Unable to connect to server. Please try again later.'
           });
@@ -195,6 +210,7 @@ const verifyActivationCode = () => {
             type: 'VERIFY_ACTIVATION_CODE_ERROR',
             payload: 'Email is already verified or the link is broken.'
           });
+        case 408:
         case 500:
           return dispatch({
             type: 'VERIFY_ACTIVATION_CODE_ERROR',

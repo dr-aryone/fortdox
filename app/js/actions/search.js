@@ -1,5 +1,6 @@
 const requestor = require('@edgeguideab/client-request');
 const config = require('../../config.json');
+const embedPrivateKey = require('actions/utilities/embedPrivateKey');
 
 const search = () => {
   return async (dispatch, getState) => {
@@ -19,17 +20,27 @@ const search = () => {
           organization,
           email
         },
-        headers: {
-          'Authorization': `FortDoks ${privateKey}`
-        }
+        headers: embedPrivateKey(privateKey)
       });
     } catch (error) {
       console.error(error);
-      return dispatch ({
-        type: 'SEARCH_NOT_FOUND'
-      });
+      switch (error.status) {
+        case 400:
+        case 404:
+          return dispatch({
+            type: 'SEARCH_ERROR',
+            payload: 'Bad request. Please try again.'
+          });
+        case 408:
+        case 500:
+          return dispatch({
+            type: 'SEARCH_ERROR',
+            payload: 'Unable to connect to server. Please try again later.'
+          });
+      }
     }
-    return dispatch ({
+
+    return dispatch({
       type: 'SEARCH_FOUND',
       payload: response.body
     });

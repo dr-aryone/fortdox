@@ -49,7 +49,7 @@ const changeView = nextView => {
 
 const logout = () => {
   return dispatch => {
-    return dispatch ({
+    return dispatch({
       type: 'LOGOUT'
     });
   };

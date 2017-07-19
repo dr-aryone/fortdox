@@ -2,12 +2,13 @@ const requestor = require('@edgeguideab/client-request');
 const passwordCheck = require('actions/utilities/passwordCheck');
 const encryptPrivateKey = require('actions/utilities/encryptPrivateKey');
 const config = require('../../config.json');
-const storeData = require('actions/utilities/storeData');
+const {writeStorage} = require('actions/utilities/storage');
 const checkEmptyFields = require('actions/utilities/checkEmptyFields');
+const embedPrivateKey = require('actions/utilities/embedPrivateKey');
 
 const inviteUser = () => {
   return async (dispatch, getState) => {
-    dispatch ({
+    dispatch({
       type: 'INVITE_USER_START'
     });
 
@@ -33,27 +34,31 @@ const inviteUser = () => {
           email,
           newUserEmail
         },
-        headers: {
-          'Authorization': `FortDoks ${privateKey}`
-        }
+        headers: embedPrivateKey(privateKey)
       });
     } catch (error) {
       console.error(error);
       switch (error.status) {
+        case 400:
+          return dispatch({
+            type: 'INVITE_USER_ERROR',
+            payload: 'Bad request. Please try again.'
+          });
         case 409:
-          return dispatch ({
+          return dispatch({
             type: 'INVITE_USER_ERROR',
             payload: `${email} has already joined the team.`
           });
+        case 408:
         case 500:
-          return dispatch ({
+          return dispatch({
             type: 'INVITE_USER_ERROR',
             payload: 'Unable to connect to server. Please try again later.'
           });
       }
     }
 
-    dispatch ({
+    return dispatch({
       type: 'INVITE_USER_SUCCESS',
       payload: `Invitation has been sent to ${newUserEmail}!`
     });
@@ -65,7 +70,7 @@ const receivePrivateKey = () => {
     let state = getState();
     let uuid = state.verifyUser.get('uuid');
     let temporaryPassword = state.verifyUser.get('temporaryPassword');
-    dispatch ({
+    dispatch({
       type: 'RECEIVE_PRIVATE_KEY_START'
     });
 
@@ -79,12 +84,17 @@ const receivePrivateKey = () => {
       });
     } catch (error) {
       console.error(error);
-      return dispatch ({
-        type: 'RECEIVE_PRIVATE_KEY_ERROR',
-        payload: 'Email is already verified or the link is broken.'
-      });
+      switch (error.status) {
+        case 408:
+        case 500:
+          return dispatch({
+            type: 'RECEIVE_PRIVATE_KEY_ERROR',
+            payload: 'Email is already verified or the link is broken.'
+          });
+      }
     }
-    dispatch ({
+
+    return dispatch({
       type: 'RECEIVE_PRIVATE_KEY_SUCCESS',
       payload: response.body.privateKey
     });
@@ -132,11 +142,11 @@ const verifyUser = () => {
     let privateKey = state.verifyUser.get('privateKey');
     let pwResult = passwordCheck(password, retypedPassword);
     if (!pwResult.valid) {
-      if (pwResult.fault == 'password') return dispatch ({
+      if (pwResult.fault == 'password') return dispatch({
         type: 'VERIFY_NEW_USER_PASSWORD_FAIL',
         payload: pwResult.errorMsg
       });
-      if (pwResult.fault == 'retypedPassword') return dispatch ({
+      if (pwResult.fault == 'retypedPassword') return dispatch({
         type: 'VERIFY_NEW_USER_PASSWORD_MISSMATCH_FAIL',
         payload: pwResult.errorMsg
       });
@@ -147,9 +157,9 @@ const verifyUser = () => {
       result = await encryptPrivateKey(privateKey, password);
     } catch (error) {
       console.error(error);
-      return dispatch ({
+      return dispatch({
         type: 'VERIFY_NEW_USER_ERROR',
-        payload: 'Link is broken.'
+        payload: 'Something went wrong. Please try again.'
       });
     }
 
@@ -162,24 +172,31 @@ const verifyUser = () => {
           uuid,
           username
         },
-        headers: {
-          'Authorization': `FortDoks ${privateKey}`
-        }
+        headers: embedPrivateKey(privateKey)
       });
     } catch (error) {
       console.error(error);
-      return dispatch ({
-        type: 'VERIFY_NEW_USER_ERROR',
-        payload: 'Unable to connect to server. Please try again later.'
-      });
+      switch (error.status) {
+        case 400:
+          return dispatch({
+            type: 'VERIFY_NEW_USER_ERROR',
+            payload: 'Bad request. Please try again.'
+          });
+        case 408:
+        case 500:
+          return dispatch({
+            type: 'VERIFY_NEW_USER_ERROR',
+            payload: 'Unable to connect to server. Please try again later.'
+          });
+      }
     }
 
     let salt = result.salt;
     let organization = response.body.organization;
     let email = response.body.email;
     let encryptedPrivateKey = result.privateKey;
-    storeData(username, encryptedPrivateKey, salt, organization, email);
-    dispatch ({
+    writeStorage(username, encryptedPrivateKey, salt, organization, email);
+    return dispatch({
       type: 'VERIFY_NEW_USER_SUCCESS',
       payload: {
         username,
