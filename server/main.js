@@ -266,33 +266,7 @@ app.post('/invite/confirm', async (req, res) => {
 
 });
 
-app.post('/documents', async (req, res) => {
-  if (req.body.title || req.body.text === '') {
-    return res.status(400).send({msg: 'Bad format, title and/or text field(s) cannot be empty'});
-  }
-  let privateKey;
-  try {
-    privateKey = extractPrivateKey(req.headers.authorization);
-  } catch (error) {
-    return res.status(400).send();
-  }
-  let encryptedMasterPassword;
-  let organization;
-  try {
-    encryptedMasterPassword = (await users.getUser(req.body.email)).password;
-    organization = await users.getOrganizationName(req.body.email);
-  } catch (error) {
-    res.status(404).send();
-  }
-  try {
-    res.send(await es.addToIndex(req.body, privateKey, encryptedMasterPassword, organization));
-  } catch (error) {
-    console.error(error);
-    res.send(500).send(error);
-  }
-});
-
-app.get('/documents', async (req, res) => {
+app.get('/search', async (req, res) => {
   let response;
   let searchString = req.query.searchString;
   let privateKey;
@@ -325,10 +299,80 @@ app.get('/documents', async (req, res) => {
     console.error(error);
     return res.status(500).send({msg: 'Internal Server Error'});
   }
-  res.send(response.hits.hits);
+  res.send({
+    searchResult: response.hits.hits,
+    totalHits: response.hits.total
+  });
 });
 
-app.patch('/documents', async (req, res) => {
+app.post('/search', async (req, res) => {
+  let searchString = req.query.searchString;
+  let privateKey;
+  try {
+    privateKey = extractPrivateKey(req.headers.authorization);
+  } catch (error) {
+    return res.status(400).send();
+  }
+  let organization = req.query.organization;
+  let email = req.query.email;
+  let index = req.query.index;
+  let response;
+  try {
+    response = await es.search({
+      searchString,
+      organization,
+      index
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send();
+  }
+  let encryptedMasterPassword;
+  try {
+    encryptedMasterPassword = (await users.getUser(email)).password;
+  } catch (error) {
+    console.error(error);
+    return res.status(404).send();
+  }
+  try {
+    response.hits.hits = await decryptDocuments(response.hits.hits, privateKey, encryptedMasterPassword);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send({msg: 'Internal Server Error'});
+  }
+  res.send({
+    searchResult: response.hits.hits,
+    totalHits: response.hits.total
+  });
+});
+
+app.post('/document', async (req, res) => {
+  if (req.body.title || req.body.text === '') {
+    return res.status(400).send({msg: 'Bad format, title and/or text field(s) cannot be empty'});
+  }
+  let privateKey;
+  try {
+    privateKey = extractPrivateKey(req.headers.authorization);
+  } catch (error) {
+    return res.status(400).send();
+  }
+  let encryptedMasterPassword;
+  let organization;
+  try {
+    encryptedMasterPassword = (await users.getUser(req.body.email)).password;
+    organization = await users.getOrganizationName(req.body.email);
+  } catch (error) {
+    res.status(404).send();
+  }
+  try {
+    res.send(await es.addToIndex(req.body, privateKey, encryptedMasterPassword, organization));
+  } catch (error) {
+    console.error(error);
+    res.send(500).send(error);
+  }
+});
+
+app.patch('/document', async (req, res) => {
   if (req.body.title || req.body.text === '') {
     return res.status(400).send({msg: 'Bad format, title and/or text field(s) cannot be empty'});
   }
@@ -366,7 +410,7 @@ app.patch('/documents', async (req, res) => {
   }
 });
 
-app.delete('/documents', async (req,res) => {
+app.delete('/document', async (req,res) => {
   let response;
   let expectations = expect({
     index: 'string',
