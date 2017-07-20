@@ -9,10 +9,6 @@ module.exports = function(sequelize, DataTypes) {
     organizationId: {
       type: DataTypes.INTEGER
     },
-    username: {
-      allowNull: true,
-      type: DataTypes.STRING
-    },
     email: {
       unique: true,
       allowNull: false,
