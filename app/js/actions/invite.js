@@ -5,7 +5,6 @@ const config = require('../../config.json');
 const {writeStorage} = require('actions/utilities/storage');
 const checkEmptyFields = require('actions/utilities/checkEmptyFields');
 const embedPrivateKey = require('actions/utilities/embedPrivateKey');
-const React = require('react');
 
 const inviteUser = () => {
   return async (dispatch, getState) => {
@@ -67,7 +66,11 @@ const inviteUser = () => {
 
     return dispatch({
       type: 'INVITE_USER_SUCCESS',
-      payload: 'SUCCESS'
+      payload: {
+        text: 'Invitation has been sent to ',
+        bold: newUserEmail,
+        text2: '!'
+      }
     });
   };
 };

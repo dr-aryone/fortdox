@@ -1,6 +1,7 @@
 const React = require('react');
 const SearchItem = require('./SearchItem');
 const LoaderOverlay = require('components/general/LoaderOverlay');
+const ErrorBox = require('components/general/ErrorBox');
 
 const SearchView = ({result, error, onUpdate, searchString, onChange, onSearch, isLoading, hasSearched}) => {
   let searchResult = [];
@@ -18,18 +19,11 @@ const SearchView = ({result, error, onUpdate, searchString, onChange, onSearch, 
     <p>{searchResult.length} search result{searchResult.length == 1 ? '' : 's'} found.</p>
   ) : null;
 
-  let errorBox = error ? (
-    <div className='alert alert-warning'>
-      <i className='material-icons'>error_outline</i>
-      {error}
-    </div>
-  ) : null;
-
   return (
     <div className='container-fluid'>
       <div className='col-sm-10 col-sm-offset-1'>
         <LoaderOverlay display={isLoading} />
-        {errorBox}
+        <ErrorBox errorMsg={error} />
         <h1>Search</h1>
         <form onSubmit={onSearch} className='input-bar box'>
           <input

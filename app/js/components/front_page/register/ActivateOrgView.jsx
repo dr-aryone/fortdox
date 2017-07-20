@@ -1,5 +1,6 @@
 const React = require('react');
 const LoaderOverlay = require('components/general/LoaderOverlay');
+const ErrorBox = require('components/general/ErrorBox');
 
 class ActivateOrgView extends React.Component {
   componentWillMount () {
@@ -27,18 +28,11 @@ class ActivateOrgView extends React.Component {
       ) : null;
     });
 
-    let errorBox = register.verifyCodeError || register.activateOrgError ? (
-      <div className='alert alert-warning'>
-        <span className='material-icons'>error_outline</span>
-        {register.verifyCodeError}
-        {register.activateOrgError}
-      </div>
-    ) : null;
-
     return (
       <div className='container'>
         <LoaderOverlay display={register.isLoading} />
-        {errorBox}
+        <ErrorBox errorMsg={register.verifyCodeError} />
+        <ErrorBox errorMsg={register.activateOrgError} />
         <h1 className='text-center'>Register Team</h1>
         <div className='box'>
           <form className={register.verifyCodeError ? 'hide' : ''} onSubmit={onRegister}>
