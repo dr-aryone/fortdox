@@ -24,7 +24,7 @@ module.exports = async (interval) => {
           }
         });
         users.forEach(async (user) => {
-          db.TempKeys.destroy({
+          await db.TempKeys.destroy({
             where: {
               uuid: user.uuid
             }

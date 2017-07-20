@@ -17,6 +17,7 @@ const uuidv1 = require('uuid/v1');
 const cleanup = require('./server_modules/database_cleanup/cleanup.js');
 const CronJob = require('cron').CronJob;
 const extractPrivateKey = require('./server_modules/utilities/extractPrivateKey');
+const logger = require('./server_modules/logger');
 
 const job = new CronJob('*/5 * * * *', async () => {
   try {
