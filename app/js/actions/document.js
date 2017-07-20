@@ -31,7 +31,7 @@ const createDocument = () => {
     let body = {};
     docFields.entrySeq().forEach((entry) => body[entry[0]] = entry[1].get('value'));
     try {
-      await requestor.post(`${config.server}/documents`, {
+      await requestor.post(`${config.server}/document`, {
         body: {
           body,
           email
@@ -93,7 +93,7 @@ const updateDocument = () => {
     let updateQuery = {};
     newDoc.entrySeq().forEach((entry) => updateQuery[entry[0]] = entry[1].get('value'));
     try {
-      await requestor.patch(`${config.server}/documents`, {
+      await requestor.patch(`${config.server}/document`, {
         body:{
           index: oldDoc.get('_index'),
           type: oldDoc.get('_type'),
@@ -137,7 +137,7 @@ const deleteDocument = () => {
     let state = getState();
     let doc = state.search.get('documentToUpdate');
     try {
-      await requestor.delete(`${config.server}/documents`, {
+      await requestor.delete(`${config.server}/document`, {
         query:{
           index: doc.get('_index'),
           type: doc.get('_type'),

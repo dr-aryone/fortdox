@@ -4,8 +4,9 @@ const initialState = fromJS({
   searchString: '',
   result: [],
   error: null,
-  isLoading: false,
-  hasSearched: false
+  searchedString: null,
+  totalHits: null,
+  isLoading: false
 });
 
 const register = (state = initialState, action) => {
@@ -16,17 +17,18 @@ const register = (state = initialState, action) => {
       return state.set('isLoading', true);
     case 'SEARCH_FOUND':
       return state.merge({
-        result: fromJS(action.payload),
+        result: fromJS(action.payload.searchResult),
         error: null,
         isLoading: false,
-        hasSearched: true
+        searchedString: fromJS(action.payload.searchedString),
+        totalHits: fromJS(action.payload.totalHits)
       });
     case 'SEARCH_ERROR':
       return state.merge({
         result: [],
         error: fromJS(action.payload),
         isLoading: false,
-        hasSearched: true
+        totalHits: null
       });
     case 'UPDATE_DOCUMENT_SUCCESS':
     case 'DELETE_DOCUMENT_SUCCESS':

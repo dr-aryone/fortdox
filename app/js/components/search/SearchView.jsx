@@ -3,7 +3,17 @@ const SearchItem = require('./SearchItem');
 const LoaderOverlay = require('components/general/LoaderOverlay');
 const ErrorBox = require('components/general/ErrorBox');
 
-const SearchView = ({result, error, onUpdate, searchString, onChange, onSearch, isLoading, hasSearched}) => {
+const SearchView = ({
+  searchString,
+  error,
+  result,
+  totalHits,
+  isLoading,
+  onChange,
+  onSearch,
+  onUpdate,
+  paginationSearch
+}) => {
   let searchResult = [];
   result.forEach((item) => {
     searchResult.push(
@@ -15,8 +25,19 @@ const SearchView = ({result, error, onUpdate, searchString, onChange, onSearch, 
       />);
   });
 
-  let searchLength = hasSearched ? (
-    <p>{searchResult.length} search result{searchResult.length == 1 ? '' : 's'} found.</p>
+  let pagination = [];
+  if (totalHits > 10) {
+    let length = Math.ceil(totalHits/10);
+    let temp = [];
+    for (let i = 1; i <= length; i++) {
+      temp.push(<button onClick={() => paginationSearch(i)} key={i}>{i}</button>);
+    }
+    pagination.push(<div>{temp}</div>);
+  }
+
+
+  let searchLength = totalHits ? (
+    <p>{totalHits} search result{totalHits == 1 ? '' : 's'} found.</p>
   ) : null;
 
   return (
@@ -39,9 +60,8 @@ const SearchView = ({result, error, onUpdate, searchString, onChange, onSearch, 
           </button>
         </form>
         {searchLength}
-        <div className='row'>
-          {searchResult}
-        </div>
+        {searchResult}
+        {pagination}
       </div>
     </div>
   );
