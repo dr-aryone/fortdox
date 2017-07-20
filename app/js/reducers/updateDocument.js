@@ -9,7 +9,8 @@ let initialState = fromJS({
 const form = (state = initialState, action) => {
   switch (action.type) {
     case 'INPUT_CHANGE_UPDATE_DOC':
-      return state.setIn(['docFields', action.inputName, 'value'], fromJS(action.inputValue));
+      return state.setIn(['docFields', action.inputName, 'value'], fromJS(action.inputValue))
+        .setIn(['docFields', action.inputName, 'error'], null);
     case 'SET_UPDATE_DOCUMENT':
       return state.merge({
         documentToUpdate: fromJS(action.payload.documentToUpdate),
