@@ -18,14 +18,14 @@ const passwordCheck = (password, retypedPassword) => {
     let errorMsg;
     switch (pwResult.reason) {
       case 'TOO_SHORT':
-        errorMsg = 'Password needs to at least be 8 characters long.';
+        errorMsg = 'Your password must be to at least 8 characters long.';
         break;
       case 'CONTAINS_COMMON_PATTERNS':
       case 'TOO_COMMON':
         errorMsg = 'Your password is not strong enough.';
         break;
       case 'TOO_FEW_NUMERIC_CHARACTERS':
-        errorMsg = 'Password needs to at least have one number.';
+        errorMsg = 'Your password must include 1 numeric character.';
         break;
     }
     return {

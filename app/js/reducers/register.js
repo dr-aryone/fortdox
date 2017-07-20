@@ -6,10 +6,6 @@ const initialState = fromJS({
       value: '',
       error: null
     },
-    username: {
-      value: '',
-      error: null
-    },
     email: {
       value: '',
       error: null

@@ -44,16 +44,6 @@ class VerifyUserView extends React.Component {
         <div className='box'>
           <div className={privateKey ? '' : 'hide'}>
             <form onSubmit={onSubmit}>
-              <label>Username:</label>
-              <input
-                name='username'
-                type='text'
-                value={fields.getIn(['username', 'value'])}
-                onChange={onChange}
-                className='input-block'
-                autoFocus
-              />
-              {errorMsg.username}
               <label>Password: (at least 8 characters long)</label>
               <input
                 name='password'

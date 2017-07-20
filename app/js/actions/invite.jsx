@@ -5,6 +5,7 @@ const config = require('../../config.json');
 const {writeStorage} = require('actions/utilities/storage');
 const checkEmptyFields = require('actions/utilities/checkEmptyFields');
 const embedPrivateKey = require('actions/utilities/embedPrivateKey');
+const React = require('react');
 
 const inviteUser = () => {
   return async (dispatch, getState) => {
@@ -40,10 +41,15 @@ const inviteUser = () => {
       console.error(error);
       switch (error.status) {
         case 400:
-          return dispatch({
+          if (error.body == 'mail') return dispatch({
+            type: 'INVITE_USER_ERROR',
+            payload: 'Invitation could not be sent. Please check the email address.'
+          });
+          if (error.body == 'header') return dispatch({
             type: 'INVITE_USER_ERROR',
             payload: 'Bad request. Please try again.'
           });
+          break;
         case 409:
           return dispatch({
             type: 'INVITE_USER_ERROR',
@@ -51,6 +57,7 @@ const inviteUser = () => {
           });
         case 408:
         case 500:
+        default:
           return dispatch({
             type: 'INVITE_USER_ERROR',
             payload: 'Unable to connect to server. Please try again later.'
@@ -60,7 +67,7 @@ const inviteUser = () => {
 
     return dispatch({
       type: 'INVITE_USER_SUCCESS',
-      payload: `Invitation has been sent to ${newUserEmail}!`
+      payload: 'SUCCESS'
     });
   };
 };
@@ -115,9 +122,6 @@ const verifyUser = () => {
       emptyFields.forEach((entry) => {
         let error;
         switch (entry[0]) {
-          case 'username':
-            error = 'Please enter an username.';
-            break;
           case 'password':
             error = 'Please enter a password.';
             break;
@@ -164,13 +168,11 @@ const verifyUser = () => {
     }
 
     let response;
-    let username = fields.getIn(['username', 'value']);
     let uuid = state.verifyUser.get('uuid');
     try {
       response = await requestor.post(`${config.server}/invite/confirm`, {
         body: {
-          uuid,
-          username
+          uuid
         },
         headers: embedPrivateKey(privateKey)
       });
@@ -195,11 +197,10 @@ const verifyUser = () => {
     let organization = response.body.organization;
     let email = response.body.email;
     let encryptedPrivateKey = result.privateKey;
-    writeStorage(username, encryptedPrivateKey, salt, organization, email);
+    writeStorage(encryptedPrivateKey, salt, organization, email);
     return dispatch({
       type: 'VERIFY_NEW_USER_SUCCESS',
       payload: {
-        username,
         privateKey,
         organization,
         email,
