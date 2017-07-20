@@ -64,7 +64,7 @@ Build the application in `fortdoks/app`
 ## Debugging
 Debugging is done on the client through the Developer Tools (`cmd + alt + I` on Mac) in the Electron window. Simply insert a debugger statement `debugger;` to trigger the developer mode. React and Redux developer tools should be visible as tabs if they are correctly installed.
 
-Debugging is done similar to the client side. Run the inspector instead of npm start in `fordoks/server`
+Debugging is done similar to the client side. Run the inspector instead of `npm start` in `fordoks/server`
 >nodemon --inspect main.js
 
 ## Cleanup
@@ -74,6 +74,7 @@ On server in `fortdoks/server`
 
 Remove indicies from ElasticSearch
 > curl -XGET 'http://localhost:9200/_cat/indices?v&pretty'
+
 > curl -XDELETE 'http://localhost:9200/<index>
 
 On client in `fortdoks/app`, remove `local_storage.json`, eg.
