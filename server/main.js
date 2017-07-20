@@ -168,7 +168,6 @@ app.post('/register/verify', async (req, res) => {
 
 app.post('/invite', async (req, res) => {
   let privateKey;
-  debugger;
   try {
     privateKey = extractPrivateKey(req.headers.authorization);
   } catch (error) {
@@ -210,7 +209,7 @@ app.post('/invite', async (req, res) => {
     await users.TempKeys.store(uuid, encryptedPrivateKey);
   } catch (error) {
     console.error(error);
-    return res.status(500).send();
+    return res.status(error).send();
   }
   let mail = mailer.newUserRegistration({
     to: newUserEmail,

@@ -21,12 +21,14 @@ const invite = (state = initialState, action) => {
       return state.set('isLoading', true);
     case 'INVITE_USER_FAIL':
       return state.merge({
+        message: null,
         fields: state.get('fields').mergeDeepWith((oldError, newError) => newError ? newError : oldError, action.payload),
         isLoading: false,
         error: null
       });
     case 'INVITE_USER_ERROR':
       return state.merge({
+        message: null,
         error: fromJS(action.payload),
         isLoading: false
       });
