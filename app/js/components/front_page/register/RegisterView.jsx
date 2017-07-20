@@ -15,7 +15,7 @@ const RegisterView = ({
 }) => {
   switch (currentView) {
     case 'REGISTER_VIEW':
-    case views.REGISTER_ORGANIZATION_VIEW:
+    case 'REGISTER_ORGANIZATION_VIEW':
       return (
         <RegisterOrgView
           registerFields={registerFields}
