@@ -43,9 +43,9 @@ const login = () => {
         error: true
       });
     }
-    let response;
+    
     try {
-      response = await requestor.post(`${config.server}/login`, {
+      await requestor.post(`${config.server}/login`, {
         body: {
           email
         },
@@ -69,6 +69,7 @@ const login = () => {
           });
       }
     }
+
     return dispatch({
       type: 'VERIFY_LOGIN_CREDS_SUCCESS',
       payload: {
