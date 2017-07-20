@@ -22,7 +22,7 @@ const passwordCheck = (password, retypedPassword) => {
         break;
       case 'CONTAINS_COMMON_PATTERNS':
       case 'TOO_COMMON':
-        errorMsg = 'Your password is not strong enough.';
+        errorMsg = 'Your password is too common. Please enter a stronger password.';
         break;
       case 'TOO_FEW_NUMERIC_CHARACTERS':
         errorMsg = 'Your password must include 1 numeric character.';

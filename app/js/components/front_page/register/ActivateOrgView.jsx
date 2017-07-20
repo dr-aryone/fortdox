@@ -36,13 +36,14 @@ class ActivateOrgView extends React.Component {
         <h1 className='text-center'>Register Team</h1>
         <div className='box'>
           <form className={register.verifyCodeError ? 'hide' : ''} onSubmit={onRegister}>
-            <label>Password: (at least 8 characters long)</label>
+            <label>Password:</label>
             <input
               name='password'
               type='password'
               onChange={onChange}
               value={activateFields.getIn(['password', 'value'])}
               className='input-block'
+              placeholder='at least 8 characters long'
               autoFocus
             />
             {errorMsg.password}
