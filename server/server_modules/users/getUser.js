@@ -1,6 +1,7 @@
 const db = require('app/models');
 
-module.exports = function (email) {
+
+const getUser = email => {
   return new Promise(async (resolve, reject) => {
     let user;
     try {
@@ -16,4 +17,24 @@ module.exports = function (email) {
       return reject(500);
     }
   });
+};
+
+
+const getOrganizationName = email => {
+  return new Promise(async (resolve, reject) => {
+    let user;
+    try {
+      user = await getUser(email);
+    } catch (error) {
+      console.error(error);
+      reject(500);
+    }
+    return resolve(user.Organization.name);
+  });
+};
+
+
+module.exports = {
+  getOrganizationName,
+  getUser
 };

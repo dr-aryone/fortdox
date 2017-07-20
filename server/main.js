@@ -20,7 +20,7 @@ const extractPrivateKey = require('./server_modules/utilities/extractPrivateKey'
 
 const job = new CronJob('*/5 * * * *', async () => {
   try {
-    await cleanup(30);
+    await cleanup(2);
   } catch (error) {
     console.error(error);
   }
@@ -266,7 +266,7 @@ app.post('/invite/confirm', async (req, res) => {
 
 app.post('/documents', async (req, res) => {
   if (req.body.title || req.body.text === '') {
-    return res.status(400).send({msg: 'Bad format, title and/or text cannot be empty'});
+    return res.status(400).send({msg: 'Bad format, title and/or text field(s) cannot be empty'});
   }
   let privateKey;
   try {
@@ -328,7 +328,7 @@ app.get('/documents', async (req, res) => {
 
 app.patch('/documents', async (req, res) => {
   if (req.body.title || req.body.text === '') {
-    return res.status(400).send({msg: 'Bad format, title and/or text cannot be empty'});
+    return res.status(400).send({msg: 'Bad format, title and/or text field(s) cannot be empty'});
   }
   let privateKey;
   try {
