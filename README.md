@@ -6,14 +6,16 @@ Clone the project
 > git clone git@bitbucket.org:edgeguideab/fortdoks.git
 
 Install following tools (if they are not already installed):
-* Item [Node.js](https://nodejs.org/)
-* Item [ElasticSearch](https://www.elastic.co/)
-* Item [MySQL](https://www.mysql.com/)
+
+* [Node.js](https://nodejs.org/)
+* [ElasticSearch](https://www.elastic.co/)
+* [MySQL](https://www.mysql.com/)
 
 For debugging, install following developer tools:
-* Item [Node Inspector](https://github.com/node-inspector/node-inspector)
-* Item [React Developer Tools](https://chrome.google.com/webstore/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi?hl=en)
-* Item [Redux DevTools](https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd?hl=en)
+
+* [Node Inspector](https://github.com/node-inspector/node-inspector)
+* [React Developer Tools](https://chrome.google.com/webstore/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi?hl=en)
+* [Redux DevTools](https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd?hl=en)
 
 ## Install Node.js dependencies
 Install the Node dependencies for client in `fortdoks/app`

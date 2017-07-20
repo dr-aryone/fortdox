@@ -1,6 +1,6 @@
 const fs = window.require('fs');
 
-const writeStorage = (username, privateKey, salt, organization, email) => {
+const writeStorage = (privateKey, salt, organization, email) => {
   let storage;
   try {
     storage = JSON.parse(fs.readFileSync(window.__dirname + '/local_storage.json', 'utf-8'));
@@ -10,7 +10,6 @@ const writeStorage = (username, privateKey, salt, organization, email) => {
 
   storage[email] = {
     [organization]: {
-      username,
       privateKey,
       salt
     }

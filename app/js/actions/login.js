@@ -74,8 +74,7 @@ const login = () => {
       payload: {
         privateKey: privateKey.toString('base64'),
         email: email,
-        organization: organization,
-        username: response.body.username
+        organization: organization
       }
     });
   };

@@ -18,7 +18,7 @@ const RegisterOrgView = ({registerFields, register, onChange, onCreateOrganizati
       {register.registerError}
     </div>
   ) : null;
-  
+
   return (
     <div className='container'>
       <LoaderOverlay display={register.isLoading} />
@@ -35,15 +35,6 @@ const RegisterOrgView = ({registerFields, register, onChange, onCreateOrganizati
           autoFocus
         />
         {errorMsg.organization}
-        <label>Username:</label>
-        <input
-          name='username'
-          type='text'
-          value={registerFields.getIn(['username', 'value'])}
-          onChange={onChange}
-          className='input-block'
-        />
-        {errorMsg.username}
         <label>Email:</label>
         <input
           name='email'

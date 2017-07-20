@@ -3,6 +3,7 @@ const path = require('path');
 const urlParser = require('url');
 const querystring = require('querystring');
 const { default: installExtension, REDUX_DEVTOOLS } = require('electron-devtools-installer');
+const config = require('./config.json');
 let win;
 let activation = {
   type: '',
@@ -35,7 +36,8 @@ async function createWindow() {
   });
 }
 
-app.setAsDefaultProtocolClient('FortDoks');
+app.setAsDefaultProtocolClient(config.name);
+
 app.on('ready', createWindow);
 
 app.on('open-url', (event, url) => {
