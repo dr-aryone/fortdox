@@ -85,19 +85,18 @@ app.post('/register', async (req, res) => {
     console.error(error);
     return res.status(error).send('user');
   }
+  let mail = mailer.firstTimeRegistration({
+    to: newUser.email,
+    organization: req.body.organization,
+    uuid: newUser.uuid
+  });
   try {
-    let mail = mailer.firstTimeRegistration({
-      to: newUser.email,
-      organization: req.body.organization,
-      uuid: newUser.uuid
-    });
     mailer.send(mail);
-    res.send();
   } catch (error) {
     console.error(error);
     return res.status(error).send('mail');
   }
-
+  res.send();
 });
 
 app.post('/register/confirm', async (req, res) => {
@@ -173,7 +172,7 @@ app.post('/invite', async (req, res) => {
   try {
     privateKey = extractPrivateKey(req.headers.authorization);
   } catch (error) {
-    return res.status(400).send();
+    return res.status(400).send('header');
   }
   let newUserEmail = req.body.newUserEmail;
   let email = req.body.email;
@@ -211,7 +210,7 @@ app.post('/invite', async (req, res) => {
     await users.TempKeys.store(uuid, encryptedPrivateKey);
   } catch (error) {
     console.error(error);
-    return res.status(500).send();
+    return res.status(error).send();
   }
   let mail = mailer.newUserRegistration({
     to: newUserEmail,
@@ -220,7 +219,12 @@ app.post('/invite', async (req, res) => {
     uuid,
     tempPassword: tempPassword.toString('base64')
   });
-  mailer.send(mail);
+  try {
+    mailer.send(mail);
+  } catch (error) {
+    console.error(error);
+    return res.status(400).send('mail');
+  }
   res.send();
 });
 

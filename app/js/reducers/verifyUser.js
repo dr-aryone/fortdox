@@ -1,10 +1,6 @@
 const {fromJS} = require('immutable');
 const initialState = fromJS({
   fields: {
-    username: {
-      value: '',
-      error: null
-    },
     password: {
       value: '',
       error: null

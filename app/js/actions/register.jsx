@@ -5,6 +5,7 @@ const {writeStorage} = require('actions/utilities/storage');
 const config = require('../../config.json');
 const checkEmptyFields = require('actions/utilities/checkEmptyFields');
 const embedPrivateKey = require('actions/utilities/embedPrivateKey');
+const React = require('react');
 
 const activateOrganizaton = () => {
   return async (dispatch, getState) => {
@@ -93,7 +94,7 @@ const activateOrganizaton = () => {
       }
     }
 
-    writeStorage(response.body.username, result.privateKey, result.salt, response.body.organizationName, email);
+    writeStorage(result.privateKey, result.salt, response.body.organizationName, email);
     return dispatch({
       type: 'ACTIVATE_ORGANIZATION_SUCCESS',
       payload: 'Team registration complete! You can now login.'
@@ -120,11 +121,6 @@ const registerOrganization = () => {
               error: 'Please enter a team name.'
             };
             break;
-          case 'username':
-            error = {
-              error: 'Please enter an username.'
-            };
-            break;
           case 'email':
             error = {
               error: 'Please enter an email.'
@@ -141,13 +137,11 @@ const registerOrganization = () => {
     }
 
     let organization = fields.getIn(['organization', 'value']);
-    let username = fields.getIn(['username', 'value']);
     let email = fields.getIn(['email', 'value']);
     try {
       await requestor.post(`${config.server}/register`, {
         body: {
           organization,
-          username,
           email
         }
       });
@@ -182,7 +176,7 @@ const registerOrganization = () => {
 
     return dispatch({
       type: 'REGISTER_ORGANIZATION_SUCCESS',
-      payload: 'Please check your email to verify your registration.'
+      payload: `A message was sent to ${email}. Please check your email to verify your registration.`
     });
   };
 };

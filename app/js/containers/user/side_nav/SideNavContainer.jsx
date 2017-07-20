@@ -4,7 +4,6 @@ const action = require('actions');
 
 const mapStateToProps = (state) => {
   return {
-    username: state.user.get('username'),
     organization: state.user.get('organization')
   };
 };
