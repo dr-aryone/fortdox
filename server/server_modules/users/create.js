@@ -1,6 +1,6 @@
 const db = require('app/models');
 
-module.exports = function ({username, email, password, organizationId, uuid}) {
+module.exports = function ({email, password, organizationId, uuid}) {
   return new Promise(async (resolve, reject) => {
     let user;
     try {
@@ -19,7 +19,6 @@ module.exports = function ({username, email, password, organizationId, uuid}) {
     }
     try {
       await db.User.create({
-        username: username,
         email: email,
         password: password,
         organizationId: organizationId,

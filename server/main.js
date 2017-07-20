@@ -54,7 +54,7 @@ app.post('/login', async (req, res) => {
   try {
     await decryptMasterPassword(privateKey, user.password);
     return res.send({
-      username: user.username
+      email: user.email
     });
   } catch (error) {
     console.error(error);
@@ -67,7 +67,6 @@ app.post('/login', async (req, res) => {
 app.post('/register', async (req, res) => {
   let uuid = uuidv1();
   let newUser = {
-    username: req.body.username,
     email: req.body.email,
     password: null,
     organizationId: null,
@@ -126,7 +125,7 @@ app.post('/register/confirm', async (req, res) => {
     let user = await users.getUser(email);
     res.status(200).send({
       organizationName,
-      username: user.username
+      email: user.email
     });
   } catch (error) {
     console.error(error);
@@ -201,7 +200,6 @@ app.post('/invite', async (req, res) => {
     return res.status(500).send();
   }
   let newUser = {
-    username: null,
     email: newUserEmail,
     password: newEncryptedMasterPassword,
     organizationId,
@@ -217,7 +215,7 @@ app.post('/invite', async (req, res) => {
   let mail = mailer.newUserRegistration({
     to: newUserEmail,
     organization: sender.Organization.name,
-    from: sender.username,
+    from: sender.email,
     uuid,
     tempPassword: tempPassword.toString('base64')
   });
@@ -249,7 +247,6 @@ app.post('/invite/verify', async (req, res) => {
 
 app.post('/invite/confirm', async (req, res) => {
   let uuid = req.body.uuid;
-  let username = req.body.username;
   let privateKey;
   try {
     privateKey = extractPrivateKey(req.headers.authorization);
@@ -258,7 +255,7 @@ app.post('/invite/confirm', async (req, res) => {
   }
   let metadata;
   try {
-    metadata = await users.verifyNewUser(uuid, privateKey, username);
+    metadata = await users.verifyNewUser(uuid, privateKey);
     await users.TempKeys.remove(uuid);
     return res.send(metadata);
   } catch (error) {

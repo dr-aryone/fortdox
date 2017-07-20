@@ -28,7 +28,7 @@ const verifyUser = function(email, privateKey) {
   });
 };
 
-const verifyNewUser = function(uuid, privateKey, username) {
+const verifyNewUser = function(uuid, privateKey) {
   return new Promise(async (resolve, reject) => {
     let encryptedMasterPassword;
     let user;
@@ -51,7 +51,7 @@ const verifyNewUser = function(uuid, privateKey, username) {
     try {
       await user.updateAttributes({
         uuid: null,
-        username
+
       });
     } catch (error) {
       console.error(error);
@@ -59,7 +59,6 @@ const verifyNewUser = function(uuid, privateKey, username) {
     }
     return resolve({
       email: user.email,
-      username,
       organization: user.Organization.name
     });
 
