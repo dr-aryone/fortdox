@@ -79,9 +79,9 @@ const updateDocument = () => {
     let emptyFields = checkEmptyFields(newDoc);
     if (emptyFields.length > 0) {
       let newDocFields = {};
-      emptyFields.forEach((key) => {
-        newDocFields[key] = {
-          error: `${key[1].get('label')} can not be empty.`
+      emptyFields.forEach((entry) => {
+        newDocFields[entry[0]] = {
+          error: `${entry[1].get('label')} can not be empty.`
         };
       });
       return dispatch({

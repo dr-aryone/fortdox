@@ -6,14 +6,14 @@ Clone the project
 > git clone git@bitbucket.org:edgeguideab/fortdoks.git
 
 Install following tools (if they are not already installed):
-- [Node.js](https://nodejs.org/)
-- [ElasticSearch](https://www.elastic.co/)
-- [MySQL](https://www.mysql.com/)
+* Item [Node.js](https://nodejs.org/)
+* Item [ElasticSearch](https://www.elastic.co/)
+* Item [MySQL](https://www.mysql.com/)
 
 For debugging, install following developer tools:
-- [Node Inspector](https://github.com/node-inspector/node-inspector)
-- [React Developer Tools](https://chrome.google.com/webstore/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi?hl=en)
-- [Redux DevTools](https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd?hl=en)
+* Item [Node Inspector](https://github.com/node-inspector/node-inspector)
+* Item [React Developer Tools](https://chrome.google.com/webstore/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi?hl=en)
+* Item [Redux DevTools](https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd?hl=en)
 
 ## Install Node.js dependencies
 Install the Node dependencies for client in `fortdoks/app`
@@ -54,7 +54,7 @@ Run mySQL (optional)
 Run database migrations in `fortdoks/server`
 > sequelize db:migrate
 
-# Build the Project into Runnable Application
+# Build the Project into a Runnable Application
 Build the application in `fortdoks/app`
 > electron-packager . --overwrite --platform=darwin --arch=x64 --out=release-build;
 
@@ -71,7 +71,8 @@ On server in `fortdoks/server`
 > db:mmigrate
 
 Remove indicies from ElasticSearch
-> curl -XDELETE 'http://yourdomain/_all'
+> curl -XGET 'http://localhost:9200/_cat/indices?v&pretty'
+> curl -XDELETE 'http://localhost:9200/<index>
 
 On client in `fortdoks/app`, remove `local_storage.json`, eg.
 > rm local_storage.json
