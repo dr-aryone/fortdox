@@ -93,7 +93,6 @@ const activateOrganizaton = () => {
           });
       }
     }
-
     writeStorage(result.privateKey, result.salt, response.body.organizationName, email);
     return dispatch({
       type: 'ACTIVATE_ORGANIZATION_SUCCESS',

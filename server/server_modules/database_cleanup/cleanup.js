@@ -1,6 +1,6 @@
 const db = require('app/models');
 
-module.exports = async (interval) => {
+module.exports = async (interval, es) => {
   let currentTime = new Date();
   let limit = interval * 60000;
   let inactiveOrganizations;
@@ -31,6 +31,7 @@ module.exports = async (interval) => {
           });
           await db.Users.destroy();
         });
+        await es.deleteIndex(entry.name);
         await entry.destroy();
       } catch (error) {
         console.error(error);

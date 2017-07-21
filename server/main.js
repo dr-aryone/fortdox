@@ -21,7 +21,7 @@ const logger = require('./server_modules/logger');
 
 const job = new CronJob('*/5 * * * *', async () => {
   try {
-    await cleanup(2);
+    await cleanup(2, es);
   } catch (error) {
     console.error(error);
   }

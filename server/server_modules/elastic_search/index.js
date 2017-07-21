@@ -7,6 +7,7 @@ const update = require('./update.js')(client);
 const addToIndex = require('./addToIndex.js')(client);
 const deleteDocument = require('./delete.js')(client);
 const createIndex = require('./createIndex.js')(client);
+const deleteIndex = require('./deleteIndex.js')(client);
 
 module.exports = {
   client,
@@ -15,5 +16,6 @@ module.exports = {
   update,
   addToIndex,
   deleteDocument,
-  createIndex
+  createIndex,
+  deleteIndex
 };
