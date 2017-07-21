@@ -4,32 +4,35 @@ const initialState = fromJS({
   searchString: '',
   result: [],
   error: null,
-  isLoading: false,
-  hasSearched: false
+  searchedString: null,
+  totalHits: null,
+  isLoading: false
 });
 
 const register = (state = initialState, action) => {
   switch (action.type) {
     case 'INPUT_CHANGE_SEARCH':
       return state.set(action.inputName, fromJS(action.inputValue));
-    case 'SEARCH_START':
+    case 'PAGINATION_SEARCH_START':
       return state.set('isLoading', true);
-    case 'SEARCH_FOUND':
+    case 'PAGINATION_SEARCH_FOUND':
       return state.merge({
-        result: fromJS(action.payload),
+        result: fromJS(action.payload.searchResult),
         error: null,
         isLoading: false,
-        hasSearched: true
+        searchedString: fromJS(action.payload.searchedString),
+        totalHits: fromJS(action.payload.totalHits)
       });
-    case 'SEARCH_ERROR':
+    case 'PAGINATION_SEARCH_ERROR':
       return state.merge({
         result: [],
         error: fromJS(action.payload),
         isLoading: false,
-        hasSearched: true
+        totalHits: null
       });
     case 'UPDATE_DOCUMENT_SUCCESS':
     case 'DELETE_DOCUMENT_SUCCESS':
+    case 'LOGOUT': 
       return initialState;
     default:
       return state;

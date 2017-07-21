@@ -4,13 +4,17 @@ button {
   display: inline-block;
   padding: 10px 15px;
   background: $primary-color;
-  border-radius: 2px;
   color: $btn-color;
   font-size: 1em;
   text-decoration: none;
   box-sizing: border-box;
   cursor: pointer;
   border: none;
+  font-family: map-deep-get($text-styles, 'text', 'font-family');
+  font-size: map-deep-get($text-styles, 'text', 'font-size');
+  text-transform: uppercase;
+  border-radius: 1px;
+  box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 6px, rgba(0, 0, 0, 0.12) 0px 1px 4px;
 
   &:hover {
     background: lighten($primary-color, 5%);
@@ -18,7 +22,9 @@ button {
   }
 
   &:active, &:focus {
-    outline: 1;
+    outline: 0;
+    background: lighten($primary-color, 5%);
+    color: lighten($btn-color, 15%);
   }
 
   .large {

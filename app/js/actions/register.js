@@ -5,7 +5,6 @@ const {writeStorage} = require('actions/utilities/storage');
 const config = require('../../config.json');
 const checkEmptyFields = require('actions/utilities/checkEmptyFields');
 const embedPrivateKey = require('actions/utilities/embedPrivateKey');
-const React = require('react');
 
 const activateOrganizaton = () => {
   return async (dispatch, getState) => {
@@ -175,7 +174,11 @@ const registerOrganization = () => {
 
     return dispatch({
       type: 'REGISTER_ORGANIZATION_SUCCESS',
-      payload: `A message was sent to ${email}. Please check your email to verify your registration.`
+      payload: {
+        text: 'A message was sent to ',
+        bold: email,
+        text2: '. Please check your email to verify your registration.'
+      }
     });
   };
 };

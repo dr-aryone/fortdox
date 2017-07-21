@@ -1,8 +1,19 @@
 const React = require('react');
 const SearchItem = require('./SearchItem');
 const LoaderOverlay = require('components/general/LoaderOverlay');
+const ErrorBox = require('components/general/ErrorBox');
 
-const SearchView = ({result, error, onUpdate, searchString, onChange, onSearch, isLoading, hasSearched}) => {
+const SearchView = ({
+  searchString,
+  error,
+  result,
+  totalHits,
+  isLoading,
+  onChange,
+  onSearch,
+  onUpdate,
+  paginationSearch
+}) => {
   let searchResult = [];
   result.forEach((item) => {
     searchResult.push(
@@ -14,22 +25,26 @@ const SearchView = ({result, error, onUpdate, searchString, onChange, onSearch, 
       />);
   });
 
-  let searchLength = hasSearched ? (
-    <p>{searchResult.length} search result{searchResult.length == 1 ? '' : 's'} found.</p>
-  ) : null;
+  let pagination = [];
+  if (totalHits > 10) {
+    let length = Math.ceil(totalHits/10);
+    let temp = [];
+    for (let i = 1; i <= length; i++) {
+      temp.push(<button onClick={() => paginationSearch(i)} key={i}>{i}</button>);
+    }
+    pagination.push(<div key={length} >{temp}</div>);
+  }
 
-  let errorBox = error ? (
-    <div className='alert alert-warning'>
-      <i className='material-icons'>error_outline</i>
-      {error}
-    </div>
+
+  let searchLength = totalHits ? (
+    <p>{totalHits} search result{totalHits == 1 ? '' : 's'} found.</p>
   ) : null;
 
   return (
     <div className='container-fluid'>
       <div className='col-sm-10 col-sm-offset-1'>
         <LoaderOverlay display={isLoading} />
-        {errorBox}
+        <ErrorBox errorMsg={error} />
         <h1>Search</h1>
         <form onSubmit={onSearch} className='input-bar box'>
           <input
@@ -45,9 +60,8 @@ const SearchView = ({result, error, onUpdate, searchString, onChange, onSearch, 
           </button>
         </form>
         {searchLength}
-        <div className='row'>
-          {searchResult}
-        </div>
+        {searchResult}
+        {pagination}
       </div>
     </div>
   );

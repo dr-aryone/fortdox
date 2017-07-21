@@ -1,6 +1,7 @@
 const React = require('react');
 const {readStorage} = require('actions/utilities/storage');
 const config = require('../../../../config.json');
+const MessageBox = require('components/general/MessageBox');
 
 const LoginView = ({loginAs, toRegisterView, toUserView, message}) => {
   let userList = [];
@@ -16,18 +17,19 @@ const LoginView = ({loginAs, toRegisterView, toUserView, message}) => {
     });
   });
 
-  let messageBox = (
-    <div className='alert alert-success'>
-      <i className='material-icons'>
-        check
-      </i>
-      {message}
-    </div>
-  );
+  let concatMessage;
+  if (typeof message === 'object' && message !== null) {
+    concatMessage = [];
+    message.entrySeq().forEach((entry) => {
+      entry[0] === 'bold' ? concatMessage.push(<b key={entry[1]}>{entry[1]}</b>) : concatMessage.push(entry[1]);
+    });
+  } else {
+    concatMessage = message;
+  }
 
   return (
     <div className='container'>
-      {message ? messageBox : null}
+      <MessageBox message={concatMessage} />
       <h1 className='text-center'>{config.name}</h1>
       <div className={`box login-panel ${userList.length == 0 ? 'hide' :''}`}>
         <h2>{userList.length > 0 ? 'Choose an account': null}</h2>

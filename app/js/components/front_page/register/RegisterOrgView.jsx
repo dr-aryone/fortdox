@@ -1,5 +1,6 @@
 const React = require('react');
 const LoaderOverlay = require('components/general/LoaderOverlay');
+const ErrorBox = require('components/general/ErrorBox');
 
 const RegisterOrgView = ({registerFields, register, onChange, onCreateOrganization, toLoginView}) => {
   let errorMsg = {};
@@ -12,17 +13,10 @@ const RegisterOrgView = ({registerFields, register, onChange, onCreateOrganizati
     ) : null;
   });
 
-  let errorBox = register.registerError ? (
-    <div className='alert alert-warning show'>
-      <span className='material-icons'>error_outline</span>
-      {register.registerError}
-    </div>
-  ) : null;
-
   return (
     <div className='container'>
       <LoaderOverlay display={register.isLoading} />
-      {errorBox}
+      <ErrorBox errorMsg={register.registerError} />
       <h1 className='text-center'>Create a New Team</h1>
       <form className='box' onSubmit={onCreateOrganization}>
         <label>Team name:</label>
