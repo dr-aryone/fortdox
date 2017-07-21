@@ -73,17 +73,23 @@ app.post('/register', async (req, res) => {
     organizationId: null,
     uuid
   };
-  try {
-    newUser.organizationId = (await orgs.createOrganization(req.body.organization)).id;
-  } catch (error) {
-    console.error(error);
-    return res.status(error).send('organization');
-  }
+  let organizationId;
+  let email = req.body.email;
   try {
     await users.createUser(newUser);
   } catch (error) {
     console.error(error);
     return res.status(error).send('user');
+  }
+  try {
+    organizationId = (await orgs.createOrganization(req.body.organization)).id;
+    await users.setOrganizationId({
+      email,
+      organizationId
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(error).send('organization');
   }
   let mail = mailer.firstTimeRegistration({
     to: newUser.email,
@@ -266,7 +272,48 @@ app.post('/invite/confirm', async (req, res) => {
 
 });
 
-app.post('/documents', async (req, res) => {
+app.get('/document', async (req, res) => {
+  let searchString = req.query.searchString;
+  let privateKey;
+  try {
+    privateKey = extractPrivateKey(req.headers.authorization);
+  } catch (error) {
+    return res.status(400).send();
+  }
+  let organization = req.query.organization;
+  let email = req.query.email;
+  let index = req.query.index;
+  let response;
+  try {
+    response = await es.paginationSearch({
+      searchString,
+      organization,
+      index
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send();
+  }
+  let encryptedMasterPassword;
+  try {
+    encryptedMasterPassword = (await users.getUser(email)).password;
+  } catch (error) {
+    console.error(error);
+    return res.status(404).send();
+  }
+  try {
+    response.hits.hits = await decryptDocuments(response.hits.hits, privateKey, encryptedMasterPassword);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send({msg: 'Internal Server Error'});
+  }
+  res.send({
+    searchResult: response.hits.hits,
+    totalHits: response.hits.total
+  });
+});
+
+app.post('/document', async (req, res) => {
   if (req.body.title || req.body.text === '') {
     return res.status(400).send({msg: 'Bad format, title and/or text field(s) cannot be empty'});
   }
@@ -292,43 +339,7 @@ app.post('/documents', async (req, res) => {
   }
 });
 
-app.get('/documents', async (req, res) => {
-  let response;
-  let searchString = req.query.searchString;
-  let privateKey;
-  try {
-    privateKey = extractPrivateKey(req.headers.authorization);
-  } catch (error) {
-    return res.status(400).send();
-  }
-  let organization = req.query.organization;
-  let email = req.query.email;
-  let encryptedMasterPassword;
-  try {
-    response = await es.search({
-      searchString,
-      organization
-    });
-  } catch (error) {
-    console.error(error);
-    return res.status(500).send();
-  }
-  try {
-    encryptedMasterPassword = (await users.getUser(email)).password;
-  } catch (error) {
-    console.error(error);
-    return res.status(404).send();
-  }
-  try {
-    response.hits.hits = await decryptDocuments(response.hits.hits, privateKey, encryptedMasterPassword);
-  } catch (error) {
-    console.error(error);
-    return res.status(500).send({msg: 'Internal Server Error'});
-  }
-  res.send(response.hits.hits);
-});
-
-app.patch('/documents', async (req, res) => {
+app.patch('/document', async (req, res) => {
   if (req.body.title || req.body.text === '') {
     return res.status(400).send({msg: 'Bad format, title and/or text field(s) cannot be empty'});
   }
@@ -366,7 +377,7 @@ app.patch('/documents', async (req, res) => {
   }
 });
 
-app.delete('/documents', async (req,res) => {
+app.delete('/document', async (req,res) => {
   let response;
   let expectations = expect({
     index: 'string',

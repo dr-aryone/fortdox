@@ -1,5 +1,6 @@
 module.exports = client => {
-  const search = async (query) => {
+  const paginationSearch = async (query) => {
+    let from = query.index * 10 - 10;
     let response;
     try {
       response = await client.search({
@@ -21,7 +22,8 @@ module.exports = client => {
                 }
               }]
             }
-          }
+          },
+          'from': from
         }
       });
       return response;
@@ -30,13 +32,13 @@ module.exports = client => {
     }
   };
 
-  const searchAll = (query) => {
+  const paginationSearchAll = (query) => {
     query.index = '_all';
-    return search(query);
+    return paginationSearch(query);
   };
 
   return {
-    search,
-    searchAll
+    paginationSearch,
+    paginationSearchAll
   };
 };

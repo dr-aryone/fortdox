@@ -1,5 +1,6 @@
 const React = require('react');
 const LoaderOverlay = require('components/general/LoaderOverlay');
+const ErrorBox = require('components/general/ErrorBox');
 
 class VerifyUserView extends React.Component {
   componentWillMount () {
@@ -19,13 +20,6 @@ class VerifyUserView extends React.Component {
       privateKey,
     } = this.props;
 
-    let errorBox = error ? (
-      <div className='alert alert-warning'>
-        <span className='material-icons'>error_outline</span>
-        {error}
-      </div>
-    ) : null;
-
     let errorMsg = {};
     fields.entrySeq().forEach((entry) => {
       errorMsg[entry[0]] = entry[1].get('error') ? (
@@ -39,18 +33,20 @@ class VerifyUserView extends React.Component {
     return (
       <div className='container'>
         <LoaderOverlay display={isLoading} />
-        {errorBox}
+        <ErrorBox message={error} />
         <h1 className='text-center'>Register</h1>
         <div className='box'>
           <div className={privateKey ? '' : 'hide'}>
             <form onSubmit={onSubmit}>
-              <label>Password: (at least 8 characters long)</label>
+              <label>Password:</label>
               <input
                 name='password'
                 type='password'
                 value={fields.getIn(['password', 'value'])}
                 onChange={onChange}
+                placeholder='at least 8 characters long'
                 className='input-block'
+                autoFocus
               />
               {errorMsg.password}
               <label>Re-type password:</label>

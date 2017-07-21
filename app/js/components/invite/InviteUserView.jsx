@@ -1,27 +1,20 @@
 const React = require('react');
 const LoaderOverlay = require('components/general/LoaderOverlay');
+const MessageBox = require('components/general/MessageBox');
+const ErrorBox = require('components/general/ErrorBox');
 
 const InviteUserView = ({fields, message, error, onChange, onSend, isLoading}) => {
-  let messageBox = message ? (
-    <div className='alert alert-success'>
-      <i className='material-icons'>
-        check
-      </i>
-      {message}
-    </div>
-  ) : null;
+  let concatMessage = [];
+  if (typeof message === 'object' && message !== null) {
+    message.entrySeq().forEach((entry) => {
+      entry[0] === 'bold' ? concatMessage.push(<b key={entry[1]}>{entry[1]}</b>) : concatMessage.push(entry[1]);
+    });
+  }
 
   let errorMsg = fields.getIn(['email', 'error']) ? (
     <div className='arrow_box show'>
       <span className='material-icons'>error_outline</span>
       {fields.getIn(['email', 'error'])}
-    </div>
-  ) : null;
-
-  let errorBox = error ? (
-    <div className='alert alert-warning'>
-      <i className='material-icons'>error_outline</i>
-      {error}
     </div>
   ) : null;
 
@@ -31,8 +24,8 @@ const InviteUserView = ({fields, message, error, onChange, onSend, isLoading}) =
         <LoaderOverlay display={isLoading} />
         <h1>Invite User</h1>
         <div className='box'>
-          {messageBox}
-          {errorBox}
+          <MessageBox message={message} />
+          <ErrorBox errorMsg={error} />
           <p>Invite a new user to the organization.</p>
           <form onSubmit={onSend} className='input-bar'>
             <input
