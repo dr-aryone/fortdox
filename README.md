@@ -80,6 +80,8 @@ Remove indicies from ElasticSearch
 On client in `fortdoks/app`, remove `local_storage.json`, eg.
 > rm local_storage.json
 
+## Backup
 Backup indices in elasticsearch
 > crontab -e
+
 > 0 0 * * * /path/to/server/backup.sh
