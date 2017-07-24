@@ -5,6 +5,7 @@ const ErrorBox = require('components/general/ErrorBox');
 
 const SearchView = ({
   searchString,
+  currentIndex,
   error,
   result,
   totalHits,
@@ -25,16 +26,7 @@ const SearchView = ({
       />);
   });
 
-  let pagination = [];
-  if (totalHits > 10) {
-    let length = Math.ceil(totalHits/10);
-    let temp = [];
-    for (let i = 1; i <= length; i++) {
-      temp.push(<button onClick={() => paginationSearch(i)} key={i}>{i}</button>);
-    }
-    pagination.push(<div key={length} >{temp}</div>);
-  }
-
+  let pagination = renderPagination(currentIndex, paginationSearch, totalHits);
 
   let searchLength = totalHits ? (
     <p>{totalHits} search result{totalHits == 1 ? '' : 's'} found.</p>
@@ -66,5 +58,35 @@ const SearchView = ({
     </div>
   );
 };
+
+function renderPagination(currentIndex, paginationSearch, totalHits) {
+  let pagination = [];
+  if (totalHits > 10) {
+    let start = currentIndex > 3 ? currentIndex - 3 : 1;
+    let end = Math.ceil(totalHits/10) > start + 6 ? start + 6 : Math.ceil(totalHits/10);
+    let temp = new Array(end-start+1);
+    temp.fill(null);
+    temp.forEach((value, i) => {
+      start + i === currentIndex?
+        temp.push(<button className='pagination focused' key={start+i}>{start+i}</button>):
+        temp.push(<button className='pagination' onClick={() => paginationSearch(start+i)} key={start+i}>{start+i}</button>);
+    });
+    if (currentIndex !== 1) temp.unshift(
+      <button className='pagination' onClick={() => paginationSearch(currentIndex-1)} key='left'>
+        <i className='material-icons'>keyboard_arrow_left</i>
+      </button>
+    );
+    if (Math.ceil(totalHits/10) !== currentIndex) temp.push(
+      <button className='pagination' onClick={() => paginationSearch(currentIndex+1)} key='right'>
+        <i className='material-icons'>keyboard_arrow_right</i>
+      </button>
+    );
+    pagination.push(<div key={length} className='pagination'>
+      {temp}
+    </div>);
+  }
+
+  return pagination;
+}
 
 module.exports = SearchView;
