@@ -2,6 +2,8 @@ const {fromJS} = require('immutable');
 
 const initialState = fromJS({
   searchString: '',
+  currentIndex: 0,
+  rangeFrom: 0,
   result: [],
   error: null,
   searchedString: null,
@@ -15,12 +17,14 @@ const register = (state = initialState, action) => {
       return state.set(action.inputName, fromJS(action.inputValue));
     case 'PAGINATION_SEARCH_START':
       return state.set('isLoading', true);
-    case 'PAGINATION_SEARCH_FOUND':
+    case 'PAGINATION_SEARCH_SUCCESS':
       return state.merge({
+        searchString: fromJS(action.payload.searchString),
+        currentIndex: fromJS(action.payload.index),
         result: fromJS(action.payload.searchResult),
         error: null,
         isLoading: false,
-        searchedString: fromJS(action.payload.searchedString),
+        searchedString: fromJS(action.payload.searchString),
         totalHits: fromJS(action.payload.totalHits)
       });
     case 'PAGINATION_SEARCH_ERROR':
