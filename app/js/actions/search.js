@@ -28,7 +28,7 @@ const setUpdateDocument = id => {
   };
 };
 
-const paginationSearch = (index = 1) => {
+const paginationSearch = (index) => {
   return async (dispatch, getState) => {
     dispatch({
       type: 'PAGINATION_SEARCH_START'
@@ -78,4 +78,4 @@ const paginationSearch = (index = 1) => {
   };
 };
 
-module.exports = { setUpdateDocument, paginationSearch};
+module.exports = {setUpdateDocument, paginationSearch};
