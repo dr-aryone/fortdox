@@ -17,6 +17,11 @@ button {
   box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 6px, rgba(0, 0, 0, 0.12) 0px 1px 4px;
   transition: all 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms;
 
+  &.round {
+    border-radius: 50%;
+    padding: 20px;
+  }
+
   &:hover {
     background: lighten($primary-color, 5%);
     color: lighten($btn-color, 15%);

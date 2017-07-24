@@ -15,7 +15,8 @@ const SearchView = ({
   onChange,
   onSearch,
   onUpdate,
-  paginationSearch
+  paginationSearch,
+  toDocView
 }) => {
   let searchResult = [];
   result.forEach((item) => {
@@ -57,6 +58,11 @@ const SearchView = ({
         {searchLength}
         {searchResult}
         {pagination}
+        <div className='doc-button'>
+          <button className='round' onClick={toDocView}>
+            <i className='material-icons'>add</i>
+          </button>
+        </div>
       </div>
     </div>
   );

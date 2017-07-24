@@ -29,6 +29,9 @@ const mapDispatchToProps = dispatch => {
     },
     paginationSearch: index => {
       dispatch(search.paginationSearch(index));
+    },
+    toDocView: () => {
+      dispatch(action.changeView('CREATE_DOC_VIEW'));
     }
   };
 };
