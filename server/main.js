@@ -76,7 +76,6 @@ app.post('/login', async (req, res) => {
     await decryptMasterPassword(privateKey, user.password);
     req.FortDox.privateKey = privateKey;
     req.FortDox.email = req.body.email;
-    debugger;
     return res.send({
       email: user.email
     });

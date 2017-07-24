@@ -20,7 +20,7 @@ const mapDispatchToProps = dispatch => {
     },
     onSearch: (event) => {
       event.preventDefault();
-      dispatch(search.paginationSearch());
+      dispatch(search.paginationSearch(0));
     },
     onUpdate: id => {
       dispatch(search.setUpdateDocument(id));
