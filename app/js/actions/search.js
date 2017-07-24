@@ -28,7 +28,7 @@ const setUpdateDocument = id => {
   };
 };
 
-const paginationSearch = index => {
+const paginationSearch = (index = 1) => {
   return async (dispatch, getState) => {
     dispatch({
       type: 'PAGINATION_SEARCH_START'

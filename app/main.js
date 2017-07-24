@@ -1,4 +1,4 @@
-const {app, BrowserWindow, Menu} = require('electron');
+const {app, BrowserWindow, Menu, session} = require('electron');
 const path = require('path');
 const urlParser = require('url');
 const querystring = require('querystring');
@@ -12,7 +12,6 @@ let activation = {
   type: '',
   code: null
 };
-
 
 async function createWindow() {
   win = new BrowserWindow({width: 1280, height: 720});

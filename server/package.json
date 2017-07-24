@@ -10,6 +10,7 @@
   "dependencies": {
     "bcrypt": "^1.0.2",
     "body-parser": "^1.17.2",
+    "client-sessions": "^0.8.0",
     "cron": "^1.2.1",
     "elasticsearch": "^13.1.1",
     "express": "^4.0.0",
