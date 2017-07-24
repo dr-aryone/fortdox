@@ -32,7 +32,7 @@ const register = (state = initialState, action) => {
       });
     case 'UPDATE_DOCUMENT_SUCCESS':
     case 'DELETE_DOCUMENT_SUCCESS':
-    case 'LOGOUT': 
+    case 'LOGOUT':
       return initialState;
     default:
       return state;

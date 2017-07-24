@@ -1,6 +1,6 @@
 module.exports = client => {
   const paginationSearch = async (query) => {
-    let from = query.index * 10 - 10;
+    let from = (query.index > 0) ? query.index * 10 - 10 : 0;
     let response;
     try {
       response = await client.search({

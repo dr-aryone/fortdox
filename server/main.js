@@ -18,7 +18,7 @@ const cleanup = require('./server_modules/database_cleanup/cleanup.js');
 const CronJob = require('cron').CronJob;
 const extractPrivateKey = require('./server_modules/utilities/extractPrivateKey');
 const logger = require('./server_modules/logger');
-
+const sessions = require('client-sessions');
 const job = new CronJob('*/5 * * * *', async () => {
   try {
     await cleanup(2, es);
@@ -31,6 +31,13 @@ job.start();
 
 app.use(bodyParser.json());
 
+app.use(sessions({
+  cookieName: 'FortDox',
+  secret: keygen.genRandomPassword(),
+  duration: 3 * 24 * 60 * 60 * 1000,
+  activeDuration: 5 * 60 * 1000
+}));
+
 app.get('/', (req, res) => {
   res.send();
 });
@@ -39,6 +46,19 @@ app.listen(8000, () => {
 });
 
 app.post('/login', async (req, res) => {
+  if (req.FortDox.privateKey && req.FortDox.email) {
+    let encryptedMasterPassword;
+    try {
+      encryptedMasterPassword = (await users.getUser(req.FortDox.email)).password;
+      await decryptMasterPassword(req.FortDox.privateKey, encryptedMasterPassword);
+      res.send({
+        email: req.FortDox.email
+      });
+    } catch (error) {
+      console.error(error);
+      return res.status(error).send();
+    }
+  }
   let user;
   try {
     user = await users.getUser(req.body.email);
@@ -54,6 +74,9 @@ app.post('/login', async (req, res) => {
   }
   try {
     await decryptMasterPassword(privateKey, user.password);
+    req.FortDox.privateKey = privateKey;
+    req.FortDox.email = req.body.email;
+    debugger;
     return res.send({
       email: user.email
     });
