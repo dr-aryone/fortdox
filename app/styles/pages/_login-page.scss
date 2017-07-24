@@ -8,8 +8,12 @@
 
   & div:hover {
     background-color: $background-color;
-    display: block;
     cursor: pointer;
+  }
+
+  & div:focus {
+    background-color: $background-color;
+    outline: 0;
   }
 
   &.hide {

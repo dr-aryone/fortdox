@@ -13,6 +13,7 @@ const inputChange = (inputName, inputValue) => {
         type = 'INPUT_CHANGE_VERIFY_LOGIN';
         break;
       case 'SEARCH_VIEW':
+      case 'USER_VIEW':
         type = 'INPUT_CHANGE_SEARCH';
         break;
       case 'CREATE_DOC_VIEW':

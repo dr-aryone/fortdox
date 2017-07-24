@@ -5,7 +5,7 @@ const DocumentForm = require('./form/DocumentForm');
 const UpdateDocView = ({docFields, onChange, onUpdate, toSearchView, isLoading}) => {
   return (
     <div className='container-fluid'>
-      <div className='col-sm-10 col-sm-offset-1'>
+      <div className='inner-container'>
         <LoaderOverlay display={isLoading} />
         <h1>Update Document</h1>
         <DocumentForm docFields={docFields} onChange={onChange} onSubmit={onUpdate}>

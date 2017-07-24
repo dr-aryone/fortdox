@@ -8,6 +8,7 @@ const mapStateToProps = state => {
     searchString: state.search.get('searchString'),
     currentIndex: state.search.get('currentIndex'),
     error: state.search.get('error'),
+    message: state.search.get('message'),
     result: state.search.get('result'),
     totalHits: state.search.get('totalHits'),
     isLoading: state.search.get('isLoading')
@@ -21,7 +22,7 @@ const mapDispatchToProps = dispatch => {
     },
     onSearch: (event) => {
       event.preventDefault();
-      dispatch(search.paginationSearch(0));
+      dispatch(search.search());
     },
     onUpdate: id => {
       dispatch(search.setUpdateDocument(id));

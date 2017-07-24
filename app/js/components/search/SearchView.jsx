@@ -2,11 +2,13 @@ const React = require('react');
 const SearchItem = require('./SearchItem');
 const LoaderOverlay = require('components/general/LoaderOverlay');
 const ErrorBox = require('components/general/ErrorBox');
+const MessageBox = require('components/general/MessageBox');
 
 const SearchView = ({
   searchString,
   currentIndex,
   error,
+  message,
   result,
   totalHits,
   isLoading,
@@ -34,10 +36,11 @@ const SearchView = ({
 
   return (
     <div className='container-fluid'>
-      <div className='col-sm-10 col-sm-offset-1'>
+      <div className='inner-container'>
         <LoaderOverlay display={isLoading} />
         <ErrorBox errorMsg={error} />
-        <h1>Search</h1>
+        <MessageBox message={message} />
+        <h1 id='top'>Search</h1>
         <form onSubmit={onSearch} className='input-bar box'>
           <input
             name='searchString'
