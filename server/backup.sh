@@ -1,9 +1,18 @@
-curl -X DELETE http://localhost:9200/_snapshot/fortdox_backup/snapshot
+timestamp=$(date +"%Y-%m-%d_%H:%M:%S")
 
-curl -X PUT \
-  http://localhost:9200/_snapshot/fortdox_backup/snapshot \
+/usr/bin/curl -X PUT \
+http://localhost:9200/_snapshot/fortdox_backup/ \
   -H 'cache-control: no-cache' \
-  -H 'postman-token: d95648fa-1c87-885a-7087-70ebb5d79885' \
+  -d '{
+	"type" : "fs",
+  "settings" : {
+    "location" : "'"$timestamp"'"
+  }
+}'
+
+/usr/bin/curl -X PUT \
+  http://localhost:9200/_snapshot/fortdox_backup/$timestamp \
+  -H 'cache-control: no-cache' \
   -d '{
 	"indices": "_all"
 }'

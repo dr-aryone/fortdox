@@ -81,7 +81,25 @@ On client in `fortdoks/app`, remove `local_storage.json`, eg.
 > rm local_storage.json
 
 ## Backup
-Backup indices in elasticsearch
+
+Locate the folder containing backup.sh and grant the file executable permissions
+> chmod +x backup.sh
+
+Navigate to the elasticsearch.yml file to set up path for the snapshot response
+> /usr/local/etc/elasticsearch
+
+Open with vim as sudo user (if elasticsearch was installed -g)
+> vim elasticsearch.yml
+
+In the section labled Paths, enter the desired location for the snapshot repository
+> path.repo /var/elasticsearch_backup
+
+Now all the "location" parameters in the backup.sh code will be relative the path you just entered.  
+
+Start a crontab that will run the backup script
 > crontab -e
 
+Insert the following line into the crontab
 > 0 0 * * * /path/to/server/backup.sh
+
+Save and quit. The crontab will now run the backup code every night at 00:00.
