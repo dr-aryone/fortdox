@@ -28,14 +28,20 @@ const setUpdateDocument = id => {
   };
 };
 
-const paginationSearch = (index = 1) => {
+const paginationSearch = index => {
   return async (dispatch, getState) => {
     dispatch({
       type: 'PAGINATION_SEARCH_START'
     });
 
     let state = getState();
-    let searchString = state.search.get('searchString');
+    let searchString;
+    if (index === 0 ) {
+      searchString = state.search.get('searchString');
+      index = 1;
+    }  else {
+      searchString = state.search.get('searchedString');
+    }
     let privateKey = state.user.get('privateKey');
     let organization = state.user.get('organization');
     let email = state.user.get('email');
@@ -67,15 +73,17 @@ const paginationSearch = (index = 1) => {
           });
       }
     }
+    
     return dispatch({
-      type: 'PAGINATION_SEARCH_FOUND',
+      type: 'PAGINATION_SEARCH_SUCCESS',
       payload: {
+        index: index,
         searchResult: response.body.searchResult,
         totalHits: response.body.totalHits,
-        searchedString: searchString
+        searchString: searchString
       }
     });
   };
 };
 
-module.exports = { setUpdateDocument, paginationSearch};
+module.exports = {setUpdateDocument, paginationSearch};

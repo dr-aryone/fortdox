@@ -1,0 +1,24 @@
+.pagination {
+  margin: 10px 0px;
+
+  & button {
+    margin: 5px;
+
+    &:first-child {
+      margin-left: 0px;
+    }
+
+    &:last-child {
+      margin-right: 0px;
+    }
+
+    &.focused {
+      background-color: lighten($primary-color, 5%);
+      color: lighten($btn-color, 15%);
+    }
+    .material-icons {
+      font-size: map-deep-get($text-styles, 'text', 'font-size');
+      font-weight: bold;
+    }
+  }
+}
