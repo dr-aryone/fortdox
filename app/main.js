@@ -50,6 +50,10 @@ async function createWindow() {
       accelerator: 'CmdOrCtrl+R',
       role: 'reload'
     }, {
+      label: 'Open DevTools',
+      accelerator: 'CmdOrCtrl+Alt+I',
+      role: 'toggledevtools'
+    }, {
       label: 'Quit',
       accelerator: 'CmdOrCtrl+Q',
       click: () => {

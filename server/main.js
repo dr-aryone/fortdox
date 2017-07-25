@@ -336,7 +336,7 @@ app.get('/document', async (req, res) => {
 });
 
 app.post('/document', async (req, res) => {
-  if (req.body.title || req.body.text === '') {
+  if (req.body.doc.title.trim() === '' || req.body.doc.text.trim() === '') {
     return res.status(400).send({msg: 'Bad format, title and/or text field(s) cannot be empty'});
   }
   let privateKey;
@@ -354,7 +354,7 @@ app.post('/document', async (req, res) => {
     res.status(404).send();
   }
   try {
-    res.send(await es.addToIndex(req.body, privateKey, encryptedMasterPassword, organization));
+    res.send(await es.addToIndex(req.body.doc, req.body.tags, privateKey, encryptedMasterPassword, organization));
   } catch (error) {
     console.error(error);
     res.send(500).send(error);
@@ -362,7 +362,7 @@ app.post('/document', async (req, res) => {
 });
 
 app.patch('/document', async (req, res) => {
-  if (req.body.title || req.body.text === '') {
+  if (req.body.updateQuery.title.trim() === '' || req.body.updateQuery.text.trim() === '') {
     return res.status(400).send({msg: 'Bad format, title and/or text field(s) cannot be empty'});
   }
   let privateKey;
