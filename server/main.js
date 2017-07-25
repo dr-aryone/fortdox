@@ -16,9 +16,11 @@ const expect = require('@edgeguideab/expect');
 const uuidv1 = require('uuid/v1');
 const cleanup = require('./server_modules/database_cleanup/cleanup.js');
 const CronJob = require('cron').CronJob;
-const extractPrivateKey = require('./server_modules/utilities/extractPrivateKey');
+const extract = require('./server_modules/utilities/extract');
+const sessions = require('./server_modules/utilities/session');
 const logger = require('./server_modules/logger');
-const sessions = require('client-sessions');
+const moment = require('moment');
+const secret = keygen.genRandomPassword();
 const job = new CronJob('*/5 * * * *', async () => {
   try {
     await cleanup(2, es);
@@ -27,16 +29,10 @@ const job = new CronJob('*/5 * * * *', async () => {
   }
 });
 
+
 job.start();
 
 app.use(bodyParser.json());
-
-app.use(sessions({
-  cookieName: 'FortDox',
-  secret: keygen.genRandomPassword(),
-  duration: 3 * 24 * 60 * 60 * 1000,
-  activeDuration: 5 * 60 * 1000
-}));
 
 app.get('/', (req, res) => {
   res.send();
@@ -46,19 +42,6 @@ app.listen(8000, () => {
 });
 
 app.post('/login', async (req, res) => {
-  if (req.FortDox.privateKey && req.FortDox.email) {
-    let encryptedMasterPassword;
-    try {
-      encryptedMasterPassword = (await users.getUser(req.FortDox.email)).password;
-      await decryptMasterPassword(req.FortDox.privateKey, encryptedMasterPassword);
-      res.send({
-        email: req.FortDox.email
-      });
-    } catch (error) {
-      console.error(error);
-      return res.status(error).send();
-    }
-  }
   let user;
   try {
     user = await users.getUser(req.body.email);
@@ -68,16 +51,52 @@ app.post('/login', async (req, res) => {
   }
   let privateKey;
   try {
-    privateKey = extractPrivateKey(req.headers.authorization);
+    privateKey = extract.privateKey(req.headers.authorization);
   } catch (error) {
     return res.status(400).send();
   }
+  let objToStore = {
+    privateKey,
+    sessionStart: moment()
+  };
   try {
     await decryptMasterPassword(privateKey, user.password);
-    req.FortDox.privateKey = privateKey;
-    req.FortDox.email = req.body.email;
+    objToStore = (await encryptPrivateKey(secret, JSON.stringify(objToStore))).toString('base64');
     return res.send({
-      email: user.email
+      email: user.email,
+      objToStore
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(401).send({
+      message: statusMsg.user[401]
+    });
+  }
+});
+
+app.post('/login/session', async (req, res) => {
+  let user;
+  try {
+    user = await users.getUser(req.body.email);
+  } catch (error) {
+    console.error(error);
+    return res.status(error).send();
+  }
+  let session;
+  try {
+    session = extract.sessionKey(req.headers.authorization);
+    session = JSON.parse(await decryptPrivateKey(secret, session));
+  } catch (error) {
+    return res.status(400).send();
+  }
+  if (!sessions.stillAlive(session.sessionStart)) {
+    return res.status(440).send();
+  }
+  try {
+    await decryptMasterPassword(session.privateKey, user.password);
+    return res.send({
+      email: user.email,
+      privateKey: session.privateKey
     });
   } catch (error) {
     console.error(error);
@@ -131,7 +150,7 @@ app.post('/register/confirm', async (req, res) => {
   let email = req.body.email;
   let privateKey;
   try {
-    privateKey = extractPrivateKey(req.headers.authorization);
+    privateKey = extract.privateKey(req.headers.authorization);
   } catch (error) {
     return res.status(400).send();
   }
@@ -198,7 +217,7 @@ app.post('/register/verify', async (req, res) => {
 app.post('/invite', async (req, res) => {
   let privateKey;
   try {
-    privateKey = extractPrivateKey(req.headers.authorization);
+    privateKey = extract.privateKey(req.headers.authorization);
   } catch (error) {
     return res.status(400).send('header');
   }
@@ -277,7 +296,7 @@ app.post('/invite/confirm', async (req, res) => {
   let uuid = req.body.uuid;
   let privateKey;
   try {
-    privateKey = extractPrivateKey(req.headers.authorization);
+    privateKey = extract.privateKey(req.headers.authorization);
   } catch (error) {
     return res.status(400).send();
   }
@@ -298,7 +317,7 @@ app.get('/document', async (req, res) => {
   let searchString = req.query.searchString;
   let privateKey;
   try {
-    privateKey = extractPrivateKey(req.headers.authorization);
+    privateKey = extract.privateKey(req.headers.authorization);
   } catch (error) {
     return res.status(400).send();
   }
@@ -341,7 +360,7 @@ app.post('/document', async (req, res) => {
   }
   let privateKey;
   try {
-    privateKey = extractPrivateKey(req.headers.authorization);
+    privateKey = extract.privateKey(req.headers.authorization);
   } catch (error) {
     return res.status(400).send();
   }
@@ -367,7 +386,7 @@ app.patch('/document', async (req, res) => {
   }
   let privateKey;
   try {
-    privateKey = extractPrivateKey(req.headers.authorization);
+    privateKey = extract.privateKey(req.headers.authorization);
   } catch (error) {
     return res.status(400).send();
   }

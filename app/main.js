@@ -1,4 +1,4 @@
-const {app, BrowserWindow, Menu, session} = require('electron');
+const {app, BrowserWindow, Menu} = require('electron');
 const path = require('path');
 const urlParser = require('url');
 const querystring = require('querystring');
@@ -37,6 +37,7 @@ async function createWindow() {
   win.loadURL(openingUrl);
 
   win.on('closed', () => {
+
     win = null;
   });
 

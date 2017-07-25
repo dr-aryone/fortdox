@@ -5,12 +5,35 @@ const {readStorage} = require('actions/utilities/storage');
 const embedPrivateKey = require('actions/utilities/embedPrivateKey');
 
 const loginAs = (email, organization) => {
-  return dispatch => {
+  return async dispatch => {
     dispatch({
-      type: 'LOGIN_AS',
+      type: 'CHECKING_LOCAL_STORAGE_START'
+    });
+    let session;
+    let response;
+    try {
+      session = localStorage.getItem(email);
+      response = await requestor.post(`${config.server}/login/session`, {
+        body: {
+          email
+        },
+        headers: embedPrivateKey(session)
+      });
+    } catch (error) {
+      return dispatch({
+        type: 'LOGIN_AS',
+        payload: {
+          email,
+          organization
+        }
+      });
+    }
+    return dispatch({
+      type: 'VERIFY_LOGIN_CREDS_SUCCESS',
       payload: {
-        email,
-        organization
+        privateKey: response.body.privateKey.toString('base64'),
+        email: email,
+        organization: organization
       }
     });
   };
@@ -22,7 +45,6 @@ const login = () => {
     dispatch({
       type: 'VERIFY_LOGIN_CREDS_START'
     });
-
     let state = getState();
     let email = state.login.get('email');
     let password = state.login.get('passwordInputValue');
@@ -43,9 +65,9 @@ const login = () => {
         error: true
       });
     }
-    
+    let response;
     try {
-      await requestor.post(`${config.server}/login`, {
+      response = await requestor.post(`${config.server}/login`, {
         body: {
           email
         },
@@ -69,7 +91,7 @@ const login = () => {
           });
       }
     }
-
+    localStorage[email] = response.body.objToStore;
     return dispatch({
       type: 'VERIFY_LOGIN_CREDS_SUCCESS',
       payload: {
