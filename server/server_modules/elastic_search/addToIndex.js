@@ -17,7 +17,11 @@ module.exports = client => {
         response = await client.index({
           index: organization.toLowerCase(),
           type: 'document',
-          body: query.body,
+          body: {
+            title: query.body.title,
+            text: query.body.text,
+            tags: query.body.tags
+          },
           refresh: true
         });
         return resolve(response);
