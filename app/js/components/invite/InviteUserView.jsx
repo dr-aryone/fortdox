@@ -20,7 +20,7 @@ const InviteUserView = ({fields, message, error, onChange, onSend, isLoading}) =
 
   return (
     <div className='container-fluid'>
-      <div className='col-sm-10 col-sm-offset-1'>
+      <div className='inner-container'>
         <LoaderOverlay display={isLoading} />
         <h1>Invite User</h1>
         <div className='box'>

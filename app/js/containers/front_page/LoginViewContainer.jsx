@@ -11,7 +11,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    loginAs: (email, organization) => {
+    loginAs: (email, organization, event) => {
+      event.preventDefault();
       dispatch(loginAs(email, organization));
     },
     toUserView: () => {

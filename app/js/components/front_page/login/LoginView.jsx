@@ -9,7 +9,14 @@ const LoginView = ({loginAs, toRegisterView, toUserView, message}) => {
   Object.entries(storage).forEach(([email, value]) => {
     Object.keys(value).forEach((organization) => {
       userList.push(
-        <div onClick={() => loginAs(email, organization)} key={email+organization}>
+        <div
+          tabIndex='0'
+          onKeyDown={(event) => {
+            if (event.keyCode === 13) loginAs(email, organization, event);
+          }}
+          onClick={(event) => loginAs(email, organization, event)}
+          key={email+organization}
+        >
           <h2>{organization}</h2>
           <h3>{email}</h3>
         </div>
