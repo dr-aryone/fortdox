@@ -26,7 +26,6 @@ function loadModels(directory) {
     });
 }
 Object.keys(db).forEach(function(modelName) {
-  //console.log(typeof db[modelName]);
   if (db[modelName].associate) {
     db[modelName].associate(db);
   }
