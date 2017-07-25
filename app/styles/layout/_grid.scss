@@ -33,10 +33,9 @@
   }
 }
 
-.col-sm-10 {
+.inner-container {
   width: percentage(10/12);
-}
-
-.col-sm-offset-1 {
   margin-left: percentage(1/12);
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
