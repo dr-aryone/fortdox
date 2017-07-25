@@ -1,3 +1,5 @@
+const {addTag} = require('./document');
+
 const inputChange = (inputName, inputValue) => {
   return (dispatch, getState) => {
     let state = getState();
@@ -17,10 +19,16 @@ const inputChange = (inputName, inputValue) => {
         type = 'INPUT_CHANGE_SEARCH';
         break;
       case 'CREATE_DOC_VIEW':
-        type = 'INPUT_CHANGE_CREATE_DOC';
+        if (inputName === 'tags') {
+          if (inputValue.slice(-1) === ' ') return dispatch(addTag());
+          type = 'INPUT_CHANGE_TAGS_CREATE_DOC';
+        } else type = 'INPUT_CHANGE_CREATE_DOC';
         break;
       case 'UPDATE_DOC_VIEW':
-        type = 'INPUT_CHANGE_UPDATE_DOC';
+        if (inputName === 'tags') {
+          if (inputValue.slice(-1) === ' ') return dispatch(addTag());
+          type = 'INPUT_CHANGE_TAGS_UPDATE_DOC';
+        } else type = 'INPUT_CHANGE_UPDATE_DOC';
         break;
       case 'INVITE_USER_VIEW':
         type = 'INPUT_CHANGE_INVITE_USER';

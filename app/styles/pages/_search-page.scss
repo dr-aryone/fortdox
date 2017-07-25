@@ -29,3 +29,15 @@
   right: 0;
   margin: 5%;
 }
+
+.search-item {
+  cursor: pointer;
+
+  .tag {
+    background-color: $background-color;
+    padding: 5px 10px;
+    margin-right: 5px;
+    border-radius: 16px;
+    display: inline-block;
+  }
+}

@@ -1,10 +1,10 @@
 const {encryptDocument} = require('../crypt/authentication/cryptDocument');
 
 module.exports = client => {
-  const addToIndex = (query, privateKey, encryptedMasterPassword, organization) => {
+  const addToIndex = (query, tags, privateKey, encryptedMasterPassword, organization) => {
     return new Promise(async (resolve, reject) => {
       let response;
-      let data = new Buffer(query.body.text);
+      let data = new Buffer(query.text);
       let encryptedData;
       try {
         encryptedData = await encryptDocument(data, privateKey, encryptedMasterPassword);
@@ -12,15 +12,15 @@ module.exports = client => {
         console.error(error);
         return reject(500);
       }
-      query.body.text = encryptedData.toString('base64');
+      query.text = encryptedData.toString('base64');
       try {
         response = await client.index({
           index: organization.toLowerCase(),
           type: 'document',
           body: {
-            title: query.body.title,
-            text: query.body.text,
-            tags: query.body.tags
+            title: query.title,
+            text: query.text,
+            tags: tags
           },
           refresh: true
         });
@@ -31,5 +31,6 @@ module.exports = client => {
       }
     });
   };
+
   return addToIndex;
 };
