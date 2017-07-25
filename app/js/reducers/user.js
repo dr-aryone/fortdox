@@ -15,6 +15,7 @@ const user = (state = initialState, action) => {
         organization: fromJS(action.payload.organization)
       });
     case 'LOGOUT':
+      localStorage.removeItem(state.get('email'));
       return initialState;
     default:
       return state;
