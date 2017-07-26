@@ -11,6 +11,7 @@ module.exports = client => {
         return reject(500);
       }
       query.updateQuery.text = encryptedText.toString('base64');
+      query.updateQuery['tags'] = query.tags;
       let response;
       try {
         response = await client.update({

@@ -24,13 +24,13 @@ const SearchView = ({
       <SearchItem
         title={item.getIn(['_source', 'title'])}
         text={item.getIn(['_source', 'text'])}
+        tags={item.getIn(['_source', 'tags'])}
         key={item.get('_id')}
         onUpdate={() => onUpdate(item.get('_id'))}
       />);
   });
 
   let pagination = renderPagination(currentIndex, paginationSearch, totalHits);
-
   let searchLength = totalHits ? (
     <p>{totalHits} search result{totalHits == 1 ? '' : 's'} found.</p>
   ) : null;

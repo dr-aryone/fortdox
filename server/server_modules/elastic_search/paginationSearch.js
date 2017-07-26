@@ -20,10 +20,6 @@ module.exports = client => {
                 'fuzzy': {
                   '_all': query.searchString
                 }
-              }, {
-                'terms': {
-                  'tags': query.tags
-                }
               }]
             }
           },

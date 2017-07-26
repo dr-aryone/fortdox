@@ -1,12 +1,13 @@
 const React = require('react');
 const SideNavItem = require('./SideNavItem');
 
-const SideNav = ({changeView, organization, logout}) => {
+const SideNav = ({changeView, organization, email, logout}) => {
   return (
     <div className='side-bar'>
       <div className='user-panel'>
         <i className='material-icons'>account_circle</i>
         <h2>{organization}</h2>
+        <h3>{email}</h3>
       </div>
       <ul className='side-nav'>
         {/* <SideNavItem text='Users' icon='person' /> */}
