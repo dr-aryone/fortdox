@@ -440,6 +440,17 @@ app.delete('/document', async (req,res) => {
   }
 });
 
+app.get('/tags', async (req, res) => {
+  let organization = req.query.organization;
+  let response;
+  try {
+    response = await es.getTags(organization);
+    return res.send(response);
+  } catch (error) {
+    return res.status(500).send();
+  }
+});
+
 app.get('/activation-redirect', (req, res) => {
   res.sendFile(__dirname + '/redirect.html');
 });
