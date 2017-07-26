@@ -1,6 +1,12 @@
 const React = require('react');
+const {List} = require('immutable');
 
-const SearchItem = ({title, text, tags, onUpdate}) => {
+const SearchItem = ({
+  title,
+  text,
+  tags = List(),
+  onUpdate
+}) => {
   let tagList = [];
   tags.forEach((item, i) => {
     tagList.push(<div className='tag' key={i}>{item}</div>);
