@@ -1,14 +1,14 @@
 const {connect} = require('react-redux');
 const App = require('components/App');
-
 const mapStateToProps = state => {
   return {
-    view: state.navigation.get('currentView') 
+    view: state.navigation.get('currentView')
   };
 };
 
 const mapDispatchToProps = () => {
-  return {};
+  return {
+  };
 };
 
 const AppContainer = connect(
