@@ -14,7 +14,7 @@ module.exports = client => {
                     store: true
                   },
                   text: {type: 'text'},
-                  tags: {type: 'text'}
+                  tags: {type: 'keyword'}
                 }
               }
             }

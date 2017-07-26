@@ -15,7 +15,6 @@ module.exports = client => {
             }
           }
         });
-        debugger;
         return resolve(response);
       } catch (error) {
         console.error(error);

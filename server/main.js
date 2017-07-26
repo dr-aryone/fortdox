@@ -92,7 +92,6 @@ app.post('/login/session', async (req, res) => {
   if (!sessions.stillAlive(session.sessionStart)) {
     return res.status(440).send();
   }
-  debugger;
   try {
     await decryptMasterPassword(session.privateKey, user.password);
     return res.send({
@@ -315,7 +314,6 @@ app.post('/invite/confirm', async (req, res) => {
 });
 
 app.get('/document', async (req, res) => {
-  debugger;
   let searchString = req.query.searchString;
   let privateKey;
   try {
@@ -383,13 +381,14 @@ app.post('/document', async (req, res) => {
 });
 
 app.patch('/document', async (req, res) => {
-  if (req.body.updateQuery.title.trim() === '' || req.body.updateQuery.text.trim() === '') {
+  if (req.body.updateQuery.title.trim() === '' || req.body.updateQuery.crypt_text.trim() === '') {
     return res.status(400).send({msg: 'Bad format, title and/or text field(s) cannot be empty'});
   }
   let privateKey;
   try {
     privateKey = extract.privateKey(req.headers.authorization);
   } catch (error) {
+    console.error(error);
     return res.status(400).send();
   }
   let response;

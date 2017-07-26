@@ -5,12 +5,12 @@ module.exports = client => {
     return new Promise(async (resolve, reject) => {
       let encryptedText;
       try {
-        encryptedText = await encryptDocument(query.updateQuery.text, privateKey, encryptedMasterPassword);
+        encryptedText = await encryptDocument(query.updateQuery.crypt_text, privateKey, encryptedMasterPassword);
       } catch (error) {
         console.err(error);
         return reject(500);
       }
-      query.updateQuery.text = encryptedText.toString('base64');
+      query.updateQuery.crypt_text = encryptedText.toString('base64');
       query.updateQuery['tags'] = query.tags;
       let response;
       try {
