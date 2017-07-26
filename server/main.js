@@ -92,11 +92,12 @@ app.post('/login/session', async (req, res) => {
   if (!sessions.stillAlive(session.sessionStart)) {
     return res.status(440).send();
   }
+  debugger;
   try {
     await decryptMasterPassword(session.privateKey, user.password);
     return res.send({
       email: user.email,
-      privateKey: session.privateKey
+      privateKey: Buffer.from(session.privateKey).toString('base64')
     });
   } catch (error) {
     console.error(error);
@@ -314,6 +315,7 @@ app.post('/invite/confirm', async (req, res) => {
 });
 
 app.get('/document', async (req, res) => {
+  debugger;
   let searchString = req.query.searchString;
   let privateKey;
   try {
