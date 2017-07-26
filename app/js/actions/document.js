@@ -249,13 +249,19 @@ const removeTag = tagIndex => {
 };
 
 const getOldTags = () => {
-  return async dispatch => {
+  return async (dispatch, getState) => {
     dispatch({
       type: 'GET_OLD_TAGS_START'
     });
+    let state = getState();
+    let organization = state.user.get('organization');
     let response;
     try {
-      response = await requestor.get(`${config.server}/tags`);
+      response = await requestor.get(`${config.server}/tags`, {
+        query: {
+          organization
+        }
+      });
     } catch (error) {
       console.error(error);
       switch (error.status) {
