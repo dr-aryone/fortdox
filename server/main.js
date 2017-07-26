@@ -23,7 +23,7 @@ const moment = require('moment');
 const secret = keygen.genRandomPassword();
 const job = new CronJob('*/5 * * * *', async () => {
   try {
-    await cleanup(2, es);
+    await cleanup(30, es);
   } catch (error) {
     console.error(error);
   }
