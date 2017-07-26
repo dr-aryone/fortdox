@@ -7,15 +7,15 @@ module.exports = client => {
           index: organization.toLowerCase(),
           body: {
             aggs: {
-              all_indexes: {
+              test: {
                 terms: {
-                  field: 'tags'
+                  field: 'tags',
+                  size: 1000
                 }
               }
             }
           }
         });
-        debugger;
         return resolve(response);
       } catch (error) {
         console.error(error);
