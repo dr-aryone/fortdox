@@ -23,6 +23,8 @@ const DocumentForm = ({onSubmit, docFields, tags, onChange, onAddTag, onRemoveTa
     );
   });
 
+  let tagSuggestionList = [];
+
   return (
     <form onSubmit={onSubmit} className='document'>
       <div className='main-panel box'>
@@ -47,6 +49,13 @@ const DocumentForm = ({onSubmit, docFields, tags, onChange, onAddTag, onRemoveTa
               }
             }}
           />
+          <div className='tag-dropdown'>
+            <div className='tag-suggestions'>
+              <div className='tag-inner'>
+                {tagSuggestionList}
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </form>
