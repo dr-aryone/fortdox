@@ -1,12 +1,13 @@
 const {connect} = require('react-redux');
 const UpdateDocView = require('components/document/UpdateDocView');
 const action = require('actions');
-const {updateDocument} = require('actions/document');
-const {deleteDocument} = require('actions/document');
+const {updateDocument, deleteDocument, addTag, removeTag, getOldTags} = require('actions/document');
 
 const mapStateToProps = (state) => {
   return {
     docFields: state.updateDocument.get('docFields'),
+    tags: state.updateDocument.get('tags'),
+    error: state.updateDocument.get('error'),
     isLoading: state.updateDocument.get('isLoading')
   };
 };
@@ -25,6 +26,15 @@ const mapDispatchToProps = dispatch => {
     },
     onDelete: () => {
       dispatch(deleteDocument());
+    },
+    onAddTag: () => {
+      dispatch(addTag());
+    },
+    onRemoveTag: tagIndex => {
+      dispatch(removeTag(tagIndex));
+    },
+    onMount: () => {
+      dispatch(getOldTags());
     }
   };
 };

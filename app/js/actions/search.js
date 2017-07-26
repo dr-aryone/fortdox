@@ -2,32 +2,6 @@ const requestor = require('@edgeguideab/client-request');
 const config = require('../../config.json');
 const embedPrivateKey = require('actions/utilities/embedPrivateKey');
 
-const setUpdateDocument = id => {
-  return async (dispatch, getState) => {
-    let state = getState();
-    let searchResult = state.search.get('result').toJS();
-    let doc = searchResult.find((item) => {
-      return item._id === id;
-    });
-    let docFields = {};
-    Object.entries(doc._source).forEach(([key, value]) => {
-      let label = key == 'title' ? 'Title' : 'Text';
-      docFields[key] = {
-        value,
-        label,
-        error: null
-      };
-    });
-    dispatch({
-      type: 'SET_UPDATE_DOCUMENT',
-      payload: {
-        documentToUpdate: doc,
-        docFields
-      }
-    });
-  };
-};
-
 const search = () => {
   return async (dispatch, getState) => {
     dispatch({
@@ -68,14 +42,13 @@ const search = () => {
           });
       }
     }
-
     return dispatch({
       type: 'SEARCH_SUCCESS',
       payload: {
         index: index,
         searchResult: response.body.searchResult,
         totalHits: response.body.totalHits,
-        searchString: searchString
+        searchString: searchString,
       }
     });
   };
@@ -134,4 +107,4 @@ const paginationSearch = index => {
   };
 };
 
-module.exports = {setUpdateDocument, search, paginationSearch};
+module.exports = {search, paginationSearch};

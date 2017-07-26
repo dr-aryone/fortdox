@@ -2,6 +2,7 @@ const {connect} = require('react-redux');
 const SearchView = require('components/search/SearchView');
 const action = require('actions');
 const search = require('actions/search');
+const {setUpdateDocument} = require('actions/document');
 
 const mapStateToProps = state => {
   return {
@@ -25,7 +26,7 @@ const mapDispatchToProps = dispatch => {
       dispatch(search.search());
     },
     onUpdate: id => {
-      dispatch(search.setUpdateDocument(id));
+      dispatch(setUpdateDocument(id));
     },
     paginationSearch: index => {
       dispatch(search.paginationSearch(index));

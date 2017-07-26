@@ -1,11 +1,13 @@
 const {connect} = require('react-redux');
 const CreateDocView = require('components/document/CreateDocView');
 const action = require('actions');
-const {createDocument} = require('actions/document');
+const {createDocument, addTag, removeTag, getOldTags} = require('actions/document');
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
     docFields: state.createDocument.get('docFields'),
+    tags: state.createDocument.get('tags'),
+    error: state.createDocument.get('error'),
     isLoading: state.createDocument.get('isLoading')
   };
 };
@@ -18,6 +20,15 @@ const mapDispatchToProps = dispatch => {
     onCreate: (event) => {
       event.preventDefault();
       dispatch(createDocument());
+    },
+    onAddTag: () => {
+      dispatch(addTag());
+    },
+    onRemoveTag: tag => {
+      dispatch(removeTag(tag));
+    },
+    onMount: () => {
+      dispatch(getOldTags());
     }
   };
 };
