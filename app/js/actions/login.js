@@ -31,7 +31,7 @@ const loginAs = (email, organization) => {
     return dispatch({
       type: 'VERIFY_LOGIN_CREDS_SUCCESS',
       payload: {
-        privateKey: response.body.privateKey.toString('base64'),
+        privateKey: response.body.privateKey,
         email: email,
         organization: organization
       }

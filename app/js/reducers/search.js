@@ -12,7 +12,7 @@ const initialState = fromJS({
   isLoading: false
 });
 
-const register = (state = initialState, action) => {
+const search = (state = initialState, action) => {
   switch (action.type) {
     case 'INPUT_CHANGE_SEARCH':
       return state.set(action.inputName, fromJS(action.inputValue));
@@ -60,4 +60,4 @@ const register = (state = initialState, action) => {
   }
 };
 
-module.exports = register;
+module.exports = search;
