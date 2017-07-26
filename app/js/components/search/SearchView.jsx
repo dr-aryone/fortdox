@@ -23,7 +23,7 @@ const SearchView = ({
     searchResult.push(
       <SearchItem
         title={item.getIn(['_source', 'title'])}
-        text={item.getIn(['_source', 'text'])}
+        text={item.getIn(['_source', 'crypt_text'])}
         tags={item.getIn(['_source', 'tags'])}
         key={item.get('_id')}
         onUpdate={() => onUpdate(item.get('_id'))}

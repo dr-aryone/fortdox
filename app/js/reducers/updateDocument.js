@@ -28,7 +28,7 @@ const form = (state = initialState, action) => {
     case 'GET_OLD_TAGS_SUCCESS':
       return state
         .setIn(['tags', 'oldTags'], fromJS(action.payload))
-        .set('isLoading', true);
+        .set('isLoading', false);
     case 'INPUT_CHANGE_TAGS_UPDATE_DOC':
       return state.setIn(['tags', 'value'], fromJS(action.inputValue));
     case 'UPDATE_DOC_ADD_TAG_SUCCESS':

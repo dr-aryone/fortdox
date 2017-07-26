@@ -23,7 +23,7 @@ const moment = require('moment');
 const secret = keygen.genRandomPassword();
 const job = new CronJob('*/5 * * * *', async () => {
   try {
-    await cleanup(2, es);
+    await cleanup(30, es);
   } catch (error) {
     console.error(error);
   }
@@ -96,7 +96,7 @@ app.post('/login/session', async (req, res) => {
     await decryptMasterPassword(session.privateKey, user.password);
     return res.send({
       email: user.email,
-      privateKey: session.privateKey
+      privateKey: Buffer.from(session.privateKey).toString('base64')
     });
   } catch (error) {
     console.error(error);
@@ -381,13 +381,14 @@ app.post('/document', async (req, res) => {
 });
 
 app.patch('/document', async (req, res) => {
-  if (req.body.updateQuery.title.trim() === '' || req.body.updateQuery.text.trim() === '') {
+  if (req.body.updateQuery.title.trim() === '' || req.body.updateQuery.crypt_text.trim() === '') {
     return res.status(400).send({msg: 'Bad format, title and/or text field(s) cannot be empty'});
   }
   let privateKey;
   try {
     privateKey = extract.privateKey(req.headers.authorization);
   } catch (error) {
+    console.error(error);
     return res.status(400).send();
   }
   let response;

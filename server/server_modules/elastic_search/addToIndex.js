@@ -16,10 +16,10 @@ module.exports = client => {
       try {
         response = await client.index({
           index: organization.toLowerCase(),
-          type: 'document',
+          type: 'fortdox_document',
           body: {
             title: query.title,
-            text: query.text,
+            crypt_text: query.text,
             tags: tags
           },
           refresh: true
