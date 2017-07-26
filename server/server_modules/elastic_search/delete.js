@@ -1,5 +1,4 @@
 module.exports = client => {
-
   const deleteDocument = (query) => {
     return new Promise(async (resolve, reject) => {
       let response;

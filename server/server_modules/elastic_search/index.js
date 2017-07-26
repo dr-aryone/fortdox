@@ -8,6 +8,7 @@ const deleteDocument = require('./delete.js')(client);
 const createIndex = require('./createIndex.js')(client);
 const {paginationSearch} = require('./paginationSearch')(client);
 const deleteIndex = require('./deleteIndex.js')(client);
+const getTags = require('./getTags.js')(client);
 
 module.exports = {
   client,
@@ -16,5 +17,6 @@ module.exports = {
   deleteDocument,
   createIndex,
   paginationSearch,
-  deleteIndex
+  deleteIndex,
+  getTags
 };
