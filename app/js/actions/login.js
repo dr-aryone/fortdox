@@ -4,6 +4,20 @@ const config = require('../../config.json');
 const {readStorage} = require('actions/utilities/storage');
 const embedPrivateKey = require('actions/utilities/embedPrivateKey');
 
+const directLogin = () => {
+  return async dispatch => {
+    if (Object.keys(localStorage).length !== 1) {
+      return dispatch({
+        type: 'DIRECT_LOGIN_FAILED'
+      });
+    }
+    let email = Object.keys(localStorage)[0];
+    const user = readStorage();
+    const organization = Object.keys(user[email])[0];
+    return dispatch(loginAs(email, organization));
+  };
+};
+
 const loginAs = (email, organization) => {
   return async dispatch => {
     dispatch({
@@ -103,4 +117,4 @@ const login = () => {
   };
 };
 
-module.exports = {login, loginAs};
+module.exports = {login, loginAs, directLogin};

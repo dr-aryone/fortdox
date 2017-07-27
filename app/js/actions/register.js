@@ -66,7 +66,6 @@ const activateOrganizaton = () => {
         payload: 'Verification of the link failed.'
       });
     }
-
     let response;
     try {
       response = await requestor.post(`${config.server}/register/confirm`, {
