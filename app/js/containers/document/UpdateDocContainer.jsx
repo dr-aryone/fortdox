@@ -27,8 +27,8 @@ const mapDispatchToProps = dispatch => {
     onDelete: () => {
       dispatch(deleteDocument());
     },
-    onAddTag: () => {
-      dispatch(addTag());
+    onAddTag: tag => {
+      dispatch(addTag(tag));
     },
     onRemoveTag: tagIndex => {
       dispatch(removeTag(tagIndex));

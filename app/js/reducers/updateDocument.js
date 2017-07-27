@@ -5,8 +5,10 @@ let initialState = fromJS({
   docFields: {},
   tags: {
     value: '',
+    error: null,
     list: [],
-    oldTags: []
+    suggested: [],
+    old: []
   },
   error: null,
   isLoading: false

@@ -16,6 +16,7 @@ class CreateDocView extends React.Component {
       tags,
       error,
       onChange,
+      onSuggestTags,
       onCreate,
       onAddTag,
       onRemoveTag,
@@ -32,6 +33,7 @@ class CreateDocView extends React.Component {
             docFields={docFields}
             tags={tags}
             onChange={onChange}
+            onSuggestTags={onSuggestTags}
             onAddTag={onAddTag}
             onRemoveTag={onRemoveTag}
             onSubmit={onCreate}
