@@ -13,7 +13,6 @@ const ipcRenderer = window.require('electron').ipcRenderer;
 const url = window.require('url');
 const querystring = window.require('querystring');
 let queryParameters = querystring.parse(url.parse(window.location.href).query);
-const remote =window.require('electron').remote;
 
 if (queryParameters.activateOrganizationCode) {
   store.dispatch({
@@ -44,11 +43,6 @@ ipcRenderer.on('activate-user', (event, data) => {
     payload: data
   });
 });
-
-// remote.getCurrentWindow().on('close', () => {
-//   const state = store.getState().user;
-//   localStorage.fortDoxState = JSON.stringify(state);
-// });
 
 
 ReactDOM.render(
