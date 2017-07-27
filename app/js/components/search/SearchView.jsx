@@ -31,7 +31,7 @@ const SearchView = ({
   });
 
   let pagination = renderPagination(currentIndex, paginationSearch, totalHits);
-  let searchLength = totalHits ? (
+  let searchLength = totalHits || totalHits === 0 ? (
     <p>{totalHits} search result{totalHits == 1 ? '' : 's'} found.</p>
   ) : null;
 
