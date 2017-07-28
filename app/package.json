@@ -2,17 +2,21 @@
   "name": "FortDox",
   "productName": "FortDox",
   "version": "1.0.0",
+  "author" : "EdgeGuide <johan.callvik@gmail.com>",
   "main": "main.js",
+  "homepage": "",
   "scripts": {
     "start": "electron .",
-    "package-mac": "electron-packager . --overwrite --platform=darwin --arch=x64 --out=release-builds"
+    "mac": "build --mac",
+    "win": "build --win",
+    "linux": "build --linux",
+    "all": "build -mwl"
   },
   "dependencies": {
     "@edgeguide/password-check": "^1.2.1",
     "@edgeguideab/client-request": "^1.4.5",
     "@edgeguideab/password-check": "^1.2.4",
     "@edgeguideab/requestor": "^1.1.2",
-    "electron": "^1.7.4",
     "electron-devtools-installer": "^2.2.0",
     "immutable": "^3.8.1",
     "react-redux": "^5.0.5",
@@ -30,6 +34,8 @@
     "babel-preset-stage-2": "^6.22.0",
     "babelify": "^7.3.0",
     "browserify": "^14.0.0",
+    "electron": "latest",
+    "electron_builder": "latest",
     "electron-packager": "^8.7.2",
     "electron-react-devtools": "^0.4.0",
     "electron-rebuild": "^1.5.11",
@@ -55,11 +61,34 @@
     "watchify": "^3.9.0"
   },
   "build": {
-    "protocols": {
-      "name": "FortDox",
-      "schemes": [
-        "FortDox"
-      ]
-    }
-  }
+    "appId": "FortDox",
+    "files": [
+      "build/*",
+      "index.html",
+      "main.js",
+      "config.json",
+      "local_storage.json",
+      "aes.js",
+      "package.json"],
+    "dmg": {
+     "contents": [
+       {
+         "x": 110,
+         "y": 150
+       },
+       {
+         "x": 240,
+         "y": 150,
+         "type": "link",
+         "path": "/Applications"
+       }
+     ]
+   },
+   "linux": {
+     "target":"deb"
+   },
+   "win": {
+     "target": "NSIS"
+   }
+ }
 }
