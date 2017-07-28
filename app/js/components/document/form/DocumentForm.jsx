@@ -2,31 +2,77 @@ const React = require('react');
 const DocumentInputField = require('./DocumentInputField');
 const DocumentTextArea = require('./DocumentTextArea');
 const DocumentTags = require('./DocumentTags');
+const BottomPanel = require('./BottomPanel');
 
 const DocumentForm = ({
   onSubmit,
   docFields,
-  tags,
   onChange,
   onSuggestTags,
   onAddTag,
   onRemoveTag,
+  onAddField,
   children
 }) => {
   let fields = [];
-  docFields.entrySeq().forEach((entry) => {
-    if (entry[0] == 'title') fields.push(
-      <DocumentInputField input={entry} onChange={onChange} key={entry[0]} />
-    );
-    else fields.push(
-      <DocumentTextArea input={entry} onChange={onChange} key={entry[0]} />
-    );
-  });
-
+  let title = docFields.get('title');
+  let encryptedTextFields = docFields.get('encryptedTexts');
+  let textFields = docFields.get('texts');
+  let tags = docFields.get('tags');
+  let size = encryptedTextFields.size + textFields.size;
+  fields.push(<DocumentInputField input={title} type='title' key='title' onChange={onChange} />);
+  for (let i = 0; i < size; i++) {
+    if (encryptedTextFields.size === 0) {
+      fields.push(
+        <DocumentTextArea
+          input={textFields.first()}
+          type='text'
+          key={i}
+          onChange={onChange}
+        />
+      );
+      textFields = textFields.shift();
+    } else if (textFields.size === 0) {
+      fields.push(
+        <DocumentTextArea
+          input={encryptedTextFields.first()}
+          type='encryptedText'
+          key={i}
+          onChange={onChange}
+        />
+      );
+      encryptedTextFields = encryptedTextFields.shift();
+    } else {
+      let encryptedID = encryptedTextFields.first().get('id');
+      let textID = textFields.first().get('id');
+      if (encryptedID < textID) {
+        fields.push(
+          <DocumentTextArea
+            input={encryptedTextFields.first()}
+            type='encryptedText'
+            key={i}
+            onChange={onChange}
+          />
+        );
+        encryptedTextFields = encryptedTextFields.shift();
+      } else {
+        fields.push(
+          <DocumentTextArea
+            input={textFields.first()}
+            type='text'
+            key={i}
+            onChange={onChange}
+          />
+        );
+        textFields = textFields.shift();
+      }
+    }
+  }
   return (
     <form onSubmit={onSubmit} className='document'>
       <div className='main-panel box'>
         {fields}
+        <BottomPanel onAddField={onAddField} />
         {children}
       </div>
       <div className='side-panel box'>

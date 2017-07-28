@@ -20,9 +20,9 @@ class UpdateDocView extends React.Component {
       onChange,
       onUpdate,
       toSearchView,
+      onSuggestTags,
       isLoading
     } = this.props;
-
 
     return (
       <div className='container-fluid'>
@@ -37,6 +37,7 @@ class UpdateDocView extends React.Component {
             onAddTag={onAddTag}
             onRemoveTag={onRemoveTag}
             onSubmit={onUpdate}
+            onSuggestTags={onSuggestTags}
           >
             <button onClick={onUpdate} type='submit'>Update</button>
             <button onClick={toSearchView} type='button'>Back</button>
