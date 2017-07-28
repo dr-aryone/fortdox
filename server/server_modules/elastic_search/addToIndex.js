@@ -1,4 +1,4 @@
-const {encryptDocument} = require('../crypt/authentication/cryptDocument');
+const {encryptDocument} = require('../encryption/authentication/documentEncryption');
 
 module.exports = client => {
   const addToIndex = (query, tags, privateKey, encryptedMasterPassword, organization) => {
@@ -19,7 +19,7 @@ module.exports = client => {
           type: 'fortdox_document',
           body: {
             title: query.title,
-            crypt_text: query.text,
+            encrypted_text: query.text,
             tags: tags
           },
           refresh: true

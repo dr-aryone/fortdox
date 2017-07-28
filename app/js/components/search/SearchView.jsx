@@ -23,7 +23,7 @@ const SearchView = ({
     searchResult.push(
       <SearchItem
         title={item.getIn(['_source', 'title'])}
-        text={item.getIn(['_source', 'crypt_text'])}
+        text={item.getIn(['_source', 'encrypted_text'])}
         tags={item.getIn(['_source', 'tags'])}
         key={item.get('_id')}
         onUpdate={() => onUpdate(item.get('_id'))}
@@ -59,7 +59,7 @@ const SearchView = ({
         {searchResult}
         {pagination}
         <div className='doc-button'>
-          <button className='round' onClick={toDocView}>
+          <button className='round large' onClick={toDocView}>
             <i className='material-icons'>add</i>
           </button>
         </div>

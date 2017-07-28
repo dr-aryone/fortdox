@@ -19,7 +19,11 @@ button {
 
   &.round {
     border-radius: 50%;
-    padding: 20px;
+    padding: 10px;
+
+    &.large {
+      padding: 20px;
+    }
   }
 
   &:hover {

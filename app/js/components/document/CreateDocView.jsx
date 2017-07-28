@@ -5,21 +5,21 @@ const ErrorBox = require('components/general/ErrorBox');
 
 class CreateDocView extends React.Component {
   componentWillMount () {
-    if (this.props.onMount) {
-      this.props.onMount(this.props);
-    }
+    // if (this.props.onMount) {
+    //   this.props.onMount(this.props);
+    // }
   }
 
   render () {
     let {
       docFields,
-      tags,
       error,
+      onAddTag,
+      onRemoveTag,
       onChange,
       onSuggestTags,
       onCreate,
-      onAddTag,
-      onRemoveTag,
+      onAddField,
       isLoading
     } = this.props;
 
@@ -31,12 +31,12 @@ class CreateDocView extends React.Component {
           <h1>Create Document</h1>
           <DocumentForm
             docFields={docFields}
-            tags={tags}
             onChange={onChange}
             onSuggestTags={onSuggestTags}
             onAddTag={onAddTag}
             onRemoveTag={onRemoveTag}
             onSubmit={onCreate}
+            onAddField={onAddField}
           >
             <button onClick={onCreate} type='submit'>Create</button>
           </DocumentForm>

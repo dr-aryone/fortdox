@@ -7,6 +7,7 @@ let initialState = fromJS({
     value: '',
     error: null,
     list: [],
+    activeTag: -1,
     suggested: [],
     old: []
   },
@@ -29,12 +30,27 @@ const form = (state = initialState, action) => {
       });
     case 'GET_OLD_TAGS_SUCCESS':
       return state
-        .setIn(['tags', 'oldTags'], fromJS(action.payload))
+        .setIn(['tags', 'old'], fromJS(action.payload))
         .set('isLoading', false);
     case 'INPUT_CHANGE_TAGS_UPDATE_DOC':
-      return state.setIn(['tags', 'value'], fromJS(action.inputValue));
+      return state.set('tags', state.get('tags').merge({
+        value: fromJS(action.value),
+        suggested: fromJS(action.suggestedTags),
+        error: null
+      }));
     case 'UPDATE_DOC_ADD_TAG_SUCCESS':
-      return state.setIn(['tags', 'value'], '').setIn(['tags', 'list'], fromJS(action.payload));
+      return state.set('tags', state.get('tags').merge({
+        value: '',
+        list: fromJS(action.payload),
+        suggested: [],
+        error: null
+      }));
+    case 'UPDATE_DOC_ADD_TAG_FAIL':
+      return state.set('tags', state.get('tags').merge({
+        value: '',
+        error: fromJS(action.payload),
+        suggested: []
+      }));
     case 'UPDATE_DOC_REMOVE_TAG_SUCCESS':
       return state.setIn(['tags', 'list'], fromJS(action.payload));
     case 'SET_UPDATE_DOCUMENT':

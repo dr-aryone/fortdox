@@ -1,12 +1,10 @@
 const {connect} = require('react-redux');
 const CreateDocView = require('components/document/CreateDocView');
-const {inputChange} = require('actions');
-const {createDocument, addTag, removeTag, getOldTags, suggestTags, setTagIndex} = require('actions/document');
+const doc = require('actions/document');
 
 const mapStateToProps = state => {
   return {
     docFields: state.createDocument.get('docFields'),
-    tags: state.createDocument.get('tags'),
     error: state.createDocument.get('error'),
     isLoading: state.createDocument.get('isLoading')
   };
@@ -14,27 +12,30 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    onChange: (event) => {
-      dispatch(inputChange(event.target.name, event.target.value));
+    onChange: (event, type) => {
+      dispatch(doc.docInputChange(event.target.name, event.target.value, type));
     },
     onSuggestTags: event => {
-      dispatch(suggestTags(event.target.value));
+      dispatch(doc.suggestTags(event.target.value));
     },
     onCreate: (event) => {
       event.preventDefault();
-      dispatch(createDocument());
+      dispatch(doc.createDocument());
     },
     onAddTag: tag => {
-      dispatch(addTag(tag));
+      dispatch(doc.addTag(tag));
     },
     onRemoveTag: tag => {
-      dispatch(removeTag(tag));
+      dispatch(doc.removeTag(tag));
     },
     setTagIndex: index => {
-      dispatch(setTagIndex(index));
+      dispatch(doc.setTagIndex(index));
     },
     onMount: () => {
-      dispatch(getOldTags());
+      dispatch(doc.getOldTags());
+    },
+    onAddField: field => {
+      dispatch(doc.addField(field));
     }
   };
 };
