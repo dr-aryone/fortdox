@@ -7,9 +7,10 @@ module.exports = client => {
           index: organization.toLowerCase(),
           body: {
             aggs: {
-              all_indexes: {
+              distinct_tags: {
                 terms: {
-                  field: 'tags'
+                  field: 'tags',
+                  size: 10000
                 }
               }
             }

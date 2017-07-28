@@ -189,34 +189,34 @@ const deleteDocument = () => {
   };
 };
 
-const addTag = () => {
+const addTag = tag => {
   return (dispatch, getState) => {
     dispatch({
       type: 'ADD_TAG_START'
     });
     let state = getState();
-    let currentView = state.navigation.get('currentView');
-    let tagList;
-    let tag;
-    switch (currentView) {
+    let currentView;
+    let prefix;
+    switch (state.navigation.get('currentView')) {
       case 'CREATE_DOC_VIEW':
-        tagList = state.createDocument.getIn(['tags', 'list']);
-        tag = state.createDocument.getIn(['tags', 'value']);
+        currentView = 'createDocument';
+        prefix = 'CREATE_DOC';
         break;
       case 'UPDATE_DOC_VIEW':
-        tagList = state.updateDocument.getIn(['tags', 'list']);
-        tag = state.updateDocument.getIn(['tags', 'value']);
+        currentView = 'updateDocument';
+        prefix = 'UPDATE_DOC';
         break;
     }
+    let tagList = state[currentView].getIn(['tags', 'list']);
+    if (tag === undefined) tag = state[currentView].getIn(['tags', 'value']);
     if (tag.trim() === '') return;
-    tagList = tagList.push(tag);
-
-    if (currentView === 'CREATE_DOC_VIEW') return dispatch({
-      type: 'CREATE_DOC_ADD_TAG_SUCCESS',
-      payload: tagList
+    if (tagList.contains(tag)) return dispatch({
+      type: `${prefix}_ADD_TAG_FAIL`,
+      payload: `${tag} has already been added.`
     });
-    else return dispatch({
-      type: 'UPDATE_DOC_ADD_TAG_SUCCESS',
+    tagList = tagList.push(tag);
+    return dispatch({
+      type: `${prefix}_ADD_TAG_SUCCESS`,
       payload: tagList
     });
   };
@@ -228,23 +228,24 @@ const removeTag = tagIndex => {
       type: 'REMOVE_TAG_START'
     });
     let state = getState();
-    let currentView = state.navigation.get('currentView');
-    let tagList;
-    if (currentView === 'CREATE_DOC_VIEW') {
-      tagList = state.createDocument.getIn(['tags', 'list']);
-      tagList = tagList.splice(tagIndex, 1);
-      return dispatch({
-        type: 'CREATE_DOC_REMOVE_TAG_SUCCESS',
-        payload: tagList
-      });
-    } else {
-      tagList = state.updateDocument.getIn(['tags', 'list']);
-      tagList = tagList.splice(tagIndex, 1);
-      return dispatch({
-        type: 'UPDATE_DOC_REMOVE_TAG_SUCCESS',
-        payload: tagList
-      });
+    let currentView;
+    let prefix;
+    switch (state.navigation.get('currentView')) {
+      case 'CREATE_DOC_VIEW':
+        currentView = 'createDocument';
+        prefix = 'CREATE_DOC';
+        break;
+      case 'UPDATE_DOC_VIEW':
+        currentView = 'updateDocument';
+        prefix = 'UPDATE_DOC';
+        break;
     }
+    let tagList = state[currentView].getIn(['tags', 'list']);
+    tagList = tagList.splice(tagIndex, 1);
+    return dispatch({
+      type: `${prefix}_REMOVE_TAG_SUCCESS`,
+      payload: tagList
+    });
   };
 };
 
@@ -275,9 +276,50 @@ const getOldTags = () => {
           });
       }
     }
+    let tagList = [];
+    response.body.forEach((tag) => tagList.push(tag.key));
     return dispatch({
       type: 'GET_OLD_TAGS_SUCCESS',
-      payload: response.body
+      payload: tagList.sort()
+    });
+  };
+};
+
+const suggestTags = inputValue => {
+  return (dispatch, getState) => {
+    if (inputValue.slice(-1) === ' ') return dispatch(addTag());
+    let state = getState();
+    let currentView;
+    let prefix;
+    switch (state.navigation.get('currentView')) {
+      case 'CREATE_DOC_VIEW':
+        currentView = 'createDocument';
+        prefix = 'CREATE_DOC';
+        break;
+      case 'UPDATE_DOC_VIEW':
+        currentView = 'updateDocument';
+        prefix = 'UPDATE_DOC';
+        break;
+    }
+    let oldTags = state[currentView].getIn(['tags', 'old']);
+    let suggestedTags = [];
+    oldTags.some((tag) => {
+      if (tag.startsWith(inputValue)) suggestedTags.push(tag);
+      if (suggestedTags.length === 5) return;
+    });
+    return dispatch({
+      type: `INPUT_CHANGE_TAGS_${prefix}`,
+      value: inputValue,
+      suggestedTags
+    });
+  };
+};
+
+const setTagIndex = index => {
+  return dispatch => {
+    return dispatch({
+      type: 'CREATE_DOCUMENT_SET_TAG_INDEX',
+      payload: index
     });
   };
 };
@@ -289,5 +331,7 @@ module.exports = {
   deleteDocument,
   addTag,
   removeTag,
-  getOldTags
+  getOldTags,
+  suggestTags,
+  setTagIndex
 };

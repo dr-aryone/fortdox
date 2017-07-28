@@ -1,7 +1,7 @@
 const {connect} = require('react-redux');
 const CreateDocView = require('components/document/CreateDocView');
-const action = require('actions');
-const {createDocument, addTag, removeTag, getOldTags} = require('actions/document');
+const {inputChange} = require('actions');
+const {createDocument, addTag, removeTag, getOldTags, suggestTags, setTagIndex} = require('actions/document');
 
 const mapStateToProps = state => {
   return {
@@ -15,17 +15,23 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     onChange: (event) => {
-      dispatch(action.inputChange(event.target.name, event.target.value));
+      dispatch(inputChange(event.target.name, event.target.value));
+    },
+    onSuggestTags: event => {
+      dispatch(suggestTags(event.target.value));
     },
     onCreate: (event) => {
       event.preventDefault();
       dispatch(createDocument());
     },
-    onAddTag: () => {
-      dispatch(addTag());
+    onAddTag: tag => {
+      dispatch(addTag(tag));
     },
     onRemoveTag: tag => {
       dispatch(removeTag(tag));
+    },
+    setTagIndex: index => {
+      dispatch(setTagIndex(index));
     },
     onMount: () => {
       dispatch(getOldTags());

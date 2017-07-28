@@ -15,8 +15,11 @@ let initialState = fromJS({
   },
   tags: {
     value: '',
+    error: null,
     list: [],
-    oldTags: []
+    activeTag: -1,
+    suggested: [],
+    old: []
   },
   error: null,
   isLoading: false,
@@ -29,15 +32,39 @@ const form = (state = initialState, action) => {
         .setIn(['docFields', action.inputName, 'value'], fromJS(action.inputValue))
         .setIn(['docFields', action.inputName, 'error'], null);
     case 'INPUT_CHANGE_TAGS_CREATE_DOC':
-      return state.setIn(['tags', 'value'], fromJS(action.inputValue));
+      return state.set('tags', state.get('tags').merge({
+        value: fromJS(action.value),
+        suggested: fromJS(action.suggestedTags),
+        error: null
+      }));
     case 'CREATE_DOC_ADD_TAG_SUCCESS':
-      return state.setIn(['tags', 'value'], '').setIn(['tags', 'list'], fromJS(action.payload));
+      return state.set('tags', state.get('tags').merge({
+        value: '',
+        list: fromJS(action.payload),
+        suggested: [],
+        error: null
+      }));
+    case 'CREATE_DOC_ADD_TAG_FAIL':
+      return state.set('tags', state.get('tags').merge({
+        value: '',
+        error: fromJS(action.payload),
+        suggested: []
+      }));
     case 'CREATE_DOC_REMOVE_TAG_SUCCESS':
       return state.setIn(['tags', 'list'], fromJS(action.payload));
-    case 'GET_OLD_TAGS_SUCCESS':
-      return state.setIn(['tags', 'oldTags'], fromJS(action.payload));
+    case 'GET_OLD_TAGS_START':
+      return state.set('isLoading', true);
     case 'GET_OLD_TAGS_ERROR':
-      return state.set('error', fromJS(action.payload));
+      return state.merge({
+        error: fromJS(action.payload),
+        isLoading: false
+      });
+    case 'GET_OLD_TAGS_SUCCESS':
+      return state
+        .setIn(['tags', 'old'], fromJS(action.payload))
+        .set('isLoading', false);
+    case 'CREATE_DOCUMENT_SET_TAG_INDEX':
+      return state.setIn(['tags', 'activeTag'], fromJS(action.payload));
     case 'CREATE_DOCUMENT_START':
       return state.set('isLoading', true);
     case 'CREATE_DOCUMENT_ERROR':

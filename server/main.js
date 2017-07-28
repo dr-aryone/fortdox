@@ -444,7 +444,7 @@ app.get('/tags', async (req, res) => {
   let response;
   try {
     response = await es.getTags(organization);
-    return res.send(response);
+    return res.send(response.aggregations.distinct_tags.buckets);
   } catch (error) {
     return res.status(500).send();
   }

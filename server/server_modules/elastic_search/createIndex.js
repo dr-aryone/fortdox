@@ -8,13 +8,19 @@ module.exports = client => {
             mappings: {
               fortdox_document: {
                 properties: {
-                  title: {type: 'text'},
+                  title: {
+                    type: 'text'
+                  },
                   crypt_text: {
                     type: 'binary',
                     store: true
                   },
-                  text: {type: 'text'},
-                  tags: {type: 'keyword'}
+                  text: {
+                    type: 'text'
+                  },
+                  tags: {
+                    type: 'keyword'
+                  }
                 }
               }
             }
