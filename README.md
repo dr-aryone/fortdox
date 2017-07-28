@@ -103,3 +103,19 @@ Insert the following line into the crontab
 > 0 0 * * * /path/to/server/backup.sh
 
 Save and quit. The crontab will now run the backup code every night at 00:00.
+
+#Building installer
+
+Install electron-builder via: `npm install electron-builder`,
+
+Build for:
+
+All platforms: `npm run all`
+
+Mac: `npm run mac`
+
+Linux: `npm run linux`
+
+Windows: `npm run win`
+
+(Currently only works if you build on a Mac, for other platform support chek out [this](https://github.com/electron-userland/electron-builder/wiki/Multi-Platform-Build))
