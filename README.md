@@ -117,3 +117,5 @@ Mac: `npm run mac`
 Linux: `npm run linux`
 
 Windows: `npm run win`
+
+(Currently only works if you build on a Mac, for other platform support chek out [this](https://github.com/electron-userland/electron-builder/wiki/Multi-Platform-Build))
