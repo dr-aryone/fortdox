@@ -6,6 +6,9 @@ const embedPrivateKey = require('actions/utilities/embedPrivateKey');
 
 const directLogin = () => {
   return async dispatch => {
+    dispatch({
+      type: 'DIRECT_LOGIN_START'
+    });
     if (Object.keys(localStorage).length !== 1) {
       return dispatch({
         type: 'DIRECT_LOGIN_FAILED'
