@@ -45,20 +45,8 @@ const createDocument = () => {
     let docFields = state.createDocument.get('docFields');
     let privateKey = state.user.get('privateKey');
     let email = state.user.get('email');
-    let emptyFields = checkEmptyFields(docFields);
-    if (emptyFields.length > 0) {
-      let newDocFields = {};
-      emptyFields.forEach((key) => {
-        newDocFields[key[0]] = {
-          error: `Please enter a ${key[1].get('label').toLowerCase()}.`
-        };
-      });
 
-      return dispatch({
-        type: 'CREATE_DOCUMENT_ERROR',
-        payload: newDocFields
-      });
-    }
+
 
     let doc = {};
     docFields.entrySeq().forEach((entry) => doc[entry[0]] = entry[1].get('value'));
@@ -208,8 +196,8 @@ const addTag = tag => {
         prefix = 'UPDATE_DOC';
         break;
     }
-    let tagList = state[currentView].getIn(['tags', 'list']);
-    if (tag === undefined) tag = state[currentView].getIn(['tags', 'value']);
+    let tagList = state[currentView].getIn(['docFields', 'tags', 'list']);
+    if (tag === undefined) tag = state[currentView].getIn(['docFields', 'tags', 'value']);
     if (tag.trim() === '') return;
     if (tagList.contains(tag)) return dispatch({
       type: `${prefix}_ADD_TAG_FAIL`,
@@ -241,7 +229,7 @@ const removeTag = tagIndex => {
         prefix = 'UPDATE_DOC';
         break;
     }
-    let tagList = state[currentView].getIn(['tags', 'list']);
+    let tagList = state[currentView].getIn(['docFields', 'tags', 'list']);
     tagList = tagList.splice(tagIndex, 1);
     return dispatch({
       type: `${prefix}_REMOVE_TAG_SUCCESS`,
@@ -302,7 +290,7 @@ const suggestTags = inputValue => {
         prefix = 'UPDATE_DOC';
         break;
     }
-    let oldTags = state[currentView].getIn(['tags', 'old']);
+    let oldTags = state[currentView].getIn(['docFields', 'tags', 'old']);
     let suggestedTags = [];
     oldTags.some((tag) => {
       if (tag.startsWith(inputValue)) suggestedTags.push(tag);
