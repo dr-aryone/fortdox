@@ -44,13 +44,13 @@ const form = (state = initialState, action) => {
         state.getIn(['docFields', 'texts'])
           .update(action.index, field => field.set('value', fromJS(action.value))));
     case 'INPUT_CHANGE_TAGS_CREATE_DOC':
-      return state.set('tags', state.get('tags').merge({
+      return state.setIn(['docFields', 'tags'], state.getIn(['docFields', 'tags']).merge({
         value: fromJS(action.value),
         suggested: fromJS(action.suggestedTags),
         error: null
       }));
     case 'CREATE_DOC_ADD_TAG_SUCCESS':
-      return state.set('tags', state.get('tags').merge({
+      return state.setIn(['docFields', 'tags'], state.getIn(['docFields', 'tags']).merge({
         value: '',
         list: fromJS(action.payload),
         suggested: [],
@@ -63,7 +63,7 @@ const form = (state = initialState, action) => {
         suggested: []
       }));
     case 'CREATE_DOC_REMOVE_TAG_SUCCESS':
-      return state.setIn(['tags', 'list'], fromJS(action.payload));
+      return state.setIn(['docFields', 'tags', 'list'], fromJS(action.payload));
     case 'GET_OLD_TAGS_START':
       return state.set('isLoading', true);
     case 'GET_OLD_TAGS_ERROR':
