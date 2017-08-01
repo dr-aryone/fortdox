@@ -40,6 +40,9 @@ const mapDispatchToProps = dispatch => {
     },
     onAddField: field => {
       dispatch(doc.addField(field));
+    },
+    onRemoveField: id => {
+      dispatch(doc.removeField(id));
     }
   };
 };

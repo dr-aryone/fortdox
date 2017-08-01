@@ -20,6 +20,7 @@ class UpdateDocView extends React.Component {
       onSuggestTags,
       onUpdate,
       onAddField,
+      onRemoveField,
       isLoading,
       toSearchView,
     } = this.props;
@@ -38,9 +39,10 @@ class UpdateDocView extends React.Component {
             onSuggestTags={onSuggestTags}
             onSubmit={onUpdate}
             onAddField={onAddField}
+            onRemoveField={onRemoveField}
           >
-            <button onClick={onUpdate} type='submit'>Update</button>
             <button onClick={toSearchView} type='button'>Back</button>
+            <button onClick={onUpdate} type='submit'>Update</button>
           </DocumentForm>
         </div>
       </div>

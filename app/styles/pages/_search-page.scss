@@ -33,6 +33,11 @@
 .search-item {
   cursor: pointer;
 
+  .highlight {
+    background-color: lighten($primary-color, 10%);
+    padding: 0px 5px;
+  }
+
   .tag {
     background-color: $background-color;
     padding: 5px 10px;

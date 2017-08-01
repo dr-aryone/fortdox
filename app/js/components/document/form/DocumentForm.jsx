@@ -78,7 +78,9 @@ const DocumentForm = ({
       <div className='main-panel box'>
         {fields}
         <BottomPanel onAddField={onAddField} />
-        {children}
+        <div className='buttons'>
+          {children}
+        </div>
       </div>
       <div className='side-panel box'>
         <DocumentTags
