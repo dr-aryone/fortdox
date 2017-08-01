@@ -5,26 +5,34 @@ module.exports = client => {
       let response;
       try {
         response = await client.search({
-          'index': query.organization.toLowerCase(),
-          'body': {
-            'query': {
-              'bool': {
-                'should': [{
-                  'query_string': {
-                    'query': `*${query.searchString}*~`
+          index: query.organization.toLowerCase(),
+          body: {
+            query: {
+              bool: {
+                should: [{
+                  query_string: {
+                    query: `*${query.searchString}*~`
                   }
                 }, {
-                  'regexp': {
-                    '_all': '.*' + query.searchString + '.*'
+                  regexp: {
+                    _all: '.*' + query.searchString + '.*'
                   }
                 }, {
-                  'fuzzy': {
-                    '_all': query.searchString
+                  fuzzy: {
+                    _all: query.searchString
                   }
                 }]
               }
             },
-            'from': from
+            highlight: {
+              pre_tags: ['<b>'],
+              post_tags: ['</b>'],
+              fields: {
+                'texts.text': {},
+              },
+              require_field_match: false
+            },
+            from: from
           }
         });
         return resolve(response);
