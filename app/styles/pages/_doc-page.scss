@@ -76,6 +76,11 @@
       cursor: pointer;
     }
   }
+
+  .buttons {
+    display: flex;
+    justify-content: space-between;
+  }
 }
 
 .tag-dropdown {

@@ -25,10 +25,13 @@ module.exports = client => {
               }
             },
             highlight: {
-              pre_tags: ['<b>'],
-              post_tags: ['</b>'],
+              pre_tags: ['%%#%%'],
+              post_tags: ['%%#%%'],
               fields: {
-                'texts.text': {},
+                '*': {
+                  fragment_size: 250,
+                  number_of_fragments: 1
+                }
               },
               require_field_match: false
             },
