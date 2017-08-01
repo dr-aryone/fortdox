@@ -1,17 +1,19 @@
-const {app, BrowserWindow, Menu} = require('electron');
+const {app, BrowserWindow} = require('electron');
 const path = require('path');
 const urlParser = require('url');
 const querystring = require('querystring');
 const { default: installExtension, REDUX_DEVTOOLS } = require('electron-devtools-installer');
 const config = require('./config.json');
-// const {systemPreferences} = require('electron');
-// systemPreferences.setUserDefault('NSDisabledDictationMenuItem', 'boolean', true);
-// systemPreferences.setUserDefault('NSDisabledCharacterPaletteMenuItem', 'boolean', true);
+const autoUpdater = require('electron-updater').autoUpdater;
+const log = require('electron-log');
+log.transports.file.level = 'info';
 let win;
 let activation = {
   type: '',
   code: null
 };
+
+
 
 async function createWindow() {
   win = new BrowserWindow({width: 1280, height: 720});
@@ -40,64 +42,34 @@ async function createWindow() {
 
     win = null;
   });
-
-  // var template = [{
-  //   label: 'Application',
-  //   submenu: [{
-  //     label: `About ${config.name}`,
-  //     role: 'orderFrontStandardAboutPanel'
-  //   }, {
-  //     label: 'Refresh',
-  //     accelerator: 'CmdOrCtrl+R',
-  //     role: 'reload'
-  //   }, {
-  //     label: 'Open DevTools',
-  //     accelerator: 'CmdOrCtrl+Alt+I',
-  //     role: 'toggledevtools'
-  //   }, {
-  //     label: 'Quit',
-  //     accelerator: 'CmdOrCtrl+Q',
-  //     click: () => {
-  //       app.quit();
-  //     }
-  //   }]}, {
-  //   label: 'Edit',
-  //   submenu: [{
-  //     label: 'Undo',
-  //     accelerator: 'CmdOrCtrl+Z',
-  //     role: 'undo'
-  //   }, {
-  //     label: 'Redo',
-  //     accelerator: 'CmdOrCtrl+Y',
-  //     role: 'redo'
-  //   }, {
-  //     type: 'separator'
-  //   }, {
-  //     label: 'Cut',
-  //     accelerator: 'CmdOrCtrl+X',
-  //     role: 'cut'
-  //   }, {
-  //     label: 'Copy',
-  //     accelerator: 'CmdOrCtrl+C',
-  //     role: 'copy'
-  //   }, {
-  //     label: 'Paste',
-  //     accelerator: 'CmdOrCtrl+V',
-  //     role: 'paste'
-  //   }, {
-  //     label: 'Select All',
-  //     accelerator: 'CmdOrCtrl+A',
-  //     role: 'selectAll'
-  //   }]}
-  //];
-
-  //Menu.setApplicationMenu(Menu.buildFromTemplate(template));
 }
+
 
 app.setAsDefaultProtocolClient(config.name);
 
-app.on('ready', createWindow);
+app.on('ready',  () => {
+  createWindow();
+  autoUpdater.checkForUpdates();
+  autoUpdater.setFeedURL(`http://localhost:8000/updater?version=${app.getVersion()}&platform=${process.platform}`);
+});
 
+autoUpdater.on('checking-for-update', () => {
+  log.info('Checking for updates..');
+});
+
+autoUpdater.on('update-available', (info) => {
+  log.info('Update available!! \n' + info);
+  autoUpdater.downloadUpdate();
+});
+
+autoUpdater.on('update-not-available', () => {
+  log.info('No update available');
+});
+
+autoUpdater.on('update-downloaded', (event, info) => {
+  log.info('Update downloaded!! \n' + info);
+  autoUpdater.quitAndInstall();
+});
 app.on('open-url', (event, url) => {
   activation.type = urlParser.parse(url).hostname;
   activation.code = querystring.parse(urlParser.parse(url).query).code;
