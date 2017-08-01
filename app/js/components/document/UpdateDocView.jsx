@@ -13,15 +13,15 @@ class UpdateDocView extends React.Component {
   render () {
     let {
       docFields,
-      tags,
       error,
       onAddTag,
       onRemoveTag,
       onChange,
-      onUpdate,
-      toSearchView,
       onSuggestTags,
-      isLoading
+      onUpdate,
+      onAddField,
+      isLoading,
+      toSearchView,
     } = this.props;
 
     return (
@@ -32,12 +32,12 @@ class UpdateDocView extends React.Component {
           <h1>Update Document</h1>
           <DocumentForm
             docFields={docFields}
-            tags={tags}
             onChange={onChange}
             onAddTag={onAddTag}
             onRemoveTag={onRemoveTag}
-            onSubmit={onUpdate}
             onSuggestTags={onSuggestTags}
+            onSubmit={onUpdate}
+            onAddField={onAddField}
           >
             <button onClick={onUpdate} type='submit'>Update</button>
             <button onClick={toSearchView} type='button'>Back</button>

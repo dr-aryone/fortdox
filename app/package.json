@@ -2,7 +2,7 @@
   "name": "FortDox",
   "productName": "FortDox",
   "version": "1.0.0",
-  "author" : "EdgeGuide <johan.callvik@gmail.com>",
+  "author": "EdgeGuide <johan.callvik@gmail.com>",
   "main": "main.js",
   "homepage": "",
   "scripts": {
@@ -35,10 +35,10 @@
     "babelify": "^7.3.0",
     "browserify": "^14.0.0",
     "electron": "latest",
-    "electron_builder": "latest",
     "electron-packager": "^8.7.2",
     "electron-react-devtools": "^0.4.0",
     "electron-rebuild": "^1.5.11",
+    "electron_builder": "latest",
     "eslint": "^3.15.0",
     "eslint-plugin-react": "^6.9.0",
     "gulp": "^3.9.1",
@@ -51,6 +51,7 @@
     "gulp-plumber": "^1.1.0",
     "gulp-ruby-sass": "^2.1.1",
     "gulp-uglify": "^2.1.2",
+    "marked": "^0.3.6",
     "pump": "^1.0.2",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
@@ -69,26 +70,27 @@
       "config.json",
       "local_storage.json",
       "aes.js",
-      "package.json"],
+      "package.json"
+    ],
     "dmg": {
-     "contents": [
-       {
-         "x": 110,
-         "y": 150
-       },
-       {
-         "x": 240,
-         "y": 150,
-         "type": "link",
-         "path": "/Applications"
-       }
-     ]
-   },
-   "linux": {
-     "target":"deb"
-   },
-   "win": {
-     "target": "NSIS"
-   }
- }
+      "contents": [
+        {
+          "x": 110,
+          "y": 150
+        },
+        {
+          "x": 240,
+          "y": 150,
+          "type": "link",
+          "path": "/Applications"
+        }
+      ]
+    },
+    "linux": {
+      "target": "deb"
+    },
+    "win": {
+      "target": "NSIS"
+    }
+  }
 }

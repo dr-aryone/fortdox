@@ -342,7 +342,9 @@ app.get('/document', async (req, res) => {
     return res.status(404).send();
   }
   try {
-    response.hits.hits = await decryptDocuments(response.hits.hits, privateKey, encryptedMasterPassword);
+    for (let doc of response.hits.hits) {
+      doc._source.encryptedTexts = await decryptDocuments(doc._source.encryptedTexts, privateKey, encryptedMasterPassword);
+    }
   } catch (error) {
     console.error(error);
     return res.status(500).send({msg: 'Internal Server Error'});
@@ -354,9 +356,6 @@ app.get('/document', async (req, res) => {
 });
 
 app.post('/document', async (req, res) => {
-  if (req.body.doc.title.trim() === '' || req.body.doc.text.trim() === '') {
-    return res.status(400).send({msg: 'Bad format, title and/or text field(s) cannot be empty'});
-  }
   let privateKey;
   try {
     privateKey = extract.privateKey(req.headers.authorization);
@@ -369,20 +368,17 @@ app.post('/document', async (req, res) => {
     encryptedMasterPassword = (await users.getUser(req.body.email)).password;
     organization = await users.getOrganizationName(req.body.email);
   } catch (error) {
-    res.status(404).send();
+    return res.status(404).send();
   }
   try {
-    res.send(await es.addToIndex(req.body.doc, req.body.tags, privateKey, encryptedMasterPassword, organization));
+    return res.send(await es.addToIndex(req.body.doc, privateKey, encryptedMasterPassword, organization));
   } catch (error) {
     console.error(error);
-    res.send(500).send(error);
+    return res.send(500).send(error);
   }
 });
 
 app.patch('/document', async (req, res) => {
-  if (req.body.updateQuery.title.trim() === '' || req.body.updateQuery.encrypted_text.trim() === '') {
-    return res.status(400).send({msg: 'Bad format, title and/or text field(s) cannot be empty'});
-  }
   let privateKey;
   try {
     privateKey = extract.privateKey(req.headers.authorization);
@@ -393,29 +389,20 @@ app.patch('/document', async (req, res) => {
   let response;
   let email = req.body.email;
   let encryptedMasterPassword;
-  let expectations = expect({
-    index: 'string',
-    type: 'string',
-    id: 'string',
-    updateQuery: 'object'
-  }, req.body);
-  if (!expectations.wereMet()) {
-    res.status(400).send({msg: 'Bad data format, please priovide atleast index, type, id'});
-  } else {
-    try {
-      encryptedMasterPassword = (await users.getUser(email)).password;
-    } catch (error) {
-      console.error(error);
-      return res.status(404).send();
-    }
-    try {
-      response = await es.update(req.body, privateKey, encryptedMasterPassword);
-      res.send(response);
-    } catch (error) {
-      console.error(error);
-      res.status(500).send({msg: 'Internal Server Error'});
-    }
+  try {
+    encryptedMasterPassword = (await users.getUser(email)).password;
+  } catch (error) {
+    console.error(error);
+    return res.status(404).send();
   }
+  try {
+    response = await es.update(req.body, privateKey, encryptedMasterPassword);
+    res.send(response);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({msg: 'Internal Server Error'});
+  }
+
 });
 
 app.delete('/document', async (req,res) => {
