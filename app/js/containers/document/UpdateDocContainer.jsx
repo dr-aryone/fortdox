@@ -1,7 +1,7 @@
 const {connect} = require('react-redux');
 const UpdateDocView = require('components/document/UpdateDocView');
 const action = require('actions');
-const {updateDocument, deleteDocument, addTag, removeTag, getOldTags} = require('actions/document');
+const {updateDocument, deleteDocument, addTag, removeTag, getOldTags, suggestTags} = require('actions/document');
 
 const mapStateToProps = (state) => {
   return {
@@ -16,6 +16,9 @@ const mapDispatchToProps = dispatch => {
   return {
     onChange: (event) => {
       dispatch(action.inputChange(event.target.name, event.target.value));
+    },
+    onSuggestTags: event => {
+      dispatch(suggestTags(event.target.value));
     },
     onUpdate: (event) => {
       event.preventDefault();

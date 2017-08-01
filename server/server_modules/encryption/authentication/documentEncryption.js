@@ -24,7 +24,7 @@ const decryptDocuments = (encryptedDataList, privateKey, encryptedMasterPassword
       return reject(500);
     }
     encryptedDataList.map((entry) => {
-      entry._source.crypt_text = aes.decrypt(masterPassword, new Buffer(entry._source.crypt_text, 'base64')).toString();
+      entry._source.encrypted_text = aes.decrypt(masterPassword, new Buffer(entry._source.encrypted_text, 'base64')).toString();
     });
 
     return resolve(encryptedDataList);

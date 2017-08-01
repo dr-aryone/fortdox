@@ -2,6 +2,7 @@ const requestor = require('@edgeguideab/client-request');
 const config = require('../../config.json');
 const checkEmptyFields = require('actions/utilities/checkEmptyFields');
 const embedPrivateKey = require('actions/utilities/embedPrivateKey');
+const {fromJS} = require('immutable');
 
 const setUpdateDocument = id => {
   return (dispatch, getState) => {
@@ -44,20 +45,8 @@ const createDocument = () => {
     let docFields = state.createDocument.get('docFields');
     let privateKey = state.user.get('privateKey');
     let email = state.user.get('email');
-    let emptyFields = checkEmptyFields(docFields);
-    if (emptyFields.length > 0) {
-      let newDocFields = {};
-      emptyFields.forEach((key) => {
-        newDocFields[key[0]] = {
-          error: `Please enter a ${key[1].get('label').toLowerCase()}.`
-        };
-      });
 
-      return dispatch({
-        type: 'CREATE_DOCUMENT_ERROR',
-        payload: newDocFields
-      });
-    }
+
 
     let doc = {};
     docFields.entrySeq().forEach((entry) => doc[entry[0]] = entry[1].get('value'));
@@ -207,8 +196,8 @@ const addTag = tag => {
         prefix = 'UPDATE_DOC';
         break;
     }
-    let tagList = state[currentView].getIn(['tags', 'list']);
-    if (tag === undefined) tag = state[currentView].getIn(['tags', 'value']);
+    let tagList = state[currentView].getIn(['docFields', 'tags', 'list']);
+    if (tag === undefined) tag = state[currentView].getIn(['docFields', 'tags', 'value']);
     if (tag.trim() === '') return;
     if (tagList.contains(tag)) return dispatch({
       type: `${prefix}_ADD_TAG_FAIL`,
@@ -240,7 +229,7 @@ const removeTag = tagIndex => {
         prefix = 'UPDATE_DOC';
         break;
     }
-    let tagList = state[currentView].getIn(['tags', 'list']);
+    let tagList = state[currentView].getIn(['docFields', 'tags', 'list']);
     tagList = tagList.splice(tagIndex, 1);
     return dispatch({
       type: `${prefix}_REMOVE_TAG_SUCCESS`,
@@ -301,7 +290,7 @@ const suggestTags = inputValue => {
         prefix = 'UPDATE_DOC';
         break;
     }
-    let oldTags = state[currentView].getIn(['tags', 'old']);
+    let oldTags = state[currentView].getIn(['docFields', 'tags', 'old']);
     let suggestedTags = [];
     oldTags.some((tag) => {
       if (tag.startsWith(inputValue)) suggestedTags.push(tag);
@@ -324,6 +313,77 @@ const setTagIndex = index => {
   };
 };
 
+const addField = field => {
+  return (dispatch, getState) => {
+    let state = getState();
+    let nextID = state.createDocument.getIn(['docFields', 'nextID']);
+    let fields;
+    let newField;
+    switch (field) {
+      case 'NEW_ENCRYPTED_TEXT':
+        fields = state.createDocument.getIn(['docFields', 'encryptedTexts']);
+        newField = {
+          value: '',
+          label: 'Encrypted Text',
+          error: null,
+          id: nextID
+        };
+        fields = fields.push(fromJS(newField));
+        return dispatch({
+          type: 'ADD_NEW_ENCRYPTED_TEXT_FIELD',
+          payload: fields,
+          nextID: nextID+1
+        });
+      case 'NEW_TEXT':
+        fields = state.createDocument.getIn(['docFields', 'texts']);
+        newField = {
+          value: '',
+          label: 'Text',
+          error: null,
+          id: nextID
+        };
+        fields = fields.push(fromJS(newField));
+        return dispatch({
+          type: 'ADD_NEW_TEXT_FIELD',
+          payload: fields,
+          nextID: nextID+1
+        });
+    }
+  };
+};
+
+const docInputChange = (inputID, inputValue, type) => {
+  return (dispatch, getState) => {
+    let state = getState();
+    let fields;
+    let index;
+    switch (type) {
+      case 'title':
+        return dispatch({
+          type: 'INPUT_CHANGE_TITLE',
+          payload: inputValue
+        });
+      case 'encryptedText':
+        fields = state.createDocument.getIn(['docFields', 'encryptedTexts']);
+        index = fields.findIndex(field => field.get('id') == inputID);
+        return dispatch({
+          type: 'INPUT_CHANGE_ENCRYPTED_TEXT',
+          index,
+          value: inputValue
+        });
+      case 'text': {
+        fields = state.createDocument.getIn(['docFields', 'texts']);
+        index = fields.findIndex(field => field.get('id') == inputID);
+        return dispatch({
+          type: 'INPUT_CHANGE_TEXT',
+          index,
+          value: inputValue
+        });
+      }
+    }
+  };
+};
+
 module.exports = {
   setUpdateDocument,
   createDocument,
@@ -333,5 +393,7 @@ module.exports = {
   removeTag,
   getOldTags,
   suggestTags,
-  setTagIndex
+  setTagIndex,
+  addField,
+  docInputChange
 };

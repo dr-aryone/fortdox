@@ -2,15 +2,15 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 const users = require('./server_modules/users');
-const keygen = require('./server_modules/crypt/keys/keygen');
+const keygen = require('./server_modules/encryption/keys/keygen');
 const orgs = require('./server_modules/organizations');
 const statusMsg = require('./statusMsg.json');
 const es = require('./server_modules/elastic_search');
-const {decryptDocuments} = require('./server_modules/crypt/authentication/cryptDocument');
-const {decryptMasterPassword} = require('./server_modules/crypt/keys/cryptMasterPassword');
-const {encryptMasterPassword} = require('./server_modules/crypt/keys/cryptMasterPassword');
-const {encryptPrivateKey} = require('./server_modules/crypt/authentication/cryptPrivateKey');
-const {decryptPrivateKey} = require('./server_modules/crypt/authentication/cryptPrivateKey');
+const {decryptDocuments} = require('./server_modules/encryption/authentication/documentEncryption');
+const {decryptMasterPassword} = require('./server_modules/encryption/keys/cryptMasterPassword');
+const {encryptMasterPassword} = require('./server_modules/encryption/keys/cryptMasterPassword');
+const {encryptPrivateKey} = require('./server_modules/encryption/authentication/privateKeyEncryption');
+const {decryptPrivateKey} = require('./server_modules/encryption/authentication/privateKeyEncryption');
 const mailer = require('./server_modules/mailer');
 const expect = require('@edgeguideab/expect');
 const uuidv1 = require('uuid/v1');
@@ -30,7 +30,6 @@ const job = new CronJob('*/5 * * * *', async () => {
 });
 const yaml = require('js-yaml');
 const fs = require('fs');
-
 
 job.start();
 
@@ -385,7 +384,7 @@ app.post('/document', async (req, res) => {
 });
 
 app.patch('/document', async (req, res) => {
-  if (req.body.updateQuery.title.trim() === '' || req.body.updateQuery.crypt_text.trim() === '') {
+  if (req.body.updateQuery.title.trim() === '' || req.body.updateQuery.encrypted_text.trim() === '') {
     return res.status(400).send({msg: 'Bad format, title and/or text field(s) cannot be empty'});
   }
   let privateKey;
