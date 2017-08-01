@@ -111,7 +111,6 @@ const form = (state = initialState, action) => {
         isLoading: false
       });
     case 'CREATE_DOC_NEW_ENCRYPTED_TEXT_FIELD':
-      debugger;
       return state
         .setIn(['docFields', 'encryptedTexts'], fromJS(action.payload))
         .setIn(['docFields', 'nextID'], fromJS(action.nextID));
@@ -119,6 +118,10 @@ const form = (state = initialState, action) => {
       return state
         .setIn(['docFields', 'texts'], fromJS(action.payload))
         .setIn(['docFields', 'nextID'], fromJS(action.nextID));
+    case 'CREATE_DOC_REMOVE_FIELD':
+      return state
+        .setIn(['docFields', 'encryptedTexts'], fromJS(action.encryptedTexts))
+        .setIn(['docFields', 'texts'], fromJS(action.texts));
     case 'CREATE_DOCUMENT_SUCCESS':
     case 'CHANGE_VIEW':
       return initialState;

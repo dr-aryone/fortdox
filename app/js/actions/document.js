@@ -373,6 +373,24 @@ const addField = field => {
   };
 };
 
+const removeField = id => {
+  return (dispatch, getState) => {
+    let state = getState();
+    let {view, prefix} = getPrefix(state.navigation.get('currentView'));
+    let encryptedTexts = state[view].getIn(['docFields', 'encryptedTexts']);
+    let texts = state[view].getIn(['docFields', 'texts']);
+    let encryptedIndex = encryptedTexts.findIndex(field => field.get('id') === id);
+    let textIndex = texts.findIndex(field => field.get('id') === id);
+    if (encryptedIndex !== -1) encryptedTexts = encryptedTexts.splice(encryptedIndex, 1);
+    if (textIndex !== -1) texts = texts.splice(textIndex, 1);
+    return dispatch({
+      type: `${prefix}_REMOVE_FIELD`,
+      encryptedTexts,
+      texts
+    });
+  };
+};
+
 const docInputChange = (inputID, inputValue, type) => {
   return (dispatch, getState) => {
     let state = getState();
@@ -451,5 +469,6 @@ module.exports = {
   suggestTags,
   setTagIndex,
   addField,
+  removeField,
   docInputChange
 };

@@ -20,6 +20,7 @@ class CreateDocView extends React.Component {
       onSuggestTags,
       onCreate,
       onAddField,
+      onRemoveField,
       isLoading
     } = this.props;
 
@@ -37,6 +38,7 @@ class CreateDocView extends React.Component {
             onSuggestTags={onSuggestTags}
             onSubmit={onCreate}
             onAddField={onAddField}
+            onRemoveField={onRemoveField}
           >
             <button onClick={onCreate} type='submit'>Create</button>
           </DocumentForm>

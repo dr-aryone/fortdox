@@ -118,6 +118,10 @@ const form = (state = initialState, action) => {
       return state
         .setIn(['docFields', 'texts'], fromJS(action.payload))
         .setIn(['docFields', 'nextID'], fromJS(action.nextID));
+    case 'UPDATE_DOC_REMOVE_FIELD':
+      return state
+        .setIn(['docFields', 'encryptedTexts'], fromJS(action.encryptedTexts))
+        .setIn(['docFields', 'texts'], fromJS(action.texts));
     case 'UPDATE_DOCUMENT_SUCCESS':
     case 'UPDATE_DOC_VIEW_TO_DEFAULT':
     case 'CHANGE_VIEW':
