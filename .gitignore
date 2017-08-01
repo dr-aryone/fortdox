@@ -7,3 +7,5 @@ app/js/local_storage/encryptedPrivateKey
 app/dist
 app/release-build
 *.log
+server/distribution/*
+!server/distribution/.keepme
