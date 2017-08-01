@@ -28,15 +28,19 @@ const job = new CronJob('*/5 * * * *', async () => {
     console.error(error);
   }
 });
+const yaml = require('js-yaml');
+const fs = require('fs');
 
 
 job.start();
 
 app.use(bodyParser.json());
 
-app.get('/', (req, res) => {
-  res.send();
+app.get('/updater/:request', (req, res) => {
+  res.send(fs.readFileSync('./distribution/latest-mac.yml'));
 });
+
+app.use('/updater/*',express.static('distribution'));
 
 app.listen(8000, () => {
 });
