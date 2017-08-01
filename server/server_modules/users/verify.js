@@ -1,5 +1,5 @@
 const db = require('app/models');
-const {decryptMasterPassword} = require('app/crypt/keys/cryptMasterPassword');
+const {decryptMasterPassword} = require('app/encryption/keys/cryptMasterPassword');
 
 const verifyUser = function(email, privateKey) {
   return new Promise(async (resolve, reject) => {

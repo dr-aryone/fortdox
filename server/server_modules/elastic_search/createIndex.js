@@ -11,12 +11,29 @@ module.exports = client => {
                   title: {
                     type: 'text'
                   },
-                  crypt_text: {
-                    type: 'binary',
-                    store: true
+                  encrypted_text: {
+                    properties: {
+                      text: {
+                        type: 'binary',
+                        store: true
+                      },
+                      id: {
+                        type: 'binary',
+                        store: true
+                      }
+                    }
                   },
                   text: {
-                    type: 'text'
+                    properties: {
+                      text: {
+                        type: 'text',
+                        store: true
+                      },
+                      id: {
+                        type: 'binary',
+                        store: true
+                      }
+                    }
                   },
                   tags: {
                     type: 'keyword'

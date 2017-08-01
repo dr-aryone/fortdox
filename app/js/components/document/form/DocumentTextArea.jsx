@@ -1,17 +1,17 @@
 const React = require('react');
 
-const DocumentTextArea = ({input, onChange}) => {
+const DocumentTextArea = ({input, type, onChange}) => {
   return (
-    <div className={`input-field ${input[1].get('error') ? 'warning' : ''}`}>
-      <label>{input[1].get('label')}</label>
+    <div className={`input-field ${input.get('error') ? 'warning' : ''}`}>
+      <label>{input.get('label')}</label>
       <textarea
-        name={input[0]}
-        onChange={onChange}
-        value={input[1].get('value')}
+        name={input.get('id')}
+        onChange={(event) => onChange(event, type)}
+        value={input.get('value')}
       />
       <div className='arrow_box'>
         <span className='material-icons'>error_outline</span>
-        {input[1].get('error')}
+        {input.get('error')}
       </div>
     </div>
   );
