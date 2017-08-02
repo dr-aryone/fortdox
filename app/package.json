@@ -1,7 +1,7 @@
 {
   "name": "FortDox",
   "productName": "FortDox",
-  "version": "1.0.1",
+  "version": "1.0.9",
   "author": "EdgeGuide <johan.callvik@gmail.com>",
   "main": "main.js",
   "homepage": "",
@@ -78,11 +78,11 @@
     "publish": [
       {
         "provider": "generic",
-        "url": "http://localhost:8000/updater"
+        "url": "http://localhost:8000/downloads"
       }
     ],
     "directories": {
-      "output": "/Users/johan/Documents/dokumentationsappen/server/distribution"
+      "output": "/opt/fortdox"
     },
     "dmg": {
       "contents": [
