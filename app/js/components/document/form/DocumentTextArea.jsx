@@ -1,9 +1,12 @@
 const React = require('react');
 
-const DocumentTextArea = ({input, type, onChange}) => {
+const DocumentTextArea = ({input, type, onChange, onRemoveField}) => {
   return (
     <div className={`input-field ${input.get('error') ? 'warning' : ''}`}>
-      <label>{input.get('label')}</label>
+      <label>
+        {input.get('label')}
+        <i className='material-icons' onClick={() => onRemoveField(input.get('id'))}>delete</i>
+      </label>
       <textarea
         name={input.get('id')}
         onChange={(event) => onChange(event, type)}

@@ -19,14 +19,12 @@ const SearchView = ({
   toDocView
 }) => {
   let searchResult = [];
-  result.forEach((item) => {
+  result.forEach((doc, index) => {
     searchResult.push(
       <SearchItem
-        title={item.getIn(['_source', 'title'])}
-        text={item.getIn(['_source', 'encrypted_text'])}
-        tags={item.getIn(['_source', 'tags'])}
-        key={item.get('_id')}
-        onUpdate={() => onUpdate(item.get('_id'))}
+        doc={doc}
+        onUpdate={onUpdate}
+        key={index}
       />);
   });
 
