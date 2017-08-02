@@ -1,12 +1,11 @@
 const {connect} = require('react-redux');
 const UpdateDocView = require('components/document/UpdateDocView');
 const action = require('actions');
-const {updateDocument, deleteDocument, addTag, removeTag, getOldTags, suggestTags} = require('actions/document');
+const doc = require('actions/document');
 
 const mapStateToProps = (state) => {
   return {
     docFields: state.updateDocument.get('docFields'),
-    tags: state.updateDocument.get('tags'),
     error: state.updateDocument.get('error'),
     isLoading: state.updateDocument.get('isLoading')
   };
@@ -14,30 +13,36 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    onChange: (event) => {
-      dispatch(action.inputChange(event.target.name, event.target.value));
+    onChange: (event, type) => {
+      dispatch(doc.docInputChange(event.target.name, event.target.value, type));
     },
     onSuggestTags: event => {
-      dispatch(suggestTags(event.target.value));
+      dispatch(doc.suggestTags(event.target.value));
     },
     onUpdate: (event) => {
       event.preventDefault();
-      dispatch(updateDocument());
+      dispatch(doc.updateDocument());
     },
     toSearchView: () => {
       dispatch(action.changeView('SEARCH_VIEW'));
     },
     onDelete: () => {
-      dispatch(deleteDocument());
+      dispatch(doc.deleteDocument());
     },
     onAddTag: tag => {
-      dispatch(addTag(tag));
+      dispatch(doc.addTag(tag));
     },
     onRemoveTag: tagIndex => {
-      dispatch(removeTag(tagIndex));
+      dispatch(doc.removeTag(tagIndex));
     },
     onMount: () => {
-      dispatch(getOldTags());
+      dispatch(doc.getOldTags());
+    },
+    onAddField: field => {
+      dispatch(doc.addField(field));
+    },
+    onRemoveField: id => {
+      dispatch(doc.removeField(id));
     }
   };
 };

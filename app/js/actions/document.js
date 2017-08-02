@@ -1,6 +1,5 @@
 const requestor = require('@edgeguideab/client-request');
 const config = require('../../config.json');
-const checkEmptyFields = require('actions/utilities/checkEmptyFields');
 const embedPrivateKey = require('actions/utilities/embedPrivateKey');
 const {fromJS} = require('immutable');
 
@@ -8,30 +7,46 @@ const setUpdateDocument = id => {
   return (dispatch, getState) => {
     let state = getState();
     let searchResult = state.search.get('result');
-    let doc;
-    searchResult.forEach((entry) => {
-      if (entry.get('_id') === id) doc = entry;
-    });
-    let docFields = {};
+    let doc = searchResult.find(entry => entry.get('_id') === id);
+    let title = {
+      value: doc.getIn(['_source', 'title']),
+      id: 'title',
+      label: 'Title',
+      error: null
+    };
+    let encryptedTexts = [];
+    let texts = [];
     let tags = [];
-    doc.get('_source').entrySeq().forEach(([key, value]) => {
-      if (key === 'tags') tags = value;
-      else {
-        let label = key == 'title' ? 'Title' : 'Text';
-        docFields[key] = {
-          value,
-          label,
-          error: null
-        };
-      }
+    let nextID = 0;
+    doc.getIn(['_source', 'encryptedTexts']).forEach(entry => {
+      encryptedTexts.push(fromJS({
+        value: entry.get('text'),
+        id: entry.get('id'),
+        label: 'Encrypted Text',
+        error: null
+      }));
+      if (entry.get('id') > nextID) nextID = entry.get('id');
     });
-    dispatch({
+    doc.getIn(['_source', 'texts']).forEach(entry => {
+      texts.push(fromJS({
+        value: entry.get('text'),
+        id: entry.get('id'),
+        label: 'Text',
+        error: null
+      }));
+      if (entry.get('id') > nextID) nextID = entry.get('id');
+    });
+    doc.getIn(['_source', 'tags']).forEach(entry => {
+      tags.push(entry);
+    });
+    return dispatch({
       type: 'SET_UPDATE_DOCUMENT',
-      payload: {
-        documentToUpdate: doc,
-        docFields,
-        tags
-      }
+      documentToUpdate: doc,
+      title,
+      encryptedTexts,
+      texts,
+      tags,
+      nextID: nextID+1
     });
   };
 };
@@ -45,17 +60,41 @@ const createDocument = () => {
     let docFields = state.createDocument.get('docFields');
     let privateKey = state.user.get('privateKey');
     let email = state.user.get('email');
+    let {titleError, emptyFieldIDs, emptyFieldError} = checkEmptyDocFields(docFields);
+    if (titleError !== null || emptyFieldIDs.length !== 0) {
+      return dispatch({
+        type: 'CREATE_DOCUMENT_FAIL',
+        titleError,
+        emptyFieldIDs,
+        emptyFieldError
+      });
+    }
+    let title = docFields.getIn(['title', 'value']);
+    let encryptedTexts = [];
+    let texts = [];
+    let tags = docFields.getIn(['tags', 'list']).toJS();
+    docFields.getIn(['encryptedTexts']).forEach(field => {
+      encryptedTexts.push({
+        text: field.get('value'),
+        id: field.get('id')
+      });
+    });
+    docFields.getIn(['texts']).forEach(field => {
+      texts.push({
+        text: field.get('value'),
+        id: field.get('id')
+      });
+    });
 
-
-
-    let doc = {};
-    docFields.entrySeq().forEach((entry) => doc[entry[0]] = entry[1].get('value'));
-    let tags = state.createDocument.getIn(['tags', 'list']);
     try {
       await requestor.post(`${config.server}/document`, {
         body: {
-          doc,
-          tags,
+          doc: {
+            title,
+            encryptedTexts,
+            texts,
+            tags
+          },
           email
         },
         headers: embedPrivateKey(privateKey)
@@ -93,35 +132,48 @@ const updateDocument = () => {
     });
 
     let state = getState();
-    let oldDoc = state.updateDocument.get('documentToUpdate');
     let newDoc = state.updateDocument.get('docFields');
-    let tags = state.updateDocument.getIn(['tags', 'list']);
-    let privateKey = state.user.get('privateKey');
-    let email = state.user.get('email');
-    let emptyFields = checkEmptyFields(newDoc);
-    if (emptyFields.length > 0) {
-      let newDocFields = {};
-      emptyFields.forEach((entry) => {
-        newDocFields[entry[0]] = {
-          error: `${entry[1].get('label')} can not be empty.`
-        };
-      });
+    let {titleError, emptyFieldIDs, emptyFieldError} = checkEmptyDocFields(newDoc);
+    if (titleError !== null || emptyFieldIDs.length !== 0) {
       return dispatch({
-        type: 'UPDATE_DOCUMENT_ERROR',
-        payload: newDocFields
+        type: 'UPDATE_DOCUMENT_FAIL',
+        titleError,
+        emptyFieldIDs,
+        emptyFieldError
       });
     }
-    let updateQuery = {};
-    newDoc.entrySeq().forEach((entry) => updateQuery[entry[0]] = entry[1].get('value'));
+    let title = newDoc.getIn(['title', 'value']);
+    let encryptedTexts = [];
+    let texts = [];
+    let tags = newDoc.getIn(['tags', 'list']).toJS();
+    newDoc.getIn(['encryptedTexts']).forEach(field => {
+      encryptedTexts.push({
+        text: field.get('value'),
+        id: field.get('id')
+      });
+    });
+    newDoc.getIn(['texts']).forEach(field => {
+      texts.push({
+        text: field.get('value'),
+        id: field.get('id')
+      });
+    });
+    let oldDoc = state.updateDocument.get('documentToUpdate');
+    let email = state.user.get('email');
+    let privateKey = state.user.get('privateKey');
     try {
       await requestor.patch(`${config.server}/document`, {
         body:{
           index: oldDoc.get('_index'),
           type: oldDoc.get('_type'),
           id: oldDoc.get('_id'),
-          updateQuery,
-          email,
-          tags
+          doc: {
+            title,
+            encryptedTexts,
+            texts,
+            tags
+          },
+          email
         },
         headers: embedPrivateKey(privateKey)
       });
@@ -180,24 +232,13 @@ const deleteDocument = () => {
 
 const addTag = tag => {
   return (dispatch, getState) => {
-    dispatch({
-      type: 'ADD_TAG_START'
-    });
     let state = getState();
-    let currentView;
-    let prefix;
-    switch (state.navigation.get('currentView')) {
-      case 'CREATE_DOC_VIEW':
-        currentView = 'createDocument';
-        prefix = 'CREATE_DOC';
-        break;
-      case 'UPDATE_DOC_VIEW':
-        currentView = 'updateDocument';
-        prefix = 'UPDATE_DOC';
-        break;
-    }
-    let tagList = state[currentView].getIn(['docFields', 'tags', 'list']);
-    if (tag === undefined) tag = state[currentView].getIn(['docFields', 'tags', 'value']);
+    let {view, prefix} = getPrefix(state.navigation.get('currentView'));
+    dispatch({
+      type: `${prefix}_ADD_TAG_START`
+    });
+    let tagList = state[view].getIn(['docFields', 'tags', 'list']);
+    if (tag === undefined) tag = state[view].getIn(['docFields', 'tags', 'value']);
     if (tag.trim() === '') return;
     if (tagList.contains(tag)) return dispatch({
       type: `${prefix}_ADD_TAG_FAIL`,
@@ -213,23 +254,12 @@ const addTag = tag => {
 
 const removeTag = tagIndex => {
   return (dispatch, getState) => {
-    dispatch({
-      type: 'REMOVE_TAG_START'
-    });
     let state = getState();
-    let currentView;
-    let prefix;
-    switch (state.navigation.get('currentView')) {
-      case 'CREATE_DOC_VIEW':
-        currentView = 'createDocument';
-        prefix = 'CREATE_DOC';
-        break;
-      case 'UPDATE_DOC_VIEW':
-        currentView = 'updateDocument';
-        prefix = 'UPDATE_DOC';
-        break;
-    }
-    let tagList = state[currentView].getIn(['docFields', 'tags', 'list']);
+    let {view, prefix} = getPrefix(state.navigation.get('currentView'));
+    dispatch({
+      type: `${prefix}_REMOVE_TAG_SUCCESS`
+    });
+    let tagList = state[view].getIn(['docFields', 'tags', 'list']);
     tagList = tagList.splice(tagIndex, 1);
     return dispatch({
       type: `${prefix}_REMOVE_TAG_SUCCESS`,
@@ -240,10 +270,11 @@ const removeTag = tagIndex => {
 
 const getOldTags = () => {
   return async (dispatch, getState) => {
-    dispatch({
-      type: 'GET_OLD_TAGS_START'
-    });
     let state = getState();
+    let {prefix} = getPrefix(state.navigation.get('currentView'));
+    dispatch({
+      type: `${prefix}_GET_OLD_TAGS_START`
+    });
     let organization = state.user.get('organization');
     let response;
     try {
@@ -260,15 +291,15 @@ const getOldTags = () => {
         case 408:
         case 500:
           return dispatch({
-            type: 'GET_OLD_TAGS_ERROR',
-            payload: 'Unable to connect to server. Please try again later.'
+            type: `${prefix}_GET_OLD_TAGS_ERROR`,
+            payload: 'Unable to get old tag list.'
           });
       }
     }
     let tagList = [];
     response.body.forEach((tag) => tagList.push(tag.key));
     return dispatch({
-      type: 'GET_OLD_TAGS_SUCCESS',
+      type: `${prefix}_GET_OLD_TAGS_SUCCESS`,
       payload: tagList.sort()
     });
   };
@@ -278,26 +309,15 @@ const suggestTags = inputValue => {
   return (dispatch, getState) => {
     if (inputValue.slice(-1) === ' ') return dispatch(addTag());
     let state = getState();
-    let currentView;
-    let prefix;
-    switch (state.navigation.get('currentView')) {
-      case 'CREATE_DOC_VIEW':
-        currentView = 'createDocument';
-        prefix = 'CREATE_DOC';
-        break;
-      case 'UPDATE_DOC_VIEW':
-        currentView = 'updateDocument';
-        prefix = 'UPDATE_DOC';
-        break;
-    }
-    let oldTags = state[currentView].getIn(['docFields', 'tags', 'old']);
+    let {view, prefix} = getPrefix(state.navigation.get('currentView'));
+    let oldTags = state[view].getIn(['docFields', 'tags', 'old']);
     let suggestedTags = [];
     oldTags.some((tag) => {
       if (tag.startsWith(inputValue)) suggestedTags.push(tag);
       if (suggestedTags.length === 5) return;
     });
     return dispatch({
-      type: `INPUT_CHANGE_TAGS_${prefix}`,
+      type: `${prefix}_INPUT_CHANGE_TAGS`,
       value: inputValue,
       suggestedTags
     });
@@ -316,12 +336,13 @@ const setTagIndex = index => {
 const addField = field => {
   return (dispatch, getState) => {
     let state = getState();
-    let nextID = state.createDocument.getIn(['docFields', 'nextID']);
+    let {view, prefix} = getPrefix(state.navigation.get('currentView'));
+    let nextID = state[view].getIn(['docFields', 'nextID']);
     let fields;
     let newField;
     switch (field) {
       case 'NEW_ENCRYPTED_TEXT':
-        fields = state.createDocument.getIn(['docFields', 'encryptedTexts']);
+        fields = state[view].getIn(['docFields', 'encryptedTexts']);
         newField = {
           value: '',
           label: 'Encrypted Text',
@@ -330,12 +351,12 @@ const addField = field => {
         };
         fields = fields.push(fromJS(newField));
         return dispatch({
-          type: 'ADD_NEW_ENCRYPTED_TEXT_FIELD',
+          type: `${prefix}_NEW_ENCRYPTED_TEXT_FIELD`,
           payload: fields,
           nextID: nextID+1
         });
       case 'NEW_TEXT':
-        fields = state.createDocument.getIn(['docFields', 'texts']);
+        fields = state[view].getIn(['docFields', 'texts']);
         newField = {
           value: '',
           label: 'Text',
@@ -344,7 +365,7 @@ const addField = field => {
         };
         fields = fields.push(fromJS(newField));
         return dispatch({
-          type: 'ADD_NEW_TEXT_FIELD',
+          type: `${prefix}_NEW_TEXT_FIELD`,
           payload: fields,
           nextID: nextID+1
         });
@@ -352,30 +373,49 @@ const addField = field => {
   };
 };
 
+const removeField = id => {
+  return (dispatch, getState) => {
+    let state = getState();
+    let {view, prefix} = getPrefix(state.navigation.get('currentView'));
+    let encryptedTexts = state[view].getIn(['docFields', 'encryptedTexts']);
+    let texts = state[view].getIn(['docFields', 'texts']);
+    let encryptedIndex = encryptedTexts.findIndex(field => field.get('id') === id);
+    let textIndex = texts.findIndex(field => field.get('id') === id);
+    if (encryptedIndex !== -1) encryptedTexts = encryptedTexts.splice(encryptedIndex, 1);
+    if (textIndex !== -1) texts = texts.splice(textIndex, 1);
+    return dispatch({
+      type: `${prefix}_REMOVE_FIELD`,
+      encryptedTexts,
+      texts
+    });
+  };
+};
+
 const docInputChange = (inputID, inputValue, type) => {
   return (dispatch, getState) => {
     let state = getState();
+    let {view, prefix} = getPrefix(state.navigation.get('currentView'));
     let fields;
     let index;
     switch (type) {
       case 'title':
         return dispatch({
-          type: 'INPUT_CHANGE_TITLE',
+          type: `${prefix}_INPUT_CHANGE_TITLE`,
           payload: inputValue
         });
       case 'encryptedText':
-        fields = state.createDocument.getIn(['docFields', 'encryptedTexts']);
+        fields = state[view].getIn(['docFields', 'encryptedTexts']);
         index = fields.findIndex(field => field.get('id') == inputID);
         return dispatch({
-          type: 'INPUT_CHANGE_ENCRYPTED_TEXT',
+          type: `${prefix}_INPUT_CHANGE_ENCRYPTED_TEXT`,
           index,
           value: inputValue
         });
       case 'text': {
-        fields = state.createDocument.getIn(['docFields', 'texts']);
+        fields = state[view].getIn(['docFields', 'texts']);
         index = fields.findIndex(field => field.get('id') == inputID);
         return dispatch({
-          type: 'INPUT_CHANGE_TEXT',
+          type: `${prefix}_INPUT_CHANGE_TEXT`,
           index,
           value: inputValue
         });
@@ -383,6 +423,40 @@ const docInputChange = (inputID, inputValue, type) => {
     }
   };
 };
+
+function getPrefix(currentView) {
+  let view;
+  let prefix;
+  switch (currentView) {
+    case 'UPDATE_DOC_VIEW':
+      view = 'updateDocument';
+      prefix = 'UPDATE_DOC';
+      return {view, prefix};
+    case 'CREATE_DOC_VIEW':
+      view = 'createDocument';
+      prefix = 'CREATE_DOC';
+      return {view, prefix};
+  }
+}
+
+function checkEmptyDocFields(docFields) {
+  let titleField = docFields.get('title');
+  let encryptedTextFields = docFields.get('encryptedTexts');
+  let textFields = docFields.get('texts');
+
+  let emptyFieldIDs = [];
+  let titleError = null;
+  let emptyFieldError = 'Please enter a text.';
+  if (titleField.get('value').trim() === '') titleError = 'Please enter a title.';
+  encryptedTextFields.valueSeq().forEach(field => {
+    if (field.get('value').trim() === '') emptyFieldIDs.push(field.get('id'));
+  });
+  textFields.valueSeq().forEach(field => {
+    if (field.get('value').trim() === '') emptyFieldIDs.push(field.get('id'));
+  });
+
+  return {titleError, emptyFieldIDs, emptyFieldError};
+}
 
 module.exports = {
   setUpdateDocument,
@@ -395,5 +469,6 @@ module.exports = {
   suggestTags,
   setTagIndex,
   addField,
+  removeField,
   docInputChange
 };

@@ -12,6 +12,7 @@ const DocumentForm = ({
   onAddTag,
   onRemoveTag,
   onAddField,
+  onRemoveField,
   children
 }) => {
   let fields = [];
@@ -29,6 +30,7 @@ const DocumentForm = ({
           type='text'
           key={i}
           onChange={onChange}
+          onRemoveField={onRemoveField}
         />
       );
       textFields = textFields.shift();
@@ -39,6 +41,7 @@ const DocumentForm = ({
           type='encryptedText'
           key={i}
           onChange={onChange}
+          onRemoveField={onRemoveField}
         />
       );
       encryptedTextFields = encryptedTextFields.shift();
@@ -52,6 +55,7 @@ const DocumentForm = ({
             type='encryptedText'
             key={i}
             onChange={onChange}
+            onRemoveField={onRemoveField}
           />
         );
         encryptedTextFields = encryptedTextFields.shift();
@@ -62,6 +66,7 @@ const DocumentForm = ({
             type='text'
             key={i}
             onChange={onChange}
+            onRemoveField={onRemoveField}
           />
         );
         textFields = textFields.shift();
@@ -73,7 +78,9 @@ const DocumentForm = ({
       <div className='main-panel box'>
         {fields}
         <BottomPanel onAddField={onAddField} />
-        {children}
+        <div className='buttons'>
+          {children}
+        </div>
       </div>
       <div className='side-panel box'>
         <DocumentTags

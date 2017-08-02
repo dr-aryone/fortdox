@@ -65,6 +65,22 @@
 
 .main-panel {
   flex-grow: 1;
+
+  label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .material-icons {
+      color: $primary-color;
+      cursor: pointer;
+    }
+  }
+
+  .buttons {
+    display: flex;
+    justify-content: space-between;
+  }
 }
 
 .tag-dropdown {

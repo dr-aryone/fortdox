@@ -31,19 +31,23 @@ let initialState = fromJS({
 
 const form = (state = initialState, action) => {
   switch (action.type) {
-    case 'INPUT_CHANGE_TITLE':
+    case 'CREATE_DOC_INPUT_CHANGE_TITLE':
       return state
         .setIn(['docFields', 'title', 'value'], fromJS(action.payload))
         .setIn(['docFields', 'title', 'error'], null);
-    case 'INPUT_CHANGE_ENCRYPTED_TEXT':
+    case 'CREATE_DOC_INPUT_CHANGE_ENCRYPTED_TEXT':
       return state.setIn(['docFields', 'encryptedTexts'],
-        state.getIn(['docFields', 'encryptedTexts'])
-          .update(action.index, field => field.set('value', fromJS(action.value))));
-    case 'INPUT_CHANGE_TEXT':
+        state.getIn(['docFields', 'encryptedTexts']).update(action.index, field => field.merge({
+          value: fromJS(action.value),
+          error: null
+        })));
+    case 'CREATE_DOC_INPUT_CHANGE_TEXT':
       return state.setIn(['docFields', 'texts'],
-        state.getIn(['docFields', 'texts'])
-          .update(action.index, field => field.set('value', fromJS(action.value))));
-    case 'INPUT_CHANGE_TAGS_CREATE_DOC':
+        state.getIn(['docFields', 'texts']).update(action.index, field => field.merge({
+          value: fromJS(action.value),
+          error: null
+        })));
+    case 'CREATE_DOC_INPUT_CHANGE_TAGS':
       return state.setIn(['docFields', 'tags'], state.getIn(['docFields', 'tags']).merge({
         value: fromJS(action.value),
         suggested: fromJS(action.suggestedTags),
@@ -64,34 +68,60 @@ const form = (state = initialState, action) => {
       }));
     case 'CREATE_DOC_REMOVE_TAG_SUCCESS':
       return state.setIn(['docFields', 'tags', 'list'], fromJS(action.payload));
-    case 'GET_OLD_TAGS_START':
+    case 'CREATE_DOC_GET_OLD_TAGS_START':
       return state.set('isLoading', true);
-    case 'GET_OLD_TAGS_ERROR':
+    case 'CREATE_DOC_GET_OLD_TAGS_ERROR':
       return state.merge({
         error: fromJS(action.payload),
         isLoading: false
       });
-    case 'GET_OLD_TAGS_SUCCESS':
+    case 'CREATE_DOC_GET_OLD_TAGS_SUCCESS':
       return state
-        .setIn(['tags', 'old'], fromJS(action.payload))
+        .setIn(['docFields', 'tags', 'old'], fromJS(action.payload))
         .set('isLoading', false);
     case 'CREATE_DOCUMENT_SET_TAG_INDEX':
-      return state.setIn(['tags', 'activeTag'], fromJS(action.payload));
+      return state.setIn(['docFields', 'tags', 'activeTag'], fromJS(action.payload));
     case 'CREATE_DOCUMENT_START':
       return state.set('isLoading', true);
+    case 'CREATE_DOCUMENT_FAIL': {
+      let encryptedTexts = state.getIn(['docFields', 'encryptedTexts']);
+      encryptedTexts.forEach((entry, index) => {
+        if (action.emptyFieldIDs.includes(entry.get('id'))) {
+          encryptedTexts = encryptedTexts.update(index, field => field.set('error', fromJS(action.emptyFieldError)));
+        }
+      });
+      let texts = state.getIn(['docFields', 'texts']);
+      texts.forEach((entry, index) => {
+        if (action.emptyFieldIDs.includes(entry.get('id'))) {
+          encryptedTexts = encryptedTexts.update(index, field => field.set('error', fromJS(action.emptyFieldError)));
+        }
+      });
+      return state.merge({
+        docFields: state.get('docFields').merge({
+          title: state.getIn(['docFields', 'title']).set('error', fromJS(action.titleError)),
+          encryptedTexts,
+          texts
+        }),
+        isLoading: false
+      });
+    }
     case 'CREATE_DOCUMENT_ERROR':
       return state.merge({
-        docFields: state.get('docFields').mergeDeepWith((oldError, newError) => newError ? newError : oldError, action.payload),
-        isLoading: false,
+        error: fromJS(action.payload),
+        isLoading: false
       });
-    case 'ADD_NEW_ENCRYPTED_TEXT_FIELD':
+    case 'CREATE_DOC_NEW_ENCRYPTED_TEXT_FIELD':
       return state
         .setIn(['docFields', 'encryptedTexts'], fromJS(action.payload))
         .setIn(['docFields', 'nextID'], fromJS(action.nextID));
-    case 'ADD_NEW_TEXT_FIELD':
+    case 'CREATE_DOC_NEW_TEXT_FIELD':
       return state
         .setIn(['docFields', 'texts'], fromJS(action.payload))
         .setIn(['docFields', 'nextID'], fromJS(action.nextID));
+    case 'CREATE_DOC_REMOVE_FIELD':
+      return state
+        .setIn(['docFields', 'encryptedTexts'], fromJS(action.encryptedTexts))
+        .setIn(['docFields', 'texts'], fromJS(action.texts));
     case 'CREATE_DOCUMENT_SUCCESS':
     case 'CHANGE_VIEW':
       return initialState;

@@ -1,26 +1,25 @@
 const {encryptDocument} = require('../encryption/authentication/documentEncryption');
 
 module.exports = client => {
-  const addToIndex = (query, tags, privateKey, encryptedMasterPassword, organization) => {
+  const addToIndex = (doc, privateKey, encryptedMasterPassword, organization) => {
     return new Promise(async (resolve, reject) => {
-      let response;
-      let data = new Buffer(query.text);
-      let encryptedData;
+      let encryptedTexts;
       try {
-        encryptedData = await encryptDocument(data, privateKey, encryptedMasterPassword);
+        encryptedTexts = await encryptDocument(doc.encryptedTexts, privateKey, encryptedMasterPassword);
       } catch (error) {
         console.error(error);
         return reject(500);
       }
-      query.text = encryptedData.toString('base64');
+      let response;
       try {
         response = await client.index({
           index: organization.toLowerCase(),
           type: 'fortdox_document',
           body: {
-            title: query.title,
-            encrypted_text: query.text,
-            tags: tags
+            title: doc.title,
+            encryptedTexts,
+            texts: doc.texts,
+            tags: doc.tags
           },
           refresh: true
         });
