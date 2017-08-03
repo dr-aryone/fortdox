@@ -1,6 +1,19 @@
 # FortDox
 FortDox is a desktop application that safely stores a teams documents and shares a team's passwords safely within the team.
 
+# Access Amazon server
+navigate to `~./ssh` and create a file `touch config`.
+
+Copy paste the following into config:
+  > Host fortdox
+        HostName 54.246.221.36
+        Port 22
+        User ubuntu
+        IdentityFile ~/.ssh/private_keys/fortdox.pem (the private key that needs to be generated)
+
+Generate said private key.
+
+Then simply type `ssh fortdox` in the terminal.
 # Installation
 Clone the project
 > git clone git@bitbucket.org:edgeguideab/fortdoks.git
@@ -80,7 +93,7 @@ Remove indicies from ElasticSearch
 On client in `fortdoks/app`, remove `local_storage.json`, eg.
 > rm local_storage.json
 
-## Backup
+## Backup on Mac
 
 Locate the folder containing backup.sh and grant the file executable permissions
 > chmod +x backup.sh
@@ -103,6 +116,31 @@ Insert the following line into the crontab
 > 0 0 * * * /path/to/server/backup.sh
 
 Save and quit. The crontab will now run the backup code every night at 00:00.
+
+## Backup on Ubuntu
+
+NOTE: If on startup Elasticsearch complains about not being able to allocate enough memory. Simply `sudo vim /etc/elasticsearch/jvm.options` and change:
+  > -Xms2g --> -Xms1g
+    -Xmx2g --> -Xmx1g
+
+Locate backup.sh and give it executable permissions `chmod +x backup.sh`.
+
+Then give the user ownership over /etc/elasticsearch with `chown -R <user> /etc/elasticsearch`.
+
+Now create the backup directory where you want it `sudo mkdir /var/elasticsearch_backup` and set priviliges for that folder `chmod 777 /var/elasticsearch_backup`.
+
+Elasticsearch can now write to elasticsearch_backup. But the location needs to be specified in elasticsearch.yml.
+
+Open elasticsearch with your favorite editor `vim /etc/elasticsearch/elasticsearch.yml`. And under Paths set the following:
+  > path.repo /var/elasticsearch_backup
+
+Now restart Elasticsearch manually with the following commands:
+
+  Stop `sudo systemctl stop elasticsearch.service`
+
+  Start `sudo systemctl start elasticsearch.service`
+
+Now it should work, if not Happy Googeling!   
 
 #Building installer
 
