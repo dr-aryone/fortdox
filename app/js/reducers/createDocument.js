@@ -23,6 +23,7 @@ let initialState = fromJS({
       suggested: [],
       old: []
     },
+    attachments: [],
     nextID: 1
   },
   error: null,
@@ -122,6 +123,15 @@ const form = (state = initialState, action) => {
       return state
         .setIn(['docFields', 'encryptedTexts'], fromJS(action.encryptedTexts))
         .setIn(['docFields', 'texts'], fromJS(action.texts));
+    case 'CREATE_DOC_ADD_ATTACHMENT':
+      return state
+        .setIn(['docFields', 'attachments'], state.getIn(['docFields', 'attachments']).push(fromJS({
+          name: fromJS(action.name),
+          type: fromJS(action.fileType),
+          file: fromJS(action.file)
+        })));
+    case 'CREATE_DOC_REMOVE_ATTACHMENT':
+      return state.setIn(['docFields', 'attachments'], fromJS(action.payload));
     case 'CREATE_DOCUMENT_SUCCESS':
     case 'CHANGE_VIEW':
       return initialState;

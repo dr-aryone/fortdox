@@ -33,7 +33,7 @@ const fs = require('fs');
 
 job.start();
 
-app.use(bodyParser.json());
+app.use(bodyParser.json({limit: '100mb'}));
 
 app.get('/updater/:request', (req, res) => {
   res.send(fs.readFileSync('./distribution/latest-mac.yml'));
@@ -347,7 +347,7 @@ app.get('/document', async (req, res) => {
   }
   try {
     for (let doc of response.hits.hits) {
-      doc._source.encryptedTexts = await decryptDocuments(doc._source.encryptedTexts, privateKey, encryptedMasterPassword);
+      doc._source.encrypted_texts = await decryptDocuments(doc._source.encrypted_texts, privateKey, encryptedMasterPassword);
     }
   } catch (error) {
     console.error(error);

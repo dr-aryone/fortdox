@@ -3,6 +3,7 @@ const DocumentInputField = require('./DocumentInputField');
 const DocumentTextArea = require('./DocumentTextArea');
 const DocumentTags = require('./DocumentTags');
 const BottomPanel = require('./BottomPanel');
+const Attachments = require('./Attachments');
 
 const DocumentForm = ({
   onSubmit,
@@ -13,6 +14,8 @@ const DocumentForm = ({
   onRemoveTag,
   onAddField,
   onRemoveField,
+  onAddAttachment,
+  onRemoveAttachment,
   children
 }) => {
   let fields = [];
@@ -73,6 +76,7 @@ const DocumentForm = ({
       }
     }
   }
+
   return (
     <form onSubmit={onSubmit} className='document'>
       <div className='main-panel box'>
@@ -88,6 +92,11 @@ const DocumentForm = ({
           tags={tags}
           onAddTag={onAddTag}
           onRemoveTag={onRemoveTag}
+        />
+        <Attachments
+          attachments={docFields.get('attachments')}
+          onAddAttachment={onAddAttachment}
+          onRemoveAttachment={onRemoveAttachment}
         />
       </div>
     </form>

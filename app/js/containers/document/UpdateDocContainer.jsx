@@ -43,6 +43,12 @@ const mapDispatchToProps = dispatch => {
     },
     onRemoveField: id => {
       dispatch(doc.removeField(id));
+    },
+    onAddAttachment: event => {
+      dispatch(doc.addAttachment(event.target.files));
+    },
+    onRemoveAttachment: id => {
+      dispatch(doc.removeAttachment(id));
     }
   };
 };

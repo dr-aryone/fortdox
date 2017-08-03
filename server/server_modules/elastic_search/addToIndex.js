@@ -17,9 +17,10 @@ module.exports = client => {
           type: 'fortdox_document',
           body: {
             title: doc.title,
-            encryptedTexts,
+            encrypted_texts: encryptedTexts,
             texts: doc.texts,
-            tags: doc.tags
+            tags: doc.tags,
+            attachments: doc.attachments
           },
           refresh: true
         });
