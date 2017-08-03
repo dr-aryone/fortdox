@@ -34,8 +34,44 @@
     flex-grow: 1;
   }
 
-  .tag {
-    padding: 10px 0px;
+  & input[type='file'] {
+    display: none;
+  }
+
+  span {
+    padding: 5px;
+    word-break: break-all;
+  }
+
+  .material-icons {
+    font-size: 16px;
+    cursor: pointer;
+    background-color: $primary-color;
+    color: #FFF;
+    border-radius: 50%;
+    padding: 5px;
+  }
+
+  .attachments {
+    .attachment-list {
+      padding-top: 5px;
+      padding-bottom: 10px;
+
+      div {
+        display: flex;
+        justify-content: space-between;
+        border-radius: 15px;
+        margin-bottom: 5px;
+        background: $background-color;
+        padding: 5px;
+        align-items: center;
+      }
+    }
+
+  }
+
+  .tags {
+    padding-top: 5px;
 
     &-item {
       background-color: $background-color;
@@ -44,21 +80,7 @@
       padding: 5px;
       margin-right: 5px;
       margin-bottom: 5px;
-      border-radius: 16px;
-
-      span {
-        padding: 5px;
-        word-break: break-all;
-      }
-
-      .material-icons {
-        font-size: 16px;
-        cursor: pointer;
-        background-color: $primary-color;
-        color: #FFF;
-        border-radius: 50%;
-        padding: 5px;
-      }
+      border-radius: 16px
     }
   }
 }

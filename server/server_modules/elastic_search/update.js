@@ -20,9 +20,10 @@ module.exports = client => {
           body: {
             doc: {
               title: query.doc.title,
-              encryptedTexts,
+              encrypted_texts: encryptedTexts,
               texts: query.doc.texts,
-              tags: query.doc.tags
+              tags: query.doc.tags,
+              attachments: query.doc.attachments
             }
           }
         });

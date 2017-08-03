@@ -11,7 +11,7 @@ module.exports = client => {
                   title: {
                     type: 'text'
                   },
-                  encryptedTexts: {
+                  encrypted_texts: {
                     type: 'object',
                     properties: {
                       text: {
@@ -29,8 +29,7 @@ module.exports = client => {
                     type: 'object',
                     properties: {
                       text: {
-                        type: 'text',
-                        store: true
+                        type: 'text'
                       },
                       id: {
                         type: 'integer',
@@ -41,6 +40,25 @@ module.exports = client => {
                   },
                   tags: {
                     type: 'keyword'
+                  },
+                  attachments: {
+                    type: 'object',
+                    properties: {
+                      name: {
+                        type: 'text',
+                        store: true,
+                        index: false
+                      },
+                      file: {
+                        type: 'binary',
+                        store: true
+                      },
+                      file_type: {
+                        type: 'text',
+                        store: true,
+                        index: false
+                      }
+                    }
                   }
                 }
               }
