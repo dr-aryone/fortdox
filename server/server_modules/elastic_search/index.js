@@ -1,6 +1,6 @@
 const elasticsearch = require('elasticsearch');
 const client = new elasticsearch.Client({
-  host: 'localhost:9200'
+  host: 'http://localhost:9200'
 });
 const update = require('./update.js')(client);
 const addToIndex = require('./addToIndex.js')(client);
