@@ -12,6 +12,7 @@ let activation = {
   type: '',
   code: null
 };
+autoUpdater.logger = log;
 
 
 
@@ -49,8 +50,8 @@ app.setAsDefaultProtocolClient(config.name);
 
 app.on('ready',  () => {
   createWindow();
+  autoUpdater.setFeedURL(`http://localhost:8000/downloads?version=${app.getVersion()}&platform=${process.platform}`);
   autoUpdater.checkForUpdates();
-  autoUpdater.setFeedURL(`http://localhost:8000/updater?version=${app.getVersion()}&platform=${process.platform}`);
 });
 
 autoUpdater.on('checking-for-update', () => {
@@ -58,8 +59,8 @@ autoUpdater.on('checking-for-update', () => {
 });
 
 autoUpdater.on('update-available', (info) => {
-  log.info('Update available!! \n' + info);
-  autoUpdater.downloadUpdate();
+  log.info('Update available!! \n' + JSON.stringify(info));
+  // autoUpdater.downloadUpdate();
 });
 
 autoUpdater.on('update-not-available', () => {
