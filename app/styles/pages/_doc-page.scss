@@ -29,10 +29,7 @@
   margin-left: 10px;
   display: flex;
   flex-direction: column;
-
-  & input {
-    flex-grow: 1;
-  }
+  overflow: hidden;
 
   & input[type='file'] {
     display: none;
@@ -50,6 +47,12 @@
     color: #FFF;
     border-radius: 50%;
     padding: 5px;
+    margin-left: 5px;
+  }
+
+  .download {
+    background-color: transparent;
+    color: $primary-color;
   }
 
   .attachments {
@@ -65,9 +68,17 @@
         background: $background-color;
         padding: 5px;
         align-items: center;
+
+        span:hover {
+          cursor: pointer;
+          text-decoration: underline;
+        }
+      }
+
+      div:hover {
+        cursor: pointer;
       }
     }
-
   }
 
   .tags {
