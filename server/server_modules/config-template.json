@@ -1,6 +1,6 @@
 {
   "name": "FortDox",
-  "server": "http://54.246.221.36:8000",
+  "server": "https://fortdox.edgeguide.se",
   "sqlConfig": {
     "username": "{you username}",
     "password": "{your password}",

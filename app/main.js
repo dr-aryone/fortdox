@@ -13,13 +13,15 @@ let activation = {
   code: null
 };
 autoUpdater.logger = log;
-
-
+let dev = true;
+//dev = (process.argv[2] === '--dev') ? true : false;
 
 async function createWindow() {
   win = new BrowserWindow({width: 1280, height: 720});
-  win.webContents.openDevTools();
-  installExtension(REDUX_DEVTOOLS);
+  if (dev) {
+    win.webContents.openDevTools();
+    installExtension(REDUX_DEVTOOLS);
+  }
 
   let openingUrl = urlParser.format({
     pathname: path.join(__dirname, 'index.html'),
@@ -40,18 +42,17 @@ async function createWindow() {
   win.loadURL(openingUrl);
 
   win.on('closed', () => {
-
     win = null;
   });
 }
-
-
 app.setAsDefaultProtocolClient(config.name);
 
 app.on('ready',  () => {
   createWindow();
-  autoUpdater.setFeedURL(`http://localhost:8000/downloads?version=${app.getVersion()}&platform=${process.platform}`);
-  autoUpdater.checkForUpdates();
+  if (dev) {
+    autoUpdater.setFeedURL(`${config.server}/downloads?version=${app.getVersion()}&platform=${process.platform}`);
+    autoUpdater.checkForUpdates();
+  }
 });
 
 autoUpdater.on('checking-for-update', () => {
@@ -60,7 +61,6 @@ autoUpdater.on('checking-for-update', () => {
 
 autoUpdater.on('update-available', (info) => {
   log.info('Update available!! \n' + JSON.stringify(info));
-  // autoUpdater.downloadUpdate();
 });
 
 autoUpdater.on('update-not-available', () => {
@@ -71,6 +71,7 @@ autoUpdater.on('update-downloaded', (event, info) => {
   log.info('Update downloaded!! \n' + info);
   autoUpdater.quitAndInstall();
 });
+
 app.on('open-url', (event, url) => {
   activation.type = urlParser.parse(url).hostname;
   activation.code = querystring.parse(urlParser.parse(url).query).code;

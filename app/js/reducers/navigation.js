@@ -17,6 +17,8 @@ const navigation = (state = initialState, action) => {
     case 'ACTIVATE_ORGANIZATION_SUCCESS':
     case 'VERIFY_NEW_USER_SUCCESS':
     case 'LOGOUT':
+    case 'DIRECT_LOGIN_FAILED':
+    case 'FORCE_BACK':
       return state.set('currentView', fromJS('LOGIN_VIEW'));
     case 'ACTIVATE_ORGANIZATION_CODE_RECIVED':
       return state.set('currentView', fromJS('ACTIVATE_ORGANIZATION_VIEW'));
