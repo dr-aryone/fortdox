@@ -47,7 +47,7 @@ class Attachments extends React.Component {
     let {
       attachments,
       onAddAttachment,
-      onRemoveAttachment
+      onRemoveAttachment,
     } = this.props;
 
     let attachmentList = [];
@@ -55,16 +55,25 @@ class Attachments extends React.Component {
       let name = attachment.get('name');
       let file = attachment.get('file');
       let type = attachment.get('type');
+      let removeButton = onRemoveAttachment ?
+        <i className='material-icons' onClick={() => onRemoveAttachment(index)}>clear</i> : null;
       attachmentList.push(
         <div key={index}>
           <span onClick={() => this.openModal(name, file, type)}>{name}</span>
           <span>
             <i className='material-icons download' onClick={this.downloadHandler}>file_download</i>
-            <i className='material-icons' onClick={() => onRemoveAttachment(index)}>clear</i>
+            {removeButton}
           </span>
         </div>
       );
     });
+
+    let inputs = onAddAttachment ? (
+      <div>
+        <input type='file' ref='fileField' onChange={event => onAddAttachment(event)} multiple />
+        <button type='button' onClick={() => this.clickHandler()}>Select File</button>
+      </div>
+    ) : null;
 
     return (
       <div className='attachments'>
@@ -76,8 +85,7 @@ class Attachments extends React.Component {
         <div className='attachment-list'>
           {attachmentList}
         </div>
-        <input type='file' ref='fileField' onChange={event => onAddAttachment(event)} multiple />
-        <button type='button' onClick={() => this.clickHandler()}>Select File</button>
+        {inputs}
       </div>
     );
   }

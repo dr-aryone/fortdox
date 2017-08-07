@@ -16,7 +16,7 @@ const addTag = tag => {
       type: `${prefix}_ADD_TAG_FAIL`,
       payload: `${tag} has already been added.`
     });
-    tagList = tagList.push(tag);
+    tagList = tagList.push(tag.toLowerCase());
     return dispatch({
       type: `${prefix}_ADD_TAG_SUCCESS`,
       payload: tagList

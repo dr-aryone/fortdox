@@ -27,12 +27,17 @@ const mapDispatchToProps = dispatch => {
     },
     onUpdate: id => {
       dispatch(setUpdateDocument(id));
+      dispatch(action.changeView('UPDATE_DOC_VIEW'));
     },
     paginationSearch: index => {
       dispatch(search.paginationSearch(index));
     },
     toDocView: () => {
       dispatch(action.changeView('CREATE_DOC_VIEW'));
+    },
+    onPreview: id => {
+      dispatch(setUpdateDocument(id));
+      dispatch(action.changeView('PREVIEW_DOC'));
     }
   };
 };

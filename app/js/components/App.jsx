@@ -15,6 +15,7 @@ const App = (prop) => {
     case 'USER_VIEW':
     case 'CREATE_DOC_VIEW':
     case 'UPDATE_DOC_VIEW':
+    case 'PREVIEW_DOC':
       return <UserViewContainer />;
     default:
       return (<div />);

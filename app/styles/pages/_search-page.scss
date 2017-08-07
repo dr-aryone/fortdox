@@ -1,3 +1,13 @@
+.left {
+  width: 50%;
+  resize: horizontal;
+  display: inline-block;
+}
+
+.right {
+  display: inline-block;
+}
+
 .pagination {
   margin: 10px 0px;
 
@@ -31,6 +41,7 @@
 }
 
 .search-item {
+  @extend .box;
   cursor: pointer;
 
   .highlight {
@@ -42,7 +53,27 @@
     background-color: $background-color;
     padding: 5px 10px;
     margin-right: 5px;
+    margin-bottom: 5px;
     border-radius: 16px;
     display: inline-block;
+    word-break: break-all;
+  }
+}
+
+.search-result-grid {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+
+  .search-item {
+    width: 32%;
+  }
+}
+
+.search-result {
+  display: block;
+
+  .search-item {
+    width: 100%;
   }
 }
