@@ -33,7 +33,7 @@ const fs = require('fs');
 
 job.start();
 
-app.use(bodyParser.json());
+app.use(bodyParser.json({limit: '100mb'}));
 
 app.use('/downloads', (req, res, next) => {console.log(req.originalUrl); next();}, express.static('/opt/fortdox'));
 
@@ -349,7 +349,7 @@ app.get('/document', async (req, res) => {
   }
   try {
     for (let doc of response.hits.hits) {
-      doc._source.encryptedTexts = await decryptDocuments(doc._source.encryptedTexts, privateKey, encryptedMasterPassword);
+      doc._source.encrypted_texts = await decryptDocuments(doc._source.encrypted_texts, privateKey, encryptedMasterPassword);
     }
   } catch (error) {
     console.error(error);

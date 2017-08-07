@@ -21,6 +21,8 @@ class CreateDocView extends React.Component {
       onCreate,
       onAddField,
       onRemoveField,
+      onAddAttachment,
+      onRemoveAttachment,
       isLoading
     } = this.props;
 
@@ -39,6 +41,8 @@ class CreateDocView extends React.Component {
             onSubmit={onCreate}
             onAddField={onAddField}
             onRemoveField={onRemoveField}
+            onAddAttachment={onAddAttachment}
+            onRemoveAttachment={onRemoveAttachment}
           >
             <button onClick={onCreate} type='submit'>Create</button>
           </DocumentForm>

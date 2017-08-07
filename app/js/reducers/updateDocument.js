@@ -14,6 +14,7 @@ let initialState = fromJS({
       suggested: [],
       old: []
     },
+    attachments: [],
     nextID: 0
   },
   error: null,
@@ -78,6 +79,7 @@ const form = (state = initialState, action) => {
           encryptedTexts: fromJS(action.encryptedTexts),
           texts: fromJS(action.texts),
           tags: state.getIn(['docFields', 'tags']).set('list', fromJS(action.tags)),
+          attachments: fromJS(action.attachments),
           nextID: fromJS(action.nextID)
         })
       });
@@ -122,6 +124,15 @@ const form = (state = initialState, action) => {
       return state
         .setIn(['docFields', 'encryptedTexts'], fromJS(action.encryptedTexts))
         .setIn(['docFields', 'texts'], fromJS(action.texts));
+    case 'UPDATE_DOC_ADD_ATTACHMENT':
+      return state
+        .setIn(['docFields', 'attachments'], state.getIn(['docFields', 'attachments']).push(fromJS({
+          name: fromJS(action.name),
+          type: fromJS(action.fileType),
+          file: fromJS(action.file)
+        })));
+    case 'UPDATE_DOC_REMOVE_ATTACHMENT':
+      return state.setIn(['docFields', 'attachments'], fromJS(action.payload));
     case 'UPDATE_DOCUMENT_SUCCESS':
     case 'UPDATE_DOC_VIEW_TO_DEFAULT':
     case 'CHANGE_VIEW':

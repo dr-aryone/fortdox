@@ -4,7 +4,7 @@ const DocumentTags = ({tags, onAddTag, onRemoveTag, onChange}) => {
   let tagList = [];
   tags.get('list').forEach((tag, i) => {
     tagList.push(
-      <div className='tag-item' key={i}>
+      <div className='tags-item' key={i}>
         <span>{tag}</span>
         <i className='material-icons' onClick={() => onRemoveTag(i)}>clear</i>
       </div>
@@ -29,10 +29,9 @@ const DocumentTags = ({tags, onAddTag, onRemoveTag, onChange}) => {
   return (
     <div className='input-field'>
       <label>Tags</label>
-      <div className='tag'>
+      <div className='tags'>
         {tagList}
       </div>
-      <label>Add Tag</label>
       <input
         name='tags'
         onChange={onChange}

@@ -10,13 +10,9 @@ const SideNav = ({changeView, organization, email, logout}) => {
         <h3>{email}</h3>
       </div>
       <ul className='side-nav'>
-        {/* <SideNavItem text='Users' icon='person' /> */}
         <SideNavItem text='Search' icon='search' onClick={() => changeView('SEARCH_VIEW')} />
         <SideNavItem text='Create Document' icon='description' onClick={() => changeView('CREATE_DOC_VIEW')} />
         <SideNavItem text='Invite User' icon='person_add' onClick={() => changeView('INVITE_USER_VIEW')} />
-        <SideNavItem text='Test'>
-          <li>Test</li>
-        </SideNavItem>
       </ul>
       <div className='logout-panel'>
         <a onClick={logout}>
