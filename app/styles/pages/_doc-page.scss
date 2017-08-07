@@ -29,13 +29,60 @@
   margin-left: 10px;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 
-  & input {
-    flex-grow: 1;
+  & input[type='file'] {
+    display: none;
   }
 
-  .tag {
-    padding: 10px 0px;
+  span {
+    padding: 5px;
+    word-break: break-all;
+  }
+
+  .material-icons {
+    font-size: 16px;
+    cursor: pointer;
+    background-color: $primary-color;
+    color: #FFF;
+    border-radius: 50%;
+    padding: 5px;
+    margin-left: 5px;
+  }
+
+  .download {
+    background-color: transparent;
+    color: $primary-color;
+  }
+
+  .attachments {
+    .attachment-list {
+      padding-top: 5px;
+      padding-bottom: 10px;
+
+      div {
+        display: flex;
+        justify-content: space-between;
+        border-radius: 15px;
+        margin-bottom: 5px;
+        background: $background-color;
+        padding: 5px;
+        align-items: center;
+
+        span:hover {
+          cursor: pointer;
+          text-decoration: underline;
+        }
+      }
+
+      div:hover {
+        cursor: pointer;
+      }
+    }
+  }
+
+  .tags {
+    padding-top: 5px;
 
     &-item {
       background-color: $background-color;
@@ -44,21 +91,7 @@
       padding: 5px;
       margin-right: 5px;
       margin-bottom: 5px;
-      border-radius: 16px;
-
-      span {
-        padding: 5px;
-        word-break: break-all;
-      }
-
-      .material-icons {
-        font-size: 16px;
-        cursor: pointer;
-        background-color: $primary-color;
-        color: #FFF;
-        border-radius: 50%;
-        padding: 5px;
-      }
+      border-radius: 16px
     }
   }
 }

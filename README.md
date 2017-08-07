@@ -121,7 +121,7 @@ Save and quit. The crontab will now run the backup code every night at 00:00.
 
 NOTE: If on startup Elasticsearch complains about not being able to allocate enough memory. Simply `sudo vim /etc/elasticsearch/jvm.options` and change:
   > -Xms2g --> -Xms1g
-    -Xmx2g --> -Xmx1g
+  > -Xmx2g --> -Xmx1g
 
 Locate backup.sh and give it executable permissions `chmod +x backup.sh`.
 
@@ -134,12 +134,16 @@ Elasticsearch can now write to elasticsearch_backup. But the location needs to b
 Open elasticsearch with your favorite editor `vim /etc/elasticsearch/elasticsearch.yml`. And under Paths set the following:
   > path.repo /var/elasticsearch_backup
 
+Now set up the cronjob via the `crontab -e` command by entering the line below:
+ > 0 0 * * * /absolute/path/to/backup.sh
+
 Now restart Elasticsearch manually with the following commands:
 
   Stop `sudo systemctl stop elasticsearch.service`
 
   Start `sudo systemctl start elasticsearch.service`
 
+Now the cronjob should create a folder labled with the timestamp of the backup every night at 00:00.
 Now it should work, if not Happy Googeling!   
 
 #Building installer
