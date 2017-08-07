@@ -1,13 +1,16 @@
-const createUser = require('./create.js');
-const {verifyUser} = require('./verify.js');
-const {verifyNewUser} = require('./verify.js');
-const {getOrganizationName} = require('./getUser.js');
-const {getUser} = require('./getUser.js');
-const verifyUUID = require('./verifyUUID.js');
 const setPassword = require('./setPassword.js');
 const TempKeys = require('./TempKeys.js');
 const getEncryptedPrivateKey = require('./getEncryptedPrivateKey.js');
-const setOrganizationId = require('./setOrganizationId.js');
+const {
+  verifyUser,
+  verifyNewUser,
+  getUser,
+  createUser,
+  setOrganizationId,
+  removeUser,
+  getOrganizationName,
+  verifyUUID
+} = require('./User.js');
 module.exports = {
   createUser,
   verifyUser,
@@ -18,5 +21,6 @@ module.exports = {
   TempKeys,
   getEncryptedPrivateKey,
   verifyNewUser,
-  setOrganizationId
+  setOrganizationId,
+  removeUser
 };

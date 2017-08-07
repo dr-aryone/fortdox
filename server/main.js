@@ -116,6 +116,12 @@ app.post('/register', async (req, res) => {
   let organizationId;
   let email = req.body.email;
   try {
+    await orgs.getName(req.body.organization);
+  } catch (error) {
+    console.error(error);
+    return res.status(error).send('organization');
+  }
+  try {
     await users.createUser(newUser);
   } catch (error) {
     console.error(error);
