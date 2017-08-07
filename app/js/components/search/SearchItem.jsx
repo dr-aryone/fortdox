@@ -1,7 +1,7 @@
 const React = require('react');
 const {List} = require('immutable');
 
-const SearchItem = ({doc, onUpdate}) => {
+const SearchItem = ({doc, onUpdate, onPreview}) => {
   let title = doc.getIn(['_source', 'title']);
   let tags = doc.getIn(['_source', 'tags']) !== undefined ? doc.getIn(['_source', 'tags']) : List();
   let id = doc.getIn(['_id']);
@@ -33,7 +33,7 @@ const SearchItem = ({doc, onUpdate}) => {
   }
 
   return (
-    <div className='search-item box' onClick={() => onUpdate(id)}>
+    <div className='search-item' onClick={() => onPreview(id)}>
       <h2>{title}</h2>
       <p>{text}</p>
       {tagList}

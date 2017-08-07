@@ -136,7 +136,13 @@ const form = (state = initialState, action) => {
     case 'UPDATE_DOCUMENT_SUCCESS':
     case 'UPDATE_DOC_VIEW_TO_DEFAULT':
     case 'CHANGE_VIEW':
-      return initialState;
+      switch (action.payload) {
+        case 'PREVIEW_DOC':
+        case 'UPDATE_DOC_VIEW':
+          return state;
+        default:
+          return initialState;
+      }
     default:
       return state;
   }

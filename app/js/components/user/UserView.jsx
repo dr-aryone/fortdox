@@ -2,9 +2,9 @@ const React = require('react');
 const SideNavContainer = require('containers/user/side_nav/SideNavContainer');
 const CreateDocContainer = require('containers/document/CreateDocContainer');
 const UpdateDocContainer = require('containers/document/UpdateDocContainer');
+const PreviewDocContainer = require('containers/document/PreviewDocContainer');
 const SearchViewContainer = require('containers/search/SearchViewContainer');
 const InviteUserContainer = require('containers/invite/InviteUserContainer');
-//const Header = require('components/user/Header');
 
 const UserView = ({currentView}) => {
   let page;
@@ -18,6 +18,9 @@ const UserView = ({currentView}) => {
       break;
     case 'UPDATE_DOC_VIEW':
       page = <UpdateDocContainer />;
+      break;
+    case 'PREVIEW_DOC':
+      page = <PreviewDocContainer />;
       break;
     case 'INVITE_USER_VIEW':
       page = <InviteUserContainer />;

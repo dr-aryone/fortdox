@@ -8,8 +8,6 @@ const navigation = (state = initialState, action) => {
   switch (action.type) {
     case 'CHANGE_VIEW':
       return state.set('currentView', fromJS(action.payload));
-    case 'SET_UPDATE_DOCUMENT':
-      return state.set('currentView', fromJS('UPDATE_DOC_VIEW'));
     case 'VERIFY_LOGIN_CREDS_SUCCESS':
     case 'UPDATE_DOCUMENT_SUCCESS':
     case 'DELETE_DOCUMENT_SUCCESS':

@@ -16,7 +16,8 @@ const SearchView = ({
   onSearch,
   onUpdate,
   paginationSearch,
-  toDocView
+  toDocView,
+  onPreview
 }) => {
   let searchResult = [];
   result.forEach((doc, index) => {
@@ -24,6 +25,7 @@ const SearchView = ({
       <SearchItem
         doc={doc}
         onUpdate={onUpdate}
+        onPreview={onPreview}
         key={index}
       />);
   });
@@ -54,7 +56,9 @@ const SearchView = ({
           </button>
         </form>
         {searchLength}
-        {searchResult}
+        <div className='search-result-grid'>
+          {searchResult}
+        </div>
         {pagination}
         <div className='doc-button'>
           <button className='round large' onClick={toDocView}>

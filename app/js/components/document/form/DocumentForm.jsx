@@ -80,8 +80,10 @@ const DocumentForm = ({
   return (
     <form onSubmit={onSubmit} className='document'>
       <div className='main-panel box'>
-        {fields}
-        <BottomPanel onAddField={onAddField} />
+        <div>
+          {fields}
+          <BottomPanel onAddField={onAddField} />
+        </div>
         <div className='buttons'>
           {children}
         </div>
