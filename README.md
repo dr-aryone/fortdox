@@ -90,8 +90,11 @@ Remove indicies from ElasticSearch
 
 > curl -XDELETE 'http://localhost:9200/<index>
 
-On client in `fortdoks/app`, remove `local_storage.json`, eg.
-> rm local_storage.json
+Clear local storage. 
+
+* Open DevTools in Electron (CMD+ALT+I or CTRL+ALT+I). 
+* Select the Application tab. 
+* Select Clear storage and at the bottom of the page, select 'Clear site data'.
 
 ## Backup on Mac
 
