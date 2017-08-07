@@ -3,6 +3,7 @@ const SearchItem = require('./SearchItem');
 const LoaderOverlay = require('components/general/LoaderOverlay');
 const ErrorBox = require('components/general/ErrorBox');
 const MessageBox = require('components/general/MessageBox');
+const PreviewDocContainer =  require('containers/document/PreviewDocContainer');
 
 const SearchView = ({
   searchString,
@@ -12,6 +13,7 @@ const SearchView = ({
   result,
   totalHits,
   isLoading,
+  documentToUpdate,
   onChange,
   onSearch,
   onUpdate,
@@ -30,41 +32,54 @@ const SearchView = ({
       />);
   });
 
+  if (searchResult.length % 3 === 2) searchResult.push(<div className='search-item invisible' />);
+
+  let preview = documentToUpdate ? <PreviewDocContainer /> : null;
   let pagination = renderPagination(currentIndex, paginationSearch, totalHits);
   let searchLength = totalHits || totalHits === 0 ? (
     <p>{totalHits} search result{totalHits == 1 ? '' : 's'} found.</p>
   ) : null;
 
+  let boxes = (error || message) ? (
+    <div className='alert-boxes'>
+      <ErrorBox errorMsg={error} />
+      <MessageBox message={message} />
+    </div>
+  ) : null;
+
+
   return (
     <div className='container-fluid'>
-      <div className='inner-container'>
-        <LoaderOverlay display={isLoading} />
-        <ErrorBox errorMsg={error} />
-        <MessageBox message={message} />
-        <h1 id='top'>Search</h1>
-        <form onSubmit={onSearch} className='input-bar box'>
-          <input
-            name='searchString'
-            type='text'
-            value={searchString}
-            onChange={onChange}
-            placeholder='Search'
-            autoFocus
-          />
-          <button onClick={onSearch} type='submit'>
-            <i className='material-icons'>search</i>
-          </button>
-        </form>
-        {searchLength}
-        <div className='search-result-grid'>
-          {searchResult}
+      <LoaderOverlay display={isLoading} />
+      {boxes}
+      <div className={`inner-container${documentToUpdate ? '-big' : ''}`}>
+        <div className={`${documentToUpdate ? 'left' : ''}`}>
+          <h1 id='top'>Search</h1>
+          <form onSubmit={onSearch} className='input-bar box'>
+            <input
+              name='searchString'
+              type='text'
+              value={searchString}
+              onChange={onChange}
+              placeholder='Search'
+              autoFocus
+            />
+            <button onClick={onSearch} type='submit'>
+              <i className='material-icons'>search</i>
+            </button>
+          </form>
+          {searchLength}
+          <div className={`search-result${documentToUpdate ? '' : '-grid'}`}>
+            {searchResult}
+          </div>
+          {pagination}
+          <div className='doc-button'>
+            <button className='round large' onClick={toDocView}>
+              <i className='material-icons'>add</i>
+            </button>
+          </div>
         </div>
-        {pagination}
-        <div className='doc-button'>
-          <button className='round large' onClick={toDocView}>
-            <i className='material-icons'>add</i>
-          </button>
-        </div>
+        {preview}
       </div>
     </div>
   );

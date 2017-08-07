@@ -12,7 +12,8 @@ const mapStateToProps = state => {
     message: state.search.get('message'),
     result: state.search.get('result'),
     totalHits: state.search.get('totalHits'),
-    isLoading: state.search.get('isLoading')
+    isLoading: state.search.get('isLoading'),
+    documentToUpdate: state.updateDocument.get('documentToUpdate')
   };
 };
 
@@ -37,7 +38,6 @@ const mapDispatchToProps = dispatch => {
     },
     onPreview: id => {
       dispatch(setUpdateDocument(id));
-      dispatch(action.changeView('PREVIEW_DOC'));
     }
   };
 };

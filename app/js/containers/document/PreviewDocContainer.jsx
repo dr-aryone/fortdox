@@ -12,9 +12,6 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    toSearchView: () => {
-      dispatch(action.changeView('SEARCH_VIEW'));
-    },
     onEdit: () => {
       dispatch(action.changeView('UPDATE_DOC_VIEW'));
     }

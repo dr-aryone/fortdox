@@ -1,38 +1,33 @@
 const React = require('react');
-const {fromJS} = require('immutable');
 const LoaderOverlay = require('components/general/LoaderOverlay');
 const ErrorBox = require('components/general/ErrorBox');
 const DocumentTags = require('./form/DocumentTags');
 const Attachments = require('./form/Attachments');
 
-const PreviewDoc = ({docFields, isLoading, error, onEdit, toSearchView}) => {
+const PreviewDoc = ({docFields, isLoading, error, onEdit}) => {
   let title = docFields.getIn(['title', 'value']);
   let texts = renderTexts(docFields);
-  let tags = docFields.get('tags');
-  let attachments = docFields.get('attachments');
+  let tags = docFields.get('tags') ? <DocumentTags tags={docFields.get('tags')} /> : null;
+  let attachments = docFields.get('attachments') ?
+    <Attachments attachments={docFields.get('attachments')} /> : null;
+  let misc = (docFields.getIn(['tags', 'list']).size && docFields.get('attachments').size) !== 0 ?
+    (<div className='misc'>
+      {tags}
+      {attachments}
+    </div>) : null;
 
   return (
-    <div className='container-fluid'>
-      <div className='inner-container'>
-        <LoaderOverlay display={isLoading} />
-        <ErrorBox errorMsg={error} />
+    <div className='right'>
+      <LoaderOverlay display={isLoading} />
+      <ErrorBox errorMsg={error} />
+      <div className='box'>
         <h1>{title}</h1>
-        <div className='document'>
-          <div className='main-panel box'>
-            <div>
-              {texts}
-            </div>
-            <div className='buttons'>
-              <button type='button' onClick={toSearchView}>Back</button>
-              <button type='button' onClick={onEdit}>Edit</button>
-            </div>
-          </div>
-          <div className='side-panel box'>
-            <DocumentTags tags={fromJS(tags)} />
-            <Attachments attachments={attachments} />
-          </div>
+        <div>
+          {texts}
         </div>
       </div>
+      {misc}
+      <button onClick={onEdit}>Edit</button>
     </div>
   );
 };
