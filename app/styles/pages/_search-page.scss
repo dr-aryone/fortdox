@@ -1,11 +1,19 @@
 .left {
-  width: 50%;
-  resize: horizontal;
-  display: inline-block;
+  width: 35%;
+  padding: 20px;
+  padding-top: 0px;
+  height: 100%;
+  overflow-y: scroll;
+  box-sizing: border-box;
 }
 
 .right {
-  display: inline-block;
+  width: 0px;
+  flex-grow: 1;
+  padding: 20px;
+  height: 100%;
+  overflow-y: scroll;
+  box-sizing: border-box;
 }
 
 .pagination {
@@ -75,5 +83,45 @@
 
   .search-item {
     width: 100%;
+  }
+}
+
+.misc {
+  @extend .box;
+  display: flex;
+  align-items: flex-start;
+
+  .input-field {
+    flex-grow: 1;
+  }
+  .attachments {
+    width: 25%;
+
+    .material-icons {
+      color: $primary-color;
+    }
+  }
+}
+
+.alert-boxes {
+  width: percentage(10/12);
+  margin-left: percentage(1/12);
+  padding-top: 10px;
+}
+
+.edit {
+  position: relative;
+  float: right;
+  border-radius: 50%;
+  background-color: $primary-color;
+
+  &:hover {
+    background-color: lighten($primary-color, 5%);
+  }
+
+  .material-icons {
+    font-size: 18px;
+    color: #FFF;
+    padding: 5px;
   }
 }

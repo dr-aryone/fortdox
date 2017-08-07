@@ -134,8 +134,8 @@ const form = (state = initialState, action) => {
     case 'UPDATE_DOC_REMOVE_ATTACHMENT':
       return state.setIn(['docFields', 'attachments'], fromJS(action.payload));
     case 'UPDATE_DOCUMENT_SUCCESS':
-    case 'UPDATE_DOC_VIEW_TO_DEFAULT':
     case 'CHANGE_VIEW':
+    case 'SEARCH_SUCCESS':
       switch (action.payload) {
         case 'PREVIEW_DOC':
         case 'UPDATE_DOC_VIEW':

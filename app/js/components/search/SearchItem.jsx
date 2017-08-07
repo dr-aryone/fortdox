@@ -22,7 +22,7 @@ const SearchItem = ({doc, onUpdate, onPreview}) => {
       let maxLength = 250;
       for (let i = 0; i < texts.size; i++) {
         if (texts.get(i).get('text').length + currentLength > maxLength) {
-          text.push(texts.get(i).get('text').splice(0, texts[i].length+currentLength-maxLength));
+          text.push(texts.get(i).get('text').slice(0, (maxLength-currentLength)));
           break;
         } else {
           text.push(texts.get(i).get('text'));
@@ -34,6 +34,9 @@ const SearchItem = ({doc, onUpdate, onPreview}) => {
 
   return (
     <div className='search-item' onClick={() => onPreview(id)}>
+      <div className='edit'>
+        <i className='material-icons' onClick={() => onUpdate(id)}>edit</i>
+      </div>
       <h2>{title}</h2>
       <p>{text}</p>
       {tagList}

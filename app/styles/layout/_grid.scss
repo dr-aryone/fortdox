@@ -41,6 +41,7 @@
 }
 
 .inner-container-big {
-  width: 95%;
-  margin-left: 2.5%;
+  display: flex;
+  box-sizing: border-box;
+  height: 100%;
 }
