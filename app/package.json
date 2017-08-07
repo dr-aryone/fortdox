@@ -1,10 +1,10 @@
 {
   "name": "FortDox",
   "productName": "FortDox",
-  "version": "1.0.9",
-  "author": "EdgeGuide <johan.callvik@gmail.com>",
+  "version": "0.1.0",
+  "author": "EdgeGuide <infok@edgeguide.com>",
   "main": "main.js",
-  "homepage": "",
+  "homepage": "edgeguide.se",
   "scripts": {
     "start": "electron .",
     "mac": "build --mac",
@@ -83,9 +83,6 @@
         "url": "http://localhost:8000/downloads"
       }
     ],
-    "directories": {
-      "output": "/opt/fortdox"
-    },
     "dmg": {
       "contents": [
         {

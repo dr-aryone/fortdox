@@ -14,7 +14,8 @@ const initialState = fromJS({
   isLoading: false,
   uuid: '',
   temporaryPassword: '',
-  privateKey: null
+  privateKey: null,
+  forceBack: false
 });
 
 const verifyUser = (state = initialState, action) => {
@@ -48,6 +49,8 @@ const verifyUser = (state = initialState, action) => {
         error: fromJS(action.payload),
         isLoading: false
       });
+    case 'FORCE_BACK':
+      return state.set('forceBack', true);
     case 'CHANGE_VIEW':
     case 'VERIFY_NEW_USER_SUCCESS':
       return initialState;
