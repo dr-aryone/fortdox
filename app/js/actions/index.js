@@ -46,6 +46,14 @@ const changeView = nextView => {
   };
 };
 
+const forceBack = () => {
+  return dispatch => {
+    dispatch({
+      type: 'FORCE_BACK'
+    });
+  };
+};
+
 const logout = () => {
   return dispatch => {
     return dispatch({
@@ -54,4 +62,4 @@ const logout = () => {
   };
 };
 
-module.exports = {inputChange, changeView, logout};
+module.exports = {inputChange, changeView, logout, forceBack};

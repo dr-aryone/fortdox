@@ -5,16 +5,20 @@ const {readStorage} = require('actions/utilities/storage');
 const embedPrivateKey = require('actions/utilities/embedPrivateKey');
 
 const directLogin = () => {
-  return async dispatch => {
+  return async (dispatch, getState) => {
     dispatch({
       type: 'DIRECT_LOGIN_START'
     });
-    if (Object.keys(localStorage).length !== 1) {
+    let state = getState();
+    if (state.verifyUser.get('forceBack')) return dispatch({
+      type: 'FORCE_BACK'
+    });
+    if (Object.keys(JSON.parse(localStorage.getItem('fortdox'))).length !== 1 && !localStorage.getItem(Object.keys(JSON.parse(localStorage.getItem('fortdox'))).length[0])) {
       return dispatch({
         type: 'DIRECT_LOGIN_FAILED'
       });
     }
-    let email = Object.keys(localStorage)[0];
+    let email = Object.keys(JSON.parse(localStorage.getItem('fortdox')))[0];
     const user = readStorage();
     const organization = Object.keys(user[email])[0];
     return dispatch(loginAs(email, organization));

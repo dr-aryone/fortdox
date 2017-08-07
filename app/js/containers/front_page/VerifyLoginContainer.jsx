@@ -26,7 +26,7 @@ const mapDispatchToProps = dispatch => {
       dispatch(login());
     },
     toLoginView: () => {
-      dispatch(action.changeView('LOGIN_VIEW'));
+      dispatch(action.forceBack());
     }
   };
 };

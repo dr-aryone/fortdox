@@ -89,6 +89,11 @@ const activateOrganizaton = () => {
             type: 'ACTIVATE_ORGANIZATION_ERROR',
             payload: 'Unable to connect to server. Please try again later.'
           });
+        case 409:
+          return dispatch({
+            type: 'ACTIVATE_ORGANIZATION_ERROR',
+            payload: 'Organization already exists'
+          });
       }
     }
     writeStorage(result.privateKey, result.salt, response.body.organizationName, email);
