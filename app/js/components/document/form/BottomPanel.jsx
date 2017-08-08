@@ -28,7 +28,7 @@ class BottomPanel extends React.Component {
             <span className='material-icons' id='TOGGLE'>add</span>
           </button>
         </div>
-        <div className='dropdown-wrapper'>
+        <div className={`dropdown-wrapper ${this.state.show ? 'show' : ''}`}>
           <ul className={`dropdown ${this.state.show ? 'show' : ''}`}>
             <li onClick={() => this.clickHandler(null, 'NEW_ENCRYPTED_TEXT', onAddField)}>
               <i className='material-icons'>enhanced_encryption</i>
