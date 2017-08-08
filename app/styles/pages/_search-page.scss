@@ -41,7 +41,7 @@
   height: 100%;
   overflow-y: scroll;
   box-sizing: border-box;
-  
+
   &.show {
     opacity: 1;
     transition: opacity 0.2s 0.5s;
@@ -89,6 +89,11 @@
   @extend .box;
   cursor: pointer;
 
+  .round.small {
+    box-shadow: none;
+    float: right;
+  }
+
   .highlight {
     background-color: lighten($primary-color, 10%);
     padding: 0px 5px;
@@ -105,16 +110,6 @@
   }
 }
 
-.search-result-grid {
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
-
-  .search-item {
-    width: 32%;
-  }
-}
-
 .search-result {
   display: flex;
   justify-content: space-between;
@@ -122,6 +117,12 @@
 
   .search-item {
     width: 100%;
+  }
+
+  &.grid {
+    .search-item {
+      width: 32%;
+    }
   }
 }
 
@@ -133,12 +134,9 @@
   .input-field {
     flex-grow: 1;
   }
+
   .attachments {
     width: 25%;
-
-    .download{
-      color: $primary-color;
-    }
   }
 }
 
@@ -146,21 +144,4 @@
   width: percentage(10/12);
   margin-left: percentage(1/12);
   padding-top: 10px;
-}
-
-.edit {
-  position: relative;
-  float: right;
-  border-radius: 50%;
-  background-color: $primary-color;
-
-  &:hover {
-    background-color: lighten($primary-color, 5%);
-  }
-
-  .material-icons {
-    font-size: 18px;
-    color: #FFF;
-    padding: 5px;
-  }
 }

@@ -47,12 +47,9 @@ const SearchView = ({
 
   let docButton = !documentToUpdate ? (
     <div className='doc-button'>
-      <button className='round large' onClick={toDocView}>
-        <i className='material-icons'>add</i>
-      </button>
+      <button className='round large material-icons' onClick={toDocView}>add</button>
     </div>
   ) : null;
-
 
   return (
     <div className='container-fluid'>
@@ -70,12 +67,12 @@ const SearchView = ({
               placeholder='Search'
               autoFocus
             />
-            <button onClick={onSearch} type='submit'>
-              <i className='material-icons'>search</i>
+            <button className='material-icons' onClick={onSearch} type='submit'>
+              search
             </button>
           </form>
           {searchLength}
-          <div className={`search-result${documentToUpdate ? '' : '-grid'}`}>
+          <div className={`search-result ${documentToUpdate ? '' : 'grid'}`}>
             {searchResult}
           </div>
           {pagination}
@@ -97,18 +94,16 @@ function renderPagination(currentIndex, paginationSearch, totalHits) {
     let temp = new Array(end-start+1);
     temp.fill(null);
     temp.forEach((value, i) => {
-      start + i === currentIndex?
-        temp.push(<button className='pagination focused' key={start+i}>{start+i}</button>):
-        temp.push(<button className='pagination' onClick={() => paginationSearch(start+i)} key={start+i}>{start+i}</button>);
+      temp.push(<button className={`pagination ${start+i === currentIndex ? 'focused' : ''}`} key={start+i}>{start+i}</button>);
     });
     if (currentIndex !== 1) temp.unshift(
-      <button className='pagination' onClick={() => paginationSearch(currentIndex-1)} key='left'>
-        <i className='material-icons'>keyboard_arrow_left</i>
+      <button className='pagination material-icons' onClick={() => paginationSearch(currentIndex-1)} key='left'>
+        keyboard_arrow_left
       </button>
     );
     if (Math.ceil(totalHits/10) !== currentIndex) temp.push(
-      <button className='pagination' onClick={() => paginationSearch(currentIndex+1)} key='right'>
-        <i className='material-icons'>keyboard_arrow_right</i>
+      <button className='pagination material-icons' onClick={() => paginationSearch(currentIndex+1)} key='right'>
+        keyboard_arrow_right
       </button>
     );
     pagination.push(<div key={length} className='pagination'>

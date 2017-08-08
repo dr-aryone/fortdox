@@ -56,7 +56,7 @@ class Attachments extends React.Component {
       let file = attachment.get('file');
       let type = attachment.get('type');
       let removeButton = onRemoveAttachment ?
-        <i className='material-icons' onClick={() => onRemoveAttachment(index)}>clear</i> : null;
+        <button className='material-icons round small' onClick={() => onRemoveAttachment(index)}>clear</button> : null;
       attachmentList.push(
         <div key={index}>
           <span onClick={() => this.openModal(name, file, type)}>{name}</span>

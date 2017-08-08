@@ -21,6 +21,11 @@ button {
     border-radius: 50%;
     padding: 10px;
 
+    &.small {
+      padding: 5px;
+      font-size: 16px;
+    }
+
     &.large {
       padding: 20px;
     }
@@ -46,21 +51,5 @@ button {
     width: 100%;
     text-align: center;
     margin-top: 5px;
-  }
-}
-
-.round {
-  .material-icons {
-    font-size: 16px;
-    cursor: pointer;
-    background-color: $primary-color;
-    color: #FFF;
-    border-radius: 50%;
-    padding: 5px;
-    margin-left: 5px;
-
-    &:hover {
-      background-color: lighten($primary-color, 5%);
-    }
   }
 }
