@@ -41,6 +41,7 @@
   height: 100%;
   overflow-y: scroll;
   box-sizing: border-box;
+  
   &.show {
     opacity: 1;
     transition: opacity 0.2s 0.5s;
@@ -48,6 +49,7 @@
 
   &.hide {
     opacity: 0;
+    padding: 0;
   }
 }
 
