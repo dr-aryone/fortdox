@@ -17,11 +17,11 @@ const PreviewDoc = ({docFields, isLoading, error, onEdit}) => {
     </div>) : null;
 
   return (
-    <div className='right'>
+    <div>
       <LoaderOverlay display={isLoading} />
       <ErrorBox errorMsg={error} />
+      <h1>{title}</h1>
       <div className='box'>
-        <h1>{title}</h1>
         <div>
           {texts}
         </div>
@@ -37,21 +37,26 @@ function renderTexts(doc) {
   let texts = doc.get('texts');
   let size = encryptedTexts.size + texts.size;
   let textList = [];
+  let newlineRegex = /\n/;
   for (let i = 0; i < size; i++) {
     if (encryptedTexts.size === 0) {
-      textList.push(<p key={i}>{texts.first().get('value')}</p>);
+      let text = texts.first().get('value').split(newlineRegex);
+      text.forEach((paragraph, i) => textList.push(<p key={i}>{paragraph}</p>));
       texts = texts.shift();
     } else if (texts.size === 0) {
-      textList.push(<p key={i}>{encryptedTexts.first().get('value')}</p>);
+      let text = encryptedTexts.first().get('value').split(newlineRegex);
+      text.forEach((paragraph, i) => textList.push(<p key={i}>{paragraph}</p>));
       encryptedTexts = encryptedTexts.shift();
     } else {
       let encryptedID = encryptedTexts.first().get('id');
       let textID = texts.first().get('id');
       if (encryptedID < textID) {
-        textList.push(<p key={i}>{encryptedTexts.first().get('value')}</p>);
+        let text = encryptedTexts.first().get('value').split(newlineRegex);
+        text.forEach((paragraph, i) => textList.push(<p key={i}>{paragraph}</p>));
         encryptedTexts = encryptedTexts.shift();
       } else {
-        textList.push(<p key={i}>{texts.first().get('value')}</p>);
+        let text = texts.first().get('value').split(newlineRegex);
+        text.forEach((paragraph, i) => textList.push(<p key={i}>{paragraph}</p>));
         texts = texts.shift();
       }
     }

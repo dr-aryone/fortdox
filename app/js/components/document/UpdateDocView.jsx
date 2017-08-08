@@ -45,8 +45,8 @@ class UpdateDocView extends React.Component {
             onAddAttachment={onAddAttachment}
             onRemoveAttachment={onRemoveAttachment}
           >
-            <button onClick={toSearchView} type='button'>Back</button>
             <button onClick={onUpdate} type='submit'>Update</button>
+            <button onClick={toSearchView} type='button'>Back</button>
           </DocumentForm>
         </div>
       </div>

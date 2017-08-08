@@ -13,7 +13,6 @@ class LoginView extends React.Component {
     let {
       loginAs,
       toRegisterView,
-      toUserView,
       message
     } = this.props;
 
@@ -56,9 +55,6 @@ class LoginView extends React.Component {
         </div>
         <button onClick={toRegisterView} className='block'>
           Register a New Team
-        </button>
-        <button onClick={toUserView} className='block'>
-          Fuskknapp!
         </button>
       </div>
     );

@@ -1,19 +1,54 @@
+.search-container {
+  display: flex;
+  box-sizing: border-box;
+  height: 100%;
+  transition: all 0.5s;
+
+  &.small {
+    width: percentage(10/12);
+    margin-left: percentage(1/12);
+  }
+
+  &.big{
+    width: 100%;
+  }
+}
+
 .left {
-  width: 35%;
   padding: 20px;
   padding-top: 0px;
-  height: 100%;
   overflow-y: scroll;
   box-sizing: border-box;
+  height: 100%;
+
+  &.small {
+    width: 35%;
+    transition: width 0.5s;
+    border-right: 5px solid #EEE;
+  }
+
+  &.full {
+    width: 100%;
+    transition: width 0.5s;
+  }
 }
 
 .right {
   width: 0px;
   flex-grow: 1;
   padding: 20px;
+  padding-top: 0px;
   height: 100%;
   overflow-y: scroll;
   box-sizing: border-box;
+  &.show {
+    opacity: 1;
+    transition: opacity 0.2s 0.5s;
+  }
+
+  &.hide {
+    opacity: 0;
+  }
 }
 
 .pagination {
@@ -79,7 +114,9 @@
 }
 
 .search-result {
-  display: block;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
 
   .search-item {
     width: 100%;
@@ -97,7 +134,7 @@
   .attachments {
     width: 25%;
 
-    .material-icons {
+    .download{
       color: $primary-color;
     }
   }
