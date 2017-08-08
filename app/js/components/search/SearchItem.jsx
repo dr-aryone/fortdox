@@ -34,9 +34,7 @@ const SearchItem = ({doc, onUpdate, onPreview}) => {
 
   return (
     <div className='search-item' onClick={() => onPreview(id)}>
-      <div className='edit'>
-        <i className='material-icons' onClick={() => onUpdate(id)}>edit</i>
-      </div>
+      <button className='round small material-icons' onClick={() => onUpdate(id)}>edit</button>
       <h2>{title}</h2>
       <p>{text}</p>
       {tagList}

@@ -22,6 +22,11 @@
 
 .document {
   display: flex;
+
+  .round.small {
+    box-shadow: none;
+    margin-left: 10px;
+  }
 }
 
 .side-panel {
@@ -31,17 +36,16 @@
   flex-direction: column;
   overflow: hidden;
 
-  & input[type='file'] {
-    display: none;
-  }
-
   span {
-    padding: 5px;
     word-break: break-all;
   }
 }
 
 .attachments {
+  & input[type='file'] {
+    display: none;
+  }
+
   .attachment-list {
     padding-top: 5px;
     padding-bottom: 10px;
@@ -49,10 +53,10 @@
     div {
       display: flex;
       justify-content: space-between;
-      border-radius: 15px;
+      border-radius: 16px;
       margin-bottom: 5px;
       background: $background-color;
-      padding: 5px;
+      padding: 5px 10px;
       align-items: center;
 
       &:hover {
@@ -81,56 +85,14 @@
   padding-top: 5px;
   overflow-y: scroll;
 
-  &-item {
+  .tag {
     background-color: $background-color;
     display: inline-flex;
     align-items: center;
     padding: 5px 10px;
-    margin-right: 5px;
+    margin-right: 10px;
     margin-bottom: 5px;
-    border-radius: 16px
-  }
-
-  .material-icons {
-    font-size: 16px;
-    cursor: pointer;
-    background-color: $primary-color;
-    color: #FFF;
-    border-radius: 50%;
-    padding: 5px;
-    margin-left: 5px;
-
-    &:hover {
-      background-color: lighten($primary-color, 5%);
-    }
-  }
-}
-
-.main-panel {
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  width: 0px;
-
-  .text {
-    width: 100%;
-  }
-
-  label {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-
-    .material-icons {
-      color: $primary-color;
-      cursor: pointer;
-    }
-  }
-
-  .buttons {
-    display: flex;
-    justify-content: space-between;
+    border-radius: 16px;
   }
 }
 
@@ -167,6 +129,39 @@
     outline: 0;
   }
 }
+
+.main-panel {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 0px;
+
+  .text {
+    width: 100%;
+  }
+
+  label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .material-icons {
+      color: $primary-color;
+      cursor: pointer;
+
+      &:hover {
+        color: lighten($primary-color, 5%);
+      }
+    }
+  }
+
+  .buttons {
+    display: flex;
+    justify-content: space-between;
+  }
+}
+
 
 .dropdown-wrapper {
   position: absolute;
