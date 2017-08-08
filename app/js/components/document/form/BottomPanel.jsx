@@ -8,7 +8,7 @@ class BottomPanel extends React.Component {
 
     this.state = {
       show: false,
-      hasBeenClosed: false
+      hasBeenClicked: false
     };
   }
 
@@ -24,21 +24,21 @@ class BottomPanel extends React.Component {
     return (
       <div className='bottom-panel'>
         <div>
-          <button className='round' type='button' onClick={() => this.clickHandler('TOGGLE')}>
-            <i className='material-icons'>add</i>
+          <button className='round' id='TOGGLE' type='button' onClick={event => this.clickHandler(event, 'TOGGLE')}>
+            <span className='material-icons' id='TOGGLE'>add</span>
           </button>
         </div>
         <div className='dropdown-wrapper'>
           <ul className={`dropdown ${this.state.show ? 'show' : ''}`}>
-            <li onClick={() => this.clickHandler('NEW_ENCRYPTED_TEXT', onAddField)}>
+            <li onClick={() => this.clickHandler(null, 'NEW_ENCRYPTED_TEXT', onAddField)}>
               <i className='material-icons'>enhanced_encryption</i>
               New Encrypted Text
             </li>
-            <li onClick={() => this.clickHandler('NEW_TEXT', onAddField)}>
+            <li onClick={() => this.clickHandler(null, 'NEW_TEXT', onAddField)}>
               <i className='material-icons'>note_add</i>
               New Text
             </li>
-            <li onClick={() => this.clickHandler('NEW_FILE', onAddField)}>
+            <li onClick={() => this.clickHandler(null, 'NEW_FILE', onAddField)}>
               <i className='material-icons'>attach_file</i>
               Attach New File
             </li>
@@ -48,14 +48,22 @@ class BottomPanel extends React.Component {
     );
   }
 
-  onClose = () => {
+  onClose = event => {
+    if (event.target.id === 'TOGGLE') this.setState({
+      hasBeenClicked: true
+    });
+
     this.setState({
       show: false
     });
     window.removeEventListener('click', this.onClose, true);
   }
 
-  clickHandler = (button, onAddField) => {
+  clickHandler = (event, button, onAddField) => {
+    if (button === 'TOGGLE' && this.state.hasBeenClicked) return this.setState({
+      hasBeenClicked: false
+    });
+
     if (!this.state.show) {
       window.addEventListener('click', this.onClose, true);
     }
