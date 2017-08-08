@@ -19,9 +19,6 @@ const mapDispatchToProps = (dispatch) => {
       event.preventDefault();
       dispatch(loginAs(email, organization));
     },
-    toUserView: () => {
-      dispatch(action.changeView('USER_VIEW'));
-    },
     toRegisterView: () => {
       dispatch(action.changeView('REGISTER_VIEW'));
     }

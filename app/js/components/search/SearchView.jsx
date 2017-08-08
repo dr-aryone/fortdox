@@ -32,9 +32,7 @@ const SearchView = ({
       />);
   });
 
-  if (searchResult.length % 3 === 2) searchResult.push(<div className='search-item invisible' />);
-
-  let preview = documentToUpdate ? <PreviewDocContainer /> : null;
+  if (searchResult.length % 3 === 2) searchResult.push(<div className='search-item invisible' key={'invisible'} />);
   let pagination = renderPagination(currentIndex, paginationSearch, totalHits);
   let searchLength = totalHits || totalHits === 0 ? (
     <p>{totalHits} search result{totalHits == 1 ? '' : 's'} found.</p>
@@ -47,13 +45,21 @@ const SearchView = ({
     </div>
   ) : null;
 
+  let docButton = !documentToUpdate ? (
+    <div className='doc-button'>
+      <button className='round large' onClick={toDocView}>
+        <i className='material-icons'>add</i>
+      </button>
+    </div>
+  ) : null;
+
 
   return (
     <div className='container-fluid'>
       <LoaderOverlay display={isLoading} />
       {boxes}
-      <div className={`inner-container${documentToUpdate ? '-big' : ''}`}>
-        <div className={`${documentToUpdate ? 'left' : ''}`}>
+      <div className={`search-container ${documentToUpdate ? 'big' : 'small'}`}>
+        <div className={`left ${documentToUpdate ? 'small' : 'full'}`}>
           <h1 id='top'>Search</h1>
           <form onSubmit={onSearch} className='input-bar box'>
             <input
@@ -73,13 +79,11 @@ const SearchView = ({
             {searchResult}
           </div>
           {pagination}
-          <div className='doc-button'>
-            <button className='round large' onClick={toDocView}>
-              <i className='material-icons'>add</i>
-            </button>
-          </div>
+          {docButton}
         </div>
-        {preview}
+        <div className={`right ${documentToUpdate ? 'show' : 'hide'}`}>
+          <PreviewDocContainer />
+        </div>
       </div>
     </div>
   );
