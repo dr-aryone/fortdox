@@ -136,6 +136,7 @@ const form = (state = initialState, action) => {
     case 'UPDATE_DOCUMENT_SUCCESS':
     case 'CHANGE_VIEW':
     case 'SEARCH_SUCCESS':
+    case 'TAG_SEARCH_SUCCESS':
       switch (action.payload) {
         case 'PREVIEW_DOC':
         case 'UPDATE_DOC_VIEW':

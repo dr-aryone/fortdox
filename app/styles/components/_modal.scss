@@ -14,18 +14,8 @@
 
   .close {
     position: absolute;
-    top: -35px;
-    right: -35px;
-
-    .material-icons {
-      box-shadow: 0 2px 2px rgba(0, 0, 0, 0.15), 0 0 2px rgba(0, 0, 0, 0.11);
-      font-size: 16px;
-      cursor: pointer;
-      background-color: $primary-color;
-      color: #FFF;
-      border-radius: 50%;
-      padding: 5px;
-    }
+    top: -30px;
+    right: -30px;
   }
 
   &-inner {

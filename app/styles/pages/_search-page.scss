@@ -107,6 +107,10 @@
     border-radius: 16px;
     display: inline-block;
     word-break: break-all;
+
+    &:hover {
+      text-decoration: underline;
+    }
   }
 }
 
@@ -137,6 +141,11 @@
 
   .attachments {
     width: 25%;
+  }
+
+  .tag:hover {
+    text-decoration: underline;
+    cursor: pointer;
   }
 }
 
