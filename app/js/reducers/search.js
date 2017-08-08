@@ -18,9 +18,11 @@ const search = (state = initialState, action) => {
       return state.set(action.inputName, fromJS(action.inputValue));
     case 'SEARCH_START':
     case 'PAGINATION_SEARCH_START':
+    case 'TAG_SEARCH_START':
       return state.set('isLoading', true);
     case 'SEARCH_SUCCESS':
     case 'PAGINATION_SEARCH_SUCCESS':
+    case 'TAG_SEARCH_SUCCESS':
       return state.merge({
         searchString: fromJS(action.payload.searchString),
         currentIndex: fromJS(action.payload.index),
@@ -33,6 +35,7 @@ const search = (state = initialState, action) => {
       });
     case 'SEARCH_ERROR':
     case 'PAGINATION_SEARCH_ERROR':
+    case 'TAG_SEARCH_ERROR':
       return state.merge({
         result: [],
         error: fromJS(action.payload),

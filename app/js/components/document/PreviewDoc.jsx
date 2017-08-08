@@ -4,16 +4,16 @@ const ErrorBox = require('components/general/ErrorBox');
 const DocumentTags = require('./form/DocumentTags');
 const Attachments = require('./form/Attachments');
 
-const PreviewDoc = ({docFields, isLoading, error, onEdit}) => {
+const PreviewDoc = ({docFields, isLoading, error, onEdit, onTagSearch}) => {
   let title = docFields.getIn(['title', 'value']);
   let texts = renderTexts(docFields);
-  let tags = docFields.get('tags') ? <DocumentTags tags={docFields.get('tags')} /> : null;
+  let tags = docFields.get('tags') ? <DocumentTags tags={docFields.get('tags')} onTagSearch={onTagSearch} /> : null;
   let attachments = docFields.get('attachments') ?
     <Attachments attachments={docFields.get('attachments')} /> : null;
-  let misc = (docFields.getIn(['tags', 'list']).size && docFields.get('attachments').size) !== 0 ?
+  let misc = (docFields.getIn(['tags', 'list']).size || docFields.get('attachments').size) !== 0 ?
     (<div className='misc'>
-      {tags}
-      {attachments}
+      {docFields.getIn(['tags', 'list']).size > 0 ? tags : null}
+      {docFields.get('attachments').size > 0 ? attachments : null}
     </div>) : null;
 
   return (

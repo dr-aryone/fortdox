@@ -38,6 +38,9 @@ const mapDispatchToProps = dispatch => {
     },
     onPreview: id => {
       dispatch(setUpdateDocument(id));
+    },
+    onTagSearch: tag => {
+      dispatch(search.tagSearch(tag));
     }
   };
 };

@@ -19,7 +19,8 @@ const SearchView = ({
   onUpdate,
   paginationSearch,
   toDocView,
-  onPreview
+  onPreview,
+  onTagSearch
 }) => {
   let searchResult = [];
   result.forEach((doc, index) => {
@@ -28,6 +29,7 @@ const SearchView = ({
         doc={doc}
         onUpdate={onUpdate}
         onPreview={onPreview}
+        onTagSearch={onTagSearch}
         key={index}
       />);
   });

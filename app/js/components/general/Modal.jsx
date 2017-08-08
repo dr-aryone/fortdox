@@ -8,7 +8,7 @@ const Modal = ({children, onClose, show}) => {
   const modal = show ? (
     <div className='modal' onClick={clickHandler}>
       <div className='modal-inner'>
-        <span className='close material-icons' onClick={onClose}>clear</span>
+        <button className='close material-icons round small' onClick={onClose}>clear</button>
         {children}
       </div>
     </div>

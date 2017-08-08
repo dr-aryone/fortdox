@@ -63,7 +63,7 @@ class BottomPanel extends React.Component {
     if (button === 'TOGGLE' && this.state.hasBeenClicked) return this.setState({
       hasBeenClicked: false
     });
-
+    
     if (!this.state.show) {
       window.addEventListener('click', this.onClose, true);
     }

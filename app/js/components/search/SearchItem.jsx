@@ -1,13 +1,13 @@
 const React = require('react');
 const {List} = require('immutable');
 
-const SearchItem = ({doc, onUpdate, onPreview}) => {
+const SearchItem = ({doc, onUpdate, onPreview, onTagSearch}) => {
   let title = doc.getIn(['_source', 'title']);
   let tags = doc.getIn(['_source', 'tags']) !== undefined ? doc.getIn(['_source', 'tags']) : List();
   let id = doc.getIn(['_id']);
   let tagList = [];
   tags.forEach((item, i) => {
-    tagList.push(<div className='tag' key={i}>{item}</div>);
+    tagList.push(<div className='tag' id='TAG' key={i} onClick={event => clickHandler(event, 'TAG', item)}>{item}</div>);
   });
 
   let text = [];
@@ -32,9 +32,21 @@ const SearchItem = ({doc, onUpdate, onPreview}) => {
     }
   }
 
+  const clickHandler = (event, element, item) => {
+    event.stopPropagation();
+    switch (element) {
+      case 'EDIT':
+        return onUpdate(item);
+      case 'ITEM':
+        return onPreview(item);
+      case 'TAG':
+        return onTagSearch(item);
+    }
+  };
+
   return (
-    <div className='search-item' onClick={() => onPreview(id)}>
-      <button className='round small material-icons' onClick={() => onUpdate(id)}>edit</button>
+    <div className='search-item' id='ITEM' onClick={event => clickHandler(event, 'ITEM', id)}>
+      <button className='round small material-icons' id='EDIT' onClick={event => clickHandler(event, 'EDIT', id)}>edit</button>
       <h2>{title}</h2>
       <p>{text}</p>
       {tagList}
