@@ -16,3 +16,5 @@ http://localhost:9200/_snapshot/fortdox_backup/ \
   -d '{
 	"indices": "_all"
 }'
+
+mysqldump --user=root --password=edgeguide --database fortdox > /var/mysql_backup/$timestamp.sql

@@ -1,4 +1,4 @@
-const {app, BrowserWindow} = require('electron');
+const {app, BrowserWindow, ipcMain} = require('electron');
 const path = require('path');
 const urlParser = require('url');
 const querystring = require('querystring');
@@ -8,20 +8,66 @@ const autoUpdater = require('electron-updater').autoUpdater;
 const log = require('electron-log');
 log.transports.file.level = 'info';
 let win;
-let activation = {
-  type: '',
-  code: null
-};
+let redirectParameters = null;
 autoUpdater.logger = log;
-let dev = true;
-//dev = (process.argv[2] === '--dev') ? true : false;
+let dev_mode = false;
+let openWindow = false;
+let pollingJob;
+dev_mode = (process.argv[2] === '--dev') ? true : false;
+app.setAsDefaultProtocolClient(config.name);
 
-async function createWindow() {
+const isSecondInstance = app.makeSingleInstance((commandLine, workingDirectory) => {
+  pollingJob = setInterval(() => {
+    if (process.platform === 'win32' && commandLine[1] !== undefined) {
+      let url = commandLine[1];
+      redirectParameters = setActivationParams(url);
+      switch (redirectParameters.type) {
+        case 'organization':
+          activateOrganization(redirectParameters.code);
+          break;
+        case 'user':
+          activateUser(url);
+      }
+    }
+  }, 1000);
+  if (openWindow) {
+    win.focus();
+  }
+});
+
+if (isSecondInstance) {
+  app.quit();
+}
+
+//If application opened from URL then this event will fire before 'ready' event.
+app.on('open-url', (event, url) => {
+  redirectParameters = setActivationParams(url);
+  if (openWindow) {
+    switch (redirectParameters.type) {
+      case 'organization':
+        activateOrganization(redirectParameters.code);
+        break;
+      case 'user':
+        activateUser(url);
+    }
+  }
+});
+
+app.on('ready', () => {
+  createBrowserWindow();
+  // if (dev) {
+  //   autoUpdater.setFeedURL(`${config.server}/downloads?version=${app.getVersion()}&platform=${process.platform}`);
+  //   autoUpdater.checkForUpdates();
+  // }
+});
+
+function createBrowserWindow() {
   win = new BrowserWindow({width: 1280, height: 720});
-  if (dev) {
+  if (dev_mode) {
     win.webContents.openDevTools();
     installExtension(REDUX_DEVTOOLS);
   }
+  openWindow = true;
 
   let openingUrl = urlParser.format({
     pathname: path.join(__dirname, 'index.html'),
@@ -29,30 +75,60 @@ async function createWindow() {
     slashes: true
   });
 
-  if (activation.code) {
-    switch (activation.type) {
-      case 'activate.organization':
-        openingUrl = `${openingUrl}?activateOrganizationCode=${activation.code}`;
+  if (redirectParameters) {
+    switch (redirectParameters.type) {
+      case 'organization':
+        openingUrl = `${openingUrl}?activateOrganizationCode=${redirectParameters.code}`;
         break;
-      case 'activate.user':
-        openingUrl = `${openingUrl}?activateUserCode=${activation.code}`;
+      case 'user':
+        openingUrl = `${openingUrl}?activateUserCode=${redirectParameters.code}`;
     }
   }
-
   win.loadURL(openingUrl);
-
   win.on('closed', () => {
     win = null;
   });
 }
-app.setAsDefaultProtocolClient(config.name);
 
-app.on('ready',  () => {
-  createWindow();
-  if (dev) {
-    autoUpdater.setFeedURL(`${config.server}/downloads?version=${app.getVersion()}&platform=${process.platform}`);
-    autoUpdater.checkForUpdates();
+const setActivationParams = url => {
+  let redirectParameters = {
+    type: '',
+    code: null
+  };
+  redirectParameters.type = redirectParameters.type = urlParser.parse(url).hostname.split('.')[1];
+  redirectParameters.code = querystring.parse(urlParser.parse(url).query).code;
+  return redirectParameters;
+};
+
+const activateOrganization = code => {
+  win.webContents.send('activate-organization', code);
+  win.focus();
+};
+
+const activateUser = url => {
+  let userToActivate = querystring.parse(urlParser.parse(url).query);
+  win.webContents.send('activate-user', userToActivate);
+  win.focus();
+};
+
+
+pollingJob = setInterval(() => {
+  if (process.platform === 'win32' && process.argv[1] !== undefined) {
+    let url = process.argv[1];
+    redirectParameters = setActivationParams(url);
+    switch (redirectParameters.type) {
+      case 'organization':
+        activateOrganization(redirectParameters.code);
+        break;
+      case 'user':
+        activateUser(url);
+    }
   }
+}, 100);
+
+
+ipcMain.on('stop', () => {
+  clearInterval(pollingJob);
 });
 
 autoUpdater.on('checking-for-update', () => {
@@ -70,21 +146,6 @@ autoUpdater.on('update-not-available', () => {
 autoUpdater.on('update-downloaded', (event, info) => {
   log.info('Update downloaded!! \n' + info);
   autoUpdater.quitAndInstall();
-});
-
-app.on('open-url', (event, url) => {
-  activation.type = urlParser.parse(url).hostname;
-  activation.code = querystring.parse(urlParser.parse(url).query).code;
-  let activateUser = querystring.parse(urlParser.parse(url).query);
-  if (win !== undefined) {
-    if (activation.type === 'activate.organization') {
-      win.webContents.send('activate-organization', activation.code);
-      win.show();
-    } else if (activation.type === 'activate.user') {
-      win.webContents.send('activate-user', activateUser);
-      win.show();
-    }
-  }
 });
 
 app.on('window-all-closed', () => {
