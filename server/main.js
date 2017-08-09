@@ -11,6 +11,7 @@ const {decryptMasterPassword} = require('./server_modules/encryption/keys/cryptM
 const {encryptMasterPassword} = require('./server_modules/encryption/keys/cryptMasterPassword');
 const {encryptPrivateKey} = require('./server_modules/encryption/authentication/privateKeyEncryption');
 const {decryptPrivateKey} = require('./server_modules/encryption/authentication/privateKeyEncryption');
+const {checkEmptyFields} = require('./server_modules/utilities/checkEmptyFields');
 const mailer = require('./server_modules/mailer');
 const expect = require('@edgeguideab/expect');
 const uuidv1 = require('uuid/v1');
@@ -376,11 +377,13 @@ app.post('/document', async (req, res) => {
   } catch (error) {
     return res.status(404).send();
   }
+  let fields = checkEmptyFields(req.body.doc);
+  if (!fields.valid) return res.status(400).send({emptyFields: fields.emptyFields, reason: fields.reason});
   try {
     return res.send(await es.addToIndex(req.body.doc, privateKey, encryptedMasterPassword, organization));
   } catch (error) {
     console.error(error);
-    return res.send(500).send(error);
+    return res.status(500).send(error);
   }
 });
 
@@ -401,6 +404,8 @@ app.patch('/document', async (req, res) => {
     console.error(error);
     return res.status(404).send();
   }
+  let fields = checkEmptyFields(req.body.doc);
+  if (!fields.valid) return res.status(400).send({emptyFields: fields.emptyFields, reason: fields.reason});
   try {
     response = await es.update(req.body, privateKey, encryptedMasterPassword);
     res.send(response);
@@ -419,7 +424,7 @@ app.delete('/document', async (req,res) => {
     id: 'string'
   }, req.query);
   if (!expectations.wereMet()) {
-    res.status(400).send({msg: 'Bad data format, please priovide atleast index, type, id'});
+    res.status(400).send(expectations.errors());
   } else {
     try {
       response = await es.deleteDocument(req.query);
