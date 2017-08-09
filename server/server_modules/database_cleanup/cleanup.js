@@ -31,11 +31,16 @@ module.exports = async (interval, es) => {
           });
           await db.Users.destroy();
         });
-        await es.deleteIndex(entry.name);
         await entry.destroy();
       } catch (error) {
         console.error(error);
         throw 500;
+      }
+      try {
+        await es.deleteIndex(entry.name);
+      } catch (error) {
+        console.error(error);
+        throw 404;
       }
     }
   });
