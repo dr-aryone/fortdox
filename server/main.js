@@ -28,9 +28,6 @@ const job = new CronJob('*/5 * * * *', async () => {
     console.error(error);
   }
 });
-const yaml = require('js-yaml');
-const fs = require('fs');
-
 job.start();
 
 app.use(bodyParser.json({limit: '100mb'}));
