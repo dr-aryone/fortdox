@@ -38,10 +38,6 @@ class BottomPanel extends React.Component {
               <i className='material-icons'>note_add</i>
               New Text
             </li>
-            <li onClick={() => this.clickHandler(null, 'NEW_FILE', onAddField)}>
-              <i className='material-icons'>attach_file</i>
-              Attach New File
-            </li>
           </ul>
         </div>
       </div>
@@ -63,7 +59,7 @@ class BottomPanel extends React.Component {
     if (button === 'TOGGLE' && this.state.hasBeenClicked) return this.setState({
       hasBeenClicked: false
     });
-    
+
     if (!this.state.show) {
       window.addEventListener('click', this.onClose, true);
     }

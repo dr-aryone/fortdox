@@ -1,4 +1,4 @@
-const {app, BrowserWindow, ipcMain} = require('electron');
+const {app, BrowserWindow, ipcMain, Menu} = require('electron');
 const path = require('path');
 const urlParser = require('url');
 const querystring = require('querystring');
@@ -85,6 +85,55 @@ function createBrowserWindow() {
     }
   }
   win.loadURL(openingUrl);
+
+  var template = [{
+    label: 'Application',
+    submenu: [{
+      label: `About ${config.name}`,
+      role: 'orderFrontStandardAboutPanel'
+    }, {
+      label: 'Refresh',
+      accelerator: 'CmdOrCtrl+R',
+      role: 'reload'
+    }, {
+      label: 'Quit',
+      accelerator: 'CmdOrCtrl+Q',
+      click: () => {
+        app.quit();
+      }
+    }]}, {
+      label: 'Edit',
+      submenu: [{
+        label: 'Undo',
+        accelerator: 'CmdOrCtrl+Z',
+        role: 'undo'
+      }, {
+        label: 'Redo',
+        accelerator: 'CmdOrCtrl+Y',
+        role: 'redo'
+      }, {
+        type: 'separator'
+      }, {
+        label: 'Cut',
+        accelerator: 'CmdOrCtrl+X',
+        role: 'cut'
+      }, {
+        label: 'Copy',
+        accelerator: 'CmdOrCtrl+C',
+        role: 'copy'
+      }, {
+        label: 'Paste',
+        accelerator: 'CmdOrCtrl+V',
+        role: 'paste'
+      }, {
+        label: 'Select All',
+        accelerator: 'CmdOrCtrl+A',
+        role: 'selectAll'
+      }]}
+  ];
+
+  Menu.setApplicationMenu(Menu.buildFromTemplate(template));
+
   win.on('closed', () => {
     win = null;
   });
