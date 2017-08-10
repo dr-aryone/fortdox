@@ -47,9 +47,9 @@ const SearchItem = ({doc, onUpdate, onPreview, onTagSearch}) => {
   return (
     <div className='search-item' id='ITEM' onClick={event => clickHandler(event, 'ITEM', id)}>
       <button className='round small material-icons' id='EDIT' onClick={event => clickHandler(event, 'EDIT', id)}>edit</button>
-      <h2>{title}</h2>
-      <p>{text}</p>
-      {tagList}
+      <h2 className='title'>{title}</h2>
+      <p className='text'>{text}</p>
+      <div className='tags'>{tagList}</div>
     </div>
   );
 };

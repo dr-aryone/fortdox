@@ -17,7 +17,6 @@
 .left {
   padding: 20px;
   padding-top: 0px;
-  overflow-y: scroll;
   box-sizing: border-box;
   height: 100%;
 
@@ -25,6 +24,7 @@
     width: 35%;
     transition: width 0.5s;
     border-right: 5px solid #EEE;
+    overflow-y: auto;
   }
 
   &.full {
@@ -87,16 +87,33 @@
 
 .search-item {
   @extend .box;
+  padding: 0px;
   cursor: pointer;
+
+  .title {
+    background-color: $grey;
+    padding: 10px;
+  }
+
+  .text {
+    padding: 10px;
+    word-break: break-all;
+  }
 
   .round.small {
     box-shadow: none;
     float: right;
+    margin: 5px 5px 0px 0px;
+    background-color: lighten($primary-color, 5%);
   }
 
   .highlight {
-    background-color: lighten($primary-color, 10%);
+    background-color: lighten($yellow, 20%);
     padding: 0px 5px;
+  }
+
+  .tags {
+    padding: 10px;
   }
 
   .tag {

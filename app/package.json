@@ -74,7 +74,8 @@
       "config.json",
       "local_storage.json",
       "aes.js",
-      "package.json"
+      "package.json",
+      "resources/*"
     ],
     "publish": [
       {
@@ -94,13 +95,15 @@
           "type": "link",
           "path": "/Applications"
         }
-      ]
+      ],
+      "icon": "resources/logo.icns"
     },
     "linux": {
       "target": "deb"
     },
     "win": {
-      "target": "NSIS"
+      "target": "NSIS",
+      "icon": "resources/logo.ico"
     }
   }
 }

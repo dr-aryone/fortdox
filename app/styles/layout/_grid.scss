@@ -7,9 +7,9 @@
 }
 
 .container-fluid {
-  margin-left: $side-nav-width;
+  margin-top: $header-height;
   height: 100%;
-  overflow-y: scroll;
+  overflow-y: auto;
 
   &.center-middle {
     display: flex;
