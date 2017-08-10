@@ -12,6 +12,9 @@ const PasswordView = ({organization, email, input, onChange, onLogin, toLoginVie
     <div className='container'>
       <LoaderOverlay display={isLoading} />
       {errorMsg}
+      <div className='logo'>
+        <img src={window.__dirname + '/resources/logo.png'} />
+      </div>
       <h1 className='text-center'>{organization}</h1>
       <div className='box'>
         <h2>{email}</h2>

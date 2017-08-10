@@ -48,6 +48,9 @@ class LoginView extends React.Component {
     return (
       <div className='container'>
         <MessageBox message={concatMessage} />
+        <div className='logo'>
+          <img src={window.__dirname + '/resources/logo.png'} />
+        </div>
         <h1 className='text-center'>{config.name}</h1>
         <div className={`box login-panel ${userList.length == 0 ? 'hide' :''}`}>
           <h2>{userList.length > 0 ? 'Choose an account': null}</h2>
