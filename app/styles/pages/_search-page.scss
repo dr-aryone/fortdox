@@ -89,6 +89,7 @@
   @extend .box;
   padding: 0px;
   cursor: pointer;
+  user-select: none;
 
   .title {
     background-color: $grey;

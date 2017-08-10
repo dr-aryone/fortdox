@@ -29,9 +29,6 @@ const job = new CronJob('*/5 * * * *', async () => {
     console.error(error);
   }
 });
-const yaml = require('js-yaml');
-const fs = require('fs');
-
 job.start();
 
 app.use(bodyParser.json({limit: '100mb'}));
@@ -46,13 +43,14 @@ app.post('/login', async (req, res) => {
   try {
     user = await users.getUser(req.body.email);
   } catch (error) {
-    console.error(error);
+    logger.log('silly', '/login: No existing user ' + req.body.email);
     return res.status(error).send();
   }
   let privateKey;
   try {
     privateKey = extract.privateKey(req.headers.authorization);
   } catch (error) {
+    logger.log('info', 'No content in header Authorization');
     return res.status(400).send();
   }
   let objToStore = {
@@ -62,12 +60,14 @@ app.post('/login', async (req, res) => {
   try {
     await decryptMasterPassword(privateKey, user.password);
     objToStore = (await encryptPrivateKey(secret, JSON.stringify(objToStore))).toString('base64');
-    return res.send({
+    res.send({
       email: user.email,
       objToStore
     });
+    logger.log('info', `User ${req.body.email} has logged in!`);
+    return;
   } catch (error) {
-    console.error(error);
+    logger.log('silly', `Encrypting LocalStorage object failed for user ${req.body.email}`);
     return res.status(401).send({
       message: statusMsg.user[401]
     });
@@ -79,7 +79,7 @@ app.post('/login/session', async (req, res) => {
   try {
     user = await users.getUser(req.body.email);
   } catch (error) {
-    console.error(error);
+    logger.log('silly', '/login/session: No existing user ' + req.body.email);
     return res.status(error).send();
   }
   let session;
@@ -87,21 +87,29 @@ app.post('/login/session', async (req, res) => {
     session = extract.sessionKey(req.headers.authorization);
     session = JSON.parse(await decryptPrivateKey(secret, session));
   } catch (error) {
-    return res.status(400).send();
+    logger.log('silly', 'Probably failed because secret was updated or session expired/was never initiated');
+    return res.status(401).send({
+      message: statusMsg.session[401]
+    });
   }
   if (!sessions.stillAlive(session.sessionStart)) {
-    return res.status(440).send();
+    logger.log('silly', 'Session expired for ' + req.body.email);
+    return res.status(401).send({
+      message: statusMsg.session[401]
+    });
   }
   try {
     await decryptMasterPassword(session.privateKey, user.password);
-    return res.send({
+    res.send({
       email: user.email,
       privateKey: Buffer.from(session.privateKey).toString('base64')
     });
+    logger.log('info', `User ${req.body.email} logged in via session!`);
+    return;
   } catch (error) {
-    console.error(error);
+    logger.log('error', 'Could not decrypt master password for ' + req.body.email);
     return res.status(401).send({
-      message: statusMsg.user[401]
+      message: statusMsg.session[401]
     });
   }
 });
@@ -119,13 +127,14 @@ app.post('/register', async (req, res) => {
   try {
     await orgs.getName(req.body.organization);
   } catch (error) {
-    console.error(error);
+    logger.log('silly', `Organization ${req.body.organization} already exists`);
     return res.status(error).send('organization');
   }
   try {
     await users.createUser(newUser);
+    logger.log('silly', `User ${req.body.email} was created!`);
   } catch (error) {
-    console.error(error);
+    logger.log('silly', `User ${req.body.email} already exists`);
     return res.status(error).send('user');
   }
   try {
@@ -135,7 +144,7 @@ app.post('/register', async (req, res) => {
       organizationId
     });
   } catch (error) {
-    console.error(error);
+    logger.log('error', `Could not set Organization ID (${organizationId}) for ${email}`);
     return res.status(error).send('organization');
   }
   let mail = mailer.firstTimeRegistration({
@@ -145,8 +154,9 @@ app.post('/register', async (req, res) => {
   });
   try {
     mailer.send(mail);
+    logger.log('silly', `User ${req.body.email} sent an activation mail for organization ${req.body.organization}`);
   } catch (error) {
-    console.error(error);
+    logger.log('silly', `Could not send email to ${newUser.email} probably because email does not exist`);
     return res.status(error).send('mail');
   }
   res.send();
@@ -158,19 +168,20 @@ app.post('/register/confirm', async (req, res) => {
   try {
     privateKey = extract.privateKey(req.headers.authorization);
   } catch (error) {
+    logger.log('silly', `Could not extract content from Authorization headrer for ${email} @ /register/confirm`);
     return res.status(400).send();
   }
   try {
     await users.verifyUser(email, privateKey);
   } catch (error) {
-    console.error(error);
+    logger.log('error', `Could not verify user ${email}, possibly malformed/incorrect private key or mysql server is down`);
     return res.status(500).send();
   }
   let organizationName;
   try {
     organizationName = await users.getOrganizationName(email);
   } catch (error) {
-    console.error(error);
+    logger.log('silly', `Could not connect user ${email} with an organization. Probable cause could be mysql server is down.`);
     res.status(404).send();
   }
   try {
@@ -181,8 +192,9 @@ app.post('/register/confirm', async (req, res) => {
       organizationName,
       email: user.email
     });
+    logger.log('info', `User ${user.email} successfully created organization ${organizationName}`);
   } catch (error) {
-    console.error(error);
+    logger.log('error', `Check ElasticSearch and MSQL server connections. Failing that check if ${organizationName} already exists`);
     res.status(500).send();
   }
 });
@@ -193,12 +205,13 @@ app.post('/register/verify', async (req, res) => {
   try {
     user = await users.verifyUUID(req.body.activationCode);
   } catch (error) {
-    console.error(error);
+    logger.log('silly', `Could not verify User with UUID ${req.body.activationCode}. Probably because user does not exist or server is down.`);
     res.status(error).send();
   }
   try {
     keypair = await keygen.genKeyPair();
   } catch (error) {
+    logger.log('error', `Generating keypair for new user ${user.email}`);
     console.error(error);
   }
   let masterPassword = keygen.genRandomPassword();
@@ -214,7 +227,7 @@ app.post('/register/verify', async (req, res) => {
       privateKey: keypair.privateKey.toString('base64')
     });
   } catch (error) {
-    console.error(error);
+    logger.log('error', `Could not set encrypted master password for ${user.email}. Check MYSQL connection, or if ${user.email} does not exist`);
     res.status(500).send();
   }
 
@@ -225,6 +238,7 @@ app.post('/invite', async (req, res) => {
   try {
     privateKey = extract.privateKey(req.headers.authorization);
   } catch (error) {
+    logger.log('silly', `Could not extract content from Authorization header for ${req.body.email} @ /invite`);
     return res.status(400).send('header');
   }
   let newUserEmail = req.body.newUserEmail;
@@ -240,6 +254,7 @@ app.post('/invite', async (req, res) => {
     organizationId = sender.organizationId;
     keypair = await keygen.genKeyPair();
   } catch (error) {
+    logger.log('silly', `Could not find sender ${email} @ /invite`);
     return res.status(409).send();
   }
   let masterPassword = decryptMasterPassword(privateKey, encryptedMasterPassword);
@@ -249,7 +264,7 @@ app.post('/invite', async (req, res) => {
   try {
     encryptedPrivateKey = await encryptPrivateKey(tempPassword, keypair.privateKey);
   } catch (error) {
-    console.error(error);
+    logger.log('error', `Cannot encrypt temporary password for ${newUserEmail} @ /invite. \n ${error}`);
     return res.status(500).send();
   }
   let newUser = {
@@ -261,8 +276,8 @@ app.post('/invite', async (req, res) => {
   try {
     await users.createUser(newUser);
     await users.TempKeys.store(uuid, encryptedPrivateKey);
+    logger.log('info', `User ${newUser.email} was created and given the UUID ${uuid}`);
   } catch (error) {
-    console.error(error);
     return res.status(error).send();
   }
   let mail = mailer.newUserRegistration({
@@ -274,6 +289,7 @@ app.post('/invite', async (req, res) => {
   });
   try {
     mailer.send(mail);
+    logger.log('info', `User ${req.body.email} invited ${newUserEmail} to join ${sender.Organization.name}`);
   } catch (error) {
     console.error(error);
     return res.status(400).send('mail');
@@ -289,12 +305,14 @@ app.post('/invite/verify', async (req, res) => {
   try {
     encryptedPrivateKey = new Buffer((await users.getEncryptedPrivateKey(uuid)), 'base64');
     privateKey = (await decryptPrivateKey(tempPassword, encryptedPrivateKey)).toString('base64');
-    return res.send({
+    res.send({
       privateKey
     });
+    logger.log('silly', `Keypair generated and private key was sent to user with UUID ${uuid}`);
+    return;
   } catch (error) {
-    console.error(error);
-    res.status(500).send();
+    logger.log('error', `Could not find user with UUID ${uuid}`);
+    return res.status(500).send();
   }
 });
 
@@ -310,9 +328,10 @@ app.post('/invite/confirm', async (req, res) => {
   try {
     metadata = await users.verifyNewUser(uuid, privateKey);
     await users.TempKeys.remove(uuid);
-    return res.send(metadata);
+    res.send(metadata);
+    logger.log('info', `User ${metadata.email} was added to ${metadata.organization}`);
   } catch (error) {
-    console.error(error);
+    logger.log('error', `Cannot verify User with uuid ${uuid} @ /invite/confirm`);
     return res.status(500).send();
   }
 
@@ -325,6 +344,7 @@ app.get('/document', async (req, res) => {
   try {
     privateKey = extract.privateKey(req.headers.authorization);
   } catch (error) {
+    logger.log('silly', `Could not extract content from ${req.query.email} @ GET /document`);
     return res.status(400).send();
   }
   let organization = req.query.organization;
@@ -338,14 +358,14 @@ app.get('/document', async (req, res) => {
       index
     });
   } catch (error) {
-    console.error(error);
+    logger.log('error', `ElaticSearch error, probably malformed search query or server is down. \n ${error}`);
     return res.status(500).send();
   }
   let encryptedMasterPassword;
   try {
     encryptedMasterPassword = (await users.getUser(email)).password;
   } catch (error) {
-    console.error(error);
+    logger.log('silly', `Cannot find user ${email}`);
     return res.status(404).send();
   }
   try {
@@ -353,7 +373,7 @@ app.get('/document', async (req, res) => {
       doc._source.encrypted_texts = await decryptDocuments(doc._source.encrypted_texts, privateKey, encryptedMasterPassword);
     }
   } catch (error) {
-    console.error(error);
+    logger.log('error', `Decrypt error, could not decrypt with privatekey from user ${email}`);
     return res.status(500).send({msg: 'Internal Server Error'});
   }
   res.send({
@@ -380,9 +400,11 @@ app.post('/document', async (req, res) => {
   let fields = checkEmptyFields(req.body.doc);
   if (!fields.valid) return res.status(400).send({emptyFields: fields.emptyFields, reason: fields.reason});
   try {
-    return res.send(await es.addToIndex(req.body.doc, privateKey, encryptedMasterPassword, organization));
+    res.send(await es.addToIndex(req.body.doc, privateKey, encryptedMasterPassword, organization));
+    logger.log('info', `User ${req.body.email} created a document with title ${req.body.doc.title}`);
+    return;
   } catch (error) {
-    console.error(error);
+    logger.log('error', `Could not add document to index ${req.body.doc.index}`);
     return res.status(500).send(error);
   }
 });
@@ -409,8 +431,9 @@ app.patch('/document', async (req, res) => {
   try {
     response = await es.update(req.body, privateKey, encryptedMasterPassword);
     res.send(response);
+    logger.log('info', `User ${email} updated document ${req.body.doc.id}`);
   } catch (error) {
-    console.error(error);
+    logger.log('error', `Cannot update document ${req.body.doc.id}`);
     res.status(500).send({msg: 'Internal Server Error'});
   }
 
@@ -429,8 +452,9 @@ app.delete('/document', async (req,res) => {
     try {
       response = await es.deleteDocument(req.query);
       res.send(response);
+      logger.log('info', `User ${req.query.email} deleted document ${req.query.id}`);
     } catch (error) {
-      console.error(error);
+      logger.log('error', 'Cannot delete document!');
       res.status(500).send();
     }
   }
@@ -443,6 +467,7 @@ app.get('/tags', async (req, res) => {
     response = await es.getTags(organization);
     return res.send(response.aggregations.distinct_tags.buckets);
   } catch (error) {
+    logger.log('error', 'Could not get tags!');
     return res.status(500).send();
   }
 });
