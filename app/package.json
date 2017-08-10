@@ -1,7 +1,7 @@
 {
   "name": "FortDox",
   "productName": "FortDox",
-  "version": "0.1.0",
+  "version": "1.1.0",
   "author": "EdgeGuide <infok@edgeguide.com>",
   "main": "main.js",
   "homepage": "edgeguide.se",
@@ -72,14 +72,13 @@
       "index.html",
       "main.js",
       "config.json",
-      "local_storage.json",
       "aes.js",
       "package.json"
     ],
     "publish": [
       {
         "provider": "generic",
-        "url": "http://localhost:8000/downloads"
+        "url": "https://fortdox.edgeguide.se/downloads"
       }
     ],
     "dmg": {
