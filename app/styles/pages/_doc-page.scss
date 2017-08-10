@@ -12,11 +12,11 @@
   }
 
   &.warning input {
-    border-bottom: 1px solid $warning;
+    border-bottom: 1px solid $red;
   }
 
   &.warning textarea {
-    border: 1px solid $warning;
+    border: 1px solid $red;
   }
 }
 

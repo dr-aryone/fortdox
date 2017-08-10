@@ -1,6 +1,36 @@
 .header {
-  padding: 10px 0 10px 15px;
-  background-color: #FFF;
+  width: 100%;
+  background-color: $primary-color;
   top: 0;
-  margin: 0px 0px 0px $side-nav-width;
+  height: $header-height;
+  position: fixed;
+  color: $background-color;
+  display: flex;
+  align-items: center;
+
+  .container {
+    width: percentage(10/12);
+    margin-left: percentage(1/12);
+    padding-left: 20px;
+    padding-right: 20px;
+    display: flex;
+    justify-content: space-between;
+
+    .organization {
+      margin-right: 10px;
+    }
+    .nav-icons {
+      font-size: 24px;
+      margin-right: 20px;
+      cursor: pointer;
+
+      .account-icons {
+        margin-right: 5px;
+      }
+
+      &:hover {
+        color: darken($background-color, 10%);
+      }
+    }
+  }
 }

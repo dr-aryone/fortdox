@@ -59,7 +59,7 @@ const SearchView = ({
       {boxes}
       <div className={`search-container ${documentToUpdate ? 'big' : 'small'}`}>
         <div className={`left ${documentToUpdate ? 'small' : 'full'}`}>
-          <h1 id='top'>Search</h1>
+          <h1 id='top' />
           <form onSubmit={onSearch} className='input-bar box'>
             <input
               name='searchString'

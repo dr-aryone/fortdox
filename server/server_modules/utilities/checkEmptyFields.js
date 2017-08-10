@@ -6,7 +6,7 @@ const checkEmptyFields = doc => {
     emptyFields.title = 'Title field can not be empty.';
   }
   let encryptedTexts = [];
-  doc.encrypted_texts.forEach(field => {
+  doc.encryptedTexts.forEach(field => {
     if (field.text.trim() === '') {
       valid = false;
       encryptedTexts.push(field.id);

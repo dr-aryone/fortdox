@@ -1,5 +1,6 @@
 {
   "name": "FortDox",
   "productName": "FortDox",
-  "server": "https://fortdox.edgeguide.se"
+  "server": "https://fortdox.edgeguide.se",
+  "logo": "resources/logo.png"
 }
