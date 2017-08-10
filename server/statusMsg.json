@@ -5,5 +5,8 @@
     "404": "Username or password is incorrect.",
     "200": "Ok",
     "500": "An error occurred. Please try again later."
+  },
+  "session": {
+    "401": "Session has expired, please log in again"
   }
 }

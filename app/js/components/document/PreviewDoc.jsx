@@ -38,25 +38,38 @@ function renderTexts(doc) {
   let size = encryptedTexts.size + texts.size;
   let textList = [];
   let newlineRegex = /\n/;
+  let counter = 0;
   for (let i = 0; i < size; i++) {
     if (encryptedTexts.size === 0) {
       let text = texts.first().get('value').split(newlineRegex);
-      text.forEach((paragraph, i) => textList.push(<p key={i}>{paragraph}</p>));
+      text.forEach((paragraph) => {
+        textList.push(<p key={counter}>{paragraph}</p>);
+        counter++;
+      });
       texts = texts.shift();
     } else if (texts.size === 0) {
       let text = encryptedTexts.first().get('value').split(newlineRegex);
-      text.forEach((paragraph, i) => textList.push(<p key={i}>{paragraph}</p>));
+      text.forEach((paragraph) => {
+        textList.push(<p key={counter}>{paragraph}</p>);
+        counter++;
+      });
       encryptedTexts = encryptedTexts.shift();
     } else {
       let encryptedID = encryptedTexts.first().get('id');
       let textID = texts.first().get('id');
       if (encryptedID < textID) {
         let text = encryptedTexts.first().get('value').split(newlineRegex);
-        text.forEach((paragraph, i) => textList.push(<p key={i}>{paragraph}</p>));
+        text.forEach((paragraph) => {
+          textList.push(<p key={counter}>{paragraph}</p>);
+          counter++;
+        });
         encryptedTexts = encryptedTexts.shift();
       } else {
         let text = texts.first().get('value').split(newlineRegex);
-        text.forEach((paragraph, i) => textList.push(<p key={i}>{paragraph}</p>));
+        text.forEach((paragraph) => {
+          textList.push(<p key={counter}>{paragraph}</p>);
+          counter++;
+        });
         texts = texts.shift();
       }
     }

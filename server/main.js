@@ -84,10 +84,14 @@ app.post('/login/session', async (req, res) => {
     session = extract.sessionKey(req.headers.authorization);
     session = JSON.parse(await decryptPrivateKey(secret, session));
   } catch (error) {
-    return res.status(400).send();
+    return res.status(401).send({
+      message: statusMsg.session[401]
+    });
   }
   if (!sessions.stillAlive(session.sessionStart)) {
-    return res.status(440).send();
+    return res.status(401).send({
+      message: statusMsg.session[401]
+    });
   }
   try {
     await decryptMasterPassword(session.privateKey, user.password);
@@ -98,7 +102,7 @@ app.post('/login/session', async (req, res) => {
   } catch (error) {
     console.error(error);
     return res.status(401).send({
-      message: statusMsg.user[401]
+      message: statusMsg.session[401]
     });
   }
 });
