@@ -79,7 +79,7 @@ const DocumentForm = ({
 
   return (
     <form onSubmit={onSubmit} className='document'>
-      <div className='main-panel box'>
+      <div className='main-panel'>
         <div>
           {fields}
           <BottomPanel onAddField={onAddField} />

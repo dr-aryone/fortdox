@@ -23,7 +23,7 @@ class VerifyUserView extends React.Component {
     let errorMsg = {};
     fields.entrySeq().forEach((entry) => {
       errorMsg[entry[0]] = entry[1].get('error') ? (
-        <div className='arrow_box show'>
+        <div className='arrow-box show'>
           <span className='material-icons'>error_outline</span>
           {entry[1].get('error')}
         </div>

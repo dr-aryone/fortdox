@@ -1,3 +1,5 @@
+$search-padding: 30px;
+
 .search-container {
   display: flex;
   box-sizing: border-box;
@@ -5,26 +7,29 @@
   transition: all 0.5s;
 
   &.small {
-    width: percentage(10/12);
-    margin-left: percentage(1/12);
+    width: percentage(8/12);
+    margin-left: percentage(2/12);
   }
 
   &.big{
-    width: 100%;
+    width: 100%
   }
 }
 
 .left {
-  padding: 20px;
-  padding-top: 0px;
+  padding-top: $search-padding;
   box-sizing: border-box;
   height: 100%;
 
   &.small {
     width: 35%;
     transition: width 0.5s;
-    border-right: 5px solid #EEE;
     overflow-y: auto;
+    padding: $search-padding;
+
+    .search-item:last-child {
+      margin-bottom: 0;
+    }
   }
 
   &.full {
@@ -36,7 +41,7 @@
 .right {
   width: 0px;
   flex-grow: 1;
-  padding: 20px;
+  padding: $search-padding;
   padding-top: 0px;
   height: 100%;
   overflow-y: scroll;
@@ -90,43 +95,41 @@
   padding: 0px;
   cursor: pointer;
   user-select: none;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
 
   .title {
-    background-color: $grey;
-    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    h2 {
+      padding: 0px;
+      margin: 0px;
+    }
+
+    .round.small {
+      box-shadow: none;
+    }
   }
 
   .text {
-    padding: 10px;
+    padding: 15px;
     word-break: break-all;
   }
 
-  .round.small {
-    box-shadow: none;
-    float: right;
-    margin: 5px 5px 0px 0px;
-    background-color: lighten($primary-color, 5%);
-  }
 
   .highlight {
-    background-color: lighten($yellow, 20%);
+    background-color: lighten($yellow, 5%);
     padding: 0px 5px;
   }
 
   .tags {
     padding: 10px;
-  }
+    padding-bottom: 5px;
 
-  .tag {
-    background-color: $background-color;
-    padding: 5px 10px;
-    margin-right: 5px;
-    margin-bottom: 5px;
-    border-radius: 16px;
-    display: inline-block;
-    word-break: break-all;
-
-    &:hover {
+    .tag:hover {
       text-decoration: underline;
     }
   }
@@ -152,6 +155,7 @@
   @extend .box;
   display: flex;
   align-items: flex-start;
+  padding: 0px;
 
   .input-field {
     flex-grow: 1;
@@ -165,10 +169,73 @@
     text-decoration: underline;
     cursor: pointer;
   }
+
+  .attachment-list {
+    padding: 10px;
+    padding-bottom: 5px;
+  }
+
+  .tags {
+    padding: 10px;
+    padding-bottom: 5px;
+
+    .tag:hover {
+      text-decoration: underline;
+    }
+  }
+
+  label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: $grey;
+    padding: 15px;
+
+    h3 {
+      margin: 0;
+      padding: 0;
+    }
+  }
 }
 
 .alert-boxes {
   width: percentage(10/12);
   margin-left: percentage(1/12);
   padding-top: 10px;
+}
+
+.preview {
+  @extend .box;
+  padding: 0px;
+  margin-top: $search-padding;
+
+ .title {
+   padding: 1.3em;
+   display: flex;
+
+    h1 {
+      display: inline-block;
+      background-color: $grey;
+      margin: 0;
+      padding: 0;
+    }
+
+    button {
+      align-self: flex-start;
+      margin-left: 1.67em;
+    }
+  }
+
+  .texts {
+    padding: 0px 1em;
+    padding-bottom: 1px;
+  }
+
+  .input-bar {
+    padding-bottom: 1em;
+  }
+
+  .arrow-box {
+    margin-bottom: 5px;
+  }
 }

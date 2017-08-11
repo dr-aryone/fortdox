@@ -4,15 +4,17 @@ const DocumentTextArea = ({input, type, onChange, onRemoveField}) => {
   return (
     <div className={`input-field ${input.get('error') ? 'warning' : ''}`}>
       <label>
-        {input.get('label')}
+        <h3>{input.get('label')}</h3>
         <i className='material-icons' onClick={() => onRemoveField(input.get('id'))}>delete</i>
       </label>
-      <textarea
-        name={input.get('id')}
-        onChange={(event) => onChange(event, type)}
-        value={input.get('value')}
-      />
-      <div className='arrow_box'>
+      <div className='textarea'>
+        <textarea
+          name={input.get('id')}
+          onChange={(event) => onChange(event, type)}
+          value={input.get('value')}
+        />
+      </div>
+      <div className='arrow-box'>
         <span className='material-icons'>error_outline</span>
         {input.get('error')}
       </div>

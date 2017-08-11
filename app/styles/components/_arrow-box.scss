@@ -1,4 +1,4 @@
-.arrow_box {
+.arrow-box {
 	position: relative;
 	background: $red;
   color: #FFF;
@@ -16,7 +16,7 @@
 	}
 }
 
-.arrow_box:before {
+.arrow-box:before {
 	bottom: 100%;
 	left: 10%;
 	border: solid transparent;
@@ -27,7 +27,7 @@
 	pointer-events: none;
 }
 
-.arrow_box:before {
+.arrow-box:before {
 	border-bottom-color: $red;
 	border-width: 10px;
 }
