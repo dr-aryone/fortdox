@@ -2,8 +2,7 @@
   top: 0;
   left: 0;
   width: 100%;
-  height: 100vh;
-  background-color: $background-color;
+  height: calc(100vh - #{$header-height});
 }
 
 .container-fluid {
@@ -21,7 +20,7 @@
     .alert {
       position: absolute;
       top: 0px;
-      width: percentage(10/12);
+      width: percentage(8/12);
       margin-top: 15px;
     }
   }
@@ -34,8 +33,8 @@
 }
 
 .inner-container {
-  width: percentage(10/12);
-  margin-left: percentage(1/12);
-  padding-top: 10px;
-  padding-bottom: 10px;
+  width: percentage(8/12);
+  margin-left: percentage(2/12);
+  height: 100%;
+  box-sizing: border-box;
 }

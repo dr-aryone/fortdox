@@ -23,16 +23,15 @@ textarea {
   width: 100%;
   box-sizing: border-box;
   display: block;
-  border: 1px solid $background-color;
+  border: 1px solid $grey;
   outline: 0px;
   background-color: #FFF;
   height: 10em;
-  margin: 5px 0px;
+  padding: 5px;
   resize: vertical;
   font-size: map-deep-get($text-styles, 'text', 'font-size');
   font-family: map-deep-get($text-styles, 'text', 'font-family');
   color: map-deep-get($text-styles, 'text', 'color');
-
   &:focus {
     border: 1px solid $primary-color;
   }

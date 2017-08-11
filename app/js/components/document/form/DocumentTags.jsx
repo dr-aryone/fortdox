@@ -50,12 +50,15 @@ const DocumentTags = ({tags, onAddTag, onRemoveTag, onChange, onTagSearch}) => {
     />
   ) : null;
 
+  let tagBox = tagList.length > 0 ? (
+    <div className='tags'>
+      {tagList}
+    </div>) : null;
+
   return (
     <div className='input-field'>
-      <label>Tags</label>
-      <div className='tags'>
-        {tagList}
-      </div>
+      <label><h3>Tags</h3></label>
+      {tagBox}
       {inputs}
       <div className='tag-dropdown'>
         <div className='tag-suggestions'>
