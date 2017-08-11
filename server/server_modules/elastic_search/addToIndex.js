@@ -15,6 +15,7 @@ module.exports = client => {
         response = await client.index({
           index: organization.toLowerCase(),
           type: 'fortdox_document',
+          pipeline: 'fortdox_attachment',
           body: {
             title: doc.title,
             encrypted_texts: encryptedTexts,

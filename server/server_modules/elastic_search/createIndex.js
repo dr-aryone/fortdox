@@ -2,6 +2,7 @@ module.exports = client => {
   const createIndex = organizationName => {
     return new Promise(async (resolve, reject) => {
       try {
+        await attachmentPlugin();
         await client.indices.create({
           index: organizationName.toLowerCase(),
           body: {
@@ -51,7 +52,8 @@ module.exports = client => {
                       },
                       file: {
                         type: 'binary',
-                        store: true
+                        store: true,
+                        index: false
                       },
                       file_type: {
                         type: 'text',
@@ -72,5 +74,35 @@ module.exports = client => {
       }
     });
   };
-  return createIndex;
+
+  const attachmentPlugin = () => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        await client.ingest.putPipeline({
+          id: 'fortdox_attachment',
+          body: {
+            description: '_description',
+            processors: [
+              {
+                foreach: {
+                  field: 'attachments',
+                  processor: {
+                    attachment: {
+                      field: '_ingest._value.file',
+                      target_field: '_ingest._value.file'
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        });
+      } catch (error) {
+        console.error(error);
+        return reject(error);
+      }
+      return resolve();
+    });
+  };
+  return {createIndex};
 };

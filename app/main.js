@@ -62,7 +62,11 @@ app.on('ready', () => {
 });
 
 function createBrowserWindow() {
-  win = new BrowserWindow({width: 1280, height: 720});
+  win = new BrowserWindow({
+    width: 1280,
+    height: 720,
+    icon: path.join(__dirname, config.logo)
+  });
   if (dev_mode) {
     win.webContents.openDevTools();
     installExtension(REDUX_DEVTOOLS);
@@ -128,7 +132,7 @@ function createBrowserWindow() {
       }, {
         label: 'Select All',
         accelerator: 'CmdOrCtrl+A',
-        role: 'selectAll'
+        role: 'selectall'
       }]}
   ];
 

@@ -82,6 +82,9 @@
         "url": "https://fortdox.edgeguide.se/downloads"
       }
     ],
+    "mac": {
+      "icon": "resources/logo.icns" 
+    },
     "dmg": {
       "contents": [
         {
@@ -94,8 +97,7 @@
           "type": "link",
           "path": "/Applications"
         }
-      ],
-      "icon": "resources/logo.icns"
+      ]
     },
     "linux": {
       "target": "deb"
