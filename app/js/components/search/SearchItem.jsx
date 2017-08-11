@@ -32,6 +32,8 @@ const SearchItem = ({doc, onUpdate, onPreview, onTagSearch}) => {
     }
   }
 
+  let textBox = text.length > 0 ? (<p className='text'>{text}</p>) : null;
+  let tagBox = tagList.length > 0 ? (<div className='tags'>{tagList}</div>) : null;
   const clickHandler = (event, element, item) => {
     event.stopPropagation();
     switch (element) {
@@ -46,10 +48,14 @@ const SearchItem = ({doc, onUpdate, onPreview, onTagSearch}) => {
 
   return (
     <div className='search-item' id='ITEM' onClick={event => clickHandler(event, 'ITEM', id)}>
-      <button className='round small material-icons' id='EDIT' onClick={event => clickHandler(event, 'EDIT', id)}>edit</button>
-      <h2 className='title'>{title}</h2>
-      <p className='text'>{text}</p>
-      <div className='tags'>{tagList}</div>
+      <div>
+        <div className='title'>
+          <h2>{title}</h2>
+          <button className='round small material-icons' id='EDIT' onClick={event => clickHandler(event, 'EDIT', id)}>edit</button>
+        </div>
+        {textBox}
+      </div>
+      {tagBox}
     </div>
   );
 };

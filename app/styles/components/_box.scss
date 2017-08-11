@@ -6,6 +6,16 @@
   border-radius: 1px;
   box-sizing: border-box;
 
+  .title {
+    background-color: $grey;
+    padding: 15px;
+  }
+
+  .text {
+    padding: 15px;
+    margin: 0px;
+  }
+
   .hide {
     display: none;
   }

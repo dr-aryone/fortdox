@@ -12,7 +12,7 @@ const InviteUserView = ({fields, message, error, onChange, onSend, isLoading}) =
   }
 
   let errorMsg = fields.getIn(['email', 'error']) ? (
-    <div className='arrow_box show'>
+    <div className='arrow-box show'>
       <span className='material-icons'>error_outline</span>
       {fields.getIn(['email', 'error'])}
     </div>
@@ -22,24 +22,28 @@ const InviteUserView = ({fields, message, error, onChange, onSend, isLoading}) =
     <div className='container-fluid'>
       <div className='inner-container'>
         <LoaderOverlay display={isLoading} />
-        <h1>Invite User</h1>
-        <div className='box'>
-          <MessageBox message={message} />
-          <ErrorBox errorMsg={error} />
-          <p>Invite a new user to the organization.</p>
-          <form onSubmit={onSend} className='input-bar'>
-            <input
-              name='email'
-              type='text'
-              value={fields.getIn(['email', 'value'])}
-              onChange={onChange}
-              placeholder='Email'
-              className='block'
-              autoFocus
-            />
-            <button onClick={onSend}>Send</button>
-          </form>
-          {errorMsg}
+        <MessageBox message={message} />
+        <ErrorBox errorMsg={error} />
+        <div className='preview'>
+          <div className='title'>
+            <h1>Invite User</h1>
+          </div>
+          <div className='texts'>
+            <p>Invite a new user to the organization.</p>
+            <form onSubmit={onSend} className='input-bar'>
+              <input
+                name='email'
+                type='text'
+                value={fields.getIn(['email', 'value'])}
+                onChange={onChange}
+                placeholder='Email'
+                className='block'
+                autoFocus
+              />
+              <button onClick={onSend}>Send</button>
+            </form>
+            {errorMsg}
+          </div>
         </div>
       </div>
     </div>
