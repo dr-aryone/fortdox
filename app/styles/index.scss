@@ -10,7 +10,8 @@
   'components/buttons',
   'components/input',
   'components/loader',
-  'components/modal';
+  'components/modal',
+  'components/tags';
 
 @import
   'layout/grid',
@@ -28,4 +29,5 @@
     margin: 0px;
     font-family: map-deep-get($text-styles, 'text', 'font-family');
     font-size: map-deep-get($text-styles, 'text', 'font-size');
+    background-color: $background-color;
   }

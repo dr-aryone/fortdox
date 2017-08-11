@@ -69,7 +69,7 @@ class Attachments extends React.Component {
     });
 
     let inputs = onAddAttachment ? (
-      <div>
+      <div className='upload'>
         <input type='file' ref='fileField' onChange={event => onAddAttachment(event)} multiple />
         <button type='button' onClick={() => this.clickHandler()}>Select File</button>
       </div>
@@ -81,7 +81,7 @@ class Attachments extends React.Component {
           <img src={`data:${this.state.type};base64,${this.state.file}`} />
           <h3>{this.state.name}</h3>
         </Modal>
-        <label>Attachments</label>
+        <label><h3>Attachments</h3></label>
         <div className='attachment-list'>
           {attachmentList}
         </div>

@@ -12,6 +12,9 @@ const mapDispatchToProps = dispatch => {
   return {
     changeView: (nextView) => {
       dispatch(action.changeView(nextView));
+    },
+    logout: () => {
+      dispatch(action.logout());
     }
   };
 };

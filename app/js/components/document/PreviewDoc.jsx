@@ -20,14 +20,16 @@ const PreviewDoc = ({docFields, isLoading, error, onEdit, onTagSearch}) => {
     <div>
       <LoaderOverlay display={isLoading} />
       <ErrorBox errorMsg={error} />
-      <h1>{title}</h1>
-      <div className='box'>
-        <div>
+      <div className='preview'>
+        <div className='title'>
+          <h1>{title}</h1>
+          <button onClick={onEdit}>Edit</button>
+        </div>
+        <div className='texts'>
           {texts}
         </div>
       </div>
       {misc}
-      <button onClick={onEdit}>Edit</button>
     </div>
   );
 };
