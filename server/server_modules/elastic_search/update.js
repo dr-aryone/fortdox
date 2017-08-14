@@ -17,7 +17,6 @@ module.exports = client => {
           type: query.type,
           id: query.id,
           refresh: true,
-          pipeline: 'fortdox_attachment',
           body: {
             doc: {
               title: query.doc.title,
