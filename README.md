@@ -32,7 +32,7 @@ For debugging, install the following developer tools:
 
 # Branches
 Development is done on the master branch. When a new release is to be deployed, merge master into the release branch.
-_NEVER COMMIT ANYTHING ON THE RELEASE BRANCH, ONLY ON MASTER_
+__NEVER COMMIT ANYTHING ON THE RELEASE BRANCH, ONLY ON MASTER__
 
 ## Install Node.js dependencies
 Install the Node dependencies for client in `fortdox/app`
