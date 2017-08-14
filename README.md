@@ -56,7 +56,7 @@ Copy the template from `fortdoks/server/server_modules/config-template.json` to 
 
 ## Client
 Run the application in `fortdoks/app`
-> electorn .
+> electron .
 
 ## Server
 Run the server in `fortdoks/server`
