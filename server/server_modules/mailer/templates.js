@@ -1,17 +1,17 @@
-
+const config = require('../config.json');
 
 const firstTimeRegistration = ({to, organization, uuid}) => ({
   to,
-  subject: `Fort Dox registration for ${organization}`,
-  content: `<p><a href="http://localhost:8000/activation-redirect?code=${uuid}"> http://localhost:8000/activation-redirect?code=${uuid} </a>`,
-  html: `<p><a href="http://localhost:8000/activation-redirect?code=${uuid}"> http://localhost:8000/activation-redirect?code=${uuid} </a>`
+  subject: `${config.name} registration for ${organization}`,
+  content: `<p><a href="${config.server}/activation-redirect?code=${uuid}">${config.server}/activation-redirect?code=${uuid} </a>`,
+  html: `<p><a href="${config.server}/activation-redirect?code=${uuid}">${config.server}/activation-redirect?code=${uuid} </a>`
 });
 
 const newUserRegistration = ({to, organization, uuid, from, tempPassword}) => ({
   to,
-  subject: `${from} has invited you to join team ${organization} in Fort Dox`,
-  content: `<p><a href="http://localhost:8000/invite-redirect?code=${uuid}&pass=${encodeURIComponent(tempPassword)}"> http://localhost:8000/invite-redirect?code=${uuid}&pass=${encodeURIComponent(tempPassword)} </a>`,
-  html: `<p><a href="http://localhost:8000/invite-redirect?code=${uuid}&pass=${encodeURIComponent(tempPassword)}"> http://localhost:8000/invite-redirect?code=${uuid}&pass=${encodeURIComponent(tempPassword)} </a>`,
+  subject: `${from} has invited you to join team ${organization} in ${config.name}`,
+  content: `<p><a href="${config.server}/invite-redirect?code=${uuid}&pass=${encodeURIComponent(tempPassword)}"> ${config.server}/invite-redirect?code=${uuid}&pass=${encodeURIComponent(tempPassword)} </a>`,
+  html: `<p><a href="${config.server}/invite-redirect?code=${uuid}&pass=${encodeURIComponent(tempPassword)}"> ${config.server}/invite-redirect?code=${uuid}&pass=${encodeURIComponent(tempPassword)} </a>`,
 });
 
 module.exports = {

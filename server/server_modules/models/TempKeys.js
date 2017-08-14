@@ -5,7 +5,7 @@ module.exports = function(sequelize, DataTypes) {
       autoIncrement: false,
       primaryKey: true,
       unique: true,
-      type: DataTypes.STRING
+      type: DataTypes.UUID
     },
     privateKey: {
       allowNull: false,

@@ -1,44 +1,50 @@
 const React = require('react');
 const LoaderOverlay = require('components/general/LoaderOverlay');
+const ErrorBox = require('components/general/ErrorBox');
 
-const RegisterOrgView = ({register, onChange, onCreateOrganization, toLoginView}) => {
-  let errorMsg = register.orgNameError ? <h2>{register.errorMsg}</h2> : null;
+const RegisterOrgView = ({registerFields, register, onChange, onCreateOrganization, toLoginView}) => {
+  let errorMsg = {};
+  registerFields.entrySeq().forEach((entry) => {
+    errorMsg[entry[0]] = entry[1].get('error') ? (
+      <div className='arrow-box show'>
+        <span className='material-icons'>error_outline</span>
+        {entry[1].get('error')}
+      </div>
+    ) : null;
+  });
+
   return (
-    <div className='container box'>
+    <div className='container'>
       <LoaderOverlay display={register.isLoading} />
+      <ErrorBox errorMsg={register.registerError} />
       <h1 className='text-center'>Create a New Team</h1>
-      {errorMsg}
-      <label>Team name:</label>
-      <input
-        name='organizationInputValue'
-        type='text'
-        value={register.organizationInputValue}
-        onChange={onChange}
-        className='input-block'
-      />
-      <label>Username:</label>
-      <input
-        name='usernameInputValue'
-        type='text'
-        value={register.usernameInputValue}
-        onChange={onChange}
-        className='input-block'
-      />
-
-      <label>E-mail:</label>
-      <input
-        name='emailInputValue'
-        type='text'
-        value={register.emailInputValue}
-        onChange={onChange}
-        className='input-block'
-      />
-      <a onClick={onCreateOrganization} className='btn btn-block'>
-        Register Team
-      </a>
-      <a onClick={toLoginView} className='btn btn-block'>
-        Back
-      </a>
+      <form className='box' onSubmit={onCreateOrganization}>
+        <label>Team name:</label>
+        <input
+          name='organization'
+          type='text'
+          value={registerFields.getIn(['organization', 'value'])}
+          onChange={onChange}
+          className='input-block'
+          autoFocus
+        />
+        {errorMsg.organization}
+        <label>Email:</label>
+        <input
+          name='email'
+          type='text'
+          value={registerFields.getIn(['email', 'value'])}
+          onChange={onChange}
+          className='input-block'
+        />
+        {errorMsg.email}
+        <button onClick={onCreateOrganization} className='block' type='submit'>
+          Register Team
+        </button>
+        <button onClick={toLoginView} className='block' type='button'>
+          Back
+        </button>
+      </form>
     </div>
   );
 };

@@ -2,26 +2,45 @@ const {connect} = require('react-redux');
 const SearchView = require('components/search/SearchView');
 const action = require('actions');
 const search = require('actions/search');
+const {setUpdateDocument} = require('actions/document');
 
 const mapStateToProps = state => {
   return {
     searchString: state.search.get('searchString'),
+    currentIndex: state.search.get('currentIndex'),
+    error: state.search.get('error'),
+    message: state.search.get('message'),
     result: state.search.get('result'),
+    totalHits: state.search.get('totalHits'),
     isLoading: state.search.get('isLoading'),
-    hasSearched: state.search.get('hasSearched')
+    documentToUpdate: state.updateDocument.get('documentToUpdate')
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    onChange: (e) => {
-      dispatch(action.inputChange(e.target.name, e.target.value));
+    onChange: (event) => {
+      dispatch(action.inputChange(event.target.name, event.target.value));
     },
-    onSearch: () => {
+    onSearch: (event) => {
+      event.preventDefault();
       dispatch(search.search());
     },
     onUpdate: id => {
-      dispatch(search.setUpdateDocument(id));
+      dispatch(setUpdateDocument(id));
+      dispatch(action.changeView('UPDATE_DOC_VIEW'));
+    },
+    paginationSearch: index => {
+      dispatch(search.paginationSearch(index));
+    },
+    toDocView: () => {
+      dispatch(action.changeView('CREATE_DOC_VIEW'));
+    },
+    onPreview: id => {
+      dispatch(setUpdateDocument(id));
+    },
+    onTagSearch: tag => {
+      dispatch(search.tagSearch(tag));
     }
   };
 };

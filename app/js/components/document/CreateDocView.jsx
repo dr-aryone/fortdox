@@ -1,19 +1,55 @@
 const React = require('react');
-const Form = require('components/general/Form');
 const LoaderOverlay = require('components/general/LoaderOverlay');
+const DocumentForm = require('./form/DocumentForm');
+const ErrorBox = require('components/general/ErrorBox');
 
-const CreateDocView = ({input, onChange, onCreate, isLoading}) => {
-  return (
-    <div className='container-fluid'>
-      <div className='col-sm-10 col-sm-offset-1'>
-        <LoaderOverlay display={isLoading} />
-        <Form header='Create Document' input={input} onChange={onChange}>
-          <br />
-          <a onClick={onCreate} className='btn'>Create</a>
-        </Form>
+class CreateDocView extends React.Component {
+  componentWillMount () {
+    if (this.props.onMount) {
+      this.props.onMount(this.props);
+    }
+  }
+
+  render () {
+    let {
+      docFields,
+      error,
+      onAddTag,
+      onRemoveTag,
+      onChange,
+      onSuggestTags,
+      onCreate,
+      onAddField,
+      onRemoveField,
+      onAddAttachment,
+      onRemoveAttachment,
+      isLoading
+    } = this.props;
+
+    return (
+      <div className='container-fluid'>
+        <div className='inner-container'>
+          <LoaderOverlay display={isLoading} />
+          <ErrorBox errorMsg={error} />
+          <h1>Create Document</h1>
+          <DocumentForm
+            docFields={docFields}
+            onChange={onChange}
+            onAddTag={onAddTag}
+            onRemoveTag={onRemoveTag}
+            onSuggestTags={onSuggestTags}
+            onSubmit={onCreate}
+            onAddField={onAddField}
+            onRemoveField={onRemoveField}
+            onAddAttachment={onAddAttachment}
+            onRemoveAttachment={onRemoveAttachment}
+          >
+            <button onClick={onCreate} type='submit'>Create</button>
+          </DocumentForm>
+        </div>
       </div>
-    </div>
-  );
-};
+    );
+  }
+}
 
 module.exports = CreateDocView;

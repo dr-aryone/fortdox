@@ -1,21 +1,57 @@
 const React = require('react');
-const Form = require('components/general/Form');
 const LoaderOverlay = require('components/general/LoaderOverlay');
+const DocumentForm = require('./form/DocumentForm');
+const ErrorBox = require('components/general/ErrorBox');
 
-const UpdateDocView = ({input, onChange, onUpdate, onDelete, toSearchView, isLoading}) => {
-  return (
-    <div className='container-fluid'>
-      <div className='col-sm-10 col-sm-offset-1'>
-        <LoaderOverlay display={isLoading} />
-        <Form header='Update Document' input={input} onChange={onChange}>
-          <br />
-          <a onClick={toSearchView} className='btn'>Back</a>
-          <a onClick={onUpdate} className='btn'>Update</a>
-          <a onClick={onDelete} className='btn'>Delete</a>
-        </Form>
+class UpdateDocView extends React.Component {
+  componentWillMount () {
+    if (this.props.onMount) {
+      this.props.onMount(this.props);
+    }
+  }
+
+  render () {
+    let {
+      docFields,
+      error,
+      onAddTag,
+      onRemoveTag,
+      onChange,
+      onSuggestTags,
+      onUpdate,
+      onAddField,
+      onRemoveField,
+      onAddAttachment,
+      onRemoveAttachment,
+      isLoading,
+      toSearchView,
+    } = this.props;
+
+    return (
+      <div className='container-fluid'>
+        <div className='inner-container'>
+          <LoaderOverlay display={isLoading} />
+          <ErrorBox errorMsg={error} />
+          <h1>Update Document</h1>
+          <DocumentForm
+            docFields={docFields}
+            onChange={onChange}
+            onAddTag={onAddTag}
+            onRemoveTag={onRemoveTag}
+            onSuggestTags={onSuggestTags}
+            onSubmit={onUpdate}
+            onAddField={onAddField}
+            onRemoveField={onRemoveField}
+            onAddAttachment={onAddAttachment}
+            onRemoveAttachment={onRemoveAttachment}
+          >
+            <button onClick={onUpdate} type='submit'>Update</button>
+            <button onClick={toSearchView} type='button'>Back</button>
+          </DocumentForm>
+        </div>
       </div>
-    </div>
-  );
-};
+    );
+  }
+}
 
 module.exports = UpdateDocView;

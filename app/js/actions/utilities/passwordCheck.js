@@ -4,6 +4,7 @@ const passwordCheck = (password, retypedPassword) => {
   if (password !== retypedPassword) {
     return {
       valid: false,
+      fault: 'retypedPassword',
       errorMsg: 'Passwords didn\'t match.'
     };
   }
@@ -17,23 +18,25 @@ const passwordCheck = (password, retypedPassword) => {
     let errorMsg;
     switch (pwResult.reason) {
       case 'TOO_SHORT':
-        errorMsg = 'Password needs to at least be 8 characters long.';
+        errorMsg = 'Your password must be to at least 8 characters long.';
         break;
       case 'CONTAINS_COMMON_PATTERNS':
       case 'TOO_COMMON':
-        errorMsg = 'Your password is not strong enough.';
+        errorMsg = 'Your password is too common. Please enter a stronger password.';
         break;
       case 'TOO_FEW_NUMERIC_CHARACTERS':
-        errorMsg = 'Password needs to at least have one number.';
+        errorMsg = 'Your password must include 1 numeric character.';
         break;
     }
     return {
       valid: false,
+      fault: 'password',
       errorMsg
     };
   }
   return {
     valid: true,
+    fault: null,
     errorMsg: null
   };
 };

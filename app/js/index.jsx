@@ -10,9 +10,11 @@ let devToolsMiddleware = window.devToolsExtension ? window.devToolsExtension() :
 let middlewares = Redux.compose(Redux.applyMiddleware(thunk), devToolsMiddleware);
 const store = Redux.createStore(reducer, {}, middlewares);
 const ipcRenderer = window.require('electron').ipcRenderer;
+const remote = window.require('electron').remote;
 const url = window.require('url');
 const querystring = window.require('querystring');
 let queryParameters = querystring.parse(url.parse(window.location.href).query);
+
 
 if (queryParameters.activateOrganizationCode) {
   store.dispatch({
@@ -27,7 +29,6 @@ if (queryParameters.activateUserCode) {
     type: 'ACTIVATE_USER_CODE_RECIVED',
     payload: queryParameters
   });
-
 }
 
 ipcRenderer.on('activate-organization', (event, data) => {
@@ -35,6 +36,7 @@ ipcRenderer.on('activate-organization', (event, data) => {
     type: 'ACTIVATE_ORGANIZATION_CODE_RECIVED',
     payload: data
   });
+  event.sender.send('stop', 'stop');
 });
 
 ipcRenderer.on('activate-user', (event, data) => {
@@ -42,6 +44,7 @@ ipcRenderer.on('activate-user', (event, data) => {
     type: 'ACTIVATE_USER_CODE_RECIVED',
     payload: data
   });
+  event.sender.send('stop', 'stop');
 });
 
 

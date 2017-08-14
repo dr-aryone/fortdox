@@ -2,23 +2,17 @@ const {connect} = require('react-redux');
 const RegisterView = require('components/front_page/register/RegisterView');
 const action = require('actions');
 const register = require('actions/register');
-const views = require('views.json');
 
 const mapStateToProps = state => {
   return {
     currentView: state.navigation.get('currentView'),
+    registerFields: state.register.get('registerFields'),
+    activateFields: state.register.get('activateFields'),
     register: {
-      organizationInputValue: state.register.get('organizationInputValue'),
-      usernameInputValue: state.register.get('usernameInputValue'),
-      emailInputValue: state.register.get('emailInputValue'),
-      passwordInputValue: state.register.get('passwordInputValue'),
-      retypedPasswordInputValue: state.register.get('retypedPasswordInputValue'),
-      errorMsg: state.register.get('errorMsg'),
-      orgNameError: state.register.get('orgNameError'),
-      activateError: state.register.get('activateError'),
-      isLoading: state.register.get('isLoading'),
-      isVerified: state.register.get('isVerified'),
-      message: state.register.get('message')
+      verifyCodeError: state.register.get('verifyCodeError'),
+      isLoading: false,
+      registerError: state.register.get('registerError'),
+      activateOrgError: state.register.get('activateOrgError')
     }
   };
 };
@@ -28,17 +22,19 @@ const mapDispatchToProps = dispatch => {
     onMount: () => {
       dispatch(register.verifyActivationCode());
     },
-    onChange: (e) => {
-      dispatch(action.inputChange(e.target.name, e.target.value));
+    onChange: (event) => {
+      dispatch(action.inputChange(event.target.name, event.target.value));
     },
-    onCreateOrganization: () => {
+    onCreateOrganization: (event) => {
+      event.preventDefault();
       dispatch(register.registerOrganization());
     },
-    onRegister: () => {
+    onRegister: (event) => {
+      event.preventDefault();
       dispatch(register.activateOrganizaton());
     },
     toLoginView: () => {
-      dispatch(action.changeView(views.LOGIN_VIEW));
+      dispatch(action.changeView('LOGIN_VIEW'));
     }
   };
 };

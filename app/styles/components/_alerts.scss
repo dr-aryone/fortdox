@@ -1,8 +1,9 @@
 .alert {
-  padding: 15px 0 15px 15px;
+  padding: 15px;
   margin-bottom: 10px;
   border-radius: 1px;
   position: relative;
+  color: #FFF;
 
   .material-icons {
     font-size: 15px;
@@ -10,8 +11,12 @@
     margin-right: 10px;
   }
 
-  &-success {
-    background-color: #a1d36e;
-    color: #FFF;
+  &-warning {
+    background-color: $red;
   }
+
+  &-success {
+    background-color: $green;
+  }
+
 }

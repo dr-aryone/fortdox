@@ -1,0 +1,35 @@
+.login-panel {
+  display: block;
+
+  & div {
+    margin-bottom: 5px;
+
+    h2 {
+      margin: 0;
+      color: $primary-color;
+    }
+  }
+
+  & div:hover {
+    background-color: $grey;
+    cursor: pointer;
+  }
+
+  & div:focus {
+    background-color: $grey;
+    outline: 0;
+  }
+
+  &.hide {
+    display: none;
+  }
+}
+
+.logo {
+  text-align: center;
+
+  img {
+    width: 50%;
+    height: auto;
+  }
+}
