@@ -65,6 +65,7 @@ Run the server in `fortdox/server`
 ## ElasticSearch
 Run ElasticSearch
 > bin/elasticsearch
+
 _NOTE_: before running ElasticSearch, you need to install the ingest-attachment plugin
 > bin/elasticsearch-plugin install ingest-attachment
 
