@@ -1,26 +1,50 @@
 const {connect} = require('react-redux');
 const CreateDocView = require('components/document/CreateDocView');
-const action = require('actions');
-const {createDocument} = require('actions/document');
+const doc = require('actions/document');
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
-    input: {
-      titleValue: state.createDocument.get('titleValue'),
-      textValue: state.createDocument.get('textValue')
-    },
+    docFields: state.createDocument.get('docFields'),
+    error: state.createDocument.get('error'),
     isLoading: state.createDocument.get('isLoading')
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    onChange: (event) => {
-      dispatch(action.inputChange(event.target.name, event.target.value));
+    onChange: (event, type) => {
+      dispatch(doc.docInputChange(event.target.name, event.target.value, type));
+    },
+    onSuggestTags: event => {
+      dispatch(doc.suggestTags(event.target.value));
     },
     onCreate: (event) => {
       event.preventDefault();
-      dispatch(createDocument());
+      dispatch(doc.createDocument());
+    },
+    onAddTag: tag => {
+      dispatch(doc.addTag(tag));
+    },
+    onRemoveTag: tag => {
+      dispatch(doc.removeTag(tag));
+    },
+    setTagIndex: index => {
+      dispatch(doc.setTagIndex(index));
+    },
+    onMount: () => {
+      dispatch(doc.getOldTags());
+    },
+    onAddField: field => {
+      dispatch(doc.addField(field));
+    },
+    onRemoveField: id => {
+      dispatch(doc.removeField(id));
+    },
+    onAddAttachment: event => {
+      dispatch(doc.addAttachment(event.target.files));
+    },
+    onRemoveAttachment: id => {
+      dispatch(doc.removeAttachment(id));
     }
   };
 };

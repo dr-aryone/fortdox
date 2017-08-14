@@ -5,11 +5,13 @@
 
 @import
   'components/alerts',
+  'components/arrow-box',
   'components/box',
   'components/buttons',
   'components/input',
   'components/loader',
-  'components/search';
+  'components/modal',
+  'components/tags';
 
 @import
   'layout/grid',
@@ -17,11 +19,15 @@
   'layout/side-nav';
 
 @import
+  'pages/doc-page',
   'pages/full-page',
+  'pages/login-page',
+  'pages/search-page',
   'pages/user-page';
 
-body {
-  margin: 0px;
-  font-family: map-deep-get($text-styles, 'text', 'font-family');
-  font-size: map-deep-get($text-styles, 'text', 'font-size');
-}
+  body {
+    margin: 0px;
+    font-family: map-deep-get($text-styles, 'text', 'font-family');
+    font-size: map-deep-get($text-styles, 'text', 'font-size');
+    background-color: $background-color;
+  }

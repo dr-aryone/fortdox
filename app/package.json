@@ -1,20 +1,28 @@
 {
-  "name": "FortDoks",
-  "productName": "FortDoks",
-  "version": "1.0.0",
+  "name": "FortDox",
+  "productName": "FortDox",
+  "version": "1.1.0",
+  "author": "EdgeGuide <infok@edgeguide.com>",
   "main": "main.js",
+  "homepage": "edgeguide.se",
   "scripts": {
     "start": "electron .",
-    "package-mac": "electron-packager . --overwrite --platform=darwin --arch=x64 --out=release-builds"
+    "mac": "build --mac",
+    "win": "build --win",
+    "linux": "build --linux",
+    "all": "build -mwl"
   },
   "dependencies": {
     "@edgeguide/password-check": "^1.2.1",
     "@edgeguideab/client-request": "^1.4.5",
     "@edgeguideab/password-check": "^1.2.4",
     "@edgeguideab/requestor": "^1.1.2",
-    "electron": "^1.7.4",
+    "electron-builder-squirrel-windows": "^19.18.0",
     "electron-devtools-installer": "^2.2.0",
+    "electron-log": "^2.2.7",
+    "electron-updater": "^2.8.0",
     "immutable": "^3.8.1",
+    "js-yaml": "^3.9.1",
     "react-redux": "^5.0.5",
     "redux": "^3.7.1",
     "redux-thunk": "^2.2.0"
@@ -30,6 +38,8 @@
     "babel-preset-stage-2": "^6.22.0",
     "babelify": "^7.3.0",
     "browserify": "^14.0.0",
+    "electron": "latest",
+    "electron-builder": "^19.6.3",
     "electron-packager": "^8.7.2",
     "electron-react-devtools": "^0.4.0",
     "electron-rebuild": "^1.5.11",
@@ -45,6 +55,7 @@
     "gulp-plumber": "^1.1.0",
     "gulp-ruby-sass": "^2.1.1",
     "gulp-uglify": "^2.1.2",
+    "marked": "^0.3.6",
     "pump": "^1.0.2",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
@@ -55,11 +66,45 @@
     "watchify": "^3.9.0"
   },
   "build": {
-    "protocols": {
-      "name": "FortDoks",
-      "schemes": [
-        "FortDoks"
+    "appId": "FortDox",
+    "files": [
+      "build/*",
+      "index.html",
+      "main.js",
+      "config.json",
+      "aes.js",
+      "package.json",
+      "resources/*"
+    ],
+    "publish": [
+      {
+        "provider": "generic",
+        "url": "https://fortdox.edgeguide.se/downloads"
+      }
+    ],
+    "mac": {
+      "icon": "resources/logo.icns" 
+    },
+    "dmg": {
+      "contents": [
+        {
+          "x": 110,
+          "y": 150
+        },
+        {
+          "x": 240,
+          "y": 150,
+          "type": "link",
+          "path": "/Applications"
+        }
       ]
+    },
+    "linux": {
+      "target": "deb"
+    },
+    "win": {
+      "target": "NSIS",
+      "icon": "resources/logo.ico"
     }
   }
 }

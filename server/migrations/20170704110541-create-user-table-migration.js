@@ -18,10 +18,6 @@ module.exports = {
         },
         onDelete: 'SET NULL'
       },
-      username: {
-        allowNull: true,
-        type: Sequelize.STRING
-      },
       email: {
         unique: true,
         allowNull: false,
@@ -32,7 +28,7 @@ module.exports = {
         type: Sequelize.BLOB
       },
       uuid: {
-        type: Sequelize.STRING,
+        type: Sequelize.UUID,
         unique: true
       }
     });

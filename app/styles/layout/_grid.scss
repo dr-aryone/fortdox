@@ -2,14 +2,13 @@
   top: 0;
   left: 0;
   width: 100%;
-  height: 100vh;
-  background-color: $background-color;
+  height: calc(100vh - #{$header-height});
 }
 
 .container-fluid {
-  margin-left: $side-nav-width;
+  margin-top: $header-height;
   height: 100%;
-  overflow-y: scroll;
+  overflow-y: auto;
 
   &.center-middle {
     display: flex;
@@ -21,7 +20,7 @@
     .alert {
       position: absolute;
       top: 0px;
-      width: percentage(10/12);
+      width: percentage(8/12);
       margin-top: 15px;
     }
   }
@@ -33,10 +32,9 @@
   }
 }
 
-.col-sm-10 {
-  width: percentage(10/12);
-}
-
-.col-sm-offset-1 {
-  margin-left: percentage(1/12);
+.inner-container {
+  width: percentage(8/12);
+  margin-left: percentage(2/12);
+  height: 100%;
+  box-sizing: border-box;
 }

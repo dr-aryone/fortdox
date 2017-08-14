@@ -1,8 +1,10 @@
 {
+  "name": "FortDox",
+  "server": "https://fortdox.edgeguide.se",
   "sqlConfig": {
     "username": "{you username}",
     "password": "{your password}",
-    "database": "FortDoks",
+    "database": "fortdox",
     "host": "127.0.0.1",
     "dialect": "mysql",
     "logging": false

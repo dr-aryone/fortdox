@@ -1,34 +1,54 @@
 const {connect} = require('react-redux');
 const UpdateDocView = require('components/document/UpdateDocView');
 const action = require('actions');
-const {updateDocument} = require('actions/document');
-const {deleteDocument} = require('actions/document');
-const views = require('views.json');
+const doc = require('actions/document');
 
 const mapStateToProps = (state) => {
   return {
-    input: {
-      titleValue: state.updateDocument.get('titleValue'),
-      textValue: state.updateDocument.get('textValue')
-    },
+    docFields: state.updateDocument.get('docFields'),
+    error: state.updateDocument.get('error'),
     isLoading: state.updateDocument.get('isLoading')
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    onChange: (event) => {
-      dispatch(action.inputChange(event.target.name, event.target.value));
+    onChange: (event, type) => {
+      dispatch(doc.docInputChange(event.target.name, event.target.value, type));
+    },
+    onSuggestTags: event => {
+      dispatch(doc.suggestTags(event.target.value));
     },
     onUpdate: (event) => {
       event.preventDefault();
-      dispatch(updateDocument());
+      dispatch(doc.updateDocument());
     },
     toSearchView: () => {
-      dispatch(action.changeView(views.SEARCH_VIEW));
+      dispatch(action.changeView('SEARCH_VIEW'));
     },
     onDelete: () => {
-      dispatch(deleteDocument());
+      dispatch(doc.deleteDocument());
+    },
+    onAddTag: tag => {
+      dispatch(doc.addTag(tag));
+    },
+    onRemoveTag: tagIndex => {
+      dispatch(doc.removeTag(tagIndex));
+    },
+    onMount: () => {
+      dispatch(doc.getOldTags());
+    },
+    onAddField: field => {
+      dispatch(doc.addField(field));
+    },
+    onRemoveField: id => {
+      dispatch(doc.removeField(id));
+    },
+    onAddAttachment: event => {
+      dispatch(doc.addAttachment(event.target.files));
+    },
+    onRemoveAttachment: id => {
+      dispatch(doc.removeAttachment(id));
     }
   };
 };

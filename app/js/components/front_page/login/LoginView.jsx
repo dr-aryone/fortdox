@@ -1,51 +1,67 @@
 const React = require('react');
-const LoaderOverlay = require('components/general/LoaderOverlay');
+const {readStorage} = require('actions/utilities/storage');
+const config = require('../../../../config.json');
+const MessageBox = require('components/general/MessageBox');
+class LoginView extends React.Component {
+  componentWillMount () {
+    if (this.props.onMount && Object.keys(readStorage()).length === 1) {
+      this.props.onMount(this.props);
+    }
+  }
 
-const LoginView = ({input, message, onChange, onLogin, toUserView, toRegisterView, isLoading}) => {
-  let errorMsg = input.error ? <h2>{input.errorMsg}</h2> : null;
-  let messageBox = (
-    <div className='alert alert-success'>
-      <i className='material-icons'>
-        check
-      </i>
-      {message}
-    </div>
-  );
-  return (
-    <div className='container'>
-      {message ? messageBox : null}
-      <div className='box'>
-        <h1 className='text-center'>FortDoks</h1>
-        <LoaderOverlay display={isLoading} />
-        {errorMsg}
-        <label>Email:</label>
-        <input
-          name='emailInputValue'
-          type='text'
-          value={input.emailInputValue}
-          onChange={onChange}
-          className='input-block'
-        />
-        <label>Password:</label>
-        <input
-          name='passwordInputValue'
-          type='password'
-          value={input.passwordInputValue}
-          onChange={onChange}
-          className='input-block'
-        />
-        <a onClick={onLogin} className='btn btn-block'>
-          Login
-        </a>
-        <a onClick={toRegisterView} className='btn btn-block'>
+  render () {
+    let {
+      loginAs,
+      toRegisterView,
+      message
+    } = this.props;
+
+    let userList = [];
+    let storage = readStorage();
+    Object.entries(storage).forEach(([email, value]) => {
+      Object.keys(value).forEach((organization) => {
+        userList.push(
+          <div
+            tabIndex='0'
+            onKeyDown={(event) => {
+              if (event.keyCode === 13) loginAs(email, organization, event);
+            }}
+            onClick={(event) => loginAs(email, organization, event)}
+            key={email+organization}
+          >
+            <h2>{organization}</h2>
+            <h3>{email}</h3>
+          </div>
+        );
+      });
+    });
+    let concatMessage;
+    if (typeof message === 'object' && message !== null) {
+      concatMessage = [];
+      message.entrySeq().forEach((entry) => {
+        entry[0] === 'bold' ? concatMessage.push(<b key={entry[1]}>{entry[1]}</b>) : concatMessage.push(entry[1]);
+      });
+    } else {
+      concatMessage = message;
+    }
+
+    return (
+      <div className='container'>
+        <MessageBox message={concatMessage} />
+        <div className='logo'>
+          <img src={window.__dirname + '/resources/logo.png'} />
+        </div>
+        <h1 className='text-center'>{config.name}</h1>
+        <div className={`box login-panel ${userList.length == 0 ? 'hide' :''}`}>
+          <h2>{userList.length > 0 ? 'Choose an account': null}</h2>
+          {userList}
+        </div>
+        <button onClick={toRegisterView} className='block'>
           Register a New Team
-        </a>
-        <a onClick={toUserView} className='btn btn-block'>
-          Fusk knapp!
-        </a>
+        </button>
       </div>
-    </div>
-  );
-};
+    );
+  }
+}
 
 module.exports = LoginView;

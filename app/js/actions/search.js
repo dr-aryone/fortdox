@@ -1,54 +1,160 @@
 const requestor = require('@edgeguideab/client-request');
 const config = require('../../config.json');
+const embedPrivateKey = require('actions/utilities/embedPrivateKey');
 
 const search = () => {
   return async (dispatch, getState) => {
     dispatch({
       type: 'SEARCH_START'
     });
+
     let state = getState();
     let searchString = state.search.get('searchString');
-    let response;
     let privateKey = state.user.get('privateKey');
     let organization = state.user.get('organization');
     let email = state.user.get('email');
+    let index = 1;
+    let response;
     try {
-      response = await requestor.get(`${config.server}/documents`, {
+      response = await requestor.get(`${config.server}/document`, {
         query: {
           searchString,
           organization,
-          email
+          email,
+          index
         },
-        headers: {
-          'Authorization': `FortDoks ${privateKey}`
-        }
+        headers: embedPrivateKey(privateKey)
       });
     } catch (error) {
       console.error(error);
-      return dispatch ({
-        type: 'SEARCH_NOT_FOUND'
-      });
+      switch (error.status) {
+        case 400:
+        case 404:
+          return dispatch({
+            type: 'SEARCH_ERROR',
+            payload: 'Bad request. Please try again.'
+          });
+        case 408:
+        case 500:
+          return dispatch({
+            type: 'SEARCH_ERROR',
+            payload: 'Unable to connect to server. Please try again later.'
+          });
+      }
     }
-    return dispatch ({
-      type: 'SEARCH_FOUND',
-      payload: response.body
+    return dispatch({
+      type: 'SEARCH_SUCCESS',
+      payload: {
+        index: index,
+        searchResult: response.body.searchResult,
+        totalHits: response.body.totalHits,
+        searchString: searchString,
+      }
     });
   };
 };
 
-const setUpdateDocument = id => {
+const paginationSearch = index => {
   return async (dispatch, getState) => {
-    let state = getState();
-    let searchResult = state.search.get('result').toJS();
-    let doc = searchResult.find((item) => {
-      return item._id === id;
-    });
     dispatch({
-      type: 'UPDATE_DOCUMENT',
-      payload: doc
+      type: 'PAGINATION_SEARCH_START'
+    });
+
+    let state = getState();
+    let searchString = state.search.get('searchedString');
+    let privateKey = state.user.get('privateKey');
+    let organization = state.user.get('organization');
+    let email = state.user.get('email');
+    document.getElementById('top').scrollIntoView();
+    let response;
+    try {
+      response = await requestor.get(`${config.server}/document`, {
+        query: {
+          searchString,
+          organization,
+          email,
+          index
+        },
+        headers: embedPrivateKey(privateKey)
+      });
+    } catch (error) {
+      console.error(error);
+      switch (error.status) {
+        case 400:
+        case 404:
+          return dispatch({
+            type: 'SEARCH_ERROR',
+            payload: 'Bad request. Please try again.'
+          });
+        case 408:
+        case 500:
+          return dispatch({
+            type: 'SEARCH_ERROR',
+            payload: 'Unable to connect to server. Please try again later.'
+          });
+      }
+    }
+
+    return dispatch({
+      type: 'PAGINATION_SEARCH_SUCCESS',
+      payload: {
+        index: index,
+        searchResult: response.body.searchResult,
+        totalHits: response.body.totalHits,
+        searchString: searchString
+      }
     });
   };
 };
 
 
-module.exports = {search, setUpdateDocument};
+const tagSearch = tag => {
+  return async (dispatch, getState) => {
+    dispatch({
+      type: 'TAG_SEARCH_START'
+    });
+    let state = getState();
+    let privateKey = state.user.get('privateKey');
+    let organization = state.user.get('organization');
+    let email = state.user.get('email');
+    let index = 1;
+    let response;
+    try {
+      response = await requestor.get(`${config.server}/document`, {
+        query: {
+          searchString: tag,
+          organization,
+          email,
+          index
+        },
+        headers: embedPrivateKey(privateKey)
+      });
+    } catch (error) {
+      console.error(error);
+      switch (error.status) {
+        case 400:
+        case 404:
+          return dispatch({
+            type: 'TAG_SEARCH_ERROR',
+            payload: 'Bad request. Please try again.'
+          });
+        case 408:
+        case 500:
+          return dispatch({
+            type: 'TAG_SEARCH_ERROR',
+            payload: 'Unable to connect to server. Please try again later.'
+          });
+      }
+    }
+    return dispatch({
+      type: 'TAG_SEARCH_SUCCESS',
+      payload: {
+        index: index,
+        searchResult: response.body.searchResult,
+        totalHits: response.body.totalHits,
+        searchString: tag,
+      }
+    });
+  };
+};
+module.exports = {search, paginationSearch, tagSearch};

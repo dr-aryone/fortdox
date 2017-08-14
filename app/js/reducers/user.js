@@ -3,8 +3,7 @@ const {fromJS} = require('immutable');
 let initialState = fromJS({
   privateKey: '',
   email: '',
-  organization: '',
-  username: ''
+  organization: ''
 });
 
 const user = (state = initialState, action) => {
@@ -13,10 +12,10 @@ const user = (state = initialState, action) => {
       return state.merge({
         privateKey: fromJS(action.payload.privateKey),
         email: fromJS(action.payload.email),
-        username: fromJS(action.payload.user),
         organization: fromJS(action.payload.organization)
       });
     case 'LOGOUT':
+      localStorage.removeItem(state.get('email'));
       return initialState;
     default:
       return state;

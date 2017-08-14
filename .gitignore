@@ -5,3 +5,8 @@ server/server_modules/config.json
 app/js/local_storage/salt
 app/js/local_storage/encryptedPrivateKey
 app/release-builds
+app/dist
+app/release-build
+*.log
+server/distribution/*
+!server/distribution/.keepme
