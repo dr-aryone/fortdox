@@ -1,8 +1,8 @@
 {
   "name": "FortDox",
   "productName": "FortDox",
-  "version": "1.1.0",
-  "author": "EdgeGuide <infok@edgeguide.com>",
+  "version": "1.1.1",
+  "author": "EdgeGuide <info@edgeguide.com>",
   "main": "main.js",
   "homepage": "edgeguide.se",
   "scripts": {
