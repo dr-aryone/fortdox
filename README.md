@@ -30,6 +30,10 @@ For debugging, install following developer tools:
 * [React Developer Tools](https://chrome.google.com/webstore/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi?hl=en)
 * [Redux DevTools](https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd?hl=en)
 
+# Branches
+Development is done on the master branch. When a new release is to be deployed, merge master into the release branch.
+_NEVER COMMIT ANYTHING ON THE RELEASE BRANCH, ONLY ON MASTER_
+
 ## Install Node.js dependencies
 Install the Node dependencies for client in `fortdoks/app`
 > npm install
@@ -90,10 +94,10 @@ Remove indicies from ElasticSearch
 
 > curl -XDELETE 'http://localhost:9200/<index>
 
-Clear local storage. 
+Clear local storage.
 
-* Open DevTools in Electron (CMD+ALT+I or CTRL+ALT+I). 
-* Select the Application tab. 
+* Open DevTools in Electron (CMD+ALT+I or CTRL+ALT+I).
+* Select the Application tab.
 * Select Clear storage and at the bottom of the page, select 'Clear site data'.
 
 ## Backup on Mac
