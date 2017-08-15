@@ -32,6 +32,10 @@ button {
     }
   }
 
+  &.flat {
+    box-shadow: none;
+  }
+
   &:hover {
     background: lighten($primary-color, 5%);
     color: lighten($btn-color, 15%);

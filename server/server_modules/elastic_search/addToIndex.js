@@ -10,6 +10,7 @@ module.exports = client => {
         console.error(error);
         return reject(500);
       }
+
       let response;
       try {
         response = await client.index({

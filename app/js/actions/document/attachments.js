@@ -1,22 +1,44 @@
 const {getPrefix} = require('./utilities');
+const fs = window.require('fs');
+const attachmentUtils = require('../utilities/attachments');
+const globalUtils = require('../utilities/global');
+const path = require('path');
+const uuid = require('uuid');
+const {shell} = window.require('electron');
+
+const FILE_MAX_SIZE = 30 * 1000 * 1000;
 
 const addAttachment = files => {
   return async (dispatch, getState) => {
     let state = getState();
     let {prefix} = getPrefix(state.navigation.get('currentView'));
     for (let file of Array.from(files)) {
-      (async (file) =>  {
-        let reader = new FileReader();
-        reader.onload = e => {
-          dispatch({
-            type: `${prefix}_ADD_ATTACHMENT`,
-            fileType: file.type,
-            name: file.name,
-            file: e.target.result.split(',')[1]
-          });
-        };
-        reader.readAsDataURL(file);
-      })(file);
+      if (file.size > FILE_MAX_SIZE) {
+        dispatch({
+          type: `${prefix}_ADD_ATTACHMENT_ERROR`,
+          payload: {
+            error: 'attachmentTooLarge',
+            file
+          }
+        });
+        continue;
+      }
+      try {
+        let data = await attachmentUtils.readSource(file);
+        dispatch({
+          type: `${prefix}_ADD_ATTACHMENT`,
+          fileType: file.type,
+          name: file.name,
+          file: data.toString('base64')
+        });
+      } catch (error) {
+        dispatch({
+          type: `${prefix}_ADD_ATTACHMENT_ERROR`,
+          payload: {
+            error
+          }
+        });
+      }
     }
   };
 };
@@ -34,7 +56,124 @@ const removeAttachment = id => {
   };
 };
 
+const clearDownload = index => {
+  return {
+    type: 'ATTACHMENT_DOWNLOAD_CLEAR',
+    payload: {
+      index
+    }
+  };
+};
+
+const clearAllDownloads = () => {
+  return {
+    type: 'ATTACHMENT_DOWNLOAD_CLEAR_ALL'
+  };
+};
+
+
+const downloadAttachment = (attachmentData, index) => {
+  return async (dispatch, getState) => {
+    let state = getState();
+    let download = state.download.get('downloads').find(e => e.get('index') === index);
+    if (download) {
+      if (download.get('downloading')) {
+        return dispatch({
+          type: 'ATTACHMENT_DOWNLOAD_ALREADY_DOWNLOADING',
+          payload: {
+            id: download.get('id'),
+            name: download.get('name'),
+            index
+          }
+        });
+      } else {
+        dispatch({
+          type: 'ATTACHMENT_DOWNLOAD_CLEAR',
+          payload: {
+            id: download.get('id'),
+            name: download.get('name'),
+            index
+          }
+        });
+      }
+    }
+    let downloadId = uuid();
+    dispatch({
+      type: 'ATTACHMENT_DOWNLOAD_STARTED',
+      payload: {
+        id: downloadId,
+        name: attachmentData.get('name'),
+        index
+      }
+    });
+    if (attachmentData.get('file')) {
+      let data = window.Buffer.from(attachmentData.get('file'), 'base64');
+      let name;
+      try {
+        name = await attachmentUtils.calculateName(globalUtils.getAppGlobals('downloadDirectory'), attachmentData.get('name'));
+      } catch (error) {
+        return dispatch({
+          type: 'ATTACHMENT_DOWNLOAD_FAILED',
+          payload: {
+            id: downloadId,
+            name: name,
+            index,
+            error
+          }
+        });
+      }
+
+      let downloadPath = path.resolve(globalUtils.getAppGlobals('downloadDirectory'), name);
+      fs.writeFile(downloadPath, data, err => {
+        if (err) {
+          return dispatch({
+            type: 'ATTACHMENT_DOWNLOAD_FAILED',
+            payload: {
+              id: downloadId,
+              name: name,
+              index
+            }
+          });
+        }
+        dispatch({
+          type: 'ATTACHMENT_DOWNLOAD_DONE',
+          payload: {
+            id: downloadId,
+            name: name,
+            path: downloadPath,
+            index
+          }
+        });
+      });
+    } else {
+      //Attachment data was not sent when fetching document
+    }
+  };
+};
+
+const showInDirectory = path => {
+  return dispatch => {
+    dispatch({
+      type: 'ATTACHMENT_OPEN_START'
+    });
+    let successfullyOpened = shell.showItemInFolder(path);
+    if (successfullyOpened) {
+      dispatch({
+        type: 'ATTACHMENT_OPEN_DONE'
+      });
+    } else {
+      dispatch({
+        type: 'ATTACHMENT_OPEN_ERROR'
+      });
+    }
+  };
+};
+
 module.exports = {
   addAttachment,
-  removeAttachment
+  removeAttachment,
+  downloadAttachment,
+  clearDownload,
+  clearAllDownloads,
+  showInDirectory
 };

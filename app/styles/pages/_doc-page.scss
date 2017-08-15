@@ -83,7 +83,7 @@
     padding: 10px;
     padding-bottom: 5px;
 
-    div {
+    > div {
       display: flex;
       justify-content: space-between;
       border-radius: 16px;
@@ -91,6 +91,25 @@
       background: $grey;
       padding: 5px 10px;
       align-items: center;
+
+      .name {
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+      }
+
+      .actions {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        i {
+          padding: 0 5px;
+        }
+
+        button.small {
+          margin: 0;
+        }
+      }
 
       &:hover {
         cursor: pointer;
