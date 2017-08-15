@@ -16,6 +16,7 @@ const DocumentForm = ({
   onRemoveField,
   onAddAttachment,
   onRemoveAttachment,
+  onDownloadAttachment,
   children
 }) => {
   let fields = [];
@@ -99,6 +100,7 @@ const DocumentForm = ({
           attachments={docFields.get('attachments')}
           onAddAttachment={onAddAttachment}
           onRemoveAttachment={onRemoveAttachment}
+          onDownloadAttachment={onDownloadAttachment}
         />
       </div>
     </form>

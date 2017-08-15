@@ -79,15 +79,18 @@ function createBrowserWindow() {
     slashes: true
   });
 
+
+  openingUrl += '?';
   if (redirectParameters) {
     switch (redirectParameters.type) {
       case 'organization':
-        openingUrl = `${openingUrl}?activateOrganizationCode=${redirectParameters.code}`;
+        openingUrl += `activateOrganizationCode=${redirectParameters.code}`;
         break;
       case 'user':
-        openingUrl = `${openingUrl}?activateUserCode=${redirectParameters.code}`;
+        openingUrl += `activateUserCode=${redirectParameters.code}`;
     }
   }
+  openingUrl += `&downloadDirectory=${encodeURIComponent(app.getPath('downloads'))}`;
   win.loadURL(openingUrl);
 
   var template = [{

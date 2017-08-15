@@ -163,6 +163,10 @@ $search-padding: 30px;
 
   .attachments {
     width: 25%;
+
+    &:only-child {
+      width: 100%;
+    }
   }
 
   .tag:hover {

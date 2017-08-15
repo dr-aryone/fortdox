@@ -2,6 +2,7 @@ const {connect} = require('react-redux');
 const UpdateDocView = require('components/document/UpdateDocView');
 const action = require('actions');
 const doc = require('actions/document');
+const attachmentActions = require('actions/document/attachments');
 
 const mapStateToProps = (state) => {
   return {
@@ -49,6 +50,9 @@ const mapDispatchToProps = dispatch => {
     },
     onRemoveAttachment: id => {
       dispatch(doc.removeAttachment(id));
+    },
+    onDownloadAttachment: (attachment, index) => {
+      dispatch(attachmentActions.downloadAttachment(attachment, index));
     }
   };
 };

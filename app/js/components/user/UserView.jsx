@@ -4,9 +4,15 @@ const CreateDocContainer = require('containers/document/CreateDocContainer');
 const UpdateDocContainer = require('containers/document/UpdateDocContainer');
 const SearchViewContainer = require('containers/search/SearchViewContainer');
 const InviteUserContainer = require('containers/invite/InviteUserContainer');
+const DownloadManager = require('components/general/DownloadManager');
 
-
-const UserView = ({currentView}) => {
+const UserView = ({
+  currentView,
+  downloads,
+  onOpenAttachment,
+  onClearDownload,
+  onClearAllDownloads
+}) => {
   let page;
   switch (currentView) {
     case 'USER_VIEW':
@@ -28,6 +34,12 @@ const UserView = ({currentView}) => {
     <div className='wrapper'>
       <HeaderContainer />
       {page}
+      <DownloadManager
+        downloads={downloads}
+        onOpenAttachment={onOpenAttachment}
+        onClearDownload={onClearDownload}
+        onClearAll={onClearAllDownloads}
+      />
     </div>
   );
 };

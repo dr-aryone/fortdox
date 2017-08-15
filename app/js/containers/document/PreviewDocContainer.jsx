@@ -2,6 +2,7 @@ const {connect} = require('react-redux');
 const PreviewDoc = require('components/document/PreviewDoc');
 const {tagSearch} = require('actions/search');
 const action = require('actions');
+const attachmentActions = require('actions/document/attachments');
 
 const mapStateToProps = state => {
   return {
@@ -18,6 +19,9 @@ const mapDispatchToProps = dispatch => {
     },
     onTagSearch: tag => {
       dispatch(tagSearch(tag));
+    },
+    onDownloadAttachment: (attachment, index) => {
+      dispatch(attachmentActions.downloadAttachment(attachment, index));
     }
   };
 };

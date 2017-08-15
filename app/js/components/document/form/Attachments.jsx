@@ -22,12 +22,18 @@ class Attachments extends React.Component {
   }
 
   openModal(name, file, type) {
-    if (type === ('image/jpeg' || 'image/png' || 'image/gif')) this.setState({
-      showModal: true,
-      name,
-      file,
-      type
-    });
+    switch (type) {
+      case 'image/jpeg':
+      case 'image/png':
+      case 'image/gif':
+        this.setState({
+          showModal: true,
+          name,
+          file,
+          type
+        });
+        return;
+    }
   }
 
   closeModal() {
@@ -39,8 +45,10 @@ class Attachments extends React.Component {
     });
   }
 
-  downloadHandler () {
-    alert('DOWNLOAD');
+  downloadHandler (attachment, index) {
+    if (this.props.onDownloadAttachment) {
+      this.props.onDownloadAttachment(attachment, index);
+    }
   }
 
   render() {
@@ -59,11 +67,13 @@ class Attachments extends React.Component {
         <button className='material-icons round small' onClick={() => onRemoveAttachment(index)}>clear</button> : null;
       attachmentList.push(
         <div key={index}>
-          <span onClick={() => this.openModal(name, file, type)}>{name}</span>
-          <span>
-            <i className='material-icons download' onClick={this.downloadHandler}>file_download</i>
+          <span className='name' onClick={() => this.openModal(name, file, type)}>{name}</span>
+          <div className='actions'>
+            <span>
+              <i className='material-icons download' onClick={() => this.downloadHandler(attachment, index)}>file_download</i>
+            </span>
             {removeButton}
-          </span>
+          </div>
         </div>
       );
     });
