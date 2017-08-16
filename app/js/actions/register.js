@@ -4,7 +4,6 @@ const passwordCheck = require('actions/utilities/passwordCheck');
 const {writeStorage} = require('actions/utilities/storage');
 const config = require('../../config.json');
 const checkEmptyFields = require('actions/utilities/checkEmptyFields');
-const embedPrivateKey = require('actions/utilities/embedPrivateKey');
 
 const activateOrganizaton = () => {
   return async (dispatch, getState) => {
@@ -70,9 +69,9 @@ const activateOrganizaton = () => {
     try {
       response = await requestor.post(`${config.server}/register/confirm`, {
         body: {
-          email
-        },
-        headers: embedPrivateKey(privateKey)
+          email,
+          privateKey
+        }
       });
     } catch (error) {
       console.error(error);

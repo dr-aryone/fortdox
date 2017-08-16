@@ -1,4 +1,6 @@
 const React = require('react');
+const config = require('../config.json');
+const request = require('@edgeguideab/client-request');
 const ReactDOM = require('react-dom');
 const Redux = require('redux');
 const ReactRedux = require('react-redux');
@@ -10,11 +12,21 @@ let devToolsMiddleware = window.devToolsExtension ? window.devToolsExtension() :
 let middlewares = Redux.compose(Redux.applyMiddleware(thunk), devToolsMiddleware);
 const store = Redux.createStore(reducer, {}, middlewares);
 const ipcRenderer = window.require('electron').ipcRenderer;
-const remote = window.require('electron').remote;
 const url = window.require('url');
 const querystring = window.require('querystring');
 let queryParameters = querystring.parse(url.parse(window.location.href).query);
 
+request.bind(`${config.server}/*`, sessionQueryMiddleWare);
+
+function sessionQueryMiddleWare({url, options}) {
+  options.headers = options.headers || {};
+  let encodedToken = localStorage.getItem('activeUser');
+  options.headers['Authorization'] = `Bearer ${encodedToken}`;
+  return {
+    url,
+    options
+  };
+}
 
 if (queryParameters.activateOrganizationCode) {
   store.dispatch({

@@ -6,7 +6,6 @@ const {encryptPrivateKey} = require('app/encryption/authentication/privateKeyEnc
 const {decryptPrivateKey} = require('app/encryption/authentication/privateKeyEncryption');
 const mailer = require('app/mailer');
 const uuidv1 = require('uuid/v1');
-const extract = require('app/utilities/extract');
 const logger = require('app/logger');
 
 module.exports = {
@@ -16,13 +15,7 @@ module.exports = {
 };
 
 async function user(req, res) {
-  let privateKey;
-  try {
-    privateKey = extract.privateKey(req.headers.authorization);
-  } catch (error) {
-    logger.log('silly', `Could not extract content from Authorization header for ${req.body.email} @ /invite`);
-    return res.status(400).send('header');
-  }
+  let privateKey = req.session.privateKey;
   let newUserEmail = req.body.newUserEmail;
   let email = req.body.email;
   let encryptedMasterPassword;
@@ -100,12 +93,13 @@ async function verify(req, res) {
 
 async function confirm(req, res) {
   let uuid = req.body.uuid;
-  let privateKey;
-  try {
-    privateKey = extract.privateKey(req.headers.authorization);
-  } catch (error) {
+  if (!req.body.privateKey) {
+    logger.log('silly', `Missing private key for ${uuid} when confirming uuid @ /invite/confirm`);
     return res.status(400).send();
   }
+
+  let privateKey = Buffer.from(req.body.privateKey, 'base64');
+
   let metadata;
   try {
     metadata = await users.verifyNewUser(uuid, privateKey);

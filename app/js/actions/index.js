@@ -56,6 +56,7 @@ const forceBack = () => {
 
 const logout = () => {
   return dispatch => {
+    localStorage.removeItem('activeUser');
     return dispatch({
       type: 'LOGOUT'
     });

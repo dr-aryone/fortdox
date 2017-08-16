@@ -2,64 +2,47 @@ const requestor = require('@edgeguideab/client-request');
 const aes = window.require('./aes.js');
 const config = require('../../config.json');
 const {readStorage} = require('actions/utilities/storage');
-const embedPrivateKey = require('actions/utilities/embedPrivateKey');
 
 const directLogin = () => {
   return async (dispatch, getState) => {
     dispatch({
       type: 'DIRECT_LOGIN_START'
     });
+
     let state = getState();
     if (state.verifyUser.get('forceBack')) return dispatch({
       type: 'FORCE_BACK'
     });
-    if (Object.keys(JSON.parse(localStorage.getItem('fortdox'))).length !== 1 && !localStorage.getItem(Object.keys(JSON.parse(localStorage.getItem('fortdox'))).length[0])) {
-      return dispatch({
-        type: 'DIRECT_LOGIN_FAILED'
-      });
+
+    if (localStorage.getItem('activeUser')) {
+      try {
+        let response = await requestor.get(`${config.server}/login/check`);
+        return dispatch({
+          type: 'VERIFY_LOGIN_CREDS_SUCCESS',
+          payload: {
+            email: response.body.email,
+            organization: response.body.organization
+          }
+        });
+      } catch (error) {
+        localStorage.removeItem('activeUser');
+        return dispatch({
+          type: 'DIRECT_LOGIN_FAILED'
+        });
+      }
     }
-    let email = Object.keys(JSON.parse(localStorage.getItem('fortdox')))[0];
-    const user = readStorage();
-    const organization = Object.keys(user[email])[0];
-    return dispatch(loginAs(email, organization));
   };
 };
 
 const loginAs = (email, organization) => {
-  return async dispatch => {
-    dispatch({
-      type: 'CHECKING_LOCAL_STORAGE_START'
-    });
-    let session;
-    let response;
-    try {
-      session = localStorage.getItem(email);
-      response = await requestor.post(`${config.server}/login/session`, {
-        body: {
-          email
-        },
-        headers: embedPrivateKey(session)
-      });
-    } catch (error) {
-      return dispatch({
-        type: 'LOGIN_AS',
-        payload: {
-          email,
-          organization
-        }
-      });
+  return {
+    type: 'LOGIN_AS',
+    payload: {
+      email,
+      organization
     }
-    return dispatch({
-      type: 'VERIFY_LOGIN_CREDS_SUCCESS',
-      payload: {
-        privateKey: response.body.privateKey,
-        email: email,
-        organization: organization
-      }
-    });
   };
 };
-
 
 const login = () => {
   return async (dispatch, getState) => {
@@ -77,7 +60,7 @@ const login = () => {
     try {
       let paddedPassword = (await aes.generatePaddedKey(password, new window.Buffer(salt, 'base64'))).key;
       privateKey = (await aes.decrypt(new window.Buffer(paddedPassword, 'base64'), new window.Buffer(encryptedPrivateKey, 'base64')));
-      privateKey = window.Buffer.from(privateKey).toString('base64');
+      privateKey = Buffer.from(privateKey).toString('base64');
     } catch (error) {
       console.error(error);
       return dispatch({
@@ -90,9 +73,9 @@ const login = () => {
     try {
       response = await requestor.post(`${config.server}/login`, {
         body: {
-          email
-        },
-        headers: embedPrivateKey(privateKey)
+          email,
+          privateKey
+        }
       });
     } catch (error) {
       console.error(error);
@@ -112,11 +95,11 @@ const login = () => {
           });
       }
     }
-    localStorage[email] = response.body.objToStore;
+
+    localStorage.setItem('activeUser', response.body.token);
     return dispatch({
       type: 'VERIFY_LOGIN_CREDS_SUCCESS',
       payload: {
-        privateKey: privateKey.toString('base64'),
         email: email,
         organization: organization
       }

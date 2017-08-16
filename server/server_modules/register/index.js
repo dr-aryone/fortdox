@@ -5,7 +5,6 @@ const es = require('app/elastic_search');
 const {encryptMasterPassword} = require('app/encryption/keys/cryptMasterPassword');
 const mailer = require('app/mailer');
 const uuidv1 = require('uuid/v1');
-const extract = require('app/utilities/extract');
 const logger = require('app/logger');
 
 module.exports = {
@@ -64,13 +63,13 @@ async function organization(req, res) {
 
 async function confirm(req, res) {
   let email = req.body.email;
-  let privateKey;
-  try {
-    privateKey = extract.privateKey(req.headers.authorization);
-  } catch (error) {
-    logger.log('silly', `Could not extract content from Authorization headrer for ${email} @ /register/confirm`);
+
+  if (!req.body.privateKey) {
+    logger.log('silly', `Missing private key for ${email} @ /register/confirm`);
     return res.status(400).send();
   }
+  let privateKey = Buffer.from(req.body.privateKey, 'base64');
+
   try {
     await users.verifyUser(email, privateKey);
   } catch (error) {
