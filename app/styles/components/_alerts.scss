@@ -11,8 +11,12 @@
     margin-right: 10px;
   }
 
-  &-warning {
+  &-danger {
     background-color: $red;
+  }
+
+  &-warning {
+    background-color: darken($yellow, 10%);
   }
 
   &-success {

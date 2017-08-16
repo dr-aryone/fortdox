@@ -56,7 +56,10 @@ const search = (state = initialState, action) => {
     case 'UPDATE_DOCUMENT_SUCCESS':
     case 'CREATE_DOCUMENT_SUCCESS':
       return initialState.set('message', fromJS(action.payload));
+    case 'SESSION_EXPIRED':
     case 'LOGOUT':
+      return initialState;
+    case 'VERIFY_LOGIN_CREDS_SUCCESS':
       return initialState;
     default:
       return state;

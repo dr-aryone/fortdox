@@ -51,7 +51,7 @@ const login = () => {
     });
     let state = getState();
     let email = state.login.get('email');
-    let password = state.login.get('passwordInputValue');
+    let password = state.login.get('password');
     let organization = state.login.get('organization');
     let storage = readStorage();
     let encryptedPrivateKey = storage[email][organization].privateKey;
@@ -62,7 +62,6 @@ const login = () => {
       privateKey = (await aes.decrypt(new window.Buffer(paddedPassword, 'base64'), new window.Buffer(encryptedPrivateKey, 'base64')));
       privateKey = Buffer.from(privateKey).toString('base64');
     } catch (error) {
-      console.error(error);
       return dispatch({
         type: 'VERIFY_LOGIN_CREDS_ERROR',
         payload: 'Wrong password. Please try again.',

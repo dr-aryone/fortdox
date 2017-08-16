@@ -144,6 +144,9 @@ const form = (state = initialState, action) => {
         default:
           return initialState;
       }
+    case 'LOGOUT':
+    case 'SESSION_EXPIRED':
+      return initialState;
     default:
       return state;
   }

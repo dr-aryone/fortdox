@@ -1,17 +1,35 @@
 const React = require('react');
 const LoaderOverlay = require('components/general/LoaderOverlay');
 
-const PasswordView = ({organization, email, input, onChange, onLogin, toLoginView, isLoading}) => {
+const PasswordView = ({
+  organization,
+  email,
+  input,
+  onChange,
+  onLogin,
+  toLoginView,
+  isLoading,
+  warning
+}) => {
   let errorMsg = input.error ? (
-    <div className='alert alert-warning'>
+    <div className='alert alert-danger'>
       <i className='material-icons'>error_outline</i>
       {input.error}
     </div>
   ) : null;
+
+  let warningMsg = warning ? (
+    <div className='alert alert-warning'>
+      <i className='material-icons'>warning</i>
+      {warning}
+    </div>
+  ) : null;
+
   return (
     <div className='container'>
       <LoaderOverlay display={isLoading} />
       {errorMsg}
+      {warningMsg}
       <div className='logo'>
         <img src={window.__dirname + '/resources/logo.png'} />
       </div>
@@ -21,9 +39,9 @@ const PasswordView = ({organization, email, input, onChange, onLogin, toLoginVie
         <form onSubmit={onLogin}>
           <label>Password</label>
           <input
-            name='passwordInputValue'
+            name='password'
             type='password'
-            value={input.passwordInputValue}
+            value={input.password}
             onChange={onChange}
             className='input-block'
             autoFocus

@@ -133,6 +133,8 @@ const form = (state = initialState, action) => {
     case 'CREATE_DOC_REMOVE_ATTACHMENT':
       return state.setIn(['docFields', 'attachments'], fromJS(action.payload));
     case 'CREATE_DOCUMENT_SUCCESS':
+    case 'LOGOUT':
+    case 'SESSION_EXPIRED':
     case 'CHANGE_VIEW':
       return initialState;
     default:

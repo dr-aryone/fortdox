@@ -31,6 +31,9 @@ const initialState = fromJS({
 
 const register = (state = initialState, action) => {
   switch (action.type) {
+    case 'LOGOUT':
+    case 'SESSION_EXPIRED':
+      return initialState;
     case 'INPUT_CHANGE_REGISTER_ORGANIZATION':
       return state.setIn(['registerFields', action.inputName, 'value'], fromJS(action.inputValue))
         .setIn(['registerFields', action.inputName, 'error'], null);
