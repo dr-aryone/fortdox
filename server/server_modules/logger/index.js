@@ -19,6 +19,10 @@ const logger = new (winston.Logger)({
       filename: __dirname + '/../../logs/filelog-silly.log',
       level: 'silly',
       timestamps: true
+    }),
+    new (winston.transports.Console)({
+      level: 'info',
+      timestamps: true
     })
   ]
 });
