@@ -18,6 +18,7 @@ const navigation = (state = initialState, action) => {
     case 'VERIFY_NEW_USER_SUCCESS':
     case 'LOGOUT':
     case 'DIRECT_LOGIN_FAILED':
+    case 'SESSION_EXPIRED':
     case 'FORCE_BACK':
       return state.set('currentView', fromJS('LOGIN_VIEW'));
     case 'ACTIVATE_ORGANIZATION_CODE_RECIVED':

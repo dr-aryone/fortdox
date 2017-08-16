@@ -12,7 +12,8 @@ const mapStateToProps = state => {
       error: state.login.get('error')
     },
     isLoading: state.login.get('isLoading'),
-    message: state.login.get('message')
+    message: state.login.get('message'),
+    warning: state.login.get('warning')
   };
 };
 

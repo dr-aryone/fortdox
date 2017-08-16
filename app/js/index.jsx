@@ -15,6 +15,7 @@ const ipcRenderer = window.require('electron').ipcRenderer;
 const url = window.require('url');
 const querystring = window.require('querystring');
 let queryParameters = querystring.parse(url.parse(window.location.href).query);
+let loginActions = require('actions/login');
 
 request.bind(`${config.server}/*`, sessionQueryMiddleWare);
 
@@ -27,6 +28,30 @@ function sessionQueryMiddleWare({url, options}) {
     options
   };
 }
+
+request.bindResponseMiddleware((oReq) => {
+  if (oReq.status === 401) {
+    let message;
+    try {
+      message = JSON.parse(oReq.response);
+    } catch (error) {
+      message = {};
+    }
+
+    if (message.error === 'sessionExpired') {
+      let state = store.getState();
+      let email = state.user.get('email');
+      let organization = state.user.get('organization');
+      localStorage.removeItem('activeUser');
+      store.dispatch({
+        type: 'SESSION_EXPIRED'
+      });
+      if (email && organization) {
+        store.dispatch(loginActions.loginAs(email, organization));
+      }
+    }
+  }
+});
 
 if (queryParameters.activateOrganizationCode) {
   store.dispatch({

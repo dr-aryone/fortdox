@@ -6,6 +6,9 @@ const initialState = fromJS({
 
 const download = (state = initialState, action) => {
   switch (action.type) {
+    case 'LOGOUT':
+    case 'SESSION_EXPIRED':
+      return initialState;
     case 'ATTACHMENT_DOWNLOAD_STARTED': {
       return state.update('downloads', list => list.push(Map({
         id: action.payload.id,

@@ -63,8 +63,11 @@ function restrict(req, res, next) {
   try {
     decodedToken = jwt.verify(encodedToken, secret);
   } catch (error) {
+    logger.info('Invalid JWT was supplied');
     logger.error(error);
-    return res.status(401).send();
+    return res.status(401).send({
+      error: 'sessionExpired'
+    });
   }
 
   decodedToken.privateKey = Buffer.from(decodedToken.privateKey);

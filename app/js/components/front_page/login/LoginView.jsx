@@ -13,7 +13,8 @@ class LoginView extends React.Component {
     let {
       loginAs,
       toRegisterView,
-      message
+      message,
+      warning
     } = this.props;
 
     let userList = [];
@@ -45,9 +46,17 @@ class LoginView extends React.Component {
       concatMessage = message;
     }
 
+    let warningMsg = warning ? (
+      <div className='alert alert-warning'>
+        <i className='material-icons'>warning</i>
+        {warning}
+      </div>
+    ) : null;
+
     return (
       <div className='container'>
         <MessageBox message={concatMessage} />
+        {warningMsg}
         <div className='logo'>
           <img src={window.__dirname + '/resources/logo.png'} />
         </div>

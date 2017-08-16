@@ -14,6 +14,9 @@ const initialState = fromJS({
 
 const invite = (state = initialState, action) => {
   switch (action.type) {
+    case 'LOGOUT':
+    case 'SESSION_EXPIRED':
+      return initialState;
     case 'INPUT_CHANGE_INVITE_USER':
       return state.setIn(['fields', action.inputName, 'value'], fromJS(action.inputValue))
         .setIn(['fields', action.inputName, 'error'], null);
