@@ -56,11 +56,11 @@ const removeAttachment = id => {
   };
 };
 
-const clearDownload = index => {
+const clearDownload = id => {
   return {
     type: 'ATTACHMENT_DOWNLOAD_CLEAR',
     payload: {
-      index
+      id
     }
   };
 };
@@ -72,10 +72,10 @@ const clearAllDownloads = () => {
 };
 
 
-const downloadAttachment = (attachmentData, index) => {
+const downloadAttachment = (attachmentData, attachmentIndex) => {
   return async (dispatch, getState) => {
     let state = getState();
-    let download = state.download.get('downloads').find(e => e.get('index') === index);
+    let download = state.download.get('downloads').find(e => e.get('attachmentIndex') === attachmentIndex);
     if (download) {
       if (download.get('downloading')) {
         return dispatch({
@@ -83,7 +83,7 @@ const downloadAttachment = (attachmentData, index) => {
           payload: {
             id: download.get('id'),
             name: download.get('name'),
-            index
+            attachmentIndex
           }
         });
       } else {
@@ -92,7 +92,7 @@ const downloadAttachment = (attachmentData, index) => {
           payload: {
             id: download.get('id'),
             name: download.get('name'),
-            index
+            attachmentIndex
           }
         });
       }
@@ -103,7 +103,7 @@ const downloadAttachment = (attachmentData, index) => {
       payload: {
         id: downloadId,
         name: attachmentData.get('name'),
-        index
+        attachmentIndex
       }
     });
     if (attachmentData.get('file')) {
@@ -117,7 +117,7 @@ const downloadAttachment = (attachmentData, index) => {
           payload: {
             id: downloadId,
             name: name,
-            index,
+            attachmentIndex,
             error
           }
         });
@@ -131,7 +131,7 @@ const downloadAttachment = (attachmentData, index) => {
             payload: {
               id: downloadId,
               name: name,
-              index
+              attachmentIndex
             }
           });
         }
@@ -141,7 +141,7 @@ const downloadAttachment = (attachmentData, index) => {
             id: downloadId,
             name: name,
             path: downloadPath,
-            index
+            attachmentIndex
           }
         });
       });

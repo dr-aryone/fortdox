@@ -11,32 +11,46 @@ const download = (state = initialState, action) => {
         id: action.payload.id,
         name: action.payload.name,
         path: action.payload.path,
-        index: action.payload.index,
+        downloadListIndex: action.payload.downloadListIndex,
         downloading: true,
         progress: 0
       })));
     } case 'ATTACHMENT_DOWNLOAD_DONE': {
-      return state.updateIn(['downloads', action.payload.index], () => Map({
+      let downloadListIndex = state.get('downloads').findIndex(e => e.get('id') === action.payload.id);
+      let updatedDownload = Map({
         id: action.payload.id,
         name: action.payload.name,
         path: action.payload.path,
-        index: action.payload.index,
+        attachmentIndex: action.payload.attachmentIndex,
         downloading: false,
         progress: 100
-      }));
+      });
+      if (downloadListIndex !== -1) {
+        return state.updateIn(['downloads', downloadListIndex], () => updatedDownload);
+      }
+      return state.update('downloads', list => list.push(updatedDownload));
     } case 'ATTACHMENT_DOWNLOAD_CLEAR': {
-      return state.update('downloads', list => list.splice(action.payload.index, 1));
+      let downloadListIndex = state.get('downloads').findIndex(e => e.get('id') === action.payload.id);
+      if (downloadListIndex !== -1) {
+        return state.update('downloads', list => list.splice(downloadListIndex, 1));
+      }
+      return state;
     } case 'ATTACHMENT_DOWNLOAD_CLEAR_ALL': {
       return state.set('downloads', List());
     } case 'ATTACHMENT_DOWNLOAD_ERROR': {
-      return state.updateIn(['downloads', action.payload.index], () => Map({
+      let downloadListIndex = state.get('downloads').findIndex(e => e.get('id') === action.payload.id);
+      let updatedDownload = Map({
         id: action.payload.id,
         name: action.payload.name,
         path: action.payload.path,
-        index: action.payload.index,
+        attachmentIndex: action.payload.downloadListIndex,
         downloading: false,
         error: true
-      }));
+      });
+      if (downloadListIndex !== -1) {
+        return state.updateIn(['downloads', downloadListIndex], () => updatedDownload);
+      }
+      return state.update('downloads', list => list.push(updatedDownload));
     } default: {
       return state;
     }
