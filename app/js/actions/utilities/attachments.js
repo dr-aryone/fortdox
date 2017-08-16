@@ -4,8 +4,20 @@ const path = window.require('path');
 const MAX_NAME_COLLISSION_CHECKS = 100;
 
 module.exports = {
+  readSource,
   calculateName
 };
+
+function readSource(file) {
+  return new Promise((resolve, reject) => {
+    fs.readFile(file.path, (error, data) => {
+      if (error) {
+        return reject(error);
+      }
+      resolve(data);
+    });
+  });
+}
 
 function calculateName(folder, requestedName) {
   return new Promise(async (resolve, reject) => {

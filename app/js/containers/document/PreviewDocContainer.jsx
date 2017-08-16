@@ -20,8 +20,8 @@ const mapDispatchToProps = dispatch => {
     onTagSearch: tag => {
       dispatch(tagSearch(tag));
     },
-    onDownloadAttachment: (attachment, index) => {
-      dispatch(attachmentActions.downloadAttachment(attachment, index));
+    onDownloadAttachment: (attachment, attachmentIndex) => {
+      dispatch(attachmentActions.downloadAttachment(attachment, attachmentIndex));
     }
   };
 };

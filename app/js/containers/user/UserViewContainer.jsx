@@ -18,8 +18,8 @@ const mapDispatchToProps = dispatch => {
     onOpenAttachment: path => {
       dispatch(attachmentActions.showInDirectory(path));
     },
-    onClearDownload: index => {
-      dispatch(attachmentActions.clearDownload(index));
+    onClearDownload: id => {
+      dispatch(attachmentActions.clearDownload(id));
     },
     onClearAllDownloads: () => {
       dispatch(attachmentActions.clearAllDownloads());

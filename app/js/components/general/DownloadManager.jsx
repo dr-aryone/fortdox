@@ -8,10 +8,10 @@ const Download = ({
   onOpen,
   onClear,
   error,
-  index
+  id
 }) => {
-  let openLink = <span className='attachment-link' onClick={() => onOpen(path)}>Show in directory</span>;
-  let clearButton = <button className='round small flat material-icons' onClick={() => onClear(index)}>clear</button>;
+  let openLink = <span key='2' className='attachment-link' onClick={() => onOpen(path)}>Show in directory</span>;
+  let clearButton = <button className='round small flat material-icons' onClick={() => onClear(id)}>clear</button>;
   let status = downloading ? 'Downloading' : 'Complete';
   if (error) {
     status = 'Error';
@@ -22,7 +22,12 @@ const Download = ({
       <div className='progress-bar'>
         <div className='bar' style={{width: `${progress}%`}} />
       </div>
-      <div className='status'><span className={status.toLowerCase()}>{status}</span><span className='delimiter' />{!downloading && progress === 100 ? openLink : null}</div>
+      <div className='status'>
+        <span className={status.toLowerCase()}>
+          {status}
+        </span>
+        {!downloading && progress === 100 ? [<span key='1' className='delimiter' />, openLink] : null}
+      </div>
       {!downloading ? clearButton : null}
     </li>
   );
@@ -35,14 +40,15 @@ const DownloadManager = ({
   onClearAll
 }) => {
   let show = downloads.size !== 0;
+
   downloads = downloads.map(download => (
     <Download
-      key={download.get('index')}
+      key={download.get('id')}
       progress={download.get('progress')}
       downloading={download.get('downloading')}
       name={download.get('name')}
       path={download.get('path')}
-      index={download.get('index')}
+      id={download.get('id')}
       error={download.get('error')}
       onOpen={onOpenAttachment}
       onClear={onClearDownload}

@@ -51,8 +51,8 @@ const mapDispatchToProps = dispatch => {
     onRemoveAttachment: id => {
       dispatch(doc.removeAttachment(id));
     },
-    onDownloadAttachment: (attachment, index) => {
-      dispatch(attachmentActions.downloadAttachment(attachment, index));
+    onDownloadAttachment: (attachment, attachmentIndex) => {
+      dispatch(attachmentActions.downloadAttachment(attachment, attachmentIndex));
     }
   };
 };
