@@ -51,8 +51,31 @@ module.exports = client => {
     return paginationSearch(query);
   };
 
+  const searchForDuplicates = (query) => {
+    return new Promise(async (resolve, reject) => {
+      let response;
+      try {
+        response = await client.search({
+          index: query.organization.toLowerCase(),
+          body: {
+            query: {
+              wildcard: {
+                title: `${query.searchString}*`
+              }
+            },
+          },
+          _source: 'title'
+        });
+        return resolve(response);
+      } catch (error) {
+        return reject(error);
+      }
+    });
+  };
+
   return {
     paginationSearch,
-    paginationSearchAll
+    paginationSearchAll,
+    searchForDuplicates
   };
 };
