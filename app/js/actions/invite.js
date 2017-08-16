@@ -4,7 +4,6 @@ const encryptPrivateKey = require('actions/utilities/encryptPrivateKey');
 const config = require('../../config.json');
 const {writeStorage} = require('actions/utilities/storage');
 const checkEmptyFields = require('actions/utilities/checkEmptyFields');
-const embedPrivateKey = require('actions/utilities/embedPrivateKey');
 
 const inviteUser = () => {
   return async (dispatch, getState) => {
@@ -26,15 +25,13 @@ const inviteUser = () => {
       });
     }
     let newUserEmail = fields.getIn(['email', 'value']);
-    let privateKey = state.user.get('privateKey');
     let email = state.user.get('email');
     try {
       await requestor.post(`${config.server}/invite`, {
         body: {
           email,
           newUserEmail
-        },
-        headers: embedPrivateKey(privateKey)
+        }
       });
     } catch (error) {
       console.error(error);
@@ -175,9 +172,9 @@ const verifyUser = () => {
     try {
       response = await requestor.post(`${config.server}/invite/confirm`, {
         body: {
-          uuid
-        },
-        headers: embedPrivateKey(privateKey)
+          uuid,
+          privateKey
+        }
       });
     } catch (error) {
       console.error(error);

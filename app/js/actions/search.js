@@ -1,6 +1,5 @@
 const requestor = require('@edgeguideab/client-request');
 const config = require('../../config.json');
-const embedPrivateKey = require('actions/utilities/embedPrivateKey');
 
 const search = () => {
   return async (dispatch, getState) => {
@@ -10,7 +9,6 @@ const search = () => {
 
     let state = getState();
     let searchString = state.search.get('searchString');
-    let privateKey = state.user.get('privateKey');
     let organization = state.user.get('organization');
     let email = state.user.get('email');
     let index = 1;
@@ -22,13 +20,17 @@ const search = () => {
           organization,
           email,
           index
-        },
-        headers: embedPrivateKey(privateKey)
+        }
       });
     } catch (error) {
       console.error(error);
       switch (error.status) {
         case 400:
+        case 401:
+          return dispatch({
+            type: 'SEARCH_ERROR',
+            payload: 'Unauthorized'
+          });
         case 404:
           return dispatch({
             type: 'SEARCH_ERROR',
@@ -62,7 +64,6 @@ const paginationSearch = index => {
 
     let state = getState();
     let searchString = state.search.get('searchedString');
-    let privateKey = state.user.get('privateKey');
     let organization = state.user.get('organization');
     let email = state.user.get('email');
     document.getElementById('top').scrollIntoView();
@@ -74,8 +75,7 @@ const paginationSearch = index => {
           organization,
           email,
           index
-        },
-        headers: embedPrivateKey(privateKey)
+        }
       });
     } catch (error) {
       console.error(error);
@@ -114,7 +114,6 @@ const tagSearch = tag => {
       type: 'TAG_SEARCH_START'
     });
     let state = getState();
-    let privateKey = state.user.get('privateKey');
     let organization = state.user.get('organization');
     let email = state.user.get('email');
     let index = 1;
@@ -126,8 +125,7 @@ const tagSearch = tag => {
           organization,
           email,
           index
-        },
-        headers: embedPrivateKey(privateKey)
+        }
       });
     } catch (error) {
       console.error(error);

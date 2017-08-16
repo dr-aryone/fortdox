@@ -1,21 +1,18 @@
 const users = require('app/users');
 const keygen = require('app/encryption/keys/keygen');
 const statusMsg = require('app/statusMsg.json');
-const {encryptPrivateKey} = require('app/encryption/authentication/privateKeyEncryption');
-const {decryptPrivateKey} = require('app/encryption/authentication/privateKeyEncryption');
-const extract = require('app/utilities/extract');
-const sessions = require('app/utilities/session');
 const logger = require('app/logger');
-const moment = require('moment');
 const secret = keygen.genRandomPassword();
 const {decryptMasterPassword} = require('app/encryption/keys/cryptMasterPassword');
+const jwt = require('jsonwebtoken');
 
 module.exports = {
   login,
+  restrict,
   check
 };
 
-async function login (req, res) {
+async function login(req, res) {
   let user;
   try {
     user = await users.getUser(req.body.email);
@@ -23,70 +20,62 @@ async function login (req, res) {
     logger.log('silly', '/login: No existing user ' + req.body.email);
     return res.status(error).send();
   }
-  let privateKey;
-  try {
-    privateKey = extract.privateKey(req.headers.authorization);
-  } catch (error) {
-    logger.log('info', 'No content in header Authorization');
-    return res.status(400).send();
-  }
-  let objToStore = {
-    privateKey,
-    sessionStart: moment()
-  };
+
+  let privateKey = Buffer.from(req.body.privateKey, 'base64');
+
   try {
     await decryptMasterPassword(privateKey, user.password);
-    objToStore = (await encryptPrivateKey(secret, JSON.stringify(objToStore))).toString('base64');
-    res.send({
-      email: user.email,
-      objToStore
-    });
-    logger.log('info', `User ${req.body.email} has logged in!`);
-    return;
   } catch (error) {
-    logger.log('silly', `Encrypting LocalStorage object failed for user ${req.body.email}`);
+    logger.error(error);
+    logger.error(`Failed to decrypt master password for user ${user.email}`);
     return res.status(401).send({
-      message: statusMsg.user[401]
+      msg: statusMsg.user[401]
     });
   }
+
+  let token = jwt.sign({
+    privateKey,
+    email: user.email,
+    organization: user.Organization.name
+  }, secret);
+
+  res.send({
+    token
+  });
+  logger.log('info', `User ${req.body.email} has logged in!`);
 }
 
-async function check(req, res) {
-  let user;
+function restrict(req, res, next) {
+  let authorization = req.headers.authorization;
+
+  if (!authorization) {
+    return res.status(401).send();
+  }
+
+  let encodedToken = authorization.split('Bearer ')[1];
+
+  if (!encodedToken) {
+    return res.status(401).send();
+  }
+
+  let decodedToken;
+
   try {
-    user = await users.getUser(req.body.email);
+    decodedToken = jwt.verify(encodedToken, secret);
   } catch (error) {
-    logger.log('silly', '/login/session: No existing user ' + req.body.email);
-    return res.status(error).send();
+    logger.error(error);
+    return res.status(401).send();
   }
-  let session;
-  try {
-    session = extract.sessionKey(req.headers.authorization);
-    session = JSON.parse(await decryptPrivateKey(secret, session));
-  } catch (error) {
-    logger.log('silly', 'Probably failed because secret was updated or session expired/was never initiated');
-    return res.status(401).send({
-      message: statusMsg.session[401]
-    });
-  }
-  if (!sessions.stillAlive(session.sessionStart)) {
-    logger.log('silly', 'Session expired for ' + req.body.email);
-    return res.status(401).send({
-      message: statusMsg.session[401]
-    });
-  }
-  try {
-    await decryptMasterPassword(session.privateKey, user.password);
-    res.send({
-      email: user.email,
-      privateKey: Buffer.from(session.privateKey).toString('base64')
-    });
-    logger.log('info', `User ${req.body.email} logged in via session!`);
-    return;
-  } catch (error) {
-    logger.log('error', 'Could not decrypt master password for ' + req.body.email);
-    return res.status(401).send({
-      message: statusMsg.session[401]
-    });
-  }
+
+  decodedToken.privateKey = Buffer.from(decodedToken.privateKey);
+  req.session = decodedToken;
+  next();
+}
+
+function check(req, res) {
+  res.send({
+    msg: 'Supplied JWT was accepted',
+    organization: req.session.organization,
+    email: req.session.email
+  });
 }

@@ -4,7 +4,7 @@ const config = require('../../../../config.json');
 const MessageBox = require('components/general/MessageBox');
 class LoginView extends React.Component {
   componentWillMount () {
-    if (this.props.onMount && Object.keys(readStorage()).length === 1) {
+    if (this.props.onMount) {
       this.props.onMount(this.props);
     }
   }

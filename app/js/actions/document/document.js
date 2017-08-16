@@ -1,7 +1,6 @@
 const {fromJS} = require('immutable');
 const requestor = require('@edgeguideab/client-request');
 const config = require('../../../config.json');
-const embedPrivateKey = require('actions/utilities/embedPrivateKey');
 
 const setUpdateDocument = id => {
   return (dispatch, getState) => {
@@ -115,8 +114,7 @@ const createDocument = () => {
             attachments
           },
           email
-        },
-        headers: embedPrivateKey(privateKey)
+        }
       });
     } catch (error) {
       console.error(error);
@@ -202,8 +200,7 @@ const updateDocument = () => {
             attachments
           },
           email
-        },
-        headers: embedPrivateKey(privateKey)
+        }
       });
     } catch (error) {
       console.error(error);

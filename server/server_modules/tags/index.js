@@ -6,7 +6,7 @@ module.exports = {
 };
 
 async function get(req, res) {
-  let organization = req.query.organization;
+  let organization = req.session.organization;
   let response;
   try {
     response = await es.getTags(organization);

@@ -3,27 +3,61 @@ const es = require('app/elastic_search');
 const {decryptDocuments} = require('app/encryption/authentication/documentEncryption');
 const checkEmptyFields = require('app/utilities/checkEmptyFields');
 const expect = require('@edgeguideab/expect');
-const extract = require('app/utilities/extract');
 const logger = require('app/logger');
 
 module.exports = {
   search,
   create,
   update,
-  delete: deleteDocument
+  delete: deleteDocument,
+  checkTitle
 };
+
+async function checkTitle(req, res) {
+  let response, user;
+  let email = req.query.email;
+  let searchString = req.query.searchString;
+
+  let expectations = expect({
+    email: 'email',
+    searchString: {
+      type: 'string',
+      allowNull: true
+    }
+  }, {
+    email,
+    searchString
+  });
+
+  if (!expectations.wereMet()) {
+    return res.status(400).send(expectations.errors());
+  }
+
+  try {
+    user = await users.getUser(email);
+    if (!user) {
+      res.status(404).send({
+        msg: 'noSuchUser'
+      });
+    }
+    response = await es.searchForDuplicates({
+      organization: user.Organization.name.toLowerCase(),
+      searchString: searchString
+    });
+  } catch (error) {
+    logger.error(error);
+    return res.status(500).send({
+      msg: 'internalServerError'
+    });
+  }
+  res.send(response);
+}
 
 async function search(req, res) {
   let searchString = req.query.searchString;
-  let privateKey;
-  try {
-    privateKey = extract.privateKey(req.headers.authorization);
-  } catch (error) {
-    logger.log('silly', `Could not extract content from ${req.query.email} @ GET /document`);
-    return res.status(400).send();
-  }
-  let organization = req.query.organization;
-  let email = req.query.email;
+  let organization = req.session.organization;
+  let email = req.session.email;
+  let privateKey = req.session.privateKey;
   let index = req.query.index;
   let response;
   try {
@@ -58,17 +92,11 @@ async function search(req, res) {
 }
 
 async function create(req, res) {
-  let privateKey;
-  try {
-    privateKey = extract.privateKey(req.headers.authorization);
-  } catch (error) {
-    return res.status(400).send();
-  }
+  let privateKey = req.session.privateKey;
+  let organization = req.session.organization;
   let encryptedMasterPassword;
-  let organization;
   try {
     encryptedMasterPassword = (await users.getUser(req.body.email)).password;
-    organization = await users.getOrganizationName(req.body.email);
   } catch (error) {
     return res.status(404).send();
   }
@@ -85,15 +113,9 @@ async function create(req, res) {
 }
 
 async function update(req, res) {
-  let privateKey;
-  try {
-    privateKey = extract.privateKey(req.headers.authorization);
-  } catch (error) {
-    console.error(error);
-    return res.status(400).send();
-  }
-  let response;
-  let email = req.body.email;
+  let email = req.session.email;
+  let privateKey = req.session.privateKey;
+
   let encryptedMasterPassword;
   try {
     encryptedMasterPassword = (await users.getUser(email)).password;
@@ -103,6 +125,8 @@ async function update(req, res) {
   }
   let fields = checkEmptyFields(req.body.doc);
   if (!fields.valid) return res.status(400).send({emptyFields: fields.emptyFields, reason: fields.reason});
+
+  let response;
   try {
     response = await es.update(req.body, privateKey, encryptedMasterPassword);
     res.send(response);
@@ -111,7 +135,6 @@ async function update(req, res) {
     logger.log('error', `Cannot update document ${req.body.doc.id}`);
     res.status(500).send({msg: 'Internal Server Error'});
   }
-
 }
 
 async function deleteDocument(req,res) {
