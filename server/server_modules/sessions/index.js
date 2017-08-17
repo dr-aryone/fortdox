@@ -1,10 +1,8 @@
 const users = require('app/users');
-const keygen = require('app/encryption/keys/keygen');
 const statusMsg = require('app/statusMsg.json');
 const logger = require('app/logger');
-const secret = keygen.genRandomPassword();
+const {decryptSession, encryptSession} = require('./encryption');
 const {decryptMasterPassword} = require('app/encryption/keys/cryptMasterPassword');
-const jwt = require('jsonwebtoken');
 
 module.exports = {
   login,
@@ -33,11 +31,11 @@ async function login(req, res) {
     });
   }
 
-  let token = jwt.sign({
-    privateKey,
+  let token = encryptSession({
+    privateKey: privateKey.toString('base64'),
     email: user.email,
     organization: user.Organization.name
-  }, secret);
+  });
 
   res.send({
     token
@@ -61,16 +59,16 @@ function restrict(req, res, next) {
   let decodedToken;
 
   try {
-    decodedToken = jwt.verify(encodedToken, secret);
+    decodedToken = decryptSession(encodedToken);
   } catch (error) {
-    logger.info('Invalid JWT was supplied');
+    logger.info('Invalid session');
     logger.error(error);
     return res.status(401).send({
       error: 'sessionExpired'
     });
   }
 
-  decodedToken.privateKey = Buffer.from(decodedToken.privateKey);
+  decodedToken.privateKey = Buffer.from(decodedToken.privateKey, 'base64');
   req.session = decodedToken;
   next();
 }
