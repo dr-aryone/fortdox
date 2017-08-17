@@ -45,15 +45,18 @@ async function login(req, res) {
 
 function restrict(req, res, next) {
   let authorization = req.headers.authorization;
-
   if (!authorization) {
-    return res.status(401).send();
+    return res.status(401).send({
+      error: 'missing authorization header'
+    });
   }
 
   let encodedToken = authorization.split('Bearer ')[1];
 
   if (!encodedToken) {
-    return res.status(401).send();
+    return res.status(401).send({
+      error: 'no bearer token in header'
+    });
   }
 
   let decodedToken;
