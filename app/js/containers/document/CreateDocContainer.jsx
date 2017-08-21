@@ -1,6 +1,7 @@
 const {connect} = require('react-redux');
 const CreateDocView = require('components/document/CreateDocView');
 const documentActions = require('actions/document');
+const action = require('actions');
 
 const mapStateToProps = state => {
   return {
@@ -54,6 +55,7 @@ const mapDispatchToProps = dispatch => {
       dispatch(documentActions.clearSimilarDocuments());
     },
     onSimilarDocumentClick: id => {
+      dispatch(action.changeView('UPDATE_DOC_VIEW'));
       dispatch(documentActions.openDocument(id));
     }
   };

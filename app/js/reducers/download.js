@@ -18,6 +18,19 @@ const download = (state = initialState, action) => {
         downloading: true,
         progress: 0
       })));
+    } case 'ATTACHMENT_DOWNLOAD_PROGRESS': {
+      let downloadListIndex = state.get('downloads').findIndex(e => e.get('id') === action.payload.id);
+      let updatedDownload = Map({
+        id: action.payload.id,
+        name: action.payload.name,
+        attachmentIndex: action.payload.attachmentIndex,
+        downloading: true,
+        progress: action.payload.progress
+      });
+      if (downloadListIndex !== -1) {
+        return state.updateIn(['downloads', downloadListIndex], () => updatedDownload);
+      }
+      return state.update('downloads', list => list.push(updatedDownload));
     } case 'ATTACHMENT_DOWNLOAD_DONE': {
       let downloadListIndex = state.get('downloads').findIndex(e => e.get('id') === action.payload.id);
       let updatedDownload = Map({

@@ -22,7 +22,7 @@ const encryptDocument = (encryptedTexts, privateKey, encryptedMasterPassword) =>
   });
 };
 
-const decryptDocuments = (encryptedTexts, privateKey, encryptedMasterPassword) => {
+const decryptDocuments = (encryptedTexts , privateKey, encryptedMasterPassword) => {
   return new Promise(async (resolve, reject) => {
     let masterPassword;
     try {

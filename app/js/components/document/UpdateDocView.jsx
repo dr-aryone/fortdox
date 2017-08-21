@@ -34,8 +34,8 @@ class UpdateDocView extends React.Component {
 
     return (
       <div className='container-fluid'>
-        <div className='inner-container'>
-          <LoaderOverlay display={isLoading} />
+        <LoaderOverlay display={isLoading} />
+        <div className={`update-view inner-container ${isLoading ? 'hide' : ''}`}>
           <ErrorBox errorMsg={error} />
           <h1>Update Document</h1>
           <DocumentForm

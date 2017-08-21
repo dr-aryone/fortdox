@@ -1,7 +1,7 @@
 const users = require('app/users');
 const es = require('app/elastic_search');
-const {decryptDocuments} = require('app/encryption/authentication/documentEncryption');
 const checkEmptyFields = require('app/utilities/checkEmptyFields');
+const {decryptDocuments, encryptDocument} = require('app/encryption/authentication/documentEncryption');
 const expect = require('@edgeguideab/expect');
 const logger = require('app/logger');
 
@@ -11,11 +11,34 @@ module.exports = {
   update,
   delete: deleteDocument,
   checkTitle,
-  get
+  get,
+  getAttachment
 };
+
+async function getAttachment(req, res) {
+  let id = req.params.id;
+  let attachmentIndex = req.params.attachmentIndex;
+  let organization = req.session.organization;
+  let attachment;
+
+  try {
+    attachment = await es.getAttachment({
+      documentId: id,
+      attachmentIndex,
+      organization
+    });
+  } catch (error) {
+    logger.error(error);
+    return res.status(500).send();
+  }
+
+  res.send(attachment);
+}
 
 async function get(req, res) {
   let organization = req.session.organization;
+  let email = req.session.email;
+  let privateKey = req.session.privateKey;
   let id = req.params.id;
   let expectations = expect({
     id: 'string'
@@ -36,6 +59,22 @@ async function get(req, res) {
   } catch (error) {
     logger.error(error);
     return res.status(500).send();
+  }
+
+  let encryptedMasterPassword;
+  try {
+    encryptedMasterPassword = (await users.getUser(email)).password;
+  } catch (error) {
+    logger.log('silly', `Cannot find user ${email}`);
+    return res.status(404).send();
+  }
+  response._source.encrypted_texts = response._source.encrypted_texts || [];
+  response._source.attachments = response._source.attachments || [];
+  try {
+    response._source.encrypted_texts = await decryptDocuments(response._source.encrypted_texts, privateKey, encryptedMasterPassword);
+  } catch (error) {
+    logger.log('error', `Decrypt error, could not decrypt with privatekey from user ${email}`);
+    return res.status(500).send({msg: 'Internal Server Error'});
   }
 
   res.send(response);
@@ -76,8 +115,6 @@ async function checkTitle(req, res) {
 async function search(req, res) {
   let searchString = req.query.searchString;
   let organization = req.session.organization;
-  let email = req.session.email;
-  let privateKey = req.session.privateKey;
   let index = req.query.index;
   let response;
   try {
@@ -90,21 +127,7 @@ async function search(req, res) {
     logger.log('error', `ElaticSearch error, probably malformed search query or server is down. \n ${error}`);
     return res.status(500).send();
   }
-  let encryptedMasterPassword;
-  try {
-    encryptedMasterPassword = (await users.getUser(email)).password;
-  } catch (error) {
-    logger.log('silly', `Cannot find user ${email}`);
-    return res.status(404).send();
-  }
-  try {
-    for (let doc of response.hits.hits) {
-      doc._source.encrypted_texts = await decryptDocuments(doc._source.encrypted_texts, privateKey, encryptedMasterPassword);
-    }
-  } catch (error) {
-    logger.log('error', `Decrypt error, could not decrypt with privatekey from user ${email}`);
-    return res.status(500).send({msg: 'Internal Server Error'});
-  }
+
   res.send({
     searchResult: response.hits.hits,
     totalHits: response.hits.total
@@ -116,18 +139,35 @@ async function create(req, res) {
   let organization = req.session.organization;
   let encryptedMasterPassword;
   try {
-    encryptedMasterPassword = (await users.getUser(req.body.email)).password;
+    encryptedMasterPassword = (await users.getUser(req.session.email)).password;
   } catch (error) {
     return res.status(404).send();
   }
-  let fields = checkEmptyFields(req.body.doc);
+
+  let fields = checkEmptyFields(req.body);
   if (!fields.valid) return res.status(400).send({emptyFields: fields.emptyFields, reason: fields.reason});
+  let encryptedTexts;
   try {
-    res.send(await es.addToIndex(req.body.doc, privateKey, encryptedMasterPassword, organization));
-    logger.log('info', `User ${req.body.email} created a document with title ${req.body.doc.title}`);
+    encryptedTexts = await encryptDocument(req.body.encryptedTexts, privateKey, encryptedMasterPassword);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send();
+  }
+
+  let query = {
+    title: req.body.title,
+    encryptedTexts: encryptedTexts,
+    texts: req.body.texts,
+    tags: req.body.tags,
+    attachments: req.body.attachments
+  };
+
+  try {
+    res.send(await es.addToIndex({query, organization}));
+    logger.log('info', `User ${req.body.email} created a document with title ${req.body.title}`);
     return;
   } catch (error) {
-    logger.log('error', `Could not add document to index ${req.body.doc.index}`);
+    logger.log('error', `Could not add document to index ${req.body.index}`);
     return res.status(500).send(error);
   }
 }
@@ -135,6 +175,7 @@ async function create(req, res) {
 async function update(req, res) {
   let email = req.session.email;
   let privateKey = req.session.privateKey;
+  let organization = req.session.organization;
 
   let encryptedMasterPassword;
   try {
@@ -143,16 +184,35 @@ async function update(req, res) {
     console.error(error);
     return res.status(404).send();
   }
-  let fields = checkEmptyFields(req.body.doc);
+  let fields = checkEmptyFields(req.body);
   if (!fields.valid) return res.status(400).send({emptyFields: fields.emptyFields, reason: fields.reason});
+
+  let encryptedTexts;
+  try {
+    encryptedTexts = await encryptDocument(req.body.encryptedTexts, privateKey, encryptedMasterPassword);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send();
+  }
+
+  let query = {
+    type: req.body.type,
+    id: req.params.id,
+    refresh: true,
+    title: req.body.title,
+    encryptedTexts: encryptedTexts,
+    texts: req.body.texts,
+    tags: req.body.tags,
+    attachments: req.body.attachments
+  };
 
   let response;
   try {
-    response = await es.update(req.body, privateKey, encryptedMasterPassword);
+    response = await es.update({query, organization});
     res.send(response);
-    logger.log('info', `User ${email} updated document ${req.body.doc.id}`);
+    logger.log('info', `User ${email} updated document ${req.body.id}`);
   } catch (error) {
-    logger.log('error', `Cannot update document ${req.body.doc.id}`);
+    logger.log('error', `Cannot update document ${req.body.id}`);
     res.status(500).send({msg: 'Internal Server Error'});
   }
 }

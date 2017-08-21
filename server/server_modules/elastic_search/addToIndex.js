@@ -1,28 +1,26 @@
-const {encryptDocument} = require('../encryption/authentication/documentEncryption');
+const uuid = require('uuid');
 
 module.exports = client => {
-  const addToIndex = (doc, privateKey, encryptedMasterPassword, organization) => {
+  const addToIndex = ({query, organization}) => {
     return new Promise(async (resolve, reject) => {
-      let encryptedTexts;
-      try {
-        encryptedTexts = await encryptDocument(doc.encryptedTexts, privateKey, encryptedMasterPassword);
-      } catch (error) {
-        console.error(error);
-        return reject(500);
-      }
-
       let response;
+      let attachments = query.attachments || [];
+      attachments = attachments.map(attachment => ({
+        name: `${uuid()}-${attachment.name}`,
+        file_type: attachment.file_type,
+        file: attachment.file
+      }));
+
       try {
         response = await client.index({
           index: organization.toLowerCase(),
           type: 'fortdox_document',
-          pipeline: 'fortdox_attachment',
           body: {
-            title: doc.title,
-            encrypted_texts: encryptedTexts,
-            texts: doc.texts,
-            tags: doc.tags,
-            attachments: doc.attachments
+            title: query.title,
+            encrypted_texts: query.encryptedTexts,
+            texts: query.texts,
+            tags: query.tags,
+            attachments: attachments
           },
           refresh: true
         });

@@ -1,29 +1,39 @@
-const {encryptDocument} = require('../encryption/authentication/documentEncryption');
+const uuid = require('uuid');
 
 module.exports = client => {
-  const update = (query, privateKey, encryptedMasterPassword) => {
+  const update = ({query, organization}) => {
     return new Promise(async (resolve, reject) => {
-      let encryptedTexts;
-      try {
-        encryptedTexts = await encryptDocument(query.doc.encryptedTexts, privateKey, encryptedMasterPassword);
-      } catch (error) {
-        console.error(error);
-        return reject(500);
-      }
       let response;
+
       try {
+        let current = await client.get({
+          index: organization.toLowerCase(),
+          type: 'fortdox_document',
+          id: query.id
+        });
+
+        query.attachments = query.attachments.filter(attachment => {
+          if (attachment.file) {
+            attachment.name = `${uuid()}-${attachment.name}`;
+            return attachment;
+          }
+          let storedAttachment = current._source.attachments.find(a => a.name === attachment.name) || {};
+          attachment.file = storedAttachment.file;
+          return attachment;
+        });
+
         response = await client.update({
-          index: query.index,
-          type: query.type,
+          index: organization.toLowerCase(),
+          type: 'fortdox_document',
           id: query.id,
           refresh: true,
           body: {
             doc: {
-              title: query.doc.title,
-              encrypted_texts: encryptedTexts,
-              texts: query.doc.texts,
-              tags: query.doc.tags,
-              attachments: query.doc.attachments
+              title: query.title,
+              encrypted_texts: query.encryptedTexts,
+              texts: query.texts,
+              tags: query.tags,
+              attachments: query.attachments
             }
           }
         });
