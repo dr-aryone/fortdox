@@ -4,11 +4,13 @@ const DocumentTextArea = require('./DocumentTextArea');
 const DocumentTags = require('./DocumentTags');
 const BottomPanel = require('./BottomPanel');
 const Attachments = require('./Attachments');
+const SimilarDocumentsList = require('./SimilarDocumentsList');
 
 const DocumentForm = ({
   onSubmit,
   docFields,
   onChange,
+  onTitleChange,
   onSuggestTags,
   onAddTag,
   onRemoveTag,
@@ -17,7 +19,10 @@ const DocumentForm = ({
   onAddAttachment,
   onRemoveAttachment,
   onDownloadAttachment,
-  children
+  children,
+  similarDocuments,
+  onCloseSimilarDocuments,
+  onSimilarDocumentClick
 }) => {
   let fields = [];
   let title = docFields.get('title');
@@ -25,7 +30,7 @@ const DocumentForm = ({
   let textFields = docFields.get('texts');
   let tags = docFields.get('tags');
   let size = encryptedTextFields.size + textFields.size;
-  fields.push(<DocumentInputField input={title} type='title' key='title' onChange={onChange} />);
+
   for (let i = 0; i < size; i++) {
     if (encryptedTextFields.size === 0) {
       fields.push(
@@ -33,7 +38,7 @@ const DocumentForm = ({
           input={textFields.first()}
           type='text'
           key={i}
-          onChange={onChange}
+          onChange={event => onChange(event, 'text')}
           onRemoveField={onRemoveField}
         />
       );
@@ -56,9 +61,9 @@ const DocumentForm = ({
         fields.push(
           <DocumentTextArea
             input={encryptedTextFields.first()}
-            type='encryptedText'
+            type='text'
             key={i}
-            onChange={onChange}
+            onChange={event => onChange(event, 'encryptedText')}
             onRemoveField={onRemoveField}
           />
         );
@@ -69,7 +74,7 @@ const DocumentForm = ({
             input={textFields.first()}
             type='text'
             key={i}
-            onChange={onChange}
+            onChange={event => onChange(event, 'text')}
             onRemoveField={onRemoveField}
           />
         );
@@ -82,6 +87,22 @@ const DocumentForm = ({
     <form onSubmit={onSubmit} className='document'>
       <div className='main-panel'>
         <div>
+          <div className='title-container'>
+            <DocumentInputField
+              input={title}
+              type='text'
+              key='title'
+              onChange={event => {
+                onChange(event, 'title');
+                onTitleChange(event);
+              }}
+            />
+            <SimilarDocumentsList
+              list={similarDocuments}
+              onClose={onCloseSimilarDocuments}
+              onClick={onSimilarDocumentClick}
+            />
+          </div>
           {fields}
           <BottomPanel onAddField={onAddField} />
         </div>

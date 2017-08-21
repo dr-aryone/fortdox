@@ -1,58 +1,68 @@
 const {connect} = require('react-redux');
 const UpdateDocView = require('components/document/UpdateDocView');
 const action = require('actions');
-const doc = require('actions/document');
+const documentActions = require('actions/document');
 const attachmentActions = require('actions/document/attachments');
 
 const mapStateToProps = (state) => {
   return {
     docFields: state.updateDocument.get('docFields'),
     error: state.updateDocument.get('error'),
-    isLoading: state.updateDocument.get('isLoading')
+    isLoading: state.updateDocument.get('isLoading'),
+    similarDocuments: state.updateDocument.get('similarDocuments')
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
     onChange: (event, type) => {
-      dispatch(doc.docInputChange(event.target.name, event.target.value, type));
+      dispatch(documentActions.docInputChange(event.target.name, event.target.value, type));
+    },
+    onTitleChange: (event) => {
+      dispatch(documentActions.docTitleChange(event.target.value));
     },
     onSuggestTags: event => {
-      dispatch(doc.suggestTags(event.target.value));
+      dispatch(documentActions.suggestTags(event.target.value));
     },
     onUpdate: (event) => {
       event.preventDefault();
-      dispatch(doc.updateDocument());
+      dispatch(documentActions.updateDocument());
     },
     toSearchView: () => {
       dispatch(action.changeView('SEARCH_VIEW'));
     },
     onDelete: () => {
-      dispatch(doc.deleteDocument());
+      dispatch(documentActions.deleteDocument());
     },
     onAddTag: tag => {
-      dispatch(doc.addTag(tag));
+      dispatch(documentActions.addTag(tag));
     },
     onRemoveTag: tagIndex => {
-      dispatch(doc.removeTag(tagIndex));
+      dispatch(documentActions.removeTag(tagIndex));
     },
     onMount: () => {
-      dispatch(doc.getOldTags());
+      dispatch(documentActions.getOldTags());
     },
     onAddField: field => {
-      dispatch(doc.addField(field));
+      dispatch(documentActions.addField(field));
     },
     onRemoveField: id => {
-      dispatch(doc.removeField(id));
+      dispatch(documentActions.removeField(id));
     },
     onAddAttachment: event => {
-      dispatch(doc.addAttachment(event.target.files));
+      dispatch(documentActions.addAttachment(event.target.files));
     },
     onRemoveAttachment: id => {
-      dispatch(doc.removeAttachment(id));
+      dispatch(documentActions.removeAttachment(id));
     },
     onDownloadAttachment: (attachment, attachmentIndex) => {
       dispatch(attachmentActions.downloadAttachment(attachment, attachmentIndex));
+    },
+    onCloseSimilarDocuments: () => {
+      dispatch(documentActions.clearSimilarDocuments());
+    },
+    onSimilarDocumentClick: id => {
+      dispatch(documentActions.openDocument(id));
     }
   };
 };

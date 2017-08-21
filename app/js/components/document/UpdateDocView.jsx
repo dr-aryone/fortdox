@@ -26,6 +26,10 @@ class UpdateDocView extends React.Component {
       onDownloadAttachment,
       isLoading,
       toSearchView,
+      onTitleChange,
+      similarDocuments,
+      onCloseSimilarDocuments,
+      onSimilarDocumentClick
     } = this.props;
 
     return (
@@ -36,7 +40,11 @@ class UpdateDocView extends React.Component {
           <h1>Update Document</h1>
           <DocumentForm
             docFields={docFields}
+            similarDocuments={similarDocuments}
+            onCloseSimilarDocuments={onCloseSimilarDocuments}
+            onSimilarDocumentClick={onSimilarDocumentClick}
             onChange={onChange}
+            onTitleChange={onTitleChange}
             onAddTag={onAddTag}
             onRemoveTag={onRemoveTag}
             onSuggestTags={onSuggestTags}

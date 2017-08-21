@@ -1,4 +1,4 @@
-const {fromJS} = require('immutable');
+const {fromJS, List} = require('immutable');
 
 let initialState = fromJS({
   documentToUpdate: null,
@@ -18,7 +18,8 @@ let initialState = fromJS({
     nextID: 0
   },
   error: null,
-  isLoading: false
+  isLoading: false,
+  similarDocuments: []
 });
 
 const form = (state = initialState, action) => {
@@ -134,6 +135,13 @@ const form = (state = initialState, action) => {
     case 'UPDATE_DOC_REMOVE_ATTACHMENT':
       return state.setIn(['docFields', 'attachments'], fromJS(action.payload));
     case 'UPDATE_DOCUMENT_SUCCESS':
+    case 'DOCUMENT_TITLE_LOOKUP_DONE': {
+      let current = state.getIn(['documentToUpdate', '_id']);
+      let hits = action.payload.hits.filter(e => e._id !== current);
+      return state.set('similarDocuments', fromJS(hits))
+        .set('isLoading', false);
+    } case 'DOCUMENT_TITLE_LOOKUP_CLEAR':
+      return state.set('similarDocuments', List());
     case 'CHANGE_VIEW':
     case 'SEARCH_SUCCESS':
     case 'TAG_SEARCH_SUCCESS':

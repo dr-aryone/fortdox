@@ -88,14 +88,14 @@ function decryptSession(content) {
   } catch (error) {
     logger.error(error);
     clean();
-    throw new Error('invalid encryption key');
+    throw new Error('Invalid encryption key');
   }
 
   let now = moment();
   let limit = moment(parseInt(createdAt) + parseInt(duration));
 
   if (now.isAfter(limit)) {
-    throw new Error('session time expired');
+    throw new Error('Session time expired');
   }
 
   try {
@@ -105,7 +105,7 @@ function decryptSession(content) {
   } catch (error) {
     logger.error(error);
     clean();
-    throw new Error('failed to parse session contents to json');
+    throw new Error('Failed to parse session contents to json');
   }
 
   function clean() {

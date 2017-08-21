@@ -1,4 +1,4 @@
-const {fromJS} = require('immutable');
+const {fromJS, List} = require('immutable');
 
 let initialState = fromJS({
   docFields: {
@@ -28,6 +28,7 @@ let initialState = fromJS({
   },
   error: null,
   isLoading: false,
+  similarDocuments: []
 });
 
 const form = (state = initialState, action) => {
@@ -132,6 +133,10 @@ const form = (state = initialState, action) => {
         })));
     case 'CREATE_DOC_REMOVE_ATTACHMENT':
       return state.setIn(['docFields', 'attachments'], fromJS(action.payload));
+    case 'DOCUMENT_TITLE_LOOKUP_DONE':
+      return state.set('similarDocuments', action.payload.hits);
+    case 'DOCUMENT_TITLE_LOOKUP_CLEAR':
+      return state.set('similarDocuments', List());
     case 'CREATE_DOCUMENT_SUCCESS':
     case 'LOGOUT':
     case 'SESSION_EXPIRED':
