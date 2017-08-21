@@ -1,7 +1,7 @@
 const fs = window.require('fs');
 const uuid = require('uuid');
 const path = window.require('path');
-const MAX_NAME_COLLISSION_CHECKS = 100;
+const MAX_NAME_COLLISION_CHECKS = 100;
 
 module.exports = {
   readSource,
@@ -26,14 +26,14 @@ function calculateName(folder, requestedName) {
     let checks = 0;
     let foundName = false;
 
-    while (!foundName && checks < MAX_NAME_COLLISSION_CHECKS) {
-      let collission;
+    while (!foundName && checks < MAX_NAME_COLLISION_CHECKS) {
+      let collision;
       try {
-        collission = await checkForCollission(path.resolve(folder, name));
+        collision = await checkForCollision(path.resolve(folder, name));
       } catch (error) {
         reject(error);
       }
-      if (collission) {
+      if (collision) {
         name = `${parsedName.name} (${checks + 1})${parsedName.ext}`;
         checks++;
       } else {
@@ -47,7 +47,7 @@ function calculateName(folder, requestedName) {
     resolve(name);
   });
 
-  function checkForCollission(file) {
+  function checkForCollision(file) {
     return new Promise((resolve, reject) => {
       fs.stat(file, err => {
         if (err) {
