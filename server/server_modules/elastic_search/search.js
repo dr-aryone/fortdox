@@ -53,6 +53,10 @@ module.exports = client => {
 
   const searchForDuplicates = ({organization, searchString}) => {
     return new Promise(async (resolve, reject) => {
+      if (searchString.length < 3) {
+        return resolve([]);
+      }
+
       let response;
       try {
         response = await client.search({
@@ -66,7 +70,11 @@ module.exports = client => {
           },
           _source: 'title'
         });
-        return resolve(response);
+        let hits = response.hits.hits.map(hit => ({
+          _id: hit._id,
+          title: hit._source.title
+        }));
+        return resolve(hits);
       } catch (error) {
         return reject(error);
       }

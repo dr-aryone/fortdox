@@ -1,50 +1,60 @@
 const {connect} = require('react-redux');
 const CreateDocView = require('components/document/CreateDocView');
-const doc = require('actions/document');
+const documentActions = require('actions/document');
 
 const mapStateToProps = state => {
   return {
     docFields: state.createDocument.get('docFields'),
     error: state.createDocument.get('error'),
-    isLoading: state.createDocument.get('isLoading')
+    isLoading: state.createDocument.get('isLoading'),
+    similarDocuments: state.updateDocument.get('similarDocuments')
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
     onChange: (event, type) => {
-      dispatch(doc.docInputChange(event.target.name, event.target.value, type));
+      dispatch(documentActions.docInputChange(event.target.name, event.target.value, type));
+    },
+    onTitleChange: (event) => {
+      dispatch(documentActions.docTitleChange(event.target.value));
     },
     onSuggestTags: event => {
-      dispatch(doc.suggestTags(event.target.value));
+      dispatch(documentActions.suggestTags(event.target.value));
     },
     onCreate: (event) => {
       event.preventDefault();
-      dispatch(doc.createDocument());
+      dispatch(documentActions.createDocument());
     },
     onAddTag: tag => {
-      dispatch(doc.addTag(tag));
+      dispatch(documentActions.addTag(tag));
     },
     onRemoveTag: tag => {
-      dispatch(doc.removeTag(tag));
+      dispatch(documentActions.removeTag(tag));
     },
     setTagIndex: index => {
-      dispatch(doc.setTagIndex(index));
+      dispatch(documentActions.setTagIndex(index));
     },
     onMount: () => {
-      dispatch(doc.getOldTags());
+      dispatch(documentActions.getOldTags());
     },
     onAddField: field => {
-      dispatch(doc.addField(field));
+      dispatch(documentActions.addField(field));
     },
     onRemoveField: id => {
-      dispatch(doc.removeField(id));
+      dispatch(documentActions.removeField(id));
     },
     onAddAttachment: event => {
-      dispatch(doc.addAttachment(event.target.files));
+      dispatch(documentActions.addAttachment(event.target.files));
     },
     onRemoveAttachment: id => {
-      dispatch(doc.removeAttachment(id));
+      dispatch(documentActions.removeAttachment(id));
+    },
+    onCloseSimilarDocuments: () => {
+      dispatch(documentActions.clearSimilarDocuments());
+    },
+    onSimilarDocumentClick: id => {
+      dispatch(documentActions.openDocument(id));
     }
   };
 };

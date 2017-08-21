@@ -2,13 +2,14 @@ const elasticsearch = require('elasticsearch');
 const client = new elasticsearch.Client({
   host: 'http://localhost:9200'
 });
-const update = require('./update.js')(client);
-const addToIndex = require('./addToIndex.js')(client);
-const deleteDocument = require('./delete.js')(client);
-const {createIndex} = require('./createIndex.js')(client);
+const update = require('./update')(client);
+const addToIndex = require('./addToIndex')(client);
+const deleteDocument = require('./delete')(client);
+const {createIndex} = require('./createIndex')(client);
 const {paginationSearch, searchForDuplicates} = require('./search')(client);
-const deleteIndex = require('./deleteIndex.js')(client);
-const getTags = require('./getTags.js')(client);
+const deleteIndex = require('./deleteIndex')(client);
+const getTags = require('./getTags')(client);
+const getDocument = require('./getDocument')(client);
 
 module.exports = {
   client,
@@ -19,5 +20,6 @@ module.exports = {
   paginationSearch,
   searchForDuplicates,
   deleteIndex,
-  getTags
+  getTags,
+  getDocument
 };

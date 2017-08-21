@@ -25,12 +25,75 @@
   }
 }
 
+
 .document {
   display: flex;
 
   .round.small {
     box-shadow: none;
     margin-left: 10px;
+  }
+
+  .title-container {
+    position: relative;
+  }
+
+  .similar-documents-list {
+    position: absolute;
+    bottom: 7px;
+    margin: 0;
+    left: 12px;
+    transform: translateY(100%) rotateX(90deg);
+    opacity: 0;
+    min-width: 200px;
+    pointer-events: none;
+    transition: all 0.3s ease-in-out;
+    padding: 15px 0;
+    padding-bottom: 0;
+
+    &.show {
+      opacity: 1;
+      pointer-events: all;
+      transform: translateY(100%) rotateX(0deg);
+
+      ul {
+        min-height: 45px;
+      }
+    }
+
+    h3 {
+      margin: 0;
+      padding: 0 15px 10px;
+      border-bottom: 1px solid $grey;
+      color: $primary-color;
+    }
+
+    ul {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      transition: min-height 0.3s ease-in-out;
+      min-height: 0;
+
+      li {
+        height: 45px;
+        line-height: 45px;
+        padding: 0 15px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        > p {
+          margin: 0;
+        }
+
+        > span.material-icons {
+          margin-left: 10px;
+          cursor: pointer;
+          color: $primary-color;
+        }
+      }
+    }
   }
 
   label {

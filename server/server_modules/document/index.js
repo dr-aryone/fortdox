@@ -10,22 +10,47 @@ module.exports = {
   create,
   update,
   delete: deleteDocument,
-  checkTitle
+  checkTitle,
+  get
 };
 
+async function get(req, res) {
+  let organization = req.session.organization;
+  let id = req.params.id;
+  let expectations = expect({
+    id: 'string'
+  }, {
+    id: id
+  });
+
+  if (!expectations.wereMet()) {
+    return res.status(400).send(expectations.errors());
+  }
+
+  let response;
+  try {
+    response = await es.getDocument({
+      organization,
+      documentId: id
+    });
+  } catch (error) {
+    logger.error(error);
+    return res.status(500).send();
+  }
+
+  res.send(response);
+}
+
 async function checkTitle(req, res) {
-  let response, user;
-  let email = req.query.email;
   let searchString = req.query.searchString;
+  let organization = req.session.organization;
 
   let expectations = expect({
-    email: 'email',
     searchString: {
       type: 'string',
       allowNull: true
     }
   }, {
-    email,
     searchString
   });
 
@@ -33,15 +58,10 @@ async function checkTitle(req, res) {
     return res.status(400).send(expectations.errors());
   }
 
+  let response;
   try {
-    user = await users.getUser(email);
-    if (!user) {
-      res.status(404).send({
-        msg: 'noSuchUser'
-      });
-    }
     response = await es.searchForDuplicates({
-      organization: user.Organization.name.toLowerCase(),
+      organization: organization.toLowerCase(),
       searchString: searchString
     });
   } catch (error) {
@@ -139,16 +159,23 @@ async function update(req, res) {
 
 async function deleteDocument(req,res) {
   let response;
+
+  let query = {
+    index: req.session.organization.toLowerCase(),
+    id: req.params.id,
+    type: req.query.type
+  };
   let expectations = expect({
     index: 'string',
     type: 'string',
     id: 'string'
-  }, req.query);
+  }, query);
+
   if (!expectations.wereMet()) {
     res.status(400).send(expectations.errors());
   } else {
     try {
-      response = await es.deleteDocument(req.query);
+      response = await es.deleteDocument(query);
       res.send(response);
       logger.log('info', `User ${req.query.email} deleted document ${req.query.id}`);
     } catch (error) {

@@ -1,5 +1,7 @@
 const {fromJS} = require('immutable');
+const requestor = require('@edgeguideab/client-request');
 const {getPrefix} = require('./utilities');
+const config = require('../../../config.json');
 
 const addField = field => {
   return (dispatch, getState) => {
@@ -92,8 +94,82 @@ const docInputChange = (inputID, inputValue, type) => {
   };
 };
 
+let typingTimeout;
+let lastEvent;
+let typingWindow = 1000;
+const docTitleChange = value => {
+  return async dispatch => {
+
+    if (!value) {
+      clearTimeout(typingTimeout);
+      return dispatch({
+        type: 'DOCUMENT_TITLE_LOOKUP_MISSING_TITLE'
+      });
+    }
+
+    if (value.length < 3) {
+      clearTimeout(typingTimeout);
+      return dispatch({
+        type: 'DOCUMENT_TITLE_LOOKUP_TITLE_TOO_SHORT'
+      });
+    }
+    let now = new Date().valueOf();
+
+    if (!lastEvent) {
+      return setTypingTimeout();
+    }
+
+    if ((now - lastEvent) < typingWindow) {
+      clearTimeout(typingTimeout);
+      dispatch({
+        type: 'DOCUMENT_TITLE_LOOKUP_RESTART_TIMEOUT'
+      });
+      setTypingTimeout();
+    } else {
+      setTypingTimeout();
+    }
+
+    function setTypingTimeout() {
+      lastEvent = new Date().valueOf();
+      typingTimeout = setTimeout(async () => {
+        dispatch({
+          type: 'DOCUMENT_TITLE_LOOKUP_START'
+        });
+        try {
+          let response = await requestor.get(`${config.server}/document/check/title`, {
+            query:{
+              searchString: value
+            }
+          });
+          dispatch({
+            type: 'DOCUMENT_TITLE_LOOKUP_DONE',
+            payload: {
+              hits: response.body
+            }
+          });
+        } catch (error) {
+          dispatch({
+            type: 'DOCUMENT_TITLE_LOOKUP_ERROR',
+            payload: {
+              error: error
+            }
+          });
+        }
+      }, typingWindow);
+    }
+  };
+};
+
+const clearSimilarDocuments = () => {
+  return {
+    type: 'DOCUMENT_TITLE_LOOKUP_CLEAR'
+  };
+};
+
 module.exports = {
   addField,
   removeField,
-  docInputChange
+  docInputChange,
+  docTitleChange,
+  clearSimilarDocuments
 };

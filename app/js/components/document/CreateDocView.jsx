@@ -17,13 +17,17 @@ class CreateDocView extends React.Component {
       onAddTag,
       onRemoveTag,
       onChange,
+      onTitleChange,
       onSuggestTags,
       onCreate,
       onAddField,
       onRemoveField,
       onAddAttachment,
       onRemoveAttachment,
-      isLoading
+      isLoading,
+      similarDocuments,
+      onCloseSimilarDocuments,
+      onSimilarDocumentClick
     } = this.props;
 
     return (
@@ -34,6 +38,10 @@ class CreateDocView extends React.Component {
           <h1>Create Document</h1>
           <DocumentForm
             docFields={docFields}
+            similarDocuments={similarDocuments}
+            onCloseSimilarDocuments={onCloseSimilarDocuments}
+            onSimilarDocumentClick={onSimilarDocumentClick}
+            onTitleChange={onTitleChange}
             onChange={onChange}
             onAddTag={onAddTag}
             onRemoveTag={onRemoveTag}

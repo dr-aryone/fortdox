@@ -1,12 +1,12 @@
 module.exports = client => {
-  const deleteDocument = (query) => {
+  const deleteDocument = ({index, type, id}) => {
     return new Promise(async (resolve, reject) => {
       let response;
       try {
         response = await client.delete({
-          index: query.index,
-          type: query.type,
-          id: query.id,
+          index: index,
+          type: type,
+          id: id,
           refresh: true
         });
         return resolve(response);

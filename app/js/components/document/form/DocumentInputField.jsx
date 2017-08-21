@@ -6,7 +6,7 @@ const DocumentInputField = ({input, type, onChange}) => {
       <label><h3>{input.get('label')}</h3></label>
       <input
         name={input.get('id')}
-        onChange={(event) => onChange(event, type)}
+        onChange={onChange}
         type={type}
         value={input.get('value')}
       />

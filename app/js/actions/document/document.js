@@ -2,11 +2,22 @@ const {fromJS} = require('immutable');
 const requestor = require('@edgeguideab/client-request');
 const config = require('../../../config.json');
 
-const setUpdateDocument = id => {
+module.exports = {
+  setUpdateDocument,
+  createDocument,
+  updateDocument,
+  deleteDocument,
+  openDocument
+};
+
+function setUpdateDocument(id, document) {
   return (dispatch, getState) => {
     let state = getState();
     let searchResult = state.search.get('result');
-    let doc = searchResult.find(entry => entry.get('_id') === id);
+    let doc = document;
+    if (!document) {
+      doc = searchResult.find(entry => entry.get('_id') === id);
+    }
     let title = {
       value: doc.getIn(['_source', 'title']),
       id: 'title',
@@ -57,16 +68,15 @@ const setUpdateDocument = id => {
       nextID: nextID+1
     });
   };
-};
+}
 
-const createDocument = () => {
+function createDocument() {
   return async (dispatch, getState) => {
     dispatch({
       type: 'CREATE_DOCUMENT_START'
     });
     let state = getState();
     let docFields = state.createDocument.get('docFields');
-    let privateKey = state.user.get('privateKey');
     let email = state.user.get('email');
     let {titleError, emptyFieldIDs, emptyFieldError} = checkEmptyDocFields(docFields);
     if (titleError !== null || emptyFieldIDs.length !== 0) {
@@ -140,9 +150,9 @@ const createDocument = () => {
       payload: 'Document created!'
     });
   };
-};
+}
 
-const updateDocument = () => {
+function updateDocument() {
   return async (dispatch, getState) => {
     dispatch({
       type: 'UPDATE_DOCUMENT_START'
@@ -185,7 +195,6 @@ const updateDocument = () => {
     });
     let oldDoc = state.updateDocument.get('documentToUpdate');
     let email = state.user.get('email');
-    let privateKey = state.user.get('privateKey');
     try {
       await requestor.patch(`${config.server}/document`, {
         body:{
@@ -225,9 +234,9 @@ const updateDocument = () => {
       payload: 'Document updated!'
     });
   };
-};
+}
 
-const deleteDocument = () => {
+function deleteDocument() {
   return async (dispatch, getState) => {
     dispatch({
       type: 'DELETE_DOCUMENT_START'
@@ -253,7 +262,30 @@ const deleteDocument = () => {
       type: 'DELETE_DOCUMENT_SUCCESS'
     });
   };
-};
+}
+
+function openDocument(id) {
+  return async dispatch => {
+    dispatch({
+      type: 'OPEN_DOCUMENT_START'
+    });
+    let response;
+    try {
+      response = await requestor.get(`${config.server}/document/${id}`);
+      dispatch({
+        type: 'OPEN_DOCUMENT_DONE',
+        payload: {
+          document: response.body
+        }
+      });
+      dispatch(setUpdateDocument(id, fromJS(response.body)));
+    } catch (error) {
+      dispatch({
+        type: 'OPEN_DOCUMENT_ERROR'
+      });
+    }
+  };
+}
 
 function checkEmptyDocFields(docFields) {
   let titleField = docFields.get('title');
@@ -273,10 +305,3 @@ function checkEmptyDocFields(docFields) {
 
   return {titleError, emptyFieldIDs, emptyFieldError};
 }
-
-module.exports = {
-  setUpdateDocument,
-  createDocument,
-  updateDocument,
-  deleteDocument
-};
