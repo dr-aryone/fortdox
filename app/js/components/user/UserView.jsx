@@ -5,9 +5,11 @@ const UpdateDocContainer = require('containers/document/UpdateDocContainer');
 const SearchViewContainer = require('containers/search/SearchViewContainer');
 const InviteUserContainer = require('containers/invite/InviteUserContainer');
 const DownloadManager = require('components/general/DownloadManager');
+const SplashScreen = require('components/general/SplashScreen');
 
 const UserView = ({
   currentView,
+  splashScreen,
   downloads,
   onOpenAttachment,
   onClearDownload,
@@ -32,6 +34,7 @@ const UserView = ({
 
   return (
     <div className='wrapper'>
+      <SplashScreen show={splashScreen} />;
       <HeaderContainer />
       {page}
       <DownloadManager

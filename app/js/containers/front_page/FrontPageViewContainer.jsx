@@ -3,7 +3,8 @@ const FrontPageView = require('components/front_page/FrontPageView');
 
 const mapStateToProps = state => {
   return {
-    currentView: state.navigation.get('currentView')
+    currentView: state.navigation.get('currentView'),
+    splashScreen: state.navigation.get('splashScreen')
   };
 };
 

@@ -7,7 +7,8 @@ const {directLogin} = require('actions/login');
 const mapStateToProps = state => {
   return {
     message: state.login.get('message'),
-    warning: state.login.get('warning')
+    warning: state.login.get('warning'),
+    modalLoader: state.login.get('modalLoader')
   };
 };
 
