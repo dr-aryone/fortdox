@@ -24,6 +24,12 @@ let initialState = fromJS({
 
 const form = (state = initialState, action) => {
   switch (action.type) {
+    case 'OPEN_DOCUMENT_START':
+      return state.set('isLoading', true);
+    case 'OPEN_DOCUMENT_DONE':
+      return state.set('isLoading', false);
+    case 'OPEN_DOCUMENT_FAILED':
+      return state.set('isLoading', false);
     case 'UPDATE_DOC_INPUT_CHANGE_TITLE':
       return state
         .setIn(['docFields', 'title', 'value'], fromJS(action.payload))

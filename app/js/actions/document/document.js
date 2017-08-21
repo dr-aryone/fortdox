@@ -264,21 +264,30 @@ function deleteDocument() {
   };
 }
 
+const MINIMUM_LOADING_TIME = 400;
 function openDocument(id) {
   return async dispatch => {
     dispatch({
       type: 'OPEN_DOCUMENT_START'
     });
+    let startTime = new Date().valueOf();
     let response;
     try {
       response = await requestor.get(`${config.server}/document/${id}`);
-      dispatch({
-        type: 'OPEN_DOCUMENT_DONE',
-        payload: {
-          document: response.body
-        }
-      });
-      dispatch(setUpdateDocument(id, fromJS(response.body)));
+      let endTime = new Date().valueOf();
+      let timeout = 0;
+      if (endTime - startTime < MINIMUM_LOADING_TIME) {
+        timeout = MINIMUM_LOADING_TIME - (endTime - startTime);
+      }
+      setTimeout(() => {
+        dispatch({
+          type: 'OPEN_DOCUMENT_DONE',
+          payload: {
+            document: response.body
+          }
+        });
+        dispatch(setUpdateDocument(id, fromJS(response.body)));
+      }, timeout);
     } catch (error) {
       dispatch({
         type: 'OPEN_DOCUMENT_ERROR'
