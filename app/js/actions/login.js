@@ -18,7 +18,7 @@ const directLogin = () => {
       try {
         let response = await requestor.get(`${config.server}/login/check`);
         return dispatch({
-          type: 'VERIFY_LOGIN_CREDS_SUCCESS',
+          type: 'DIRECT_LOGIN_SUCCESS',
           payload: {
             email: response.body.email,
             organization: response.body.organization
@@ -30,6 +30,12 @@ const directLogin = () => {
           type: 'DIRECT_LOGIN_FAILED'
         });
       }
+    } else {
+      setTimeout(() => {
+        return dispatch({
+          type: 'DIRECT_LOGIN_FAILED'
+        });
+      }, 200);
     }
   };
 };

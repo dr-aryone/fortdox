@@ -26,6 +26,7 @@ const login = (state = initialState, action) => {
         .set('warning', null)
         .set('error', null);
     case 'CHANGE_VIEW':
+    case 'DIRECT_LOGIN_SUCCESS':
     case 'VERIFY_LOGIN_CREDS_SUCCESS':
       return initialState;
     case 'VERIFY_LOGIN_CREDS_ERROR':

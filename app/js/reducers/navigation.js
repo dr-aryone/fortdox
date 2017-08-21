@@ -2,6 +2,7 @@ const {fromJS} = require('immutable');
 
 const initialState = fromJS({
   currentView: 'LOGIN_VIEW',
+  splashScreen: true
 });
 
 const navigation = (state = initialState, action) => {
@@ -9,10 +10,12 @@ const navigation = (state = initialState, action) => {
     case 'CHANGE_VIEW':
       return state.set('currentView', fromJS(action.payload));
     case 'VERIFY_LOGIN_CREDS_SUCCESS':
+    case 'DIRECT_LOGIN_SUCCESS':
     case 'UPDATE_DOCUMENT_SUCCESS':
     case 'DELETE_DOCUMENT_SUCCESS':
     case 'CREATE_DOCUMENT_SUCCESS':
-      return state.set('currentView', fromJS('USER_VIEW'));
+      return state.set('currentView', fromJS('USER_VIEW'))
+        .set('splashScreen', false);
     case 'REGISTER_ORGANIZATION_SUCCESS':
     case 'ACTIVATE_ORGANIZATION_SUCCESS':
     case 'VERIFY_NEW_USER_SUCCESS':
@@ -20,7 +23,8 @@ const navigation = (state = initialState, action) => {
     case 'DIRECT_LOGIN_FAILED':
     case 'SESSION_EXPIRED':
     case 'FORCE_BACK':
-      return state.set('currentView', fromJS('LOGIN_VIEW'));
+      return state.set('currentView', fromJS('LOGIN_VIEW'))
+        .set('splashScreen', false);
     case 'ACTIVATE_ORGANIZATION_CODE_RECIVED':
       return state.set('currentView', fromJS('ACTIVATE_ORGANIZATION_VIEW'));
     case 'ACTIVATE_USER_CODE_RECIVED':
