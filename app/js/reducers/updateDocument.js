@@ -27,7 +27,18 @@ const form = (state = initialState, action) => {
     case 'OPEN_DOCUMENT_START':
       return state.set('isLoading', true);
     case 'OPEN_DOCUMENT_DONE':
-      return state.set('isLoading', false);
+      return state.merge({
+        documentToUpdate: fromJS(action.documentToUpdate),
+        docFields: state.get('docFields').merge({
+          title: fromJS(action.title),
+          encryptedTexts: fromJS(action.encryptedTexts),
+          texts: fromJS(action.texts),
+          tags: state.getIn(['docFields', 'tags']).set('list', fromJS(action.tags)),
+          attachments: fromJS(action.attachments),
+          nextID: fromJS(action.nextID)
+        }),
+        isLoading: false
+      });
     case 'OPEN_DOCUMENT_FAILED':
       return state.set('isLoading', false);
     case 'UPDATE_DOC_INPUT_CHANGE_TITLE':
@@ -67,29 +78,13 @@ const form = (state = initialState, action) => {
       }));
     case 'UPDATE_DOC_REMOVE_TAG_SUCCESS':
       return state.setIn(['docFields', 'tags', 'list'], fromJS(action.payload));
-    case 'UPDATE_DOC_GET_OLD_TAGS_START':
-      return state.set('isLoading', true);
     case 'UPDATE_DOC_GET_OLD_TAGS_ERROR':
       return state.merge({
-        error: fromJS(action.payload),
-        isLoading: false
+        error: fromJS(action.payload)
       });
     case 'UPDATE_DOC_GET_OLD_TAGS_SUCCESS':
       return state
-        .setIn(['docFields', 'tags', 'old'], fromJS(action.payload))
-        .set('isLoading', false);
-    case 'SET_UPDATE_DOCUMENT':
-      return state.merge({
-        documentToUpdate: fromJS(action.documentToUpdate),
-        docFields: state.get('docFields').merge({
-          title: fromJS(action.title),
-          encryptedTexts: fromJS(action.encryptedTexts),
-          texts: fromJS(action.texts),
-          tags: state.getIn(['docFields', 'tags']).set('list', fromJS(action.tags)),
-          attachments: fromJS(action.attachments),
-          nextID: fromJS(action.nextID)
-        })
-      });
+        .setIn(['docFields', 'tags', 'old'], fromJS(action.payload));
     case 'UPDATE_DOCUMENT_START':
       return state.set('isLoading', true);
     case 'UPDATE_DOCUMENT_FAIL': {
@@ -141,6 +136,7 @@ const form = (state = initialState, action) => {
     case 'UPDATE_DOC_REMOVE_ATTACHMENT':
       return state.setIn(['docFields', 'attachments'], fromJS(action.payload));
     case 'UPDATE_DOCUMENT_SUCCESS':
+      return state.set('isLoading', false);
     case 'DOCUMENT_TITLE_LOOKUP_DONE': {
       let current = state.getIn(['documentToUpdate', '_id']);
       let hits = action.payload.hits.filter(e => e._id !== current);

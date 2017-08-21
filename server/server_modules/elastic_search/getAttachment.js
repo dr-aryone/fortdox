@@ -1,5 +1,5 @@
 module.exports = client => {
-  const getDocument = ({organization, documentId}) => {
+  const getAttachment = ({organization, documentId, attachmentIndex}) => {
     return new Promise(async (resolve, reject) => {
       let response;
       try {
@@ -7,9 +7,9 @@ module.exports = client => {
           index: organization.toLowerCase(),
           type: 'fortdox_document',
           id: documentId,
-          _sourceExclude: 'attachments.file'
+          _sourceExclude: ['texts', 'title', 'encrypted_texts']
         });
-        return resolve(response);
+        return resolve(response._source.attachments[attachmentIndex].file);
       } catch (error) {
         console.error(error);
         return reject(error);
@@ -17,5 +17,5 @@ module.exports = client => {
     });
   };
 
-  return getDocument;
+  return getAttachment;
 };

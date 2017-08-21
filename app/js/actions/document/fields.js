@@ -96,7 +96,7 @@ const docInputChange = (inputID, inputValue, type) => {
 
 let typingTimeout;
 let lastEvent;
-let typingWindow = 1000;
+let typingWindow = 500;
 const docTitleChange = value => {
   return async dispatch => {
 

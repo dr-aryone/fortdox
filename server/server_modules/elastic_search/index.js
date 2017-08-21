@@ -10,6 +10,7 @@ const {paginationSearch, searchForDuplicates} = require('./search')(client);
 const deleteIndex = require('./deleteIndex')(client);
 const getTags = require('./getTags')(client);
 const getDocument = require('./getDocument')(client);
+const getAttachment = require('./getAttachment')(client);
 
 module.exports = {
   client,
@@ -21,5 +22,6 @@ module.exports = {
   searchForDuplicates,
   deleteIndex,
   getTags,
-  getDocument
+  getDocument,
+  getAttachment
 };

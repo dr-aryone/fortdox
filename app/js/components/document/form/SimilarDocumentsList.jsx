@@ -8,10 +8,12 @@ class SimilarDocumentsList extends React.Component {
 
   componentWillUnmount() {
     window.removeEventListener('click', this.close);
+    window.removeEventListener('keydown', this.close);
   }
 
   componentWillMount() {
     window.addEventListener('click', this.close);
+    window.addEventListener('keydown', this.close);
   }
 
   close() {

@@ -1,4 +1,6 @@
 const {getPrefix} = require('./utilities');
+const requestor = require('@edgeguideab/client-request');
+const config = require('../../../config.json');
 const fs = window.require('fs');
 const attachmentUtils = require('../utilities/attachments');
 const globalUtils = require('../utilities/global');
@@ -76,6 +78,8 @@ const downloadAttachment = (attachmentData, attachmentIndex) => {
   return async (dispatch, getState) => {
     let state = getState();
     let download = state.download.get('downloads').find(e => e.get('attachmentIndex') === attachmentIndex);
+    let currentDocument = state.updateDocument.getIn(['documentToUpdate', '_id']);
+
     if (download) {
       if (download.get('downloading')) {
         return dispatch({
@@ -106,48 +110,72 @@ const downloadAttachment = (attachmentData, attachmentIndex) => {
         attachmentIndex
       }
     });
-    if (attachmentData.get('file')) {
-      let data = window.Buffer.from(attachmentData.get('file'), 'base64');
-      let name;
-      try {
-        name = await attachmentUtils.calculateName(globalUtils.getAppGlobals('downloadDirectory'), attachmentData.get('name'));
-      } catch (error) {
+    let response;
+    try {
+      response = await requestor.get(`${config.server}/document/${currentDocument}/attachment/${attachmentIndex}`, {
+        onDataReceived: ({loaded, total}) => {
+          let progress = Math.ceil((loaded / total) * 100);
+          dispatch({
+            type: 'ATTACHMENT_DOWNLOAD_PROGRESS',
+            payload: {
+              id: downloadId,
+              name: attachmentData.get('name'),
+              attachmentIndex,
+              progress
+            }
+          });
+        }
+      });
+    } catch (error) {
+      return dispatch({
+        type: 'ATTACHMENT_DOWNLOAD_FAILED',
+        payload: {
+          id: downloadId,
+          name: name,
+          attachmentIndex,
+          error
+        }
+      });
+    }
+
+    let data = window.Buffer.from(response.body, 'base64');
+    let name;
+    try {
+      name = await attachmentUtils.calculateName(globalUtils.getAppGlobals('downloadDirectory'), attachmentData.get('name'));
+    } catch (error) {
+      return dispatch({
+        type: 'ATTACHMENT_DOWNLOAD_FAILED',
+        payload: {
+          id: downloadId,
+          name: name,
+          attachmentIndex,
+          error
+        }
+      });
+    }
+
+    let downloadPath = path.resolve(globalUtils.getAppGlobals('downloadDirectory'), name);
+    fs.writeFile(downloadPath, data, err => {
+      if (err) {
         return dispatch({
           type: 'ATTACHMENT_DOWNLOAD_FAILED',
           payload: {
             id: downloadId,
             name: name,
-            attachmentIndex,
-            error
-          }
-        });
-      }
-
-      let downloadPath = path.resolve(globalUtils.getAppGlobals('downloadDirectory'), name);
-      fs.writeFile(downloadPath, data, err => {
-        if (err) {
-          return dispatch({
-            type: 'ATTACHMENT_DOWNLOAD_FAILED',
-            payload: {
-              id: downloadId,
-              name: name,
-              attachmentIndex
-            }
-          });
-        }
-        dispatch({
-          type: 'ATTACHMENT_DOWNLOAD_DONE',
-          payload: {
-            id: downloadId,
-            name: name,
-            path: downloadPath,
             attachmentIndex
           }
         });
+      }
+      dispatch({
+        type: 'ATTACHMENT_DOWNLOAD_DONE',
+        payload: {
+          id: downloadId,
+          name: name,
+          path: downloadPath,
+          attachmentIndex
+        }
       });
-    } else {
-      //Attachment data was not sent when fetching document
-    }
+    });
   };
 };
 

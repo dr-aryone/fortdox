@@ -18,8 +18,14 @@ const search = (state = initialState, action) => {
       return state.set(action.inputName, fromJS(action.inputValue));
     case 'SEARCH_START':
     case 'PAGINATION_SEARCH_START':
+    case 'OPEN_DOCUMENT_START':
     case 'TAG_SEARCH_START':
       return state.set('isLoading', true);
+    case 'OPEN_DOCUMENT_DONE':
+      return state.set('isLoading', false);
+    case 'OPEN_DOCUMENT_FAILED':
+      return state.set('isLoading', false)
+        .set('error', 'Unable to open document');
     case 'SEARCH_SUCCESS':
     case 'PAGINATION_SEARCH_SUCCESS':
     case 'TAG_SEARCH_SUCCESS':

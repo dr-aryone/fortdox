@@ -36,7 +36,8 @@ module.exports = client => {
               require_field_match: false
             },
             from: from
-          }
+          },
+          _sourceExclude: ['attachments', 'encrypted_texts'],
         });
         return resolve(response);
       } catch (error) {
@@ -63,10 +64,18 @@ module.exports = client => {
           index: organization.toLowerCase(),
           body: {
             query: {
-              wildcard: {
-                title: `${searchString}*`
+              bool: {
+                should: [{
+                  regexp: {
+                    _all: `.*${searchString}.*`
+                  }
+                }, {
+                  fuzzy: {
+                    _all: searchString
+                  }
+                }]
               }
-            },
+            }
           },
           _source: 'title'
         });

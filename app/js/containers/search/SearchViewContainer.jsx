@@ -2,7 +2,7 @@ const {connect} = require('react-redux');
 const SearchView = require('components/search/SearchView');
 const action = require('actions');
 const search = require('actions/search');
-const {setUpdateDocument} = require('actions/document');
+const {openDocument} = require('actions/document');
 
 const mapStateToProps = state => {
   return {
@@ -27,7 +27,7 @@ const mapDispatchToProps = dispatch => {
       dispatch(search.search());
     },
     onUpdate: id => {
-      dispatch(setUpdateDocument(id));
+      dispatch(openDocument(id));
       dispatch(action.changeView('UPDATE_DOC_VIEW'));
     },
     paginationSearch: index => {
@@ -37,7 +37,7 @@ const mapDispatchToProps = dispatch => {
       dispatch(action.changeView('CREATE_DOC_VIEW'));
     },
     onPreview: id => {
-      dispatch(setUpdateDocument(id));
+      dispatch(openDocument(id, true));
     },
     onTagSearch: tag => {
       dispatch(search.tagSearch(tag));

@@ -3,72 +3,11 @@ const requestor = require('@edgeguideab/client-request');
 const config = require('../../../config.json');
 
 module.exports = {
-  setUpdateDocument,
   createDocument,
   updateDocument,
   deleteDocument,
   openDocument
 };
-
-function setUpdateDocument(id, document) {
-  return (dispatch, getState) => {
-    let state = getState();
-    let searchResult = state.search.get('result');
-    let doc = document;
-    if (!document) {
-      doc = searchResult.find(entry => entry.get('_id') === id);
-    }
-    let title = {
-      value: doc.getIn(['_source', 'title']),
-      id: 'title',
-      label: 'Title',
-      error: null
-    };
-    let encryptedTexts = [];
-    let texts = [];
-    let tags = [];
-    let attachments = [];
-    let nextID = 0;
-    doc.getIn(['_source', 'encrypted_texts']).forEach(entry => {
-      encryptedTexts.push(fromJS({
-        value: entry.get('text'),
-        id: entry.get('id'),
-        label: 'Encrypted Text',
-        error: null
-      }));
-      if (entry.get('id') > nextID) nextID = entry.get('id');
-    });
-    doc.getIn(['_source', 'texts']).forEach(entry => {
-      texts.push(fromJS({
-        value: entry.get('text'),
-        id: entry.get('id'),
-        label: 'Text',
-        error: null
-      }));
-      if (entry.get('id') > nextID) nextID = entry.get('id');
-    });
-    doc.getIn(['_source', 'tags']).forEach(entry => {
-      tags.push(entry);
-    });
-    doc.getIn(['_source', 'attachments']).forEach(attachment => {
-      attachments.push({
-        name: attachment.get('name'),
-        file: attachment.get('file'),
-        type: attachment.get('file_type'),
-      });
-    });
-    return dispatch({
-      type: 'SET_UPDATE_DOCUMENT',
-      documentToUpdate: doc,
-      title,
-      encryptedTexts,
-      texts,
-      tags,
-      attachments,
-      nextID: nextID+1
-    });
-  };
-}
 
 function createDocument() {
   return async (dispatch, getState) => {
@@ -77,7 +16,6 @@ function createDocument() {
     });
     let state = getState();
     let docFields = state.createDocument.get('docFields');
-    let email = state.user.get('email');
     let {titleError, emptyFieldIDs, emptyFieldError} = checkEmptyDocFields(docFields);
     if (titleError !== null || emptyFieldIDs.length !== 0) {
       return dispatch({
@@ -116,14 +54,11 @@ function createDocument() {
     try {
       await requestor.post(`${config.server}/document`, {
         body: {
-          doc: {
-            title,
-            encryptedTexts,
-            texts,
-            tags,
-            attachments
-          },
-          email
+          title,
+          encryptedTexts,
+          texts,
+          tags,
+          attachments
         }
       });
     } catch (error) {
@@ -157,7 +92,6 @@ function updateDocument() {
     dispatch({
       type: 'UPDATE_DOCUMENT_START'
     });
-
     let state = getState();
     let newDoc = state.updateDocument.get('docFields');
     let {titleError, emptyFieldIDs, emptyFieldError} = checkEmptyDocFields(newDoc);
@@ -194,21 +128,16 @@ function updateDocument() {
       });
     });
     let oldDoc = state.updateDocument.get('documentToUpdate');
-    let email = state.user.get('email');
+
     try {
-      await requestor.patch(`${config.server}/document`, {
+      await requestor.patch(`${config.server}/document/${oldDoc.get('_id')}`, {
         body:{
-          index: oldDoc.get('_index'),
           type: oldDoc.get('_type'),
-          id: oldDoc.get('_id'),
-          doc: {
-            title,
-            encryptedTexts,
-            texts,
-            tags,
-            attachments
-          },
-          email
+          title,
+          encryptedTexts,
+          texts,
+          tags,
+          attachments
         }
       });
     } catch (error) {
@@ -264,8 +193,8 @@ function deleteDocument() {
   };
 }
 
-const MINIMUM_LOADING_TIME = 400;
-function openDocument(id) {
+const MINIMUM_LOADING_TIME = 200;
+function openDocument(id, skipTimeout) {
   return async dispatch => {
     dispatch({
       type: 'OPEN_DOCUMENT_START'
@@ -279,22 +208,72 @@ function openDocument(id) {
       if (endTime - startTime < MINIMUM_LOADING_TIME) {
         timeout = MINIMUM_LOADING_TIME - (endTime - startTime);
       }
+      if (skipTimeout) {
+        timeout = 0;
+      }
       setTimeout(() => {
-        dispatch({
-          type: 'OPEN_DOCUMENT_DONE',
-          payload: {
-            document: response.body
-          }
-        });
-        dispatch(setUpdateDocument(id, fromJS(response.body)));
+        setUpdateDocument(response.body);
       }, timeout);
     } catch (error) {
       dispatch({
         type: 'OPEN_DOCUMENT_ERROR'
       });
     }
+
+    function setUpdateDocument(doc) {
+      let title = {
+        value: doc._source.title,
+        id: 'title',
+        label: 'Title',
+        error: null
+      };
+      let encryptedTexts = [];
+      let texts = [];
+      let tags = [];
+      let attachments = [];
+      let nextID = 0;
+      doc._source.encrypted_texts.forEach(entry => {
+        encryptedTexts.push(fromJS({
+          value: entry.text,
+          id: entry.id,
+          label: 'Encrypted Text',
+          error: null
+        }));
+        if (entry.id > nextID) nextID = entry.id;
+      });
+      doc._source.texts.forEach(entry => {
+        texts.push(fromJS({
+          value: entry.text,
+          id: entry.id,
+          label: 'Text',
+          error: null
+        }));
+        if (entry.id > nextID) nextID = entry.id;
+      });
+      doc._source.tags.forEach(entry => {
+        tags.push(entry);
+      });
+      doc._source.attachments.forEach(attachment => {
+        attachments.push({
+          name: attachment.name,
+          file: attachment.file,
+          type: attachment.file_type
+        });
+      });
+      return dispatch({
+        type: 'OPEN_DOCUMENT_DONE',
+        documentToUpdate: doc,
+        title,
+        encryptedTexts,
+        texts,
+        tags,
+        attachments,
+        nextID: nextID+1
+      });
+    }
   };
 }
+
 
 function checkEmptyDocFields(docFields) {
   let titleField = docFields.get('title');
