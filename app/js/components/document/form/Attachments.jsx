@@ -61,6 +61,7 @@ class Attachments extends React.Component {
     let attachmentList = [];
     attachments.forEach((attachment, index) => {
       let name = attachment.get('name');
+      name = name.replace(/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}-/, ''); //Filter the uuid
       let file = attachment.get('file');
       let type = attachment.get('type');
       let removeButton = onRemoveAttachment ?

@@ -139,9 +139,9 @@ const downloadAttachment = (attachmentData, attachmentIndex) => {
     }
 
     let data = window.Buffer.from(response.body, 'base64');
-    let name;
+    let name = attachmentData.get('name').replace(/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}-/, '');
     try {
-      name = await attachmentUtils.calculateName(globalUtils.getAppGlobals('downloadDirectory'), attachmentData.get('name'));
+      name = await attachmentUtils.calculateName(globalUtils.getAppGlobals('downloadDirectory'), name);
     } catch (error) {
       return dispatch({
         type: 'ATTACHMENT_DOWNLOAD_FAILED',
