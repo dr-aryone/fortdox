@@ -1,4 +1,4 @@
-const {app, BrowserWindow, ipcMain, Menu} = require('electron');
+const {app, BrowserWindow, ipcMain, Menu, shell} = require('electron');
 const path = require('path');
 const urlParser = require('url');
 const querystring = require('querystring');
@@ -93,6 +93,9 @@ function createBrowserWindow() {
   openingUrl += `&downloadDirectory=${encodeURIComponent(app.getPath('downloads'))}`;
   win.loadURL(openingUrl);
 
+  win.webContents.on('will-navigate', handleRedirect);
+  win.webContents.on('new-window', handleRedirect);
+
   var template = [{
     label: 'Application',
     submenu: [{
@@ -167,6 +170,12 @@ const activateUser = url => {
   win.focus();
 };
 
+function handleRedirect(e, url) {
+  if (url !== win.webContents.getURL()) {
+    e.preventDefault();
+    shell.openExternal(url);
+  }
+}
 
 pollingJob = setInterval(() => {
   if (process.platform === 'win32' && process.argv[1] !== undefined) {
