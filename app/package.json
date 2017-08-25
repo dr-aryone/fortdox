@@ -25,6 +25,7 @@
     "react-redux": "^5.0.5",
     "redux": "^3.7.1",
     "redux-thunk": "^2.2.0",
+    "remarkable": "^1.7.1",
     "uuid": "^3.1.0"
   },
   "devDependencies": {
@@ -55,7 +56,6 @@
     "gulp-plumber": "^1.1.0",
     "gulp-ruby-sass": "^2.1.1",
     "gulp-uglify": "^2.1.2",
-    "marked": "^0.3.6",
     "pump": "^1.0.2",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",

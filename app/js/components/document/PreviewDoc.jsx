@@ -1,8 +1,15 @@
+/* eslint-disable react/no-danger */
 const React = require('react');
 const LoaderOverlay = require('components/general/LoaderOverlay');
 const ErrorBox = require('components/general/ErrorBox');
 const DocumentTags = require('./form/DocumentTags');
 const Attachments = require('./form/Attachments');
+const Remarkable = require('remarkable');
+const markdown = new Remarkable({
+  breaks: true,
+  linkify: true
+});
+
 
 const PreviewDoc = ({docFields, isLoading, error, onEdit, onTagSearch, onDownloadAttachment}) => {
   let title = docFields.getIn(['title', 'value']);
@@ -37,45 +44,12 @@ const PreviewDoc = ({docFields, isLoading, error, onEdit, onTagSearch, onDownloa
 function renderTexts(doc) {
   let encryptedTexts = doc.get('encryptedTexts');
   let texts = doc.get('texts');
-  let size = encryptedTexts.size + texts.size;
-  let textList = [];
-  let newlineRegex = /\n/;
-  let counter = 0;
-  for (let i = 0; i < size; i++) {
-    if (encryptedTexts.size === 0) {
-      let text = texts.first().get('value').split(newlineRegex);
-      text.forEach((paragraph) => {
-        textList.push(<p key={counter}>{paragraph}</p>);
-        counter++;
-      });
-      texts = texts.shift();
-    } else if (texts.size === 0) {
-      let text = encryptedTexts.first().get('value').split(newlineRegex);
-      text.forEach((paragraph) => {
-        textList.push(<p key={counter}>{paragraph}</p>);
-        counter++;
-      });
-      encryptedTexts = encryptedTexts.shift();
-    } else {
-      let encryptedID = encryptedTexts.first().get('id');
-      let textID = texts.first().get('id');
-      if (encryptedID < textID) {
-        let text = encryptedTexts.first().get('value').split(newlineRegex);
-        text.forEach((paragraph) => {
-          textList.push(<p key={counter}>{paragraph}</p>);
-          counter++;
-        });
-        encryptedTexts = encryptedTexts.shift();
-      } else {
-        let text = texts.first().get('value').split(newlineRegex);
-        text.forEach((paragraph) => {
-          textList.push(<p key={counter}>{paragraph}</p>);
-          counter++;
-        });
-        texts = texts.shift();
-      }
-    }
-  }
-  return textList;
+
+  return encryptedTexts
+    .concat(texts)
+    .sort((textA, textB) => textA.get('id') < textB.get('id') ? -1 : 1)
+    .map(text => (
+      <p key={text.get('id')} dangerouslySetInnerHTML={{__html: markdown.render(text.get('value'))}} />
+    ));
 }
 module.exports = PreviewDoc;

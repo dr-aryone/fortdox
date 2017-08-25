@@ -28,6 +28,7 @@
   'pages/user-page';
 
   body {
+    overflow: hidden;
     margin: 0px;
     font-family: map-deep-get($text-styles, 'text', 'font-family');
     font-size: map-deep-get($text-styles, 'text', 'font-size');
