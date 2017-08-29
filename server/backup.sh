@@ -17,7 +17,7 @@ http://localhost:9200/_snapshot/fortdox_backup/ \
 	"indices": "_all"
 }'
 
-mysqldump --user=root --password=edgeguide --database fortdox > /var/mysql_backup/$timestamp.sql
+mysqldump --user=root --password=edgeguide fortdox > /var/mysql_backup/$timestamp.sql
 
 temp1=$(date -d "now - 2 weeks" +"%Y-%m-%d")
 expired_date=$(echo "$temp1")
