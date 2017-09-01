@@ -9,6 +9,7 @@ class SearchItem extends React.Component {
   handleKeyboardClick(event) {
     if (event.code === 'Space' || event.code === 'Enter') {
       this.wrapper.click();
+      event.preventDefault();
     }
   }
 

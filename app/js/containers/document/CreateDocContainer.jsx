@@ -27,6 +27,9 @@ const mapDispatchToProps = dispatch => {
       event.preventDefault();
       dispatch(documentActions.createDocument());
     },
+    onCancel: () => {
+      dispatch(action.changeView('SEARCH_VIEW'));
+    },
     onAddTag: tag => {
       dispatch(documentActions.addTag(tag));
     },
