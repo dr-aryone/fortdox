@@ -234,8 +234,27 @@ $search-padding: 30px;
     }
   }
 
+  .private-key {
+    @extend .box;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    h4 {
+      color: $primary-color;
+      display: flex;
+      align-items: center;
+
+      i {
+        color: $green;
+        margin-left: 5px;
+        font-size: 16px;
+      }
+    }
+  }
+
   .texts {
-    padding: 0px 1em;
+    padding: 1em;
     padding-bottom: 1px;
     word-wrap: break-word;
 
