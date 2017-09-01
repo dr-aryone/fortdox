@@ -1,17 +1,37 @@
-/* eslint-disable react/no-danger */
 const React = require('react');
 const LoaderOverlay = require('components/general/LoaderOverlay');
 const ErrorBox = require('components/general/ErrorBox');
 const DocumentTags = require('./form/DocumentTags');
 const Attachments = require('./form/Attachments');
 const Remarkable = require('remarkable');
-const markdown = new Remarkable({
+const RemarkableReactRenderer = require('remarkable-react');
+const {privateKeyParser} = require('lib/remarkableExtensions');
+const PrivateKey = require('./customMarkdown/PrivateKey');
+
+let markdown = new Remarkable({
   breaks: true,
   linkify: true
 });
 
+markdown.block.ruler.before('code', 'privatekey', privateKeyParser);
 
-const PreviewDoc = ({docFields, isLoading, error, onEdit, onTagSearch, onDownloadAttachment}) => {
+markdown.renderer = new RemarkableReactRenderer({
+  components: {
+    privatekey: PrivateKey
+  },
+  tokens: {
+    privatekey: 'privatekey',
+  }
+});
+
+const PreviewDoc = ({
+  docFields,
+  isLoading,
+  error,
+  onEdit,
+  onTagSearch,
+  onDownloadAttachment
+}) => {
   let title = docFields.getIn(['title', 'value']);
   let texts = renderTexts(docFields);
   let tags = docFields.get('tags') ? <DocumentTags tags={docFields.get('tags')} onTagSearch={onTagSearch} /> : null;
@@ -44,12 +64,12 @@ const PreviewDoc = ({docFields, isLoading, error, onEdit, onTagSearch, onDownloa
 function renderTexts(doc) {
   let encryptedTexts = doc.get('encryptedTexts');
   let texts = doc.get('texts');
-
   return encryptedTexts
     .concat(texts)
     .sort((textA, textB) => textA.get('id') < textB.get('id') ? -1 : 1)
     .map(text => (
-      <p key={text.get('id')} dangerouslySetInnerHTML={{__html: markdown.render(text.get('value'))}} />
+      <div key={text.get('id')}>{markdown.render(text.get('value'))}</div>
     ));
 }
+
 module.exports = PreviewDoc;
