@@ -27,7 +27,8 @@ class CreateDocView extends React.Component {
       isLoading,
       similarDocuments,
       onCloseSimilarDocuments,
-      onSimilarDocumentClick
+      onSimilarDocumentClick,
+      onCancel
     } = this.props;
 
     return (
@@ -53,6 +54,7 @@ class CreateDocView extends React.Component {
             onRemoveAttachment={onRemoveAttachment}
           >
             <button onClick={onCreate} type='submit'>Create</button>
+            <button onClick={onCancel} type='submit'>Cancel</button>
           </DocumentForm>
         </div>
       </div>

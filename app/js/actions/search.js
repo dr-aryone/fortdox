@@ -1,69 +1,18 @@
 const requestor = require('@edgeguideab/client-request');
 const config = require('../../config.json');
+const HITS_PER_PAGE = 12;
 
-const search = () => {
+const search = index => {
   return async (dispatch, getState) => {
     dispatch({
       type: 'SEARCH_START'
     });
-
-    let state = getState();
-    let searchString = state.search.get('searchString');
-    let organization = state.user.get('organization');
-    let email = state.user.get('email');
-    let index = 1;
-    let response;
-    try {
-      response = await requestor.get(`${config.server}/document`, {
-        query: {
-          searchString,
-          organization,
-          email,
-          index
-        }
-      });
-    } catch (error) {
-      console.error(error);
-      switch (error.status) {
-        case 400:
-        case 401:
-          return dispatch({
-            type: 'SEARCH_ERROR',
-            payload: 'Unauthorized'
-          });
-        case 404:
-          return dispatch({
-            type: 'SEARCH_ERROR',
-            payload: 'Bad request. Please try again.'
-          });
-        case 408:
-        case 500:
-          return dispatch({
-            type: 'SEARCH_ERROR',
-            payload: 'Unable to connect to server. Please try again later.'
-          });
-      }
+    if (index === undefined) {
+      index = 1;
     }
-    return dispatch({
-      type: 'SEARCH_SUCCESS',
-      payload: {
-        index: index,
-        searchResult: response.body.searchResult,
-        totalHits: response.body.totalHits,
-        searchString: searchString,
-      }
-    });
-  };
-};
-
-const paginationSearch = index => {
-  return async (dispatch, getState) => {
-    dispatch({
-      type: 'PAGINATION_SEARCH_START'
-    });
 
     let state = getState();
-    let searchString = state.search.get('searchedString');
+    let searchString = state.search.get('searchString') || state.search.get('searchedString') || '';
     let organization = state.user.get('organization');
     let email = state.user.get('email');
     document.getElementById('top').scrollIntoView();
@@ -74,12 +23,18 @@ const paginationSearch = index => {
           searchString,
           organization,
           email,
-          index
+          index,
+          results: HITS_PER_PAGE
         }
       });
     } catch (error) {
       console.error(error);
       switch (error.status) {
+        case 401:
+          return dispatch({
+            type: 'SEARCH_ERROR',
+            payload: 'Unauthorized'
+          });
         case 400:
         case 404:
           return dispatch({
@@ -96,7 +51,7 @@ const paginationSearch = index => {
     }
 
     return dispatch({
-      type: 'PAGINATION_SEARCH_SUCCESS',
+      type: 'SEARCH_SUCCESS',
       payload: {
         index: index,
         searchResult: response.body.searchResult,
@@ -155,4 +110,4 @@ const tagSearch = tag => {
     });
   };
 };
-module.exports = {search, paginationSearch, tagSearch};
+module.exports = {search, tagSearch, HITS_PER_PAGE};

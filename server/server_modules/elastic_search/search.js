@@ -1,7 +1,7 @@
 module.exports = client => {
-  const paginationSearch = query => {
+  const paginationSearch = (query, limit = 10) => {
     return new Promise(async (resolve, reject) => {
-      let from = (query.index > 0) ? query.index * 10 - 10 : 0;
+      let from = (query.index > 0) ? query.index * limit - limit : 0;
       let response;
       try {
         response = await client.search({
@@ -35,7 +35,8 @@ module.exports = client => {
               },
               require_field_match: false
             },
-            from: from
+            from: from,
+            size: limit
           },
           _sourceExclude: ['attachments', 'encrypted_texts'],
         });

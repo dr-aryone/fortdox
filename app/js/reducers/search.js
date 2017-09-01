@@ -17,7 +17,6 @@ const search = (state = initialState, action) => {
     case 'INPUT_CHANGE_SEARCH':
       return state.set(action.inputName, fromJS(action.inputValue));
     case 'SEARCH_START':
-    case 'PAGINATION_SEARCH_START':
     case 'OPEN_DOCUMENT_START':
     case 'TAG_SEARCH_START':
       return state.set('isLoading', true);
@@ -27,7 +26,6 @@ const search = (state = initialState, action) => {
       return state.set('isLoading', false)
         .set('error', 'Unable to open document');
     case 'SEARCH_SUCCESS':
-    case 'PAGINATION_SEARCH_SUCCESS':
     case 'TAG_SEARCH_SUCCESS':
       return state.merge({
         searchString: fromJS(action.payload.searchString),
@@ -40,7 +38,6 @@ const search = (state = initialState, action) => {
         totalHits: fromJS(action.payload.totalHits)
       });
     case 'SEARCH_ERROR':
-    case 'PAGINATION_SEARCH_ERROR':
     case 'TAG_SEARCH_ERROR':
       return state.merge({
         result: [],
