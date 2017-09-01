@@ -15,10 +15,19 @@
     &:last-child {
       margin-bottom: 10px;
     }
-    > span {
+    &.pending .email {
+      color: lighten($text-color, 30%);
+    }
+    > span.email {
       padding: 10px;
       background-color: $grey;
       border-radius: 3px;
+    }
+    > span.pending {
+      font-size: 10px;
+      &:not(:empty) {
+        margin-left: 10px;
+      }
     }
   }
 }
