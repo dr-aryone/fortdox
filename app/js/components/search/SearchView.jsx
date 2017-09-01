@@ -1,5 +1,6 @@
 const React = require('react');
 const SearchItem = require('./SearchItem');
+const Searchbar = require('./Searchbar');
 const LoaderOverlay = require('components/general/LoaderOverlay');
 const ErrorBox = require('components/general/ErrorBox');
 const MessageBox = require('components/general/MessageBox');
@@ -60,19 +61,7 @@ const SearchView = ({
       <div className={`search-container ${documentToUpdate ? 'big' : 'small'}`}>
         <div className={`left ${documentToUpdate ? 'small' : 'full'}`}>
           <span id='top' />
-          <form onSubmit={onSearch} className='input-bar box'>
-            <input
-              name='searchString'
-              type='text'
-              value={searchString}
-              onChange={onChange}
-              placeholder='Search'
-              autoFocus
-            />
-            <button className='material-icons' onClick={onSearch} type='submit' tabIndex={-1}>
-              search
-            </button>
-          </form>
+          <Searchbar onSearch={onSearch} searchString={searchString} onChange={onChange} />
           {searchLength}
           <div className={`search-result ${documentToUpdate ? '' : 'grid'}`}>
             {searchResult}
