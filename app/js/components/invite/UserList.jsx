@@ -1,6 +1,5 @@
 const React = require('react');
 const Loader = require('components/general/Loader');
-const MessageBox = require('components/general/MessageBox');
 const ErrorBox = require('components/general/ErrorBox');
 
 module.exports = class UserList extends React.Component {

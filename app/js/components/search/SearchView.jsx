@@ -5,6 +5,7 @@ const LoaderOverlay = require('components/general/LoaderOverlay');
 const ErrorBox = require('components/general/ErrorBox');
 const MessageBox = require('components/general/MessageBox');
 const PreviewDocContainer =  require('containers/document/PreviewDocContainer');
+const {HITS_PER_PAGE} = require('actions/search');
 
 const SearchView = ({
   searchString,
@@ -18,7 +19,6 @@ const SearchView = ({
   onChange,
   onSearch,
   onUpdate,
-  paginationSearch,
   toDocView,
   onPreview,
   onTagSearch
@@ -36,7 +36,7 @@ const SearchView = ({
   });
 
   if (searchResult.length % 3 === 2) searchResult.push(<div className='search-item invisible' key={'invisible'} />);
-  let pagination = renderPagination(currentIndex, paginationSearch, totalHits);
+  let pagination = renderPagination(currentIndex, onSearch, totalHits);
   let searchLength = totalHits || totalHits === 0 ? (
     <p>{totalHits} search result{totalHits == 1 ? '' : 's'} found.</p>
   ) : null;
@@ -61,7 +61,14 @@ const SearchView = ({
       <div className={`search-container ${documentToUpdate ? 'big' : 'small'}`}>
         <div className={`left ${documentToUpdate ? 'small' : 'full'}`}>
           <span id='top' />
-          <Searchbar onSearch={onSearch} searchString={searchString} onChange={onChange} />
+          <Searchbar
+            onSearch={event => {
+              event.preventDefault();
+              onSearch();
+            }}
+            searchString={searchString}
+            onChange={onChange}
+          />
           {searchLength}
           <div className={`search-result ${documentToUpdate ? '' : 'grid'}`}>
             {searchResult}
@@ -77,28 +84,28 @@ const SearchView = ({
   );
 };
 
-function renderPagination(currentIndex, paginationSearch, totalHits) {
+function renderPagination(currentIndex, onSearch, totalHits) {
   let pagination = [];
-  if (totalHits > 10) {
+  if (totalHits > HITS_PER_PAGE) {
     let start = currentIndex > 3 ? currentIndex - 3 : 1;
-    let end = Math.ceil(totalHits/10) > start + 6 ? start + 6 : Math.ceil(totalHits/10);
-    let temp = new Array(end-start+1);
-    temp.fill(null);
-    temp.forEach((value, i) => {
-      temp.push(<button className={`pagination ${start+i === currentIndex ? 'focused' : ''}`} key={start+i}>{start+i}</button>);
+    let end = Math.ceil(totalHits/HITS_PER_PAGE) > start + 6 ? start + 6 : Math.ceil(totalHits/HITS_PER_PAGE);
+    let paginationButtons = new Array(end-start+1);
+    paginationButtons.fill(null);
+    paginationButtons.forEach((value, i) => {
+      paginationButtons.push(<button onClick={() => onSearch(start + i)} className={`pagination ${start+i === currentIndex ? 'focused' : ''}`} key={start+i}>{start+i}</button>);
     });
-    if (currentIndex !== 1) temp.unshift(
-      <button className='pagination material-icons' onClick={() => paginationSearch(currentIndex-1)} key='left'>
+    if (currentIndex !== 1) paginationButtons.unshift(
+      <button className='pagination material-icons' onClick={() => onSearch(currentIndex-1)} key='left'>
         keyboard_arrow_left
       </button>
     );
-    if (Math.ceil(totalHits/10) !== currentIndex) temp.push(
-      <button className='pagination material-icons' onClick={() => paginationSearch(currentIndex+1)} key='right'>
+    if (Math.ceil(totalHits/HITS_PER_PAGE) !== currentIndex) paginationButtons.push(
+      <button className='pagination material-icons' onClick={() => onSearch(currentIndex+1)} key='right'>
         keyboard_arrow_right
       </button>
     );
     pagination.push(<div key={length} className='pagination'>
-      {temp}
+      {paginationButtons}
     </div>);
   }
 
