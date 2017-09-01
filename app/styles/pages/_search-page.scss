@@ -265,6 +265,21 @@ $search-padding: 30px;
     padding-bottom: 1px;
     word-wrap: break-word;
 
+    > .safe {
+      padding: 10px;
+      position: relative;
+      margin-bottom: 5px;
+      border-top: 1px solid transparentize($safe-green, 0.6);
+      border-bottom: 1px solid transparentize($safe-green, 0.6);
+      .lock {
+        position: absolute;
+        right: 20px;
+        top: 20px;
+        font-size: 30px;
+        color: $safe-green;
+      }
+    }
+
     h1 {
       font-size: 26px;
     }
