@@ -16,7 +16,7 @@ class SearchItem extends React.Component {
   componentDidMount() {
     this.wrapper.addEventListener('keypress', this.handleKeyboardClick);
   }
-  componentWillUnMount() {
+  componentWillUnmount() {
     this.wrapper.removeEventListener('keypress', this.handleKeyboardClick);
   }
 
