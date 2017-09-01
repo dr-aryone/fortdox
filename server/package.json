@@ -3,8 +3,7 @@
   "version": "1.0.2",
   "main.js": "server.js",
   "scripts": {
-    "start": "nodemon main.js",
-    "debugg": "nodemon --inspect main.js",
+    "start": "node main.js",
     "postinstall": "node -e \"var s='../server_modules',d='node_modules/app',fs=require('fs');fs.stat(d,function(e){!e||fs.symlinkSync(s,d,'dir')}); try { fs.mkdirSync('./logs') } catch(e) { console.log(e)}\""
   },
   "dependencies": {
