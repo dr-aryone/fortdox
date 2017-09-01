@@ -8,6 +8,7 @@ let initialState = fromJS({
 
 const user = (state = initialState, action) => {
   switch (action.type) {
+    case 'DIRECT_LOGIN_SUCCESS':
     case 'VERIFY_LOGIN_CREDS_SUCCESS':
       return state.merge({
         email: fromJS(action.payload.email),

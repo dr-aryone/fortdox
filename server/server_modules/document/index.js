@@ -115,6 +115,7 @@ async function checkTitle(req, res) {
 async function search(req, res) {
   let searchString = req.query.searchString;
   let organization = req.session.organization;
+  let results = req.query.results;
   let index = req.query.index;
   let response;
   try {
@@ -122,7 +123,7 @@ async function search(req, res) {
       searchString,
       organization,
       index
-    });
+    }, results);
   } catch (error) {
     logger.log('error', `ElaticSearch error, probably malformed search query or server is down. \n ${error}`);
     return res.status(500).send();

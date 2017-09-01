@@ -10,8 +10,9 @@
 const crypto = require('crypto');
 const moment = require('moment');
 const logger = require('app/logger');
-const encryptionKey = crypto.randomBytes(32);
-const signatureKey = crypto.randomBytes(32);
+const devMode = process.argv[2] === '--dev';
+const encryptionKey = devMode ? Buffer.alloc(32) : crypto.randomBytes(32);
+const signatureKey = devMode ? Buffer.alloc(32) : crypto.randomBytes(32);
 const cipherType = 'aes-256-cbc';
 const BLOCK_SIZE_BYTES = 16;
 const SESSION_DURATION = moment.duration(30, 'days').valueOf();
@@ -71,6 +72,7 @@ function decryptSession(content) {
 
   signature = base64Decode(signature);
   cipherText = base64Decode(cipherText);
+
 
   let expectedSignature = computeHmac(cipherText, duration, createdAt);
   if (!constantTimeEquals(signature, expectedSignature)) {

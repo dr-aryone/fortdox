@@ -22,16 +22,12 @@ const mapDispatchToProps = dispatch => {
     onChange: (event) => {
       dispatch(action.inputChange(event.target.name, event.target.value));
     },
-    onSearch: (event) => {
-      event.preventDefault();
-      dispatch(search.search());
+    onSearch: index => {
+      dispatch(search.search(index));
     },
     onUpdate: id => {
       dispatch(openDocument(id));
       dispatch(action.changeView('UPDATE_DOC_VIEW'));
-    },
-    paginationSearch: index => {
-      dispatch(search.paginationSearch(index));
     },
     toDocView: () => {
       dispatch(action.changeView('CREATE_DOC_VIEW'));

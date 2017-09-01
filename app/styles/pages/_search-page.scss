@@ -220,6 +220,11 @@ $search-padding: 30px;
  .title {
    padding: 1.3em;
    display: flex;
+   &.small {
+     h1 {
+       font-size: 20px;
+     }
+   }
 
     h1 {
       display: inline-block;
