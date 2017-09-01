@@ -239,6 +239,8 @@ $search-padding: 30px;
     display: flex;
     align-items: center;
     justify-content: space-between;
+    max-width: 270px;
+    margin: 10px auto 30px auto;
 
     h4 {
       color: $primary-color;

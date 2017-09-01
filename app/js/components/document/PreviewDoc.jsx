@@ -24,7 +24,14 @@ markdown.renderer = new RemarkableReactRenderer({
   }
 });
 
-const PreviewDoc = ({docFields, isLoading, error, onEdit, onTagSearch, onDownloadAttachment}) => {
+const PreviewDoc = ({
+  docFields,
+  isLoading,
+  error,
+  onEdit,
+  onTagSearch,
+  onDownloadAttachment
+}) => {
   let title = docFields.getIn(['title', 'value']);
   let texts = renderTexts(docFields);
   let tags = docFields.get('tags') ? <DocumentTags tags={docFields.get('tags')} onTagSearch={onTagSearch} /> : null;

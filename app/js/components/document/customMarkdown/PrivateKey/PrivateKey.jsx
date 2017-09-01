@@ -1,5 +1,6 @@
 const React = require('react');
 const {dialog} = window.require('electron').remote;
+const path = window.require('path');
 const fs = window.require('fs');
 
 class PrivateKey extends React.Component {
@@ -42,10 +43,14 @@ class PrivateKey extends React.Component {
 
     fs.writeFile(fileName, content, (err) => {
       if (err) {
-        console.log('An error ocurred creating the file '+ err.message);
+        if (this.props.onPrivateKeySaveFailed) {
+          this.props.onPrivateKeySaveFailed();
+        }
       }
 
-      console.log('save successful');
+      if (this.props.onPrivateKeySave) {
+        this.props.onPrivateKeySave(path.basename(fileName));
+      }
     });
   }
 }

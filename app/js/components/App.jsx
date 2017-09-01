@@ -2,6 +2,7 @@ const React = require('react');
 const FrontPageViewContainer = require('containers/front_page/FrontPageViewContainer');
 const UserViewContainer = require('containers/user/UserViewContainer');
 const SplashScreen = require('components/general/SplashScreen');
+const Toast = require('components/general/Toast');
 
 const App = ({currentView, splashScreen}) => {
   let view = null;
@@ -25,6 +26,7 @@ const App = ({currentView, splashScreen}) => {
     <div>
       <SplashScreen show={splashScreen} />
       {view}
+      <Toast />
     </div>
   );
 };
