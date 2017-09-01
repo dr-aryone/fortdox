@@ -69,7 +69,7 @@ const SearchView = ({
               placeholder='Search'
               autoFocus
             />
-            <button className='material-icons' onClick={onSearch} type='submit'>
+            <button className='material-icons' onClick={onSearch} type='submit' tabIndex={-1}>
               search
             </button>
           </form>
