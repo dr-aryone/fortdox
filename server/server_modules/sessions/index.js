@@ -34,6 +34,7 @@ async function login(req, res) {
   let token = encryptSession({
     privateKey: privateKey.toString('base64'),
     email: user.email,
+    organizationId: user.Organization.id,
     organization: user.Organization.name
   });
 
@@ -78,7 +79,6 @@ function restrict(req, res, next) {
 
 function check(req, res) {
   res.send({
-    msg: 'Supplied JWT was accepted',
     organization: req.session.organization,
     email: req.session.email
   });

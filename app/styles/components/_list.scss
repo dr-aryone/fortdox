@@ -1,0 +1,24 @@
+.user-list {
+  display: flex;
+  .alert {
+    margin: 20px;
+  }
+}
+
+.organization-users {
+  display: flex;
+  flex-direction: column;
+  .user {
+    display: flex;
+    align-items: center;
+    margin: 10px 10px 0 10px;
+    &:last-child {
+      margin-bottom: 10px;
+    }
+    > span {
+      padding: 10px;
+      background-color: $grey;
+      border-radius: 3px;
+    }
+  }
+}

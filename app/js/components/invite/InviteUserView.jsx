@@ -2,6 +2,8 @@ const React = require('react');
 const LoaderOverlay = require('components/general/LoaderOverlay');
 const MessageBox = require('components/general/MessageBox');
 const ErrorBox = require('components/general/ErrorBox');
+const UserList = require('./UserListContainer');
+
 
 const InviteUserView = ({fields, message, error, onChange, onSend, isLoading}) => {
   let concatMessage = [];
@@ -45,6 +47,7 @@ const InviteUserView = ({fields, message, error, onChange, onSend, isLoading}) =
             {errorMsg}
           </div>
         </div>
+        <UserList />
       </div>
     </div>
   );
