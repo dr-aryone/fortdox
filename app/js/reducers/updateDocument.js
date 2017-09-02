@@ -19,7 +19,11 @@ let initialState = fromJS({
   },
   error: null,
   isLoading: false,
-  similarDocuments: []
+  similarDocuments: [],
+  searchField: {
+    show: false,
+    value: ''
+  }
 });
 
 const form = (state = initialState, action) => {
@@ -37,7 +41,10 @@ const form = (state = initialState, action) => {
           attachments: fromJS(action.attachments),
           nextID: fromJS(action.nextID)
         }),
-        isLoading: false
+        isLoading: false,
+        searchField: {
+          show: false
+        }
       });
     case 'OPEN_DOCUMENT_FAILED':
       return state.set('isLoading', false);
@@ -144,6 +151,10 @@ const form = (state = initialState, action) => {
         .set('isLoading', false);
     } case 'DOCUMENT_TITLE_LOOKUP_CLEAR':
       return state.set('similarDocuments', List());
+    case 'SHOW_SEARCH_FIELD':
+      return state.setIn(['searchField', 'show'], true);
+    case 'SEARCH_FIELD_CHANGE':
+      return state.setIn(['searchField', 'value'], action.payload.value);
     case 'CHANGE_VIEW':
     case 'SEARCH_SUCCESS':
     case 'TAG_SEARCH_SUCCESS':
