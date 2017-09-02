@@ -16,8 +16,9 @@ module.exports = class UserList extends React.Component {
       users
     } = this.props;
     const domUsers = users.map(user => (
-      <div className='user' key={user}>
-        <span>{user}</span>
+      <div className={`user ${user.pending ? 'pending' : ''}`} key={user.email}>
+        <span className='email'>{user.email}</span>
+        <span className='pending'>{user.pending ? '(Pending)' : ''}</span>
       </div>
     ));
     return (

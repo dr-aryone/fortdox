@@ -83,13 +83,18 @@ class PreviewDoc extends React.Component {
   }
 
   renderTexts(doc) {
-    let encryptedTexts = doc.get('encryptedTexts');
+    let encryptedTexts = doc
+      .get('encryptedTexts')
+      .map(text => text.set('encrypted', true));
     let texts = doc.get('texts');
     return encryptedTexts
       .concat(texts)
       .sort((textA, textB) => textA.get('id') < textB.get('id') ? -1 : 1)
       .map(text => (
-        <div key={text.get('id')}>{markdown.render(text.get('value'))}</div>
+        <div className={text.get('encrypted') ? 'safe' : ''} key={text.get('id')}>
+          {text.get('encrypted') ? <i className='material-icons lock'>lock_outline</i> : null}
+          {markdown.render(text.get('value'))}
+        </div>
       ));
   }
 
