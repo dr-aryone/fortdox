@@ -7,18 +7,23 @@ module.exports = {
 
 async function listOrganizationMembers(req, res) {
   const organizationId = req.session.organizationId;
-  let organization;
+  let organization, tempKeys;
   try {
-    organization = await db.Organization.findOne({
-      where: {
-        id: organizationId
-      },
-      include: [{
-        model: db.User,
-        as: 'users',
-        attributes: ['email']
-      }]
-    });
+    [organization, tempKeys] = await Promise.all([
+      db.Organization.findOne({
+        where: {
+          id: organizationId
+        },
+        include: [{
+          model: db.User,
+          as: 'users',
+          attributes: ['email', 'uuid']
+        }]
+      }),
+      db.TempKeys.findAll({
+        attributes: ['uuid']
+      })
+    ]);
   } catch (error) {
     logger.error(error);
     res.status(500).send();
@@ -28,5 +33,12 @@ async function listOrganizationMembers(req, res) {
     res.status(404).send('noSuchOrganization');
     return;
   }
-  res.send(organization.users.map(user => user.email));
+  tempKeys = tempKeys || [];
+  res.send(organization.users.map(user => {
+    const pending = tempKeys.find(k => k.uuid === user.uuid);
+    return {
+      email: user.email,
+      pending: !!pending
+    };
+  }));
 }
