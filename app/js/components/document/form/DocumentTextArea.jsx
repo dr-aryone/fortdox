@@ -1,6 +1,9 @@
 const React = require('react');
 
 const DocumentTextArea = ({input, type, onChange, onRemoveField}) => {
+  const style = {
+    minHeight: `${input.get('value').split('\n').length}em`
+  };
   return (
     <div className={`input-field ${input.get('error') ? 'warning' : ''}`}>
       <label>
@@ -12,6 +15,7 @@ const DocumentTextArea = ({input, type, onChange, onRemoveField}) => {
           name={input.get('id')}
           onChange={(event) => onChange(event, type)}
           value={input.get('value')}
+          style={style}
         />
       </div>
       <div className='arrow-box'>
