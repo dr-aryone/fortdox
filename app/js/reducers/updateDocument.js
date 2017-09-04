@@ -97,7 +97,7 @@ const form = (state = initialState, action) => {
       let texts = state.getIn(['docFields', 'texts']);
       texts.forEach((entry, index) => {
         if (action.emptyFieldIDs.includes(entry.get('id'))) {
-          encryptedTexts = encryptedTexts.update(index, field => field.set('error', fromJS(action.emptyFieldError)));
+          texts = texts.update(index, field => field.set('error', fromJS(action.emptyFieldError)));
         }
       });
       return state.merge({
