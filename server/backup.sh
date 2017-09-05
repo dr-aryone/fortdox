@@ -1,7 +1,16 @@
+#!/bin/bash
 timestamp=$(date +"%Y-%m-%d_%H:%M:%S")
+rootfolder=/var/elasticsearch_backup
+password=edgeguide
+database=fortdox
+#rootfolder=/opt/fortdox/backup
+#password=
+#database=FortDoks
+
+echo "Creating backup in $rootfolder/$timestamp"
 
 /usr/bin/curl -X PUT \
-http://localhost:9200/_snapshot/fortdox_backup/ \
+http://localhost:9200/_snapshot/fortdox_backup \
   -H 'cache-control: no-cache' \
   -d '{
 	"type" : "fs",
@@ -17,9 +26,13 @@ http://localhost:9200/_snapshot/fortdox_backup/ \
 	"indices": "_all"
 }'
 
-mysqldump --user=root --password=edgeguide fortdox > /var/mysql_backup/$timestamp.sql
+mysqldump --user=root --password=$password $database > $rootfolder/$timestamp.sql
+tar cz -C $rootfolder $timestamp.sql $timestamp > $rootfolder/$timestamp.tar.gz
+rm -rf $rootfolder/$timestamp
+rm $rootfolder/$timestamp.sql
+
+echo "Successfully created backup"
 
 temp1=$(date -d "now - 2 weeks" +"%Y-%m-%d")
 expired_date=$(echo "$temp1")
-rm -r /var/elasticsearch_backup/$expired_date*
-rm /var/mysql_backup/$expired_date*
+rm $rootfolder/$expired_date.tar.gz
