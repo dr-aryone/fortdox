@@ -217,6 +217,11 @@ $search-padding: 30px;
   padding: 0px;
   margin-top: $search-padding;
 
+  .search-field input {
+    width: 100%;
+    padding: 0px 10px 5px;
+  }
+
  .title {
    padding: 1.3em;
    display: flex;
