@@ -22,8 +22,8 @@ const mapDispatchToProps = dispatch => {
     onChange: (event) => {
       dispatch(action.inputChange(event.target.name, event.target.value));
     },
-    onSearch: index => {
-      dispatch(search.search(index));
+    onSearch: ({index, freshSearch}) => {
+      dispatch(search.search({index, freshSearch}));
     },
     onUpdate: id => {
       dispatch(openDocument(id));
