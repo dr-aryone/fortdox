@@ -6,6 +6,10 @@ module.exports = class Searchbar extends React.Component {
     this.handleKeyDown = this.handleKeyDown.bind(this);
     this.handleKeyUp = this.handleKeyUp.bind(this);
     this.holdingModifier = false;
+    this.onSearch = event => {
+      event.preventDefault();
+      this.props.onSearch({freshSearch: true});
+    };
   }
   handleKeyDown(event) {
     if (this.holdingModifier && event.code === 'KeyL') {
@@ -30,12 +34,11 @@ module.exports = class Searchbar extends React.Component {
   }
   render() {
     const {
-      onSearch,
       searchString,
       onChange
     } = this.props;
     return (
-      <form onSubmit={onSearch} className='input-bar box'>
+      <form onSubmit={this.onSearch} className='input-bar box'>
         <input
           name='searchString'
           type='text'
@@ -45,7 +48,7 @@ module.exports = class Searchbar extends React.Component {
           autoFocus
           ref={e => this.inputField = e}
         />
-        <button className='material-icons' onClick={onSearch} type='submit' tabIndex={-1}>
+        <button className='material-icons' onClick={this.onSearch} type='submit' tabIndex={-1}>
           search
         </button>
       </form>

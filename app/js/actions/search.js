@@ -2,17 +2,22 @@ const requestor = require('@edgeguideab/client-request');
 const config = require('../../config.json');
 const HITS_PER_PAGE = 12;
 
-const search = index => {
+const search = ({index = 1, freshSearch = false} = {}) => {
   return async (dispatch, getState) => {
-    dispatch({
-      type: 'SEARCH_START'
-    });
-    if (index === undefined) {
-      index = 1;
-    }
-
     let state = getState();
-    let searchString = state.search.get('searchString') || state.search.get('searchedString') || '';
+    let searchString;
+    if (freshSearch) {
+      searchString = state.search.get('searchString') || '';
+    } else {
+      searchString = state.search.get('searchString') || state.search.get('searchedString') || '';
+    }
+    dispatch({
+      type: 'SEARCH_START',
+      payload: {
+        searchString,
+        index
+      }
+    });
     let organization = state.user.get('organization');
     let email = state.user.get('email');
     document.getElementById('top').scrollIntoView();

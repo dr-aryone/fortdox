@@ -62,10 +62,7 @@ const SearchView = ({
         <div className={`left ${documentToUpdate ? 'small' : 'full'}`}>
           <span id='top' />
           <Searchbar
-            onSearch={event => {
-              event.preventDefault();
-              onSearch();
-            }}
+            onSearch={onSearch}
             searchString={searchString}
             onChange={onChange}
           />
@@ -95,12 +92,12 @@ function renderPagination(currentIndex, onSearch, totalHits) {
       paginationButtons.push(<button onClick={() => onSearch(start + i)} className={`pagination ${start+i === currentIndex ? 'focused' : ''}`} key={start+i}>{start+i}</button>);
     });
     if (currentIndex !== 1) paginationButtons.unshift(
-      <button className='pagination material-icons' onClick={() => onSearch(currentIndex-1)} key='left'>
+      <button className='pagination material-icons' onClick={() => onSearch({index: currentIndex - 1})} key='left'>
         keyboard_arrow_left
       </button>
     );
     if (Math.ceil(totalHits/HITS_PER_PAGE) !== currentIndex) paginationButtons.push(
-      <button className='pagination material-icons' onClick={() => onSearch(currentIndex+1)} key='right'>
+      <button className='pagination material-icons' onClick={() => onSearch({index: currentIndex + 1})} key='right'>
         keyboard_arrow_right
       </button>
     );
