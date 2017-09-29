@@ -24,64 +24,25 @@ const DocumentForm = ({
   onCloseSimilarDocuments,
   onSimilarDocumentClick
 }) => {
-  let fields = [];
   let title = docFields.get('title');
-  let encryptedTextFields = docFields.get('encryptedTexts');
+  let encryptedTextFields = docFields.get('encryptedTexts')
+    .map(field => field.set('encrypted', true));
   let textFields = docFields.get('texts');
   let tags = docFields.get('tags');
-  let size = encryptedTextFields.size + textFields.size;
 
-  for (let i = 0; i < size; i++) {
-    if (encryptedTextFields.size === 0) {
-      fields.push(
-        <DocumentTextArea
-          input={textFields.first()}
-          type='text'
-          key={i}
-          onChange={event => onChange(event, 'text')}
-          onRemoveField={onRemoveField}
-        />
-      );
-      textFields = textFields.shift();
-    } else if (textFields.size === 0) {
-      fields.push(
-        <DocumentTextArea
-          input={encryptedTextFields.first()}
-          type='encryptedText'
-          key={i}
-          onChange={onChange}
-          onRemoveField={onRemoveField}
-        />
-      );
-      encryptedTextFields = encryptedTextFields.shift();
-    } else {
-      let encryptedID = encryptedTextFields.first().get('id');
-      let textID = textFields.first().get('id');
-      if (encryptedID < textID) {
-        fields.push(
-          <DocumentTextArea
-            input={encryptedTextFields.first()}
-            type='text'
-            key={i}
-            onChange={event => onChange(event, 'encryptedText')}
-            onRemoveField={onRemoveField}
-          />
-        );
-        encryptedTextFields = encryptedTextFields.shift();
-      } else {
-        fields.push(
-          <DocumentTextArea
-            input={textFields.first()}
-            type='text'
-            key={i}
-            onChange={event => onChange(event, 'text')}
-            onRemoveField={onRemoveField}
-          />
-        );
-        textFields = textFields.shift();
-      }
-    }
-  }
+  let fields = encryptedTextFields
+    .concat(textFields)
+    .sort((textA, textB) => textA.get('id') < textB.get('id') ? -1 : 1)
+    .map((field, index) => (
+      <DocumentTextArea
+        input={field}
+        type={field.get('encrypted') ? 'encryptedText' : 'text'}
+        key={index}
+        onChange={onChange}
+        onRemoveField={onRemoveField}
+      />
+    )
+  );
 
   return (
     <form onSubmit={onSubmit} className='document'>
