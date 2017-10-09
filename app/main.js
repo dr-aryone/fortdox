@@ -111,10 +111,6 @@ function createBrowserWindow() {
       click: () => {
         app.quit();
       }
-    }, {
-      label: 'Dev',
-      accelerator: 'Cmd+I',
-      role: 'toggledevtools'
     }]}, {
       label: 'Edit',
       submenu: [{

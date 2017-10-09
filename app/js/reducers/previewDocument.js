@@ -62,6 +62,8 @@ const preview = (state = initialState, action) => {
     case 'CHANGE_VIEW':
       if (action.payload === 'UPDATE_DOC_VIEW' || action.payload === 'PREVIEW_DOC') return state;
       else return initialState;
+    case 'DELETE_DOCUMENT_SUCCESS':
+      return initialState;
     default:
       return state;
   }

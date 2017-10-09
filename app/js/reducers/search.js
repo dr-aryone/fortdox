@@ -57,7 +57,10 @@ const search = (state = initialState, action) => {
       }
     case 'UPDATE_DOCUMENT_SUCCESS':
     case 'CREATE_DOCUMENT_SUCCESS':
+    case 'DELETE_DOCUMENT_SUCCESS':
       return initialState.set('message', fromJS(action.payload));
+    case 'DELETE_DOCUMENT_ERROR':
+      return state.set('error', fromJS(action.payload));
     case 'SESSION_EXPIRED':
     case 'LOGOUT':
     case 'VERIFY_LOGIN_CREDS_SUCCESS':
