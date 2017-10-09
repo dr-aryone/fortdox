@@ -2,12 +2,34 @@ const React = require('react');
 const LoaderOverlay = require('components/general/LoaderOverlay');
 const DocumentForm = require('./form/DocumentForm');
 const ErrorBox = require('components/general/ErrorBox');
+const Modal = require('components/general/Modal');
 
 class UpdateDocView extends React.Component {
+  constructor(props) {
+    super(props);
+    this.openModal = this.openModal.bind(this);
+    this.closeModal = this.closeModal.bind(this);
+    this.state = {
+      showModal: false
+    };
+  }
+
   componentWillMount () {
     if (this.props.onMount) {
       this.props.onMount(this.props);
     }
+  }
+
+  openModal() {
+    this.setState({
+      showModal: true
+    });
+  }
+
+  closeModal() {
+    this.setState({
+      showModal: false
+    });
   }
 
   render () {
@@ -19,6 +41,7 @@ class UpdateDocView extends React.Component {
       onChange,
       onSuggestTags,
       onUpdate,
+      onDelete,
       onAddField,
       onRemoveField,
       onAddAttachment,
@@ -57,7 +80,19 @@ class UpdateDocView extends React.Component {
           >
             <button onClick={onUpdate} type='submit'>Update</button>
             <button onClick={toSearchView} type='button'>Back</button>
+            <button onClick={this.openModal} type='button' className='warning'>Delete</button>
           </DocumentForm>
+          <Modal show={this.state.showModal} onClose={this.closeModal} showClose={false}>
+            <div className='box dialog'>
+              <i className='material-icons'>error_outline</i>
+              <h2>Warning</h2>
+              <p>Are you sure that you want to delete the document?</p>
+              <div className='buttons'>
+                <button onClick={onDelete} type='button' className='warning'>Delete</button>
+                <button onClick={this.closeModal} type='button'>Cancel</button>
+              </div>
+            </div>
+          </Modal>
         </div>
       </div>
     );
