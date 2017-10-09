@@ -19,6 +19,7 @@ const App = ({currentView, splashScreen}) => {
     case 'USER_VIEW':
     case 'CREATE_DOC_VIEW':
     case 'UPDATE_DOC_VIEW':
+    case 'PREVIEW_DOC':
       view = <UserViewContainer />;
       break;
   }

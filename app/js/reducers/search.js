@@ -47,8 +47,7 @@ const search = (state = initialState, action) => {
         totalHits: null
       });
     case 'CHANGE_VIEW':
-      if (action.payload === 'UPDATE_DOC_VIEW' ||
-      action.payload === 'SEARCH_VIEW') {
+      if (action.payload === 'UPDATE_DOC_VIEW' || action.payload === 'PREVIEW_DOC') {
         return state.set({
           message: null,
           error: null
@@ -61,7 +60,6 @@ const search = (state = initialState, action) => {
       return initialState.set('message', fromJS(action.payload));
     case 'SESSION_EXPIRED':
     case 'LOGOUT':
-      return initialState;
     case 'VERIFY_LOGIN_CREDS_SUCCESS':
       return initialState;
     default:

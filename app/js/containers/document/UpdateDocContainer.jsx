@@ -29,7 +29,7 @@ const mapDispatchToProps = dispatch => {
       dispatch(documentActions.updateDocument());
     },
     toSearchView: () => {
-      dispatch(action.changeView('SEARCH_VIEW'));
+      dispatch(action.changeView('PREVIEW_DOC'));
     },
     onDelete: () => {
       dispatch(documentActions.deleteDocument());
