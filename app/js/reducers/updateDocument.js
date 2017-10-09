@@ -70,7 +70,7 @@ const form = (state = initialState, action) => {
         suggested: fromJS(action.suggestedTags),
         error: null
       }));
-    case 'UPDATE_DOC_ADD_TAG_SUCCESS':
+    case 'UPDATE_DOC_ADD_TAG':
       return state.setIn(['docFields', 'tags'], state.getIn(['docFields', 'tags']).merge({
         value: '',
         list: fromJS(action.payload),
@@ -83,7 +83,7 @@ const form = (state = initialState, action) => {
         error: fromJS(action.payload),
         suggested: []
       }));
-    case 'UPDATE_DOC_REMOVE_TAG_SUCCESS':
+    case 'UPDATE_DOC_REMOVE_TAG':
       return state.setIn(['docFields', 'tags', 'list'], fromJS(action.payload));
     case 'UPDATE_DOC_GET_OLD_TAGS_ERROR':
       return state.merge({
