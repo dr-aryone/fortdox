@@ -16,6 +16,7 @@ const SearchView = ({
   totalHits,
   isLoading,
   documentToUpdate,
+  showPreview,
   onChange,
   onSearch,
   onUpdate,
@@ -58,8 +59,8 @@ const SearchView = ({
     <div className='container-fluid'>
       <LoaderOverlay display={isLoading} />
       {boxes}
-      <div className={`search-container ${documentToUpdate ? 'big' : 'small'}`}>
-        <div className={`left ${documentToUpdate ? 'small' : 'full'}`}>
+      <div className={`search-container ${showPreview ? 'big' : 'small'}`}>
+        <div className={`left ${showPreview ? 'small' : 'full'}`}>
           <span id='top' />
           <Searchbar
             onSearch={onSearch}
@@ -67,13 +68,13 @@ const SearchView = ({
             onChange={onChange}
           />
           {searchLength}
-          <div className={`search-result ${documentToUpdate ? '' : 'grid'}`}>
+          <div className={`search-result ${showPreview ? '' : 'grid'}`}>
             {searchResult}
           </div>
           {pagination}
           {docButton}
         </div>
-        <div className={`right ${documentToUpdate ? 'show' : 'hide'}`}>
+        <div className={`right ${showPreview ? 'show' : 'hide'}`}>
           <PreviewDocContainer />
         </div>
       </div>

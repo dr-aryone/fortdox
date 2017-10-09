@@ -5,6 +5,7 @@ const register = require('./register');
 const search = require('./search');
 const createDocument = require('./createDocument');
 const updateDocument = require('./updateDocument');
+const previewDocument = require('./previewDocument');
 const user = require('./user');
 const invite = require('./invite');
 const verifyUser = require('./verifyUser');
@@ -20,6 +21,7 @@ const docApp = combineReducers({
   search,
   createDocument,
   updateDocument,
+  previewDocument,
   invite,
   verifyUser,
   download,

@@ -82,7 +82,8 @@ function createDocument() {
 
     return dispatch({
       type: 'CREATE_DOCUMENT_SUCCESS',
-      payload: 'Document created!'
+      payload: 'Document created!',
+      docFields
     });
   };
 }
@@ -160,7 +161,8 @@ function updateDocument() {
 
     return dispatch({
       type: 'UPDATE_DOCUMENT_SUCCESS',
-      payload: 'Document updated!'
+      payload: 'Document updated!',
+      docFields: newDoc
     });
   };
 }
