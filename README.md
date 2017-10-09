@@ -90,7 +90,7 @@ Debugging is done similar to the client side. Run the inspector instead of `npm 
 ## Cleanup
 On server in `fortdox/server`
 > db:migrate:undo:all
-> db:mmigrate
+> db:migrate
 
 Remove indicies from ElasticSearch
 > curl -XGET 'http://localhost:9200/_cat/indices?v&pretty'

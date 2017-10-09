@@ -4,7 +4,7 @@ const DocumentTags = ({tags, onAddTag, onRemoveTag, onChange, onTagSearch}) => {
   let tagList = [];
   tags.get('list').forEach((tag, i) => {
     let removeButton = onRemoveTag ?
-      <button className='material-icons round small' onClick={() => onRemoveTag(i)}>clear</button> : null;
+      <button className='material-icons round small' onClick={() => onRemoveTag(i)} type='button'>clear</button> : null;
     if (onTagSearch) {
       tagList.push(
         <div className='tag' key={i} onClick={() => onTagSearch(tag)}>
