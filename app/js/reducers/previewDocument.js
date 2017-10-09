@@ -60,7 +60,8 @@ const preview = (state = initialState, action) => {
       return state.set('isLoading', false);
     case 'SEARCH_SUCCESS':
     case 'CHANGE_VIEW':
-      return initialState;
+      if (action.payload === 'UPDATE_DOC_VIEW' || action.payload === 'PREVIEW_DOC') return state;
+      else return initialState;
     default:
       return state;
   }
