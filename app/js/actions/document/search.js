@@ -29,7 +29,7 @@ function searchFieldChange(value) {
 function search() {
   return (dispatch, getState) => {
     let state = getState();
-    let searchFieldValue = state.updateDocument.getIn(['searchField', 'value']);
+    let searchFieldValue = state.previewDocument.getIn(['searchField', 'value']);
     window.find(searchFieldValue);
   };
 }

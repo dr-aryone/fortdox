@@ -7,10 +7,10 @@ const attachmentActions = require('actions/document/attachments');
 
 const mapStateToProps = state => {
   return {
-    docFields: state.updateDocument.get('docFields'),
-    error: state.updateDocument.get('error'),
-    isLoading: state.updateDocument.get('isLoading'),
-    searchField: state.updateDocument.get('searchField')
+    docFields: state.previewDocument.get('docFields'),
+    error: state.previewDocument.get('error'),
+    isLoading: state.previewDocument.get('isLoading'),
+    searchField: state.previewDocument.get('searchField')
   };
 };
 
