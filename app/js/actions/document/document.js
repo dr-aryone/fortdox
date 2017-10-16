@@ -5,6 +5,7 @@ const config = require('../../../config.json');
 module.exports = {
   createDocument,
   updateDocument,
+  previewDocument,
   deleteDocument,
   openDocument
 };
@@ -196,7 +197,7 @@ function deleteDocument() {
 }
 
 const MINIMUM_LOADING_TIME = 200;
-function openDocument(id, skipTimeout) {
+function openDocument(id, skipTimeout, showPreview) {
   return async dispatch => {
     dispatch({
       type: 'OPEN_DOCUMENT_START'
@@ -214,7 +215,7 @@ function openDocument(id, skipTimeout) {
         timeout = 0;
       }
       setTimeout(() => {
-        setUpdateDocument(response.body);
+        setUpdateDocument(response.body, showPreview);
       }, timeout);
     } catch (error) {
       dispatch({
@@ -222,7 +223,7 @@ function openDocument(id, skipTimeout) {
       });
     }
 
-    function setUpdateDocument(doc) {
+    function setUpdateDocument(doc, showPreview) {
       let title = {
         value: doc._source.title,
         id: 'title',
@@ -262,7 +263,7 @@ function openDocument(id, skipTimeout) {
           type: attachment.file_type
         });
       });
-      return dispatch({
+      dispatch({
         type: 'OPEN_DOCUMENT_DONE',
         documentToUpdate: doc,
         title,
@@ -272,10 +273,27 @@ function openDocument(id, skipTimeout) {
         attachments,
         nextID: nextID+1
       });
+
+      if (showPreview) showPreview();
     }
   };
 }
 
+function previewDocument(id, skipTimeout) {
+  return async (dispatch, getState) => {
+    dispatch({
+      type: 'PREVIEW_DOCUMENT_START'
+    });
+    dispatch(openDocument(id, skipTimeout, () => {
+      let state = getState();
+      let docFields = state.updateDocument.get('docFields');
+      return dispatch({
+        type: 'PREVIEW_DOCUMENT_DONE',
+        docFields
+      });
+    }));
+  };
+}
 
 function checkEmptyDocFields(docFields) {
   let titleField = docFields.get('title');
