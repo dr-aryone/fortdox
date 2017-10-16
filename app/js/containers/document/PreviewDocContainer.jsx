@@ -22,6 +22,9 @@ const mapDispatchToProps = dispatch => {
     onTagSearch: tag => {
       dispatch(tagSearch(tag));
     },
+    onPreviewAttachment: (attachment, attachmentIndex) => {
+      dispatch(attachmentActions.previewAttachment(attachment, attachmentIndex));
+    },
     onDownloadAttachment: (attachment, attachmentIndex) => {
       dispatch(attachmentActions.downloadAttachment(attachment, attachmentIndex));
     },

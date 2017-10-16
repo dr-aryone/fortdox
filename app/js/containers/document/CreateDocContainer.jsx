@@ -54,6 +54,12 @@ const mapDispatchToProps = dispatch => {
     onRemoveAttachment: id => {
       dispatch(documentActions.removeAttachment(id));
     },
+    onPreviewAttachment: (attachment, attachmentIndex) => {
+      dispatch(documentActions.previewAttachment(attachment, attachmentIndex));
+    },
+    onDownloadAttachment: (attachment, attachmentIndex) => {
+      dispatch(documentActions.downloadAttachment(attachment, attachmentIndex));
+    },
     onCloseSimilarDocuments: () => {
       dispatch(documentActions.clearSimilarDocuments());
     },

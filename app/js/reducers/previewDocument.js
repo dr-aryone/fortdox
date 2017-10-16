@@ -14,6 +14,11 @@ let initialState = fromJS({
       old: []
     },
     attachments: [],
+    preview: {
+      name: null,
+      data: null,
+      type: null
+    },
     nextID: 0
   },
   error: null,
@@ -36,7 +41,7 @@ const preview = (state = initialState, action) => {
       });
     case 'PREVIEW_DOCUMENT_START':
       return state.set('isLoading', true);
-    case 'PREVIEW_DOCUMENT_DONE':
+    case 'PREVIEW_DOCUMENT_SUCCESS':
       return state.merge({
         docFields: fromJS(action.docFields),
         isLoading: false,
@@ -57,6 +62,18 @@ const preview = (state = initialState, action) => {
       else return initialState;
     case 'DELETE_DOCUMENT_SUCCESS':
       return initialState;
+    case 'PREVIEW_DOC_PREVIEW_ATTACHMENT_START':
+      return state.set('isLoading', true);
+    case 'PREVIEW_DOC_PREVIEW_ATTACHMENT_FAIL':
+      return state.merge({
+        isLoading: false,
+        error: fromJS(action.payload)
+      });
+    case 'PREVIEW_DOC_PREVIEW_ATTACHMENT_SUCCESS':
+      return state.merge({
+        isLoading: false,
+        error: null
+      }).setIn(['docFields', 'preview'], fromJS(action.payload));
     default:
       return state;
   }

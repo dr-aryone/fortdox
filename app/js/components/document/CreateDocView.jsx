@@ -24,6 +24,8 @@ class CreateDocView extends React.Component {
       onRemoveField,
       onAddAttachment,
       onRemoveAttachment,
+      onPreviewAttachment,
+      onDownloadAttachment,
       isLoading,
       similarDocuments,
       onCloseSimilarDocuments,
@@ -52,6 +54,8 @@ class CreateDocView extends React.Component {
             onRemoveField={onRemoveField}
             onAddAttachment={onAddAttachment}
             onRemoveAttachment={onRemoveAttachment}
+            onPreviewAttachment={onPreviewAttachment}
+            onDownloadAttachment={onDownloadAttachment}
           >
             <button onClick={onCreate} type='submit'>Create</button>
             <button onClick={onCancel} type='submit'>Cancel</button>

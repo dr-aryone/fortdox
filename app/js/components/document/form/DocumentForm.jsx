@@ -18,6 +18,7 @@ const DocumentForm = ({
   onRemoveField,
   onAddAttachment,
   onRemoveAttachment,
+  onPreviewAttachment,
   onDownloadAttachment,
   children,
   similarDocuments,
@@ -118,8 +119,10 @@ const DocumentForm = ({
         />
         <Attachments
           attachments={docFields.get('attachments')}
+          preview={docFields.get('preview')}
           onAddAttachment={onAddAttachment}
           onRemoveAttachment={onRemoveAttachment}
+          onPreviewAttachment={onPreviewAttachment}
           onDownloadAttachment={onDownloadAttachment}
         />
       </div>

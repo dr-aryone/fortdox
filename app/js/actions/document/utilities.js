@@ -10,6 +10,11 @@ const getPrefix = currentView => {
       view = 'createDocument';
       prefix = 'CREATE_DOC';
       return {view, prefix};
+    case 'SEARCH_VIEW':
+    case 'PREVIEW_DOC':
+      view = 'previewDocument';
+      prefix= 'PREVIEW_DOC';
+      return {view, prefix};
   }
 };
 

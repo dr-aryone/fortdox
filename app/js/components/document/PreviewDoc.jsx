@@ -41,16 +41,22 @@ class PreviewDoc extends React.Component {
       onEdit,
       onTagSearch,
       onDownloadAttachment,
+      onPreviewAttachment,
       searchField,
       onSearch,
       onSearchFieldChange
     } = this.props;
-
     let title = docFields.getIn(['title', 'value']);
     let texts = this.renderTexts(docFields);
     let tags = docFields.get('tags') ? <DocumentTags tags={docFields.get('tags')} onTagSearch={onTagSearch} /> : null;
-    let attachments = docFields.get('attachments') ?
-      <Attachments attachments={docFields.get('attachments')} onDownloadAttachment={onDownloadAttachment} /> : null;
+    let attachments = docFields.get('attachments') ? (
+      <Attachments
+        attachments={docFields.get('attachments')}
+        preview={docFields.get('preview')}
+        onDownloadAttachment={onDownloadAttachment}
+        onPreviewAttachment={onPreviewAttachment}
+      />
+    ) : null;
     let misc = (docFields.getIn(['tags', 'list']).size || docFields.get('attachments').size) !== 0 ?
     (<div className='misc'>
       {docFields.getIn(['tags', 'list']).size > 0 ? tags : null}

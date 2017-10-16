@@ -58,6 +58,46 @@ const removeAttachment = id => {
   };
 };
 
+const previewAttachment = (attachmentData, attachmentIndex) => {
+  return async (dispatch, getState) => {
+    let state = getState();
+    let {prefix} = getPrefix(state.navigation.get('currentView'));
+    dispatch({
+      type: `${prefix}_PREVIEW_ATTACHMENT_START`
+    });
+    let name;
+    let data;
+    let type = attachmentData.get('type');
+    if (attachmentData.get('file')) {
+      data = attachmentData.get('file');
+      name = attachmentData.get('name');
+    } else {
+      let currentDocumentId = state.updateDocument.getIn(['documentToUpdate', '_id']);
+      let response;
+      try {
+        response = await requestor.get(`${config.server}/document/${currentDocumentId}/attachment/${attachmentIndex}`);
+      } catch (error) {
+        return dispatch({
+          type: `${prefix}_PREVIEW_ATTACHMENT_FAIL`,
+          payload: {
+            error: `Unable to preview ${name}.`
+          }
+        });
+      }
+      data = response.body;
+      name = attachmentData.get('name').replace(/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}-/, '');
+    }
+    return dispatch({
+      type: `${prefix}_PREVIEW_ATTACHMENT_SUCCESS`,
+      payload: {
+        name,
+        data,
+        type
+      }
+    });
+  };
+};
+
 const clearDownload = id => {
   return {
     type: 'ATTACHMENT_DOWNLOAD_CLEAR',
@@ -72,7 +112,6 @@ const clearAllDownloads = () => {
     type: 'ATTACHMENT_DOWNLOAD_CLEAR_ALL'
   };
 };
-
 
 const downloadAttachment = (attachmentData, attachmentIndex) => {
   return async (dispatch, getState) => {
@@ -206,6 +245,7 @@ const showInDirectory = path => {
 module.exports = {
   addAttachment,
   removeAttachment,
+  previewAttachment,
   downloadAttachment,
   clearDownload,
   clearAllDownloads,

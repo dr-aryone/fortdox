@@ -17,6 +17,8 @@ const navigation = (state = initialState, action) => {
     case 'CREATE_DOCUMENT_SUCCESS':
       return state.set('currentView', fromJS('USER_VIEW'))
         .set('splashScreen', false);
+    case 'PREVIEW_DOCUMENT_SUCCESS':
+      return state.set('currentView', fromJS('PREVIEW_DOC'));
     case 'REGISTER_ORGANIZATION_SUCCESS':
     case 'ACTIVATE_ORGANIZATION_SUCCESS':
     case 'VERIFY_NEW_USER_SUCCESS':

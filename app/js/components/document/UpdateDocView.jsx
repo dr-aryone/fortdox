@@ -46,6 +46,7 @@ class UpdateDocView extends React.Component {
       onRemoveField,
       onAddAttachment,
       onRemoveAttachment,
+      onPreviewAttachment,
       onDownloadAttachment,
       isLoading,
       toSearchView,
@@ -76,6 +77,7 @@ class UpdateDocView extends React.Component {
             onRemoveField={onRemoveField}
             onAddAttachment={onAddAttachment}
             onRemoveAttachment={onRemoveAttachment}
+            onPreviewAttachment={onPreviewAttachment}
             onDownloadAttachment={onDownloadAttachment}
           >
             <button onClick={onUpdate} type='submit'>Update</button>

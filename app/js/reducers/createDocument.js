@@ -24,6 +24,11 @@ let initialState = fromJS({
       old: []
     },
     attachments: [],
+    preview: {
+      name: null,
+      data: null,
+      type: null
+    },
     nextID: 1
   },
   error: null,
@@ -133,6 +138,18 @@ const form = (state = initialState, action) => {
         })));
     case 'CREATE_DOC_REMOVE_ATTACHMENT':
       return state.setIn(['docFields', 'attachments'], fromJS(action.payload));
+    case 'CREATE_DOC_PREVIEW_ATTACHMENT_START':
+      return state.set('isLoading', true);
+    case 'CREATE_DOC_PREVIEW_ATTACHMENT_FAIL':
+      return state.merge({
+        error: fromJS(action.payload.error),
+        isLoading: false
+      });
+    case 'CREATE_DOC_PREVIEW_ATTACHMENT_SUCCESS':
+      return state.merge({
+        isLoading: false,
+        error: null
+      }).setIn(['docFields', 'preview'], fromJS(action.payload));
     case 'DOCUMENT_TITLE_LOOKUP_DONE':
       return state.set('similarDocuments', action.payload.hits);
     case 'DOCUMENT_TITLE_LOOKUP_CLEAR':

@@ -20,6 +20,11 @@ let initialState = fromJS({
       old: []
     },
     attachments: [],
+    preview: {
+      name: null,
+      data: null,
+      type: null
+    },
     nextID: 0
   },
   error: null,
@@ -88,7 +93,7 @@ const form = (state = initialState, action) => {
       return state.setIn(['docFields', 'tags', 'list'], fromJS(action.payload));
     case 'UPDATE_DOC_GET_OLD_TAGS_ERROR':
       return state.merge({
-        error: fromJS(action.payload)
+        error: fromJS(action.payload.error)
       });
     case 'UPDATE_DOC_GET_OLD_TAGS_SUCCESS':
       return state
@@ -143,6 +148,18 @@ const form = (state = initialState, action) => {
         })));
     case 'UPDATE_DOC_REMOVE_ATTACHMENT':
       return state.setIn(['docFields', 'attachments'], fromJS(action.payload));
+    case 'UPDATE_DOC_PREVIEW_ATTACHMENT_START':
+      return state.set('isLoading', true);
+    case 'UPDATE_DOC_PREVIEW_ATTACHMENT_FAIL':
+      return state.merge({
+        error: fromJS(action.payload.error),
+        isLoading: false
+      });
+    case 'UPDATE_DOC_PREVIEW_ATTACHMENT_SUCCESS':
+      return state.merge({
+        isLoading: false,
+        error: null
+      }).setIn(['docFields', 'preview'], fromJS(action.payload));
     case 'UPDATE_DOCUMENT_SUCCESS':
       return state.set('isLoading', false);
     case 'DOCUMENT_TITLE_LOOKUP_DONE': {
