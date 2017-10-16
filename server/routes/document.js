@@ -5,6 +5,7 @@ const router = express.Router();
 router.get('/', document.search);
 router.post('/', document.create);
 router.get('/:id', document.get);
+router.delete('/:id', document.delete);
 router.patch('/:id', document.update);
 router.get('/:id/attachment/:attachmentIndex', document.getAttachment);
 router.get('/check/title', document.checkTitle);

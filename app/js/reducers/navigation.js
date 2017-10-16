@@ -13,6 +13,7 @@ const navigation = (state = initialState, action) => {
     case 'DIRECT_LOGIN_SUCCESS':
     case 'UPDATE_DOCUMENT_SUCCESS':
     case 'DELETE_DOCUMENT_SUCCESS':
+    case 'DELETE_DOCUMENT_ERROR':
     case 'CREATE_DOCUMENT_SUCCESS':
       return state.set('currentView', fromJS('USER_VIEW'))
         .set('splashScreen', false);
