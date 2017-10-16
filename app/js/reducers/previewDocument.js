@@ -34,18 +34,11 @@ const preview = (state = initialState, action) => {
         error: null,
         showPreview: true
       });
-    case 'OPEN_DOCUMENT_START':
+    case 'PREVIEW_DOCUMENT_START':
       return state.set('isLoading', true);
-    case 'OPEN_DOCUMENT_DONE':
+    case 'PREVIEW_DOCUMENT_DONE':
       return state.merge({
-        docFields: state.get('docFields').merge({
-          title: fromJS(action.title),
-          encryptedTexts: fromJS(action.encryptedTexts),
-          texts: fromJS(action.texts),
-          tags: state.getIn(['docFields', 'tags']).set('list', fromJS(action.tags)),
-          attachments: fromJS(action.attachments),
-          nextID: fromJS(action.nextID)
-        }),
+        docFields: fromJS(action.docFields),
         isLoading: false,
         showPreview: true,
         searchField: {
