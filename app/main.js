@@ -79,7 +79,6 @@ function createBrowserWindow() {
     slashes: true
   });
 
-
   openingUrl += '?';
   if (redirectParameters) {
     switch (redirectParameters.type) {
@@ -96,51 +95,97 @@ function createBrowserWindow() {
   win.webContents.on('will-navigate', handleRedirect);
   win.webContents.on('new-window', handleRedirect);
 
-  var template = [{
-    label: 'Application',
+  const template = [{
+    label: 'Edit',
     submenu: [{
-      label: `About ${config.name}`,
-      role: 'orderFrontStandardAboutPanel'
+      role: 'undo'
     }, {
-      label: 'Refresh',
+      role: 'redo'
+    }, {
+      type: 'separator'
+    }, {
+      role: 'cut'
+    }, {
+      role: 'copy'
+    }, {
+      role: 'paste'
+    }, {
+      role: 'pasteandmatchstyle'
+    }, {
+      role: 'delete'
+    }, {
+      role: 'selectall'
+    }]
+  }, {
+    label: 'View',
+    submenu: [{
+      label: 'Reload',
       accelerator: 'CmdOrCtrl+R',
-      role: 'reload'
-    }, {
-      label: 'Quit',
-      accelerator: 'CmdOrCtrl+Q',
-      click: () => {
-        app.quit();
+      click (item, focusedWindow) {
+        if (focusedWindow) focusedWindow.reload();
       }
-    }]}, {
-      label: 'Edit',
+    }, {
+      type: 'separator'
+    }, {
+      role: 'togglefullscreen'
+    }
+    ]
+  }, {
+    role: 'window',
+    submenu: [{
+      role: 'minimize'
+    }, {
+      role: 'close'
+    }]
+  }, {
+    role: 'help',
+    submenu: []
+  }];
+
+  if (process.platform === 'darwin') {
+    const name = config.name;
+    template.unshift({
+      label: name,
       submenu: [{
-        label: 'Undo',
-        accelerator: 'CmdOrCtrl+Z',
-        role: 'undo'
-      }, {
-        label: 'Redo',
-        accelerator: 'CmdOrCtrl+Y',
-        role: 'redo'
+        role: 'about'
       }, {
         type: 'separator'
       }, {
-        label: 'Cut',
-        accelerator: 'CmdOrCtrl+X',
-        role: 'cut'
+        role: 'services',
+        submenu: []
       }, {
-        label: 'Copy',
-        accelerator: 'CmdOrCtrl+C',
-        role: 'copy'
+        type: 'separator'
       }, {
-        label: 'Paste',
-        accelerator: 'CmdOrCtrl+V',
-        role: 'paste'
+        role: 'hide'
       }, {
-        label: 'Select All',
-        accelerator: 'CmdOrCtrl+A',
-        role: 'selectall'
-      }]}
-  ];
+        role: 'hideothers'
+      }, {
+        role: 'unhide'
+      }, {
+        type: 'separator'
+      }, {
+        role: 'quit'
+      }]
+    });
+
+    template[3].submenu = [{
+      label: 'Close',
+      accelerator: 'CmdOrCtrl+W',
+      role: 'close'
+    }, {
+      label: 'Minimize',
+      accelerator: 'CmdOrCtrl+M',
+      role: 'minimize'
+    }, {
+      label: 'Zoom',
+      role: 'zoom'
+    }, {
+      type: 'separator'
+    }, {
+      label: 'Bring All to Front',
+      role: 'front'
+    }];
+  }
 
   Menu.setApplicationMenu(Menu.buildFromTemplate(template));
 
