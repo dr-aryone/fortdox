@@ -79,7 +79,6 @@ const downloadAttachment = (attachmentData, attachmentIndex) => {
     let state = getState();
     let download = state.download.get('downloads').find(e => e.get('attachmentIndex') === attachmentIndex);
     let currentDocument = state.updateDocument.getIn(['documentToUpdate', '_id']);
-
     if (download) {
       if (download.get('downloading')) {
         return dispatch({
@@ -101,45 +100,52 @@ const downloadAttachment = (attachmentData, attachmentIndex) => {
         });
       }
     }
-    let downloadId = uuid();
-    dispatch({
-      type: 'ATTACHMENT_DOWNLOAD_STARTED',
-      payload: {
-        id: downloadId,
-        name: attachmentData.get('name'),
-        attachmentIndex
-      }
-    });
     let response;
-    try {
-      response = await requestor.get(`${config.server}/document/${currentDocument}/attachment/${attachmentIndex}`, {
-        onDataReceived: ({loaded, total}) => {
-          let progress = Math.ceil((loaded / total) * 100);
-          dispatch({
-            type: 'ATTACHMENT_DOWNLOAD_PROGRESS',
-            payload: {
-              id: downloadId,
-              name: attachmentData.get('name'),
-              attachmentIndex,
-              progress
-            }
-          });
-        }
-      });
-    } catch (error) {
-      return dispatch({
-        type: 'ATTACHMENT_DOWNLOAD_FAILED',
+    let name;
+    let data;
+    let downloadId = uuid();
+    if (attachmentData.get('file')) {
+      data = window.Buffer.from(attachmentData.get('file'), 'base64');
+      name = attachmentData.get('name');
+    } else {
+      dispatch({
+        type: 'ATTACHMENT_DOWNLOAD_STARTED',
         payload: {
           id: downloadId,
-          name: name,
-          attachmentIndex,
-          error
+          name: attachmentData.get('name'),
+          attachmentIndex
         }
       });
+      try {
+        response = await requestor.get(`${config.server}/document/${currentDocument}/attachment/${attachmentIndex}`, {
+          onDataReceived: ({loaded, total}) => {
+            let progress = Math.ceil((loaded / total) * 100);
+            dispatch({
+              type: 'ATTACHMENT_DOWNLOAD_PROGRESS',
+              payload: {
+                id: downloadId,
+                name: attachmentData.get('name'),
+                attachmentIndex,
+                progress
+              }
+            });
+          }
+        });
+      } catch (error) {
+        return dispatch({
+          type: 'ATTACHMENT_DOWNLOAD_FAILED',
+          payload: {
+            id: downloadId,
+            name: name,
+            attachmentIndex,
+            error
+          }
+        });
+      }
+      data = window.Buffer.from(response.body, 'base64');
+      name = attachmentData.get('name').replace(/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}-/, '');
     }
 
-    let data = window.Buffer.from(response.body, 'base64');
-    let name = attachmentData.get('name').replace(/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}-/, '');
     try {
       name = await attachmentUtils.calculateName(globalUtils.getAppGlobals('downloadDirectory'), name);
     } catch (error) {
