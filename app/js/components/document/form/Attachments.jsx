@@ -10,10 +10,7 @@ class Attachments extends React.Component {
     this.downloadHandler = this.downloadHandler.bind(this);
 
     this.state = {
-      showModal: false,
-      name: null,
-      file: null,
-      type: null,
+      showModal: false
     };
   }
 
@@ -21,17 +18,16 @@ class Attachments extends React.Component {
     this.refs.fileField.click();
   }
 
-  openModal(name, file, type) {
+  openModal(attachment, index, onPreviewAttachment) {
+    let type = attachment.get('type');
     switch (type) {
       case 'image/jpeg':
       case 'image/png':
       case 'image/gif':
         this.setState({
-          showModal: true,
-          name,
-          file,
-          type
+          showModal: true
         });
+        onPreviewAttachment(attachment, index);
         return;
     }
   }
@@ -54,21 +50,21 @@ class Attachments extends React.Component {
   render() {
     let {
       attachments,
+      preview,
       onAddAttachment,
       onRemoveAttachment,
+      onPreviewAttachment
     } = this.props;
 
     let attachmentList = [];
     attachments.forEach((attachment, index) => {
       let name = attachment.get('name');
       name = name.replace(/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}-/, ''); //Filter the uuid
-      let file = attachment.get('file');
-      let type = attachment.get('type');
       let removeButton = onRemoveAttachment ?
         <button className='material-icons round small' onClick={() => onRemoveAttachment(index)} type='button'>clear</button> : null;
       attachmentList.push(
         <div key={index}>
-          <span className='name' onClick={() => this.openModal(name, file, type)}>{name}</span>
+          <span className='name' onClick={() => this.openModal(attachment, index, onPreviewAttachment)}>{name}</span>
           <div className='actions'>
             <span>
               <i className='material-icons download' onClick={() => this.downloadHandler(attachment, index)}>file_download</i>
@@ -85,12 +81,11 @@ class Attachments extends React.Component {
         <button type='button' onClick={() => this.clickHandler()}>Select File</button>
       </div>
     ) : null;
-
     return (
       <div className='attachments'>
         <Modal show={this.state.showModal} onClose={this.closeModal}>
-          <img src={`data:${this.state.type};base64,${this.state.file}`} />
-          <h3>{this.state.name}</h3>
+          <img src={`data:${preview.get('type')};base64,${preview.get('data')}`} />
+          <h3>{preview.get('name')}</h3>
         </Modal>
         <label><h3>Attachments</h3></label>
         <div className='attachment-list'>

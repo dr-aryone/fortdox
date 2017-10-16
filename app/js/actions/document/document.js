@@ -287,7 +287,7 @@ function previewDocument(id, skipTimeout) {
       let state = getState();
       let docFields = state.updateDocument.get('docFields');
       return dispatch({
-        type: 'PREVIEW_DOCUMENT_DONE',
+        type: 'PREVIEW_DOCUMENT_SUCCESS',
         docFields
       });
     }));
