@@ -86,7 +86,7 @@ class UpdateDocView extends React.Component {
             <div className='box dialog'>
               <i className='material-icons'>error_outline</i>
               <h2>Warning</h2>
-              <p>Are you sure that you want to delete the document?</p>
+              <p>Are you sure you want to delete the document?</p>
               <div className='buttons'>
                 <button onClick={onDelete} type='button' className='warning'>Delete</button>
                 <button onClick={this.closeModal} type='button'>Cancel</button>
