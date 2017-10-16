@@ -19,6 +19,7 @@ const UserView = ({
   switch (currentView) {
     case 'USER_VIEW':
     case 'SEARCH_VIEW':
+    case 'PREVIEW_DOC':
       page = <SearchViewContainer />;
       break;
     case 'CREATE_DOC_VIEW':

@@ -226,6 +226,7 @@ async function deleteDocument(req,res) {
     id: req.params.id,
     type: req.query.type
   };
+
   let expectations = expect({
     index: 'string',
     type: 'string',
@@ -238,7 +239,7 @@ async function deleteDocument(req,res) {
     try {
       response = await es.deleteDocument(query);
       res.send(response);
-      logger.log('info', `User ${req.query.email} deleted document ${req.query.id}`);
+      logger.log('info', `User ${req.session.email} deleted document ${req.params.id}`);
     } catch (error) {
       logger.log('error', 'Cannot delete document!');
       res.status(500).send();

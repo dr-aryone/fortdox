@@ -82,7 +82,8 @@ function createDocument() {
 
     return dispatch({
       type: 'CREATE_DOCUMENT_SUCCESS',
-      payload: 'Document created!'
+      payload: 'Document created!',
+      docFields
     });
   };
 }
@@ -160,7 +161,8 @@ function updateDocument() {
 
     return dispatch({
       type: 'UPDATE_DOCUMENT_SUCCESS',
-      payload: 'Document updated!'
+      payload: 'Document updated!',
+      docFields: newDoc
     });
   };
 }
@@ -170,25 +172,25 @@ function deleteDocument() {
     dispatch({
       type: 'DELETE_DOCUMENT_START'
     });
-
     let state = getState();
-    let doc = state.search.get('documentToUpdate');
+    let doc = state.updateDocument.get('documentToUpdate');
     try {
-      await requestor.delete(`${config.server}/document`, {
+      await requestor.delete(`${config.server}/document/${doc.get('_id')}`, {
         query:{
           index: doc.get('_index'),
           type: doc.get('_type'),
-          id: doc.get('_id')
         }
       });
     } catch (error) {
       console.error(error);
-      dispatch({
-        type: 'DELETE_DOCUMENT_ERROR'
+      return dispatch({
+        type: 'DELETE_DOCUMENT_ERROR',
+        payload: 'Unable to delete document.'
       });
     }
     dispatch({
-      type: 'DELETE_DOCUMENT_SUCCESS'
+      type: 'DELETE_DOCUMENT_SUCCESS',
+      payload: 'Document was deleted!'
     });
   };
 }

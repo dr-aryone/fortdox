@@ -6,9 +6,6 @@ const addTag = tag => {
   return (dispatch, getState) => {
     let state = getState();
     let {view, prefix} = getPrefix(state.navigation.get('currentView'));
-    dispatch({
-      type: `${prefix}_ADD_TAG_START`
-    });
     let tagList = state[view].getIn(['docFields', 'tags', 'list']);
     if (tag === undefined) tag = state[view].getIn(['docFields', 'tags', 'value']);
     if (tag.trim() === '') return;
@@ -18,7 +15,7 @@ const addTag = tag => {
     });
     tagList = tagList.push(tag.toLowerCase());
     return dispatch({
-      type: `${prefix}_ADD_TAG_SUCCESS`,
+      type: `${prefix}_ADD_TAG`,
       payload: tagList
     });
   };
@@ -28,13 +25,10 @@ const removeTag = tagIndex => {
   return (dispatch, getState) => {
     let state = getState();
     let {view, prefix} = getPrefix(state.navigation.get('currentView'));
-    dispatch({
-      type: `${prefix}_REMOVE_TAG_SUCCESS`
-    });
     let tagList = state[view].getIn(['docFields', 'tags', 'list']);
     tagList = tagList.splice(tagIndex, 1);
     return dispatch({
-      type: `${prefix}_REMOVE_TAG_SUCCESS`,
+      type: `${prefix}_REMOVE_TAG`,
       payload: tagList
     });
   };

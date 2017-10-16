@@ -13,6 +13,7 @@ const mapStateToProps = state => {
     result: state.search.get('result'),
     totalHits: state.search.get('totalHits'),
     isLoading: state.search.get('isLoading'),
+    showPreview: state.previewDocument.get('showPreview'),
     documentToUpdate: state.updateDocument.get('documentToUpdate')
   };
 };
