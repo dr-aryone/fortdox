@@ -82,7 +82,6 @@ const DocumentForm = ({
       }
     }
   }
-
   return (
     <form onSubmit={onSubmit} className='document'>
       <div className='main-panel'>

@@ -42,8 +42,8 @@ class CreateDocView extends React.Component {
             similarDocuments={similarDocuments}
             onCloseSimilarDocuments={onCloseSimilarDocuments}
             onSimilarDocumentClick={onSimilarDocumentClick}
-            onTitleChange={onTitleChange}
             onChange={onChange}
+            onTitleChange={onTitleChange}
             onAddTag={onAddTag}
             onRemoveTag={onRemoveTag}
             onSuggestTags={onSuggestTags}

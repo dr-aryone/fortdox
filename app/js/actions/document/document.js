@@ -273,7 +273,6 @@ function openDocument(id, skipTimeout, showPreview) {
         attachments,
         nextID: nextID+1
       });
-
       if (showPreview) showPreview();
     }
   };

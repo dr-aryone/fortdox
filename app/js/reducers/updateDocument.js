@@ -3,7 +3,12 @@ const {fromJS, List} = require('immutable');
 let initialState = fromJS({
   documentToUpdate: null,
   docFields: {
-    title: {},
+    title: {
+      value: '',
+      id: 'title',
+      label: 'Title',
+      error: null
+    },
     encryptedTexts: [],
     texts: [],
     tags: {
