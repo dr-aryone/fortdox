@@ -74,6 +74,8 @@ const preview = (state = initialState, action) => {
         isLoading: false,
         error: null
       }).setIn(['docFields', 'preview'], fromJS(action.payload));
+    case 'TAG_SEARCH_SUCCESS':
+      return initialState;
     default:
       return state;
   }
