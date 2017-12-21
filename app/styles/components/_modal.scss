@@ -39,3 +39,29 @@
     }
   }
 }
+
+.doc-mode {
+  .modal-inner {
+    @extend .box;
+    padding: 0px;
+    height: 100%;
+    margin: 0px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+
+    .text {
+      overflow-y: scroll;
+      max-height: 100%;
+
+      p {
+        margin-top: 0px;
+      }
+    }
+
+    h2 {
+      margin: 0px;
+      padding: 0px;
+    }
+  }
+}

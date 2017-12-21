@@ -205,6 +205,13 @@
   }
 }
 
+.meta-data {
+  .edit:hover {
+    text-decoration: underline;
+    cursor: pointer;
+  }
+}
+
 .tags {
   padding-bottom: 0px;
 }

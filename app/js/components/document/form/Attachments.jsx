@@ -83,7 +83,7 @@ class Attachments extends React.Component {
     ) : null;
     return (
       <div className='attachments'>
-        <Modal show={this.state.showModal} onClose={this.closeModal}>
+        <Modal show={this.state.showModal} onClose={this.closeModal} showClose>
           <img src={`data:${preview.get('type')};base64,${preview.get('data')}`} />
           <h3>{preview.get('name')}</h3>
         </Modal>

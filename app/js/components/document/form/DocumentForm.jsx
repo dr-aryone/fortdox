@@ -89,7 +89,7 @@ const DocumentForm = ({
           onPreviewAttachment={onPreviewAttachment}
           onDownloadAttachment={onDownloadAttachment}
         />
-        {changelog ? <Changelog changelog={changelog} /> : null}
+        {changelog ? <Changelog changelog={docFields.get('changelog')} /> : null}
       </div>
     </form>
   );

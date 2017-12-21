@@ -1,10 +1,10 @@
 module.exports = function(sequelize, DataTypes) {
   var Changelog = sequelize.define('Changelog', {
     id: {
-      allowNull: false,
+      type: DataTypes.INTEGER,
+      primaryKey:  true,
       autoIncrement: true,
-      primaryKey: true,
-      type: DataTypes.INTEGER
+      allowNull: false
     },
     user: {
       unique: false,
@@ -17,7 +17,7 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING
     }
   }, {
-    createdAt: true
+    updatedAt: false
   });
 
   return Changelog;

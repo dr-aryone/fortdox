@@ -163,12 +163,13 @@ $search-padding: 30px;
   .created {
     @extend .box;
     padding: 0px;
-    flex-grow: 1;
+    width: 50%;
+    margin-right: 7px;
   }
 
   .edited {
     @extend .box;
-    margin-left: 15px;
+    margin-left: 7px;
     width: 50%;
     padding: 0px;
   }

@@ -52,9 +52,9 @@ async function get(req, res) {
     return res.status(400).send(expectations.errors());
   }
 
-  let response;
+  let doc;
   try {
-    response = await es.getDocument({
+    doc = await es.getDocument({
       organization,
       documentId: id
     });
@@ -70,14 +70,27 @@ async function get(req, res) {
     logger.log('silly', `Cannot find user ${email}`);
     return res.status(404).send();
   }
-  response._source.encrypted_texts = response._source.encrypted_texts || [];
-  response._source.attachments = response._source.attachments || [];
+
+  doc._source.encrypted_texts = doc._source.encrypted_texts || [];
+  doc._source.attachments = doc._source.attachments || [];
   try {
-    response._source.encrypted_texts = await decryptDocuments(response._source.encrypted_texts, privateKey, encryptedMasterPassword);
+    doc._source.encrypted_texts = await decryptDocuments(doc._source.encrypted_texts, privateKey, encryptedMasterPassword);
   } catch (error) {
     logger.log('error', `Decrypt error, could not decrypt with privatekey from user ${email}`);
     return res.status(500).send({msg: 'Internal Server Error'});
   }
+
+  let logentries;
+  try {
+    logentries = await changelog.get(doc._id);
+  } catch (error) {
+    logger.log('error', `Cannot get logentries for documentid ${doc._id}`);
+  }
+  
+  let response = {
+    ...doc,
+    logentries
+  };
 
   res.send(response);
 }
