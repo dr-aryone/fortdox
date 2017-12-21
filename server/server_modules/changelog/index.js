@@ -17,9 +17,25 @@ const get = (documentId) => {
   });
 };
 
+const getLatestEntries = () => {
+  return new Promise(async (resolve, reject) => {
+    let entries;
+    try {
+      entries = await db.Changelog.findAll({
+        order: ['createdAt', 'ASC'],
+        limit: 10,
+        raw: true
+      });
+    } catch (error) {
+      console.log(error);
+      return reject(500);
+    }
+    return resolve(entries);
+  });
+};
+
 
 const addLogEntry = (documentId, user) => {
-  debugger;
   return new Promise(async (resolve, reject) => {
     try {
       await db.Changelog.create({
@@ -52,6 +68,7 @@ const remove = (documentId) => {
 
 
 module.exports = {
+  getLatestEntries,
   addLogEntry,
   get,
   remove
