@@ -168,17 +168,17 @@ async function create(req, res) {
   try {
     response = await es.addToIndex({query, organization});
     res.send(response);
-    logger.log('info', `User ${req.session.email} created a document with title ${req.body.title} and id ${response.body._id}`);
+    logger.log('info', `User ${req.session.email} created a document with title ${req.body.title} and id ${response._id}`);
   } catch (error) {
     logger.log('error', `Could not add document to index ${req.body.index}`);
     return res.status(500).send(error);
   }
 
   try {
-    await changelog.addLogEntry(response.body._id, req.session.email);
-    logger.log('info', `Changelog entry for document ${req.body.title} with id ${response.body._id}`);
+    await changelog.addLogEntry(response._id, req.session.email);
+    logger.log('info', `Changelog entry for document ${req.body.title} with id ${response._id}`);
   } catch (error) {
-    logger.log('error', `Could not add changelog entry to for document ${response.body._id}`);
+    logger.log('error', `Could not add changelog entry to for document ${response._id}`);
     return res.status(500).send(error);
   }
 }
