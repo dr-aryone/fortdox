@@ -19,6 +19,7 @@ let initialState = fromJS({
       data: null,
       type: null
     },
+    changelog: null,
     nextID: 0
   },
   error: null,

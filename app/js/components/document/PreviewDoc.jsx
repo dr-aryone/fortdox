@@ -57,6 +57,20 @@ class PreviewDoc extends React.Component {
         onPreviewAttachment={onPreviewAttachment}
       />
     ) : null;
+
+    let metaData = (
+      <div className='misc'>
+        <div className='created'>
+          <label><h3>Created</h3></label>
+          <div className='text'>Test</div>
+        </div>
+        <div className='edited'>
+          <label><h3>Edited</h3></label>
+          <div className='text'>Test</div>
+        </div>
+      </div>
+    );
+
     let misc = (docFields.getIn(['tags', 'list']).size || docFields.get('attachments').size) !== 0 ?
     (<div className='misc'>
       {docFields.getIn(['tags', 'list']).size > 0 ? tags : null}
@@ -83,6 +97,7 @@ class PreviewDoc extends React.Component {
             {texts}
           </div>
         </div>
+        {metaData}
         {misc}
       </div>
     );

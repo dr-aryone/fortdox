@@ -1,9 +1,10 @@
 module.exports = function(sequelize, DataTypes) {
   var Changelog = sequelize.define('Changelog', {
     id: {
-      type: DataTypes.INTEGER,
-      primaryKey:  true,
-      autoIncrement: true
+      allowNull: false,
+      autoIncrement: true,
+      primaryKey: true,
+      type: DataTypes.INTEGER
     },
     user: {
       unique: false,

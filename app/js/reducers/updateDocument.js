@@ -25,6 +25,7 @@ let initialState = fromJS({
       data: null,
       type: null
     },
+    changelog: null,
     nextID: 0
   },
   error: null,
@@ -45,6 +46,7 @@ const form = (state = initialState, action) => {
           texts: fromJS(action.texts),
           tags: state.getIn(['docFields', 'tags']).set('list', fromJS(action.tags)),
           attachments: fromJS(action.attachments),
+          changelog: fromJS(action.changelog),
           nextID: fromJS(action.nextID)
         }),
         isLoading: false,

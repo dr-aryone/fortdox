@@ -271,6 +271,7 @@ function openDocument(id, skipTimeout, showPreview) {
         texts,
         tags,
         attachments,
+        changelog: doc.changelog,
         nextID: nextID+1
       });
       if (showPreview) showPreview();
