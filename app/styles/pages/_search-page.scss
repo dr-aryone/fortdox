@@ -156,19 +156,38 @@ $search-padding: 30px;
 }
 
 .misc {
-  @extend .box;
   display: flex;
   align-items: flex-start;
   padding: 0px;
 
-  .input-field {
+  .created {
+    @extend .box;
+    padding: 0px;
     flex-grow: 1;
   }
 
+  .edited {
+    @extend .box;
+    margin-left: 15px;
+    width: 50%;
+    padding: 0px;
+  }
+
+  .input-field {
+    @extend .box;
+    padding: 0px;
+    flex-grow: 1;
+
+  }
+
   .attachments {
+    @extend .box;
+    margin-left: 15px;
     width: 25%;
+    padding: 0px;
 
     &:only-child {
+      padding: 0px;
       width: 100%;
     }
   }

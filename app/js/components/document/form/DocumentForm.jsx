@@ -5,10 +5,12 @@ const DocumentTags = require('./DocumentTags');
 const BottomPanel = require('./BottomPanel');
 const Attachments = require('./Attachments');
 const SimilarDocumentsList = require('./SimilarDocumentsList');
+const Changelog = require('./Changelog');
 
 const DocumentForm = ({
   onSubmit,
   docFields,
+  changelog,
   onChange,
   onTitleChange,
   onSuggestTags,
@@ -87,6 +89,7 @@ const DocumentForm = ({
           onPreviewAttachment={onPreviewAttachment}
           onDownloadAttachment={onDownloadAttachment}
         />
+        {changelog ? <Changelog changelog={changelog} /> : null}
       </div>
     </form>
   );

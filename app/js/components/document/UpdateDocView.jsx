@@ -64,6 +64,7 @@ class UpdateDocView extends React.Component {
           <h1>Update Document</h1>
           <DocumentForm
             docFields={docFields}
+            changelog={docFields.get('changelog')}
             similarDocuments={similarDocuments}
             onCloseSimilarDocuments={onCloseSimilarDocuments}
             onSimilarDocumentClick={onSimilarDocumentClick}

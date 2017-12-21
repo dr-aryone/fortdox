@@ -141,6 +141,8 @@
 }
 
 .attachments {
+  padding-bottom: 15px;
+
   .upload {
     text-align: center;
 
@@ -148,7 +150,6 @@
       display: none;
     }
   }
-
 
   .attachment-list {
     padding: 10px;
@@ -202,6 +203,10 @@
       }
     }
   }
+}
+
+.tags {
+  padding-bottom: 0px;
 }
 
 .tag-dropdown {
