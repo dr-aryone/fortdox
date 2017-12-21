@@ -1,7 +1,9 @@
 const users = require('app/users');
+const changelog = require('app/changelog');
 const es = require('app/elastic_search');
 const checkEmptyFields = require('app/utilities/checkEmptyFields');
 const {decryptDocuments, encryptDocument} = require('app/encryption/authentication/documentEncryption');
+const {decryptMasterPassword} = require('app/encryption/keys/cryptMasterPassword');
 const expect = require('@edgeguideab/expect');
 const logger = require('app/logger');
 
@@ -162,13 +164,21 @@ async function create(req, res) {
     tags: req.body.tags,
     attachments: req.body.attachments
   };
-
+  let response;
   try {
-    res.send(await es.addToIndex({query, organization}));
-    logger.log('info', `User ${req.body.email} created a document with title ${req.body.title}`);
-    return;
+    response = await es.addToIndex({query, organization});
+    res.send(response);
+    logger.log('info', `User ${req.session.email} created a document with title ${req.body.title} and id ${response.body._id}`);
   } catch (error) {
     logger.log('error', `Could not add document to index ${req.body.index}`);
+    return res.status(500).send(error);
+  }
+
+  try {
+    await changelog.addLogEntry(response.body._id, req.session.email);
+    logger.log('info', `Changelog entry for document ${req.body.title} with id ${response.body._id}`);
+  } catch (error) {
+    logger.log('error', `Could not add changelog entry to for document ${response.body._id}`);
     return res.status(500).send(error);
   }
 }
@@ -210,16 +220,33 @@ async function update(req, res) {
   let response;
   try {
     response = await es.update({query, organization});
-    res.send(response);
     logger.log('info', `User ${email} updated document ${req.body.id}`);
   } catch (error) {
     logger.log('error', `Cannot update document ${req.body.id}`);
-    res.status(500).send({msg: 'Internal Server Error'});
+    return res.status(500).send({msg: 'Internal Server Error'});
+  }
+
+  try {
+    await changelog.addLogEntry(req.params.id, email);
+    res.send(response);
+    logger.log('info', `Added changelog entry for ${email}'s update of document ${req.params.id}`);
+  } catch (error) {
+    logger.log('error', `Could not add log entry for update on document ${req.params.id}`);
+    return res.status(500).send({msg: 'Internal Server Error'});
   }
 }
 
 async function deleteDocument(req,res) {
   let response;
+  let encryptedMasterPassword;
+  try {
+    encryptedMasterPassword = (await users.getUser(req.session.email)).password;
+    decryptMasterPassword(req.session.privateKey, encryptedMasterPassword);
+    logger.log('silly', `Successfully authenticated user ${req.session.email} for deleting document ${req.params.id}`);
+  } catch (error) {
+    logger.log('error', `User ${req.session.email} tried to delete ${req.params.id} without proper authentication`);
+    res.status(409).send();
+  }
 
   let query = {
     index: req.session.organization.toLowerCase(),
