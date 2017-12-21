@@ -2,18 +2,28 @@ const db = require('app/models');
 
 const get = (documentId) => {
   return new Promise(async (resolve, reject) => {
-    let doc;
     try {
-      doc = await db.Changelog.findAll({
+      await db.Changelog.findAll({
         where: {
           elasticSearchId: documentId
-        }
+        },
+        order: [['createdAt', 'ASC']],
+        raw: true
+      }).then(logentries => {
+        logentries = logentries.map(entry => {
+          entry.createdAt = entry.createdAt.getDate() + '-' +
+            (entry.createdAt.getMonth() < 9 ? '0' : '') +
+            (entry.createdAt.getMonth() + 1) + '-' +
+            entry.createdAt.getFullYear() + ' ' +
+            entry.createdAt.getHours() + ':' + entry.createdAt.getMinutes();
+          return entry;
+        });
+        return resolve(logentries);
       });
     } catch (error) {
       console.log(error);
-      return reject();
+      return reject(500);
     }
-    return doc;
   });
 };
 

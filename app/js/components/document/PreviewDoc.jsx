@@ -58,18 +58,26 @@ class PreviewDoc extends React.Component {
       />
     ) : null;
 
-    let metaData = (
-      <div className='misc'>
-        <div className='created'>
-          <label><h3>Created</h3></label>
-          <div className='text'>Test</div>
+    let metaData = '';
+    if (docFields.get('changelog')) {
+      let changelog = docFields.get('changelog');
+      metaData = (
+        <div className='misc'>
+          <div className='created'>
+            <label><h3>Created</h3></label>
+            <div className='text'>
+              {changelog.get(0).get('createdAt')} by {changelog.get(0).get('user')}
+            </div>
+          </div>
+          <div className='edited'>
+            <label><h3>Last edited</h3></label>
+            <div className='text'>
+              {changelog.get(changelog.size - 1).get('createdAt')} by {changelog.get(changelog.size - 1).get('user')}
+            </div>
+          </div>
         </div>
-        <div className='edited'>
-          <label><h3>Edited</h3></label>
-          <div className='text'>Test</div>
-        </div>
-      </div>
-    );
+      );
+    }
 
     let misc = (docFields.getIn(['tags', 'list']).size || docFields.get('attachments').size) !== 0 ?
     (<div className='misc'>
