@@ -2,7 +2,7 @@
 
 module.exports = {
   up: function (queryInterface, Sequelize) {
-    return queryInterface.createTable('Changelog', {
+    return queryInterface.createTable('Changelogs', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -10,7 +10,7 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       user: {
-        unique: true,
+        unique: false,
         allowNull: false,
         type: Sequelize.STRING
       },
@@ -25,6 +25,6 @@ module.exports = {
     });
   },
   down: function (queryInterface) {
-    return queryInterface.dropTable('Organizations');
+    return queryInterface.dropTable('Changelogs');
   }
 };

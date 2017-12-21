@@ -19,6 +19,7 @@ const get = (documentId) => {
 
 
 const addLogEntry = (documentId, user) => {
+  debugger;
   return new Promise(async (resolve, reject) => {
     try {
       await db.Changelog.create({

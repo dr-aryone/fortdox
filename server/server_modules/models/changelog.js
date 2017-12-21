@@ -3,7 +3,8 @@ module.exports = function(sequelize, DataTypes) {
     id: {
       type: DataTypes.INTEGER,
       primaryKey:  true,
-      autoIncrement: true
+      autoIncrement: true,
+      allowNull: false
     },
     user: {
       unique: false,
@@ -16,7 +17,7 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING
     }
   }, {
-    createdAt: true
+    updatedAt: false
   });
 
   return Changelog;
