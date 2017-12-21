@@ -259,7 +259,6 @@ async function deleteDocument(req,res) {
     type: 'string',
     id: 'string'
   }, query);
-
   if (!expectations.wereMet()) {
     res.status(400).send(expectations.errors());
   } else {
@@ -269,7 +268,13 @@ async function deleteDocument(req,res) {
       logger.log('info', `User ${req.session.email} deleted document ${req.params.id}`);
     } catch (error) {
       logger.log('error', 'Cannot delete document!');
-      res.status(500).send();
+      return res.status(500).send();
     }
+    try {
+      await changelog.remove(req.params.id);
+    } catch (error) {
+      logger.log('error', `Could not remove log entries for document ${req.params.id}`);
+    }
+    return res.send(response);
   }
 }
