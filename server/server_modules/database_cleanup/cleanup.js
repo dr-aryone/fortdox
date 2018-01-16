@@ -1,10 +1,14 @@
 const db = require('app/models');
+const logger = require('app/logger');
+const es = require('app/elastic_search');
+const THIRTY_MINUTES = 1800000;
 
-module.exports = async (interval, es) => {
-  let currentTime = new Date();
-  let limit = interval * 60000;
+module.exports = async () => {
+  logger.silly('Running cleanup');
+  const currentTime = new Date();
+  const birthTimeToDelete = new Date(currentTime - THIRTY_MINUTES);
   let inactiveOrganizations;
-  let notActivatedUsers;
+  let tempKeysOfInActivateUsers;
   try {
     inactiveOrganizations = await db.Organization.findAll({
       where: {
@@ -15,22 +19,23 @@ module.exports = async (interval, es) => {
     console.error(error);
     throw 404;
   }
-  inactiveOrganizations.forEach(async (entry) => {
-    if (entry.createdAt < new Date(currentTime - limit)) {
+  const organizationCleanupPromises = inactiveOrganizations.map(async (entry) => {
+    if (entry.createdAt < birthTimeToDelete) {
       try {
         let users = await db.User.findAll({
           where: {
             organizationId: entry.id
           }
         });
-        users.forEach(async (user) => {
+        const userPromises = users.map(async user => {
           await db.TempKeys.destroy({
             where: {
               uuid: user.uuid
             }
           });
-          await db.Users.destroy();
+          await user.destroy();
         });
+        await Promise.all(userPromises);
         await entry.destroy();
       } catch (error) {
         console.error(error);
@@ -46,30 +51,37 @@ module.exports = async (interval, es) => {
   });
 
   try {
-    notActivatedUsers = await db.TempKeys.findAll({
+    await Promise.all(organizationCleanupPromises);
+    tempKeysOfInActivateUsers = await db.TempKeys.findAll({
       where: {
         activated: false
       }
     });
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     throw 500;
   }
 
-  notActivatedUsers.forEach(async (user) => {
-    if (user.createdAt < new Date(currentTime - limit)) {
-      try {
-        await user.destroy();
-        await db.User.destroy({
-          where: {
-            uuid: user.uuid
-          }
-        });
-      } catch (error) {
-        console.error(error);
-        throw 500;
-      }
+  const tempKeysDeletionPromises = tempKeysOfInActivateUsers.map(async tempKey => {
+    if (tempKey.createdAt < birthTimeToDelete) {
+      return;
+    }
+    try {
+      await tempKey.destroy();
+      await db.User.destroy({
+        where: {
+          uuid: tempKey.uuid
+        }
+      });
+    } catch (error) {
+      console.error(error);
+      throw 500;
     }
   });
-  return;
+  try {
+    await Promise.all(tempKeysDeletionPromises);
+  } catch (error) {
+    logger.error(error);
+    throw 500;
+  }
 };

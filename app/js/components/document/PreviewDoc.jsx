@@ -66,13 +66,13 @@ class PreviewDoc extends React.Component {
           <div className='created'>
             <label><h3>Created</h3></label>
             <div className='text'>
-              {changelog.get(0).get('createdAt')} by {changelog.get(0).get('user')}
+              {changelog.getIn([0, 'createdAt'])} by {changelog.getIn([0, 'user'])}
             </div>
           </div>
           <div className='edited'>
             <label><h3>Last edited</h3></label>
             <div className='text'>
-              {changelog.get(changelog.size - 1).get('createdAt')} by {changelog.get(changelog.size - 1).get('user')}
+              {changelog.getIn([changelog.size - 1, 'createdAt'])} by {changelog.getIn([changelog.size - 1, 'user'])}
             </div>
           </div>
         </div>
