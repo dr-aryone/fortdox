@@ -21,7 +21,7 @@ const logger = new (winston.Logger)({
       timestamps: true
     }),
     new (winston.transports.Console)({
-      level: 'info',
+      level: 'silly',
       timestamps: true
     })
   ]

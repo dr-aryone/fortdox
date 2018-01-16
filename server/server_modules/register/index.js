@@ -62,7 +62,7 @@ async function organization(req, res) {
 }
 
 async function confirm(req, res) {
-  let email = req.body.email;
+  let email = req.body.email;  
 
   if (!req.body.privateKey) {
     logger.log('silly', `Missing private key for ${email} @ /register/confirm`);
@@ -104,14 +104,14 @@ async function verify(req, res) {
   try {
     user = await users.verifyUUID(req.body.activationCode);
   } catch (error) {
-    logger.log('silly', `Could not verify User with UUID ${req.body.activationCode}. Probably because user does not exist or server is down.`);
-    res.status(error).send();
+    logger.warn(`Could not verify User with UUID ${req.body.activationCode}. Probably because user does not exist or server is down.`);
+    return res.status(error).send();
   }
   try {
+    logger.silly(`Generating keypair for new user ${user.email}`);
     keypair = await keygen.genKeyPair();
   } catch (error) {
-    logger.log('error', `Generating keypair for new user ${user.email}`);
-    console.error(error);
+    logger.error(error);
   }
   let masterPassword = keygen.genRandomPassword();
   let encryptedMasterPassword = encryptMasterPassword(keypair.publicKey, masterPassword);

@@ -1,16 +1,15 @@
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
-const es = require('app/elastic_search');
-const cleanup = require('app/database_cleanup/cleanup.js');
+const cleanup = require('app/database_cleanup/cleanup');
 const CronJob = require('cron').CronJob;
 const logger = require('app/logger');
 const routes = require('./routes');
 const PORT = 8000;
 
-const job = new CronJob('*/5 * * * *', async () => {
+const job = new CronJob('0 0/5 * * * * *', async () => {
   try {
-    await cleanup(30, es);
+    await cleanup();
   } catch (error) {
     console.error(error);
   }

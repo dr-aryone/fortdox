@@ -178,29 +178,26 @@ const getOrganizationName = email => {
   });
 };
 
-const verifyUUID = uuid => {
-  return new Promise(async (resolve, reject) => {
-    let result;
-    let user;
-    try {
-      user = await db.User.findOne({
-        where: {uuid: uuid}
-      });
-      if (!user) {
-        return reject(404);
-      }
-      result = {
-        email: user.email,
-        organizationId: user.organizationId
-      };
-
-    } catch (error) {
-      console.error(error);
-      return reject(500);
+const verifyUUID = async uuid => {
+  let result;
+  let user;
+  try {
+    user = await db.User.findOne({
+      where: {uuid}
+    });
+    if (!user) {
+      throw 404;
     }
-    return resolve(result);
+    result = {
+      email: user.email,
+      organizationId: user.organizationId
+    };
 
-  });
+  } catch (error) {
+    console.error(error);
+    throw 500;
+  }
+  return result;
 };
 
 module.exports = {

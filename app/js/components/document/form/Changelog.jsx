@@ -1,5 +1,6 @@
 const React = require('react');
 const Modal = require('components/general/Modal');
+const {Map} = require('immutable');
 
 class Changelog extends React.Component {
   constructor(props) {
@@ -25,8 +26,8 @@ class Changelog extends React.Component {
   }
 
   render() {
-    let {
-      changelog
+    const {
+      changelog = Map()
     } = this.props;
 
     let changelogBox = [];
@@ -46,12 +47,12 @@ class Changelog extends React.Component {
         </Modal>
         <label><h3>Created</h3></label>
         <div className='text'>
-          {changelog.get(0).get('createdAt')} by {changelog.get(0).get('user')}
+          {changelog.getIn([0, 'createdAt'])} by {changelog.getIn([0, 'user'])}
         </div>
 
         <label><h3>Last edited</h3></label>
         <div className='text edit' onClick={() => this.openModal()}>
-          {changelog.get(changelog.size-1).get('createdAt')} by {changelog.get(changelog.size - 1).get('user')}
+          {changelog.getIn([changelog.size - 1, 'createdAt'])} by {changelog.getIn([changelog.size - 1, 'user'])}
         </div>
       </div>
     );

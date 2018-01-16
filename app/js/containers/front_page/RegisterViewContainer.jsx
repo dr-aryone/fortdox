@@ -10,7 +10,7 @@ const mapStateToProps = state => {
     activateFields: state.register.get('activateFields'),
     register: {
       verifyCodeError: state.register.get('verifyCodeError'),
-      isLoading: false,
+      isLoading: state.register.get('isLoading'),
       registerError: state.register.get('registerError'),
       activateOrgError: state.register.get('activateOrgError')
     }

@@ -30,6 +30,12 @@ For debugging, install the following developer tools:
 * [React Developer Tools](https://chrome.google.com/webstore/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi?hl=en)
 * [Redux DevTools](https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd?hl=en)
 
+## Switching between production and local
+Any teams you have previously saved (for instance your real production team), is saved in local storage.
+Local storage in electron is saved in a folder, specific to your operating system.
+In macOS this folder is `~/Library/Application\ Support/FortDox/Local\ Storage`.
+Make a backup of the contents, and you are good to go with local development.
+
 # Branches
 Development is done on the master branch. When a new release is to be deployed, merge master into the release branch.
 __NEVER COMMIT ANYTHING ON THE RELEASE BRANCH, ONLY ON MASTER__
