@@ -82,10 +82,6 @@ Run mySQL (optional)
 Run database migrations in `fortdox/server`
 > sequelize db:migrate
 
-# Build the Project into a Runnable Application
-Build the application in `fortdox/app`
-> electron-packager . --overwrite --platform=darwin --arch=x64 --out=release-build;
-
 # Developers
 ## Debugging
 Debugging is done on the client through the Developer Tools (`cmd + alt + I` on Mac) in the Electron window. Simply insert a debugger statement `debugger;` to trigger the developer mode. React and Redux developer tools should be visible as tabs if they are correctly installed.
@@ -162,7 +158,7 @@ Now restart Elasticsearch manually with the following commands:
 Now the cronjob should create a folder labled with the timestamp of the backup every night at 00:00.
 Now it should work, if not Happy Googeling!   
 
-#Building installer
+# Building installer
 
 Install electron-builder via: `npm install electron-builder`,
 

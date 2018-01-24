@@ -2,7 +2,7 @@
   "name": "fortdox",
   "productName": "FortDox",
   "description": "Secure password handling for collaboration",
-  "version": "1.2.4",
+  "version": "1.2.6",
   "author": "EdgeGuide <info@edgeguide.com>",
   "main": "main.js",
   "homepage": "https://edgeguide.se",
@@ -18,7 +18,8 @@
     "win32": "build --win --ia32",
     "linux": "build --linux",
     "all": "build -mwl",
-    "watch": "gulp"
+    "watch": "gulp",
+    "postinstall": "electron-builder install-app-deps"
   },
   "dependencies": {
     "@edgeguideab/client-request": "^1.4.8",
@@ -37,7 +38,7 @@
     "redux-thunk": "^2.2.0",
     "remarkable": "^1.7.1",
     "remarkable-react": "^1.0.1",
-    "uuid": "^3.1.0"
+    "uuid": "^3.2.1"
   },
   "devDependencies": {
     "babel-core": "^6.26.0",
@@ -50,12 +51,11 @@
     "babelify": "^7.3.0",
     "browserify": "^14.5.0",
     "electron": "latest",
-    "electron-builder": "^19.53.7",
-    "electron-builder-squirrel-windows": "^19.53.7",
+    "electron-builder": "^19.55.0",
+    "electron-builder-squirrel-windows": "^19.55.0",
     "electron-devtools-installer": "^2.2.3",
     "electron-packager": "^8.7.2",
     "electron-react-devtools": "^0.4.0",
-    "electron-rebuild": "^1.7.3",
     "eslint": "^3.15.0",
     "eslint-plugin-react": "^6.9.0",
     "gulp": "^3.9.1",

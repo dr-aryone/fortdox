@@ -1,15 +1,24 @@
 const React = require('react');
 
 module.exports = class Searchbar extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.handleKeyDown = this.handleKeyDown.bind(this);
     this.handleKeyUp = this.handleKeyUp.bind(this);
+    this.onChange = this.onChange.bind(this);
     this.holdingModifier = false;
     this.onSearch = event => {
       event.preventDefault();
-      this.props.onSearch({freshSearch: true});
+      this.props.onSearch({freshSearch: true, searchString: this.state.searchString});
     };
+    this.state = {
+      searchString: props.savedSearchString
+    };
+  }
+  onChange(e) {
+    this.setState({
+      searchString: e.target.value
+    });
   }
   handleKeyDown(event) {
     if (this.holdingModifier && event.code === 'KeyL') {
@@ -33,17 +42,13 @@ module.exports = class Searchbar extends React.Component {
     window.removeEventListener('keyup', this.handleKeyUp);
   }
   render() {
-    const {
-      searchString,
-      onChange
-    } = this.props;
     return (
       <form onSubmit={this.onSearch} className='input-bar box'>
         <input
           name='searchString'
           type='text'
-          value={searchString}
-          onChange={onChange}
+          value={this.state.searchString}
+          onChange={this.onChange}
           placeholder='Search'
           autoFocus
           ref={e => this.inputField = e}

@@ -6,7 +6,7 @@ const {openDocument, previewDocument} = require('actions/document');
 
 const mapStateToProps = state => {
   return {
-    searchString: state.search.get('searchString'),
+    savedSearchString: state.search.get('searchString'),
     currentIndex: state.search.get('currentIndex'),
     error: state.search.get('error'),
     message: state.search.get('message'),
@@ -20,11 +20,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    onChange: (event) => {
-      dispatch(action.inputChange(event.target.name, event.target.value));
-    },
-    onSearch: ({index, freshSearch}) => {
-      dispatch(search.search({index, freshSearch}));
+    onSearch: args => {
+      dispatch(search.search(args));
     },
     onUpdate: id => {
       dispatch(openDocument(id));

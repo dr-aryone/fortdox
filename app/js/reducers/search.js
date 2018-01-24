@@ -14,17 +14,15 @@ const initialState = fromJS({
 
 const search = (state = initialState, action) => {
   switch (action.type) {
-    case 'INPUT_CHANGE_SEARCH':
-      return state.set(action.inputName, fromJS(action.inputValue));
     case 'SEARCH_START':
+      return state.set('isLoading', true).set('searchString', action.payload.searchString);
     case 'OPEN_DOCUMENT_START':
     case 'TAG_SEARCH_START':
       return state.set('isLoading', true);
     case 'OPEN_DOCUMENT_DONE':
       return state.set('isLoading', false);
     case 'OPEN_DOCUMENT_FAILED':
-      return state.set('isLoading', false)
-        .set('error', 'Unable to open document');
+      return state.set('isLoading', false).set('error', 'Unable to open document');
     case 'SEARCH_SUCCESS':
     case 'TAG_SEARCH_SUCCESS':
       return state.merge({
@@ -46,15 +44,6 @@ const search = (state = initialState, action) => {
         isLoading: false,
         totalHits: null
       });
-    case 'CHANGE_VIEW':
-      if (action.payload === 'UPDATE_DOC_VIEW' || action.payload === 'PREVIEW_DOC') {
-        return state.set({
-          message: null,
-          error: null
-        });
-      } else {
-        return initialState;
-      }
     case 'UPDATE_DOCUMENT_SUCCESS':
     case 'CREATE_DOCUMENT_SUCCESS':
     case 'DELETE_DOCUMENT_SUCCESS':
