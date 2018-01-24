@@ -2,14 +2,13 @@ const requestor = require('@edgeguideab/client-request');
 const config = require('../../config.json');
 const HITS_PER_PAGE = 12;
 
-const search = ({index = 1, freshSearch = false} = {}) => {
+const search = ({index = 1, freshSearch = false, searchString} = {}) => {
   return async (dispatch, getState) => {
-    let state = getState();
-    let searchString;
+    const state = getState();
     if (freshSearch) {
-      searchString = state.search.get('searchString') || '';
+      searchString = searchString || '';
     } else {
-      searchString = state.search.get('searchString') || state.search.get('searchedString') || '';
+      searchString = searchString || state.search.get('searchedString') || '';
     }
     dispatch({
       type: 'SEARCH_START',

@@ -2,7 +2,6 @@ const {app, BrowserWindow, ipcMain, Menu, shell} = require('electron');
 const path = require('path');
 const urlParser = require('url');
 const querystring = require('querystring');
-const { default: installExtension, REDUX_DEVTOOLS } = require('electron-devtools-installer');
 const config = require('./config.json');
 const autoUpdater = require('electron-updater').autoUpdater;
 const log = require('electron-log');
@@ -10,10 +9,14 @@ log.transports.file.level = 'info';
 let win;
 let redirectParameters = null;
 autoUpdater.logger = log;
-let dev_mode = false;
 let openWindow = false;
 let pollingJob;
-dev_mode = (process.argv[2] === '--dev') ? true : false;
+const devMode = (process.argv[2] === '--dev') ? true : false;
+let devtools = {};
+if (devMode) {
+  devtools = require('electron-devtools-installer');
+}
+const { default: installExtension, REDUX_DEVTOOLS } = devtools;
 app.setAsDefaultProtocolClient(config.name);
 
 const isSecondInstance = app.makeSingleInstance((commandLine, workingDirectory) => {
@@ -67,7 +70,7 @@ function createBrowserWindow() {
     height: 720,
     icon: path.join(__dirname, config.logo)
   });
-  if (dev_mode) {
+  if (devMode) {
     win.webContents.openDevTools();
     installExtension(REDUX_DEVTOOLS);
   }

@@ -2,7 +2,8 @@ const inputChange = (inputName, inputValue) => {
   return (dispatch, getState) => {
     let state = getState();
     let type;
-    switch (state.navigation.get('currentView')) {
+    const currentView = state.navigation.get('currentView');
+    switch (currentView) {
       case 'ACTIVATE_ORGANIZATION_VIEW':
         type ='INPUT_CHANGE_ACTIVATE_ORGANIZATION';
         break;
@@ -18,16 +19,15 @@ const inputChange = (inputName, inputValue) => {
       case 'UPDATE_DOC_VIEW':
         type = 'INPUT_CHANGE_UPDATE_DOC';
         break;
-      case 'SEARCH_VIEW':
-      case 'USER_VIEW':
-        type = 'INPUT_CHANGE_SEARCH';
-        break;
       case 'INVITE_USER_VIEW':
         type = 'INPUT_CHANGE_INVITE_USER';
         break;
       case 'VERIFY_USER_VIEW':
         type = 'INPUT_CHANGE_VERIFY_USER';
         break;
+      default:
+        console.error(`Unknown view ${currentView}`);
+        return;
     }
     return dispatch({
       type,
