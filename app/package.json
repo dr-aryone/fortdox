@@ -25,12 +25,13 @@
     "@edgeguideab/client-request": "^1.4.8",
     "@edgeguideab/password-check": "^1.2.6",
     "@edgeguideab/requestor": "^1.1.8",
+    "clipboard-js": "^0.3.6",
     "electron-log": "^2.2.14",
     "electron-updater": "^2.19.1",
     "immutable": "^3.8.2",
     "js-yaml": "^3.10.0",
-    "react": "^15.6.2",
-    "react-dom": "^15.6.2",
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0",
     "react-markdown": "^2.5.1",
     "react-redux": "^5.0.6",
     "react-router": "^3.2.0",
@@ -38,6 +39,7 @@
     "redux-thunk": "^2.2.0",
     "remarkable": "^1.7.1",
     "remarkable-react": "^1.0.1",
+    "styled-components": "^3.1.6",
     "uuid": "^3.2.1"
   },
   "devDependencies": {

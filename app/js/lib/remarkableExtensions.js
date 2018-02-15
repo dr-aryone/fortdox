@@ -1,5 +1,6 @@
 module.exports = {
-  privateKeyParser
+  privateKeyParser,
+  copyParser
 };
 
 function privateKeyParser(state, startLine, endLine) {
@@ -41,6 +42,26 @@ function privateKeyParser(state, startLine, endLine) {
   });
 
   state.line = currentLineIndex;
+
+  return true;
+}
+
+function copyParser(state) {
+  const {src: currentLine} = state;
+  const regexp = /@(copy|password)@([^@].*?)@(copy|password)@/g;
+  let match = regexp.exec(currentLine);
+  if (!match) return false;
+  while (match) {
+    let content = match[2];
+    state.pos += match[4] + content.length;
+    state.tokens.push({
+      type: 'copy',
+      content: content,
+      level: state.level,
+      title: match[1]
+    });
+    match = regexp.exec(currentLine);
+  }
 
   return true;
 }
