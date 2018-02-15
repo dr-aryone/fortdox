@@ -5,8 +5,9 @@ const DocumentTags = require('./form/DocumentTags');
 const Attachments = require('./form/Attachments');
 const Remarkable = require('remarkable');
 const RemarkableReactRenderer = require('remarkable-react');
-const {privateKeyParser} = require('lib/remarkableExtensions');
+const {privateKeyParser, copyParser} = require('lib/remarkableExtensions');
 const PrivateKey = require('./customMarkdown/PrivateKey');
+const Copy = require('./customMarkdown/Copy');
 const SearchField = require('./components/SearchField');
 
 let markdown = new Remarkable({
@@ -15,13 +16,16 @@ let markdown = new Remarkable({
 });
 
 markdown.block.ruler.before('code', 'privatekey', privateKeyParser);
+markdown.inline.ruler.push('copy', copyParser);
 
 markdown.renderer = new RemarkableReactRenderer({
   components: {
-    privatekey: PrivateKey
+    privatekey: PrivateKey,
+    copy: Copy    
   },
   tokens: {
     privatekey: 'privatekey',
+    copy: 'copy',    
   }
 });
 

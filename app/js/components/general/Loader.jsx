@@ -97,8 +97,8 @@ class Loader extends React.Component {
     };
   }
   componentDidMount() {
-    this.scalePath(this.refs.path);
-    this.rotateWrapper(this.refs.wrapper);
+    this.scalePath(this.path);
+    this.rotateWrapper(this.wrapper);
   }
   componentWillUnmount() {
     clearTimeout(this.scalePathTimer);
@@ -154,13 +154,13 @@ class Loader extends React.Component {
 
     return (
       <div {...other} style={Object.assign(styles.root, style)} >
-        <div ref='wrapper' style={Object.assign(styles.wrapper, innerStyle)} >
+        <div ref={e => this.wrapper = e} style={Object.assign(styles.wrapper, innerStyle)} >
           <svg
             viewBox={`0 0 ${size} ${size}`}
             style={styles.svg}
           >
             <circle
-              ref='path'
+              ref={e => this.path = e}
               style={styles.path}
               cx={size / 2}
               cy={size / 2}

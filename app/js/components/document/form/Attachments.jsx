@@ -15,7 +15,7 @@ class Attachments extends React.Component {
   }
 
   clickHandler() {
-    this.refs.fileField.click();
+    this.fileField.click();
   }
 
   openModal(attachment, index, onPreviewAttachment) {
@@ -77,7 +77,7 @@ class Attachments extends React.Component {
 
     let inputs = onAddAttachment ? (
       <div className='upload'>
-        <input type='file' ref='fileField' onChange={event => onAddAttachment(event)} multiple />
+        <input type='file' ref={e => this.fileField = e} onChange={event => onAddAttachment(event)} multiple />
         <button type='button' onClick={() => this.clickHandler()}>Select File</button>
       </div>
     ) : null;
