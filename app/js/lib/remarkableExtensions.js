@@ -48,20 +48,18 @@ function privateKeyParser(state, startLine, endLine) {
 
 function copyParser(state) {
   const {src: currentLine} = state;
-  const regexp = /@(copy|password)@([^@].*?)@(copy|password)@/g;
+  const regexp = /@(copy|password)@(.*?)@(copy|password)@/g;
   let match = regexp.exec(currentLine);
-  if (!match) return false;
-  while (match) {
-    let content = match[2];
-    state.pos += match[4] + content.length;
-    state.tokens.push({
-      type: 'copy',
-      content: content,
-      level: state.level,
-      title: match[1]
-    });
-    match = regexp.exec(currentLine);
-  }
+  if (!match || match.index !== state.pos) return false;
+  let content = match[2];
+  state.pos += match[0].length;
+  state.push({
+    type: 'copy',
+    content: content,
+    block: false,
+    level: state.level,
+    title: match[1]
+  });
 
   return true;
 }

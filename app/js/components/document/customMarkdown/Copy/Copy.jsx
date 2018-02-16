@@ -1,7 +1,7 @@
 const React = require('react');
 const clipboard = require('clipboard-js');
 const Icon = require('./Icon');
-const {Wrapper, Input, Button} = require('./styled');
+const {Wrapper, ValueField, Button} = require('./styled');
 
 module.exports = class Copy extends React.Component {
   constructor(props) {
@@ -14,7 +14,7 @@ module.exports = class Copy extends React.Component {
 
     return (
       <Wrapper>
-        <Input disabled type={type} value={content} />
+        <ValueField>{type === 'password' ? content.replace(/./g, '•') : content}</ValueField>
         <Button onClick={this.onCopyClick}>
           <Icon />
         </Button>
