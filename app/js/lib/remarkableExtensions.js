@@ -46,20 +46,21 @@ function privateKeyParser(state, startLine, endLine) {
   return true;
 }
 
-function copyParser(state) {
+function copyParser(state, silent) {
   const {src: currentLine} = state;
   const regexp = /@(copy|password)@(.*?)@(copy|password)@/g;
-  let match = regexp.exec(currentLine);
-  if (!match || match.index !== state.pos) return false;
+  let match = regexp.exec(currentLine.substring(state.pos));
+  if (!match || match.index !== 0) return false;
   let content = match[2];
   state.pos += match[0].length;
-  state.push({
-    type: 'copy',
-    content: content,
-    block: false,
-    level: state.level,
-    title: match[1]
-  });
+  if (!silent) {
+    state.push({
+      type: 'copy',
+      content: content,
+      level: state.level,
+      title: match[1]
+    });
+  }
 
   return true;
 }
