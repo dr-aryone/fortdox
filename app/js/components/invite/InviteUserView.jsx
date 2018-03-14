@@ -5,7 +5,17 @@ const ErrorBox = require('components/general/ErrorBox');
 const UserList = require('./UserListContainer');
 
 
-const InviteUserView = ({fields, message, error, onChange, onSend, isLoading}) => {
+const InviteUserView = props => {
+  let {
+    fields,
+    message,
+    error,
+    onChange,
+    onSend,
+    isLoading,
+    onDeleteUser
+  } = props;
+
   let concatMessage = [];
   if (typeof message === 'object' && message !== null) {
     message.entrySeq().forEach((entry) => {
@@ -20,11 +30,15 @@ const InviteUserView = ({fields, message, error, onChange, onSend, isLoading}) =
     </div>
   ) : null;
 
+  let msg = message ?
+    <span>{message.get('text')}<b>{message.get('bold')}</b>{message.get('text2')}</span>
+  : null;
+
   return (
     <div className='container-fluid'>
       <div className='inner-container'>
         <LoaderOverlay display={isLoading} />
-        <MessageBox message={message} />
+        <MessageBox message={msg} />
         <ErrorBox errorMsg={error} />
         <div className='preview'>
           <div className='title'>
@@ -47,7 +61,7 @@ const InviteUserView = ({fields, message, error, onChange, onSend, isLoading}) =
             {errorMsg}
           </div>
         </div>
-        <UserList />
+        <UserList onDeleteUser={onDeleteUser} />
       </div>
     </div>
   );

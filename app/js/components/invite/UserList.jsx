@@ -9,18 +9,23 @@ module.exports = class UserList extends React.Component {
     } = this.props;
     onMount();
   }
+
   render() {
     const {
       loading,
       error,
-      users
+      users,
+      onDeleteUser
     } = this.props;
+
     const domUsers = users.map(user => (
       <div className={`user ${user.pending ? 'pending' : ''}`} key={user.email}>
         <span className='email'>{user.email}</span>
         <span className='pending'>{user.pending ? '(Pending)' : ''}</span>
+        <i className='material-icons' onClick={() => onDeleteUser(user.email)}>clear</i>
       </div>
     ));
+
     return (
       <div className='user-list'>
         <div className='preview'>

@@ -29,5 +29,13 @@
         margin-left: 10px;
       }
     }
+
+    > i.material-icons {
+      color: $red;
+
+      &:hover{
+        cursor: pointer;
+      }
+    }
   }
 }
