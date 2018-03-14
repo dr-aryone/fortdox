@@ -210,4 +210,31 @@ const verifyUser = () => {
   };
 };
 
-module.exports = {inviteUser, receivePrivateKey, verifyUser};
+const deleteUser = email => {
+  return async dispatch => {
+    dispatch({
+      type: 'DELETE_USER_START'
+    });
+    try {
+      await requestor.delete(`${config.server}/users/${email}`);
+    } catch (error) {
+      console.error(error);
+      let message = 'Server error';
+      switch (error.status) {
+        case 500:
+          message = 'Return internal server error';
+          break;
+      }
+      return dispatch({
+        type: 'DELETE_USER_ERROR',
+        message
+      });
+    }
+
+    dispatch({
+      type: 'DELETE_USER_SUCCESS'
+    });
+  };
+};
+
+module.exports = {inviteUser, receivePrivateKey, verifyUser, deleteUser};

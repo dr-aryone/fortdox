@@ -1,14 +1,24 @@
 'use strict';
-
+const config = require('../config.json');
 const nodemailer = require('nodemailer');
 const {firstTimeRegistration} = require('./templates.js');
 const {newUserRegistration} = require('./templates.js');
 
 let transporter = nodemailer.createTransport({
-  service: 'gmail',
+  host: 'mailcluster.loopia.se',
+  secure: true,
+  port: 465,
   auth: {
-    user: 'edgeguidetester@gmail.com',
-    pass: 'edgegu1de'
+    user: config.mailer.email,
+    pass: config.mailer.password
+  }
+});
+
+transporter.verify(function(error) {
+  if (error) {
+    console.log(error);
+  } else {
+    console.log('Mailer is ready');
   }
 });
 
@@ -23,6 +33,7 @@ function send(mailOptions) {
       if (error) {
         return reject(error);
       }
+      console.log('Message %s sent: %s', info.messageId, info.response);
       resolve('Message %s sent: %s', info.messageId, info.response);
     });
   });

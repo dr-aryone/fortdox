@@ -15,6 +15,19 @@ const store = (uuid, encryptedPrivateKey) => {
   });
 };
 
+const exist = (uuid) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let tempKey;
+      await db.TempKeys.findOne({ where: {uuid}});
+      if (tempKey) return resolve(true);
+      else return resolve(false);
+    } catch (error) {
+      return reject(500);
+    }
+  });
+};
+
 const remove = (uuid) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -32,4 +45,4 @@ const remove = (uuid) => {
   });
 };
 
-module.exports = {store, remove};
+module.exports = {store, exist, remove};

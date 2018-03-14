@@ -7,10 +7,11 @@ const getUser = email => {
     try {
       user = await db.User.findOne({
         where: {
-          email: email
+          email
         },
         include: [db.Organization]
       });
+      if (!user) return reject(404);
       return resolve(user);
     } catch (error) {
       console.error(error);

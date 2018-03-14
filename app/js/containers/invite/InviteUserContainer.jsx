@@ -1,7 +1,7 @@
 const {connect} = require('react-redux');
 const InviteUserView = require('components/invite/InviteUserView');
 const action = require('actions');
-const {inviteUser} = require('actions/invite');
+const {inviteUser, deleteUser} = require('actions/invite');
 
 const mapStateToProps = state => {
   return {
@@ -20,6 +20,9 @@ const mapDispatchToProps = dispatch => {
     onSend: (event) => {
       event.preventDefault();
       dispatch(inviteUser());
+    },
+    onDeleteUser: email => {
+      dispatch(deleteUser(email));
     }
   };
 };

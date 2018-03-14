@@ -19,14 +19,13 @@ async function user(req, res) {
   let newUserEmail = req.body.newUserEmail;
   let email = req.body.email;
   let encryptedMasterPassword;
-  let organizationId;
+  let organizationId = req.session.organizationId;
   let keypair;
   let sender;
   let uuid = uuidv1();
   try {
     sender = await users.getUser(email);
     encryptedMasterPassword = sender.password;
-    organizationId = sender.organizationId;
     keypair = await keygen.genKeyPair();
   } catch (error) {
     logger.log('silly', `Could not find sender ${email} @ /invite`);
