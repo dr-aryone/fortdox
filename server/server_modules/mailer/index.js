@@ -33,7 +33,6 @@ function send(mailOptions) {
       if (error) {
         return reject(error);
       }
-      console.log('Message %s sent: %s', info.messageId, info.response);
       resolve('Message %s sent: %s', info.messageId, info.response);
     });
   });

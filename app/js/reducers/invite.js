@@ -36,11 +36,17 @@ const invite = (state = initialState, action) => {
         isLoading: false
       });
     case 'INVITE_USER_SUCCESS':
+      return initialState.set('message', fromJS(action.payload));
+    case 'DELETE_USER_START':
+      return state.set('isLoading', true);
+    case 'DELETE_USER_ERROR':
       return state.merge({
+        message: null,
         isLoading: false,
-        error: null,
-        message: fromJS(action.payload)
-      }).setIn(['fields', 'email', 'value'], '');
+        error: fromJS(action.payload)
+      });
+    case 'DELETE_USER_SUCCESS':
+      return initialState.set('message', fromJS(action.payload));
     case 'CHANGE_VIEW':
       return initialState;
     default:

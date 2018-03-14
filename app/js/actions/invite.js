@@ -232,7 +232,11 @@ const deleteUser = email => {
     }
 
     dispatch({
-      type: 'DELETE_USER_SUCCESS'
+      type: 'DELETE_USER_SUCCESS',
+      payload: {
+        bold: `${email}`,
+        text: ' is successfully deleted form the organization.'
+      }
     });
   };
 };

@@ -31,7 +31,7 @@ const InviteUserView = props => {
   ) : null;
 
   let msg = message ?
-    <span>{message.get('text')}<b>{message.get('bold')}</b>{message.get('text2')}</span>
+    <span>{message.get('text')}<b>{message.get('bold')}</b>{message.get('text2') ? message.get('text2') : null}</span>
   : null;
 
   return (
