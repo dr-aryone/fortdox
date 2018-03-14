@@ -15,11 +15,15 @@ const store = (uuid, encryptedPrivateKey) => {
   });
 };
 
-const exist = (uuid) => {
+const exist = uuid => {
   return new Promise(async (resolve, reject) => {
     try {
       let tempKey;
-      await db.TempKeys.findOne({ where: {uuid}});
+      tempKey = await db.TempKeys.findOne({
+        where: {
+          uuid
+        }
+      });
       if (tempKey) return resolve(true);
       else return resolve(false);
     } catch (error) {
