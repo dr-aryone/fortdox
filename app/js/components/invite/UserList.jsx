@@ -49,7 +49,9 @@ module.exports = class UserList extends React.Component {
       <div className={`user ${user.pending ? 'pending' : ''}`} key={user.email}>
         <span className='email'>{user.email}</span>
         <span className='pending'>{user.pending ? '(Pending)' : ''}</span>
-        <i className='material-icons' onClick={() => this.openModal(user.email)}>clear</i>
+        {this.props.user !== user.email ?
+          <i className='material-icons' onClick={() => this.openModal(user.email)}>clear</i>
+          : null }
       </div>
     ));
 
