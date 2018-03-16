@@ -2,6 +2,7 @@ const {connect} = require('react-redux');
 const InviteUserView = require('components/invite/InviteUserView');
 const action = require('actions');
 const {inviteUser, deleteUser} = require('actions/invite');
+const {list} = require('actions/organization');
 
 const mapStateToProps = state => {
   return {
@@ -14,15 +15,17 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    onChange: (event) => {
+    onChange: event => {
       dispatch(action.inputChange(event.target.name, event.target.value));
     },
-    onSend: (event) => {
+    onSend: async event => {
       event.preventDefault();
-      dispatch(inviteUser());
+      await dispatch(inviteUser());
+      dispatch(list());
     },
-    onDeleteUser: email => {
-      dispatch(deleteUser(email));
+    onDeleteUser: async email => {
+      await dispatch(deleteUser(email));
+      dispatch(list());
     }
   };
 };
