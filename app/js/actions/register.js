@@ -112,9 +112,9 @@ const registerOrganization = () => {
     let state = getState();
     let fields = state.register.get('registerFields');
     let emptyFields = checkEmptyFields(fields);
-    if (emptyFields.length > 0) {
+    if (emptyFields.count() > 0) {
       let newFields = {};
-      emptyFields.forEach((key) => {
+      emptyFields.forEach(key => {
         let error;
         switch (key[0]) {
           case 'organization':
