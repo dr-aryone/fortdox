@@ -14,9 +14,9 @@ const inviteUser = () => {
     let state = getState();
     let fields = state.invite.get('fields');
     let emptyFields = checkEmptyFields(fields);
-    if (emptyFields.length > 0) {
+    if (emptyFields.count() > 0) {
       let errorField = {};
-      errorField[emptyFields[0][0]] = {
+      errorField[emptyFields.get(0)[0]] = {
         error: 'Please enter an email'
       };
       return dispatch({
@@ -24,6 +24,8 @@ const inviteUser = () => {
         payload: errorField
       });
     }
+
+
     let newUserEmail = fields.getIn(['email', 'value']);
     let email = state.user.get('email');
     try {
