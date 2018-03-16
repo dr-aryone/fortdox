@@ -25,7 +25,6 @@ const inviteUser = () => {
       });
     }
 
-
     let newUserEmail = fields.getIn(['email', 'value']);
     let email = state.user.get('email');
     try {
@@ -213,10 +212,17 @@ const verifyUser = () => {
 };
 
 const deleteUser = email => {
-  return async dispatch => {
+  return async (dispatch, getState) => {
     dispatch({
       type: 'DELETE_USER_START'
     });
+
+    const user = getState().user.get('email');
+    if (user === email) return dispatch({
+      type: 'DELETE_USER_ERROR',
+      payload: 'You can\'t remove yourself from the organization'
+    });
+
     try {
       await requestor.delete(`${config.server}/users/${email}`);
     } catch (error) {
@@ -225,6 +231,9 @@ const deleteUser = email => {
       switch (error.status) {
         case 500:
           message = 'Return internal server error';
+          break;
+        case 404:
+          message = `${email} can\' be found.`;
           break;
       }
       return dispatch({

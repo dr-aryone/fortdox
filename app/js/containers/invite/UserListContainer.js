@@ -4,6 +4,7 @@ const {list} = require('actions/organization');
 
 const mapStateToProps = state => {
   return {
+    user: state.user.get('email'),
     users: state.organization.get('users'),
     loading: state.organization.get('loading'),
     error: state.organization.get('error')
