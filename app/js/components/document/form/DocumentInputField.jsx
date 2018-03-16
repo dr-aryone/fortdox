@@ -10,7 +10,7 @@ const DocumentInputField = ({input, type, onChange}) => {
         type={type}
         value={input.get('value')}
       />
-      <div className='arrow-box'>
+      <div className={`arrow-box ${input.get('error') ? 'show' : ''}`}>
         <span className='material-icons'>error_outline</span>
         {input.get('error')}
       </div>

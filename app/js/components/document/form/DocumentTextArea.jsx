@@ -18,7 +18,7 @@ const DocumentTextArea = ({input, type, onChange, onRemoveField}) => {
           style={style}
         />
       </div>
-      <div className='arrow-box'>
+      <div className={`arrow-box ${input.get('error') ? 'show' : ''}`}>
         <span className='material-icons'>error_outline</span>
         {input.get('error')}
       </div>

@@ -6,6 +6,7 @@
   input {
     flex-grow: 1;
     margin: 15px;
+    margin-bottom: 10px;
   }
 
   .textarea {
@@ -22,6 +23,10 @@
 
   &.warning textarea {
     border: 1px solid $red;
+  }
+
+  .arrow-box {
+    margin: 0px 15px 15px 15px;
   }
 }
 
