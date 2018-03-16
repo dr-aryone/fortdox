@@ -235,7 +235,7 @@ const deleteUser = email => {
       type: 'DELETE_USER_SUCCESS',
       payload: {
         bold: `${email}`,
-        text: ' is successfully deleted form the organization.'
+        text2: ' has been successfully removed form the organization.'
       }
     });
   };

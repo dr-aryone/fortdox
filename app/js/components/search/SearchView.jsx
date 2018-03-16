@@ -26,7 +26,13 @@ const SearchView = ({
   let searchResult = [];
   result.forEach((doc, index) => {
     searchResult.push(
-      <SearchItem doc={doc} onUpdate={onUpdate} onPreview={onPreview} onTagSearch={onTagSearch} key={index} />
+      <SearchItem
+        doc={doc}
+        onUpdate={onUpdate}
+        onPreview={onPreview}
+        onTagSearch={onTagSearch}
+        key={index}
+      />
     );
   });
 

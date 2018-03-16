@@ -1,5 +1,5 @@
 const {connect} = require('react-redux');
-const UserList = require('./UserList');
+const UserList = require('components/invite/UserList');
 const {list} = require('actions/organization');
 
 const mapStateToProps = state => {
