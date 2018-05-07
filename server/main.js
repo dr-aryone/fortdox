@@ -7,7 +7,7 @@ const logger = require('app/logger');
 const routes = require('./routes');
 const PORT = 8000;
 
-const job = new CronJob('0 0/5 * * * * *', async () => {
+const job = new CronJob('*/30 * * * *', async () => {
   try {
     await cleanup();
   } catch (error) {
