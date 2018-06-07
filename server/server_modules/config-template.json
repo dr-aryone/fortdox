@@ -8,5 +8,14 @@
     "host": "127.0.0.1",
     "dialect": "mysql",
     "logging": false
+  },
+  "mailer": {
+    "host": "{mail server}",
+    "secure": true,
+    "port": 465,
+    "auth": {
+      "user": "{your username}",
+      "pass": "{your password}"
+    }
   }
 }

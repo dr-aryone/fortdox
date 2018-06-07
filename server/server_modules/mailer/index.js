@@ -4,15 +4,7 @@ const nodemailer = require('nodemailer');
 const {firstTimeRegistration} = require('./templates.js');
 const {newUserRegistration} = require('./templates.js');
 
-let transporter = nodemailer.createTransport({
-  host: 'mailcluster.loopia.se',
-  secure: true,
-  port: 465,
-  auth: {
-    user: config.mailer.email,
-    pass: config.mailer.password
-  }
-});
+let transporter = nodemailer.createTransport(config.mailer);
 
 transporter.verify(function(error) {
   if (error) {
