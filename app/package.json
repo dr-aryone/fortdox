@@ -2,7 +2,7 @@
   "name": "fortdox",
   "productName": "FortDox",
   "description": "Secure password handling for collaboration",
-  "version": "1.2.7",
+  "version": "1.3.0",
   "author": "EdgeGuide <info@edgeguide.com>",
   "main": "main.js",
   "homepage": "https://edgeguide.se",
