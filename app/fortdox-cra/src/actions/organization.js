@@ -5,7 +5,7 @@ export default {
   list
 };
 
-function list() {
+export function list() {
   return async dispatch => {
     dispatch({
       type: 'LIST_USERS_START'

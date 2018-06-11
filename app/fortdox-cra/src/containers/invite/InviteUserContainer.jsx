@@ -1,8 +1,8 @@
+import { inviteUser, deleteUser } from 'actions/invite';
 const { connect } = require('react-redux');
-const InviteUserView = require('../../components/invite/InviteUserView');
+const InviteUserView = require('components/invite/InviteUserView');
 const action = require('../../actions');
-const { inviteUser, deleteUser } = require('../../actions/invite');
-const { list } = require('../../actions/organization');
+const { list } = require('actions/organization');
 
 const mapStateToProps = state => {
   return {

@@ -5,7 +5,7 @@ const config = require('config.json');
 const { writeStorage } = require('actions/utilities/storage');
 const checkEmptyFields = require('actions/utilities/checkEmptyFields');
 
-const inviteUser = () => {
+export const inviteUser = () => {
   return async (dispatch, getState) => {
     dispatch({
       type: 'INVITE_USER_START'
@@ -76,7 +76,7 @@ const inviteUser = () => {
   };
 };
 
-const receivePrivateKey = () => {
+export const receivePrivateKey = () => {
   return async (dispatch, getState) => {
     let state = getState();
     let uuid = state.verifyUser.get('uuid');
@@ -112,7 +112,7 @@ const receivePrivateKey = () => {
   };
 };
 
-const verifyUser = () => {
+export const verifyUser = () => {
   return async (dispatch, getState) => {
     dispatch({
       type: 'VERIFY_NEW_USER_START'
@@ -216,7 +216,7 @@ const verifyUser = () => {
   };
 };
 
-const deleteUser = email => {
+export const deleteUser = email => {
   return async (dispatch, getState) => {
     dispatch({
       type: 'DELETE_USER_START'
