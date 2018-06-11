@@ -10,7 +10,7 @@ export default {
   openDocument
 };
 
-function createDocument() {
+export function createDocument() {
   return async (dispatch, getState) => {
     dispatch({
       type: 'CREATE_DOCUMENT_START'
@@ -91,7 +91,7 @@ function createDocument() {
   };
 }
 
-function updateDocument() {
+export function updateDocument() {
   return async (dispatch, getState) => {
     dispatch({
       type: 'UPDATE_DOCUMENT_START'
@@ -172,7 +172,7 @@ function updateDocument() {
   };
 }
 
-function deleteDocument() {
+export function deleteDocument() {
   return async (dispatch, getState) => {
     dispatch({
       type: 'DELETE_DOCUMENT_START'
@@ -287,7 +287,7 @@ function openDocument(id, skipTimeout, showPreview) {
   };
 }
 
-function previewDocument(id, skipTimeout) {
+export function previewDocument(id, skipTimeout) {
   return async (dispatch, getState) => {
     dispatch({
       type: 'PREVIEW_DOCUMENT_START'
@@ -305,7 +305,7 @@ function previewDocument(id, skipTimeout) {
   };
 }
 
-function checkEmptyDocFields(docFields) {
+export function checkEmptyDocFields(docFields) {
   let titleField = docFields.get('title');
   let encryptedTextFields = docFields.get('encryptedTexts');
   let textFields = docFields.get('texts');

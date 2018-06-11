@@ -3,7 +3,7 @@ const requestor = require('@edgeguideab/client-request');
 const { getPrefix } = require('./utilities');
 const config = require('config.json');
 
-const addField = field => {
+export const addField = field => {
   return (dispatch, getState) => {
     let state = getState();
     let { view, prefix } = getPrefix(state.navigation.get('currentView'));
@@ -43,7 +43,7 @@ const addField = field => {
   };
 };
 
-const removeField = id => {
+export const removeField = id => {
   return (dispatch, getState) => {
     let state = getState();
     let { view, prefix } = getPrefix(state.navigation.get('currentView'));
@@ -64,7 +64,7 @@ const removeField = id => {
   };
 };
 
-const docInputChange = (inputID, inputValue, type) => {
+export const docInputChange = (inputID, inputValue, type) => {
   return (dispatch, getState) => {
     let state = getState();
     let { view, prefix } = getPrefix(state.navigation.get('currentView'));
@@ -100,7 +100,7 @@ const docInputChange = (inputID, inputValue, type) => {
 let typingTimeout;
 let lastEvent;
 let typingWindow = 500;
-const docTitleChange = value => {
+export const docTitleChange = value => {
   return async dispatch => {
     if (!value) {
       clearTimeout(typingTimeout);
@@ -165,7 +165,7 @@ const docTitleChange = value => {
   };
 };
 
-const clearSimilarDocuments = () => {
+export const clearSimilarDocuments = () => {
   return {
     type: 'DOCUMENT_TITLE_LOOKUP_CLEAR'
   };

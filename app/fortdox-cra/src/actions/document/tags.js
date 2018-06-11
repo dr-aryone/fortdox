@@ -2,7 +2,7 @@ const requestor = require('@edgeguideab/client-request');
 const config = require('config.json');
 const { getPrefix } = require('./utilities');
 
-const addTag = tag => {
+export const addTag = tag => {
   return (dispatch, getState) => {
     let state = getState();
     let { view, prefix } = getPrefix(state.navigation.get('currentView'));
@@ -23,7 +23,7 @@ const addTag = tag => {
   };
 };
 
-const removeTag = tagIndex => {
+export const removeTag = tagIndex => {
   return (dispatch, getState) => {
     let state = getState();
     let { view, prefix } = getPrefix(state.navigation.get('currentView'));
@@ -36,7 +36,7 @@ const removeTag = tagIndex => {
   };
 };
 
-const getOldTags = () => {
+export const getOldTags = () => {
   return async (dispatch, getState) => {
     let state = getState();
     let { prefix } = getPrefix(state.navigation.get('currentView'));
@@ -73,7 +73,7 @@ const getOldTags = () => {
   };
 };
 
-const suggestTags = inputValue => {
+export const suggestTags = inputValue => {
   return (dispatch, getState) => {
     if (inputValue.slice(-1) === ' ') return dispatch(addTag());
     let state = getState();
@@ -92,7 +92,7 @@ const suggestTags = inputValue => {
   };
 };
 
-const setTagIndex = index => {
+export const setTagIndex = index => {
   return dispatch => {
     return dispatch({
       type: 'CREATE_DOCUMENT_SET_TAG_INDEX',

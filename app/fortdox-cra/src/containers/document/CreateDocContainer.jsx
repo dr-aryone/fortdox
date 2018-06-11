@@ -1,6 +1,6 @@
+import documentActions from 'actions/document';
 const { connect } = require('react-redux');
 const CreateDocView = require('../../components/document/CreateDocView');
-const documentActions = require('../../actions/document');
 const action = require('../../actions');
 
 const mapStateToProps = state => {
@@ -81,4 +81,4 @@ const CreateDocContainer = connect(
   mapDispatchToProps
 )(CreateDocView);
 
-module.exports = CreateDocContainer;
+export default CreateDocContainer;
