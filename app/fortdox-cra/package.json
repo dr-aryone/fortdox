@@ -4,11 +4,14 @@
   "private": true,
   "homepage": "./",
   "dependencies": {
+    "node-sass-chokidar": "^1.3.0",
     "react": "^16.4.0",
     "react-dom": "^16.4.0",
     "react-scripts": "1.1.4"
   },
   "scripts": {
+    "build-css": "node-sass-chokidar styles/ -o public/css/",
+    "watch-css": "npm run build-css && node-sass-chokidar styles/ -o public/css/ --watch --recursive",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",

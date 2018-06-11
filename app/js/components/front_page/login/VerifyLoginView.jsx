@@ -31,7 +31,7 @@ const PasswordView = ({
       {errorMsg}
       {warningMsg}
       <div className='logo'>
-        <img src={window.__dirname + '/resources/logo.png'} />
+        <img src={process.env.PUBLIC_URL + '/resources/logo.png'} />
       </div>
       <h1 className='text-center'>{organization}</h1>
       <div className='box'>

@@ -66,7 +66,7 @@ class LoginView extends React.Component {
         <MessageBox message={concatMessage} />
         {warningMsg}
         <div className='logo'>
-          <img src={window.__dirname + '/resources/logo.png'} />
+          <img src={process.env.PUBLIC_URL + '/resources/logo.png'} />
         </div>
         <h1 className='text-center'>{config.name}</h1>
         <div

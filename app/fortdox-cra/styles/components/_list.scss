@@ -1,0 +1,41 @@
+.user-list {
+  display: flex;
+  .alert {
+    margin: 20px;
+  }
+}
+
+.organization-users {
+  display: flex;
+  flex-direction: column;
+  .user {
+    display: flex;
+    align-items: center;
+    margin: 10px 10px 0 10px;
+    &:last-child {
+      margin-bottom: 10px;
+    }
+    &.pending .email {
+      color: lighten($text-color, 30%);
+    }
+    > span.email {
+      padding: 10px;
+      background-color: $grey;
+      border-radius: 3px;
+    }
+    > span.pending {
+      font-size: 10px;
+      &:not(:empty) {
+        margin-left: 10px;
+      }
+    }
+
+    > i.material-icons {
+      color: $red;
+
+      &:hover{
+        cursor: pointer;
+      }
+    }
+  }
+}

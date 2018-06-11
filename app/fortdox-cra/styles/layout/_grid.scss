@@ -1,0 +1,40 @@
+.wrapper {
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: calc(100vh - #{$header-height});
+}
+
+.container-fluid {
+  margin-top: $header-height;
+  height: 100%;
+  overflow-y: auto;
+
+  &.center-middle {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    position: relative;
+
+    .alert {
+      position: absolute;
+      top: 0px;
+      width: percentage(8/12);
+      margin-top: 15px;
+    }
+  }
+
+  &.center {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+  }
+}
+
+.inner-container {
+  width: percentage(8/12);
+  margin-left: percentage(2/12);
+  height: 100%;
+  box-sizing: border-box;
+}

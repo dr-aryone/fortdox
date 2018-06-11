@@ -1,0 +1,39 @@
+@import
+  'abstracts/variables',
+  'abstracts/mixins',
+  'abstracts/typography';
+
+@import
+  'components/alerts',
+  'components/arrow-box',
+  'components/box',
+  'components/buttons',
+  'components/dialog',
+  'components/input',
+  'components/loader',
+  'components/modal',
+  'components/download-manager',
+  'components/splash-screen',
+  'components/toast',
+  'components/tags',
+  'components/list';
+
+@import
+  'layout/grid',
+  'layout/header',
+  'layout/side-nav';
+
+@import
+  'pages/doc-page',
+  'pages/full-page',
+  'pages/login-page',
+  'pages/search-page',
+  'pages/user-page';
+
+  body {
+    overflow: hidden;
+    margin: 0px;
+    font-family: map-deep-get($text-styles, 'text', 'font-family');
+    font-size: map-deep-get($text-styles, 'text', 'font-size');
+    background-color: $background-color;
+  }
