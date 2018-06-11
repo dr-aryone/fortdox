@@ -1,3 +1,4 @@
+import { HITS_PER_PAGE } from 'actions/search';
 const React = require('react');
 const SearchItem = require('./SearchItem');
 const Searchbar = require('./Searchbar');
@@ -5,7 +6,6 @@ const LoaderOverlay = require('../../components/general/LoaderOverlay');
 const ErrorBox = require('../../components/general/ErrorBox');
 const MessageBox = require('components/general/MessageBox');
 const PreviewDocContainer = require('containers/document/PreviewDocContainer');
-const { HITS_PER_PAGE } = require('actions/search');
 
 const SearchView = ({
   currentIndex,
@@ -106,7 +106,7 @@ function renderPagination(currentIndex, onSearch, totalHits) {
           onClick={() => onSearch(start + i)}
           className={`pagination ${
             start + i === currentIndex ? 'focused' : ''
-          }`}
+            }`}
           key={start + i}
         >
           {start + i}
@@ -134,7 +134,7 @@ function renderPagination(currentIndex, onSearch, totalHits) {
         </button>
       );
     pagination.push(
-      <div key={pagination.length()} className='pagination'>
+      <div key={pagination.length} className='pagination'>
         {paginationButtons}
       </div>
     );
@@ -143,4 +143,4 @@ function renderPagination(currentIndex, onSearch, totalHits) {
   return pagination;
 }
 
-module.exports = SearchView;
+export default SearchView;

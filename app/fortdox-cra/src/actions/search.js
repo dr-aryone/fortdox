@@ -1,8 +1,8 @@
 const requestor = require('@edgeguideab/client-request');
 const config = require('config.json');
-const HITS_PER_PAGE = 12;
+export const HITS_PER_PAGE = 12;
 
-const search = ({ index = 1, freshSearch = false, searchString } = {}) => {
+export const search = ({ index = 1, freshSearch = false, searchString } = {}) => {
   return async (dispatch, getState) => {
     const state = getState();
     if (freshSearch) {
@@ -66,7 +66,7 @@ const search = ({ index = 1, freshSearch = false, searchString } = {}) => {
   };
 };
 
-const tagSearch = tag => {
+export const tagSearch = tag => {
   return async (dispatch, getState) => {
     dispatch({
       type: 'TAG_SEARCH_START'
