@@ -1,8 +1,8 @@
+import { openDocument, previewDocument } from 'actions/document/document';
 import search from 'actions/search';
-import { openDocument, previewDocument } from 'actions/document';
 const { connect } = require('react-redux');
-const SearchView = require('../../components/search/SearchView');
-const action = require('../../actions');
+const SearchView = require('components/search/SearchView');
+const action = require('actions');
 
 const mapStateToProps = state => {
   return {

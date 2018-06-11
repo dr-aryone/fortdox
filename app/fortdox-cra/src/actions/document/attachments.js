@@ -1,4 +1,4 @@
-const { getPrefix } = require('./utilities');
+import { getPrefix } from './utilities';
 const requestor = require('@edgeguideab/client-request');
 const config = require('config.json');
 const fs = window.require('fs');
@@ -10,8 +10,9 @@ const { shell } = window.require('electron');
 
 const FILE_MAX_SIZE = 30 * 1000 * 1000;
 
-const addAttachment = files => {
+export const addAttachment = files => {
   return async (dispatch, getState) => {
+    debugger;
     let state = getState();
     let { prefix } = getPrefix(state.navigation.get('currentView'));
     for (let file of Array.from(files)) {
@@ -26,6 +27,7 @@ const addAttachment = files => {
         continue;
       }
       try {
+        debugger;
         let data = await attachmentUtils.readSource(file);
         dispatch({
           type: `${prefix}_ADD_ATTACHMENT`,
@@ -34,6 +36,7 @@ const addAttachment = files => {
           file: data.toString('base64')
         });
       } catch (error) {
+        debugger;
         dispatch({
           type: `${prefix}_ADD_ATTACHMENT_ERROR`,
           payload: {
@@ -45,7 +48,7 @@ const addAttachment = files => {
   };
 };
 
-const removeAttachment = id => {
+export const removeAttachment = id => {
   return async (dispatch, getState) => {
     let state = getState();
     let { view, prefix } = getPrefix(state.navigation.get('currentView'));
@@ -58,7 +61,7 @@ const removeAttachment = id => {
   };
 };
 
-const previewAttachment = (attachmentData, attachmentIndex) => {
+export const previewAttachment = (attachmentData, attachmentIndex) => {
   return async (dispatch, getState) => {
     let state = getState();
     let { prefix } = getPrefix(state.navigation.get('currentView'));
@@ -80,7 +83,7 @@ const previewAttachment = (attachmentData, attachmentIndex) => {
       try {
         response = await requestor.get(
           `${
-            config.server
+          config.server
           }/document/${currentDocumentId}/attachment/${attachmentIndex}`
         );
       } catch (error) {
@@ -110,7 +113,7 @@ const previewAttachment = (attachmentData, attachmentIndex) => {
   };
 };
 
-const clearDownload = id => {
+export const clearDownload = id => {
   return {
     type: 'ATTACHMENT_DOWNLOAD_CLEAR',
     payload: {
@@ -119,13 +122,13 @@ const clearDownload = id => {
   };
 };
 
-const clearAllDownloads = () => {
+export const clearAllDownloads = () => {
   return {
     type: 'ATTACHMENT_DOWNLOAD_CLEAR_ALL'
   };
 };
 
-const downloadAttachment = (attachmentData, attachmentIndex) => {
+export const downloadAttachment = (attachmentData, attachmentIndex) => {
   return async (dispatch, getState) => {
     let state = getState();
     let download = state.download
@@ -175,7 +178,7 @@ const downloadAttachment = (attachmentData, attachmentIndex) => {
       try {
         response = await requestor.get(
           `${
-            config.server
+          config.server
           }/document/${currentDocument}/attachment/${attachmentIndex}`,
           {
             onDataReceived: ({ loaded, total }) => {
@@ -257,7 +260,7 @@ const downloadAttachment = (attachmentData, attachmentIndex) => {
   };
 };
 
-const showInDirectory = path => {
+export const showInDirectory = path => {
   return dispatch => {
     dispatch({
       type: 'ATTACHMENT_OPEN_START'

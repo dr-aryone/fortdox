@@ -1,8 +1,11 @@
+import documentActions from 'actions/document/document';
+import tagActions from 'actions/document/tags';
+import fieldActions from 'actions/document/fields';
+import attachmentActions from 'actions/document/attachments';
+
 const { connect } = require('react-redux');
 const UpdateDocView = require('../../components/document/UpdateDocView');
 const action = require('../../actions');
-const documentActions = require('../../actions/document');
-const attachmentActions = require('../../actions/document/attachments');
 
 const mapStateToProps = state => {
   return {
@@ -17,18 +20,14 @@ const mapDispatchToProps = dispatch => {
   return {
     onChange: (event, type) => {
       dispatch(
-        documentActions.docInputChange(
-          event.target.name,
-          event.target.value,
-          type
-        )
+        fieldActions.docInputChange(event.target.name, event.target.value, type)
       );
     },
     onTitleChange: event => {
-      dispatch(documentActions.docTitleChange(event.target.value));
+      dispatch(fieldActions.docTitleChange(event.target.value));
     },
     onSuggestTags: event => {
-      dispatch(documentActions.suggestTags(event.target.value));
+      dispatch(tagActions.suggestTags(event.target.value));
     },
     onUpdate: event => {
       event.preventDefault();
@@ -41,25 +40,25 @@ const mapDispatchToProps = dispatch => {
       dispatch(documentActions.deleteDocument());
     },
     onAddTag: tag => {
-      dispatch(documentActions.addTag(tag));
+      dispatch(tagActions.addTag(tag));
     },
     onRemoveTag: tagIndex => {
-      dispatch(documentActions.removeTag(tagIndex));
+      dispatch(tagActions.removeTag(tagIndex));
     },
     onMount: () => {
-      dispatch(documentActions.getOldTags());
+      dispatch(tagActions.getOldTags());
     },
     onAddField: field => {
-      dispatch(documentActions.addField(field));
+      dispatch(fieldActions.addField(field));
     },
     onRemoveField: id => {
-      dispatch(documentActions.removeField(id));
+      dispatch(fieldActions.removeField(id));
     },
     onAddAttachment: event => {
-      dispatch(documentActions.addAttachment(event.target.files));
+      dispatch(attachmentActions.addAttachment(event.target.files));
     },
     onRemoveAttachment: id => {
-      dispatch(documentActions.removeAttachment(id));
+      dispatch(attachmentActions.removeAttachment(id));
     },
     onPreviewAttachment: (attachment, attachmentIndex) => {
       dispatch(
@@ -72,7 +71,7 @@ const mapDispatchToProps = dispatch => {
       );
     },
     onCloseSimilarDocuments: () => {
-      dispatch(documentActions.clearSimilarDocuments());
+      dispatch(fieldActions.clearSimilarDocuments());
     },
     onSimilarDocumentClick: id => {
       dispatch(documentActions.openDocument(id));
@@ -85,4 +84,4 @@ const UpdateDocContainer = connect(
   mapDispatchToProps
 )(UpdateDocView);
 
-module.exports = UpdateDocContainer;
+export default UpdateDocContainer;

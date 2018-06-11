@@ -201,7 +201,7 @@ export function deleteDocument() {
 }
 
 const MINIMUM_LOADING_TIME = 200;
-function openDocument(id, skipTimeout, showPreview) {
+export function openDocument(id, skipTimeout, showPreview) {
   return async dispatch => {
     dispatch({
       type: 'OPEN_DOCUMENT_START'

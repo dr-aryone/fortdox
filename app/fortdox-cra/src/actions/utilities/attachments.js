@@ -8,7 +8,7 @@ export default {
   calculateName
 };
 
-function readSource(file) {
+export function readSource(file) {
   return new Promise((resolve, reject) => {
     fs.readFile(file.path, (error, data) => {
       if (error) {
@@ -19,7 +19,7 @@ function readSource(file) {
   });
 }
 
-function calculateName(folder, requestedName) {
+export function calculateName(folder, requestedName) {
   return new Promise(async (resolve, reject) => {
     let parsedName = path.parse(requestedName);
     let name = requestedName;
