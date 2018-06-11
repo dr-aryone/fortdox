@@ -14,7 +14,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     onMount: () => {
-      dispatch(LoginActions.directLogin);
+      dispatch(LoginActions.directLogin());
     },
     loginAs: (email, organization, event) => {
       event.preventDefault();
