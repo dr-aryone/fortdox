@@ -1,0 +1,2 @@
+react: cd fortdox-cra && npm start
+electron: node electron-wait-react.js

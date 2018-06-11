@@ -78,11 +78,13 @@ function createBrowserWindow() {
   }
   openWindow = true;
 
-  let openingUrl = urlParser.format({
-    pathname: path.join(__dirname, 'index.html'),
-    protocol: 'file',
-    slashes: true
-  });
+  let openingUrl =
+    process.env.ELECTRON_START_URL ||
+    urlParser.format({
+      pathname: path.join(__dirname, './fortdox-cra/build/index.html'),
+      protocol: 'file',
+      slashes: true
+    });
 
   openingUrl += '?';
   if (redirectParameters) {
