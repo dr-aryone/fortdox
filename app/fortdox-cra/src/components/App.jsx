@@ -1,6 +1,6 @@
 import FrontPageViewContainer from '../containers/front_page/FrontPageViewContainer';
+import UserViewContainer from '../containers/user/UserViewContainer';
 const React = require('react');
-const UserViewContainer = require('../containers/user/UserViewContainer');
 const SplashScreen = require('components/general/SplashScreen');
 const Toast = require('components/general/Toast');
 

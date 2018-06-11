@@ -1,7 +1,7 @@
+import search from 'actions/search';
 const { connect } = require('react-redux');
 const SearchView = require('../../components/search/SearchView');
 const action = require('../../actions');
-const search = require('../../actions/search');
 const { openDocument, previewDocument } = require('../../actions/document');
 
 const mapStateToProps = state => {
@@ -44,4 +44,4 @@ const SearchViewContainer = connect(
   mapDispatchToProps
 )(SearchView);
 
-module.exports = SearchViewContainer;
+export default SearchViewContainer;

@@ -1,5 +1,5 @@
+import UserView from 'components/user/UserView';
 const { connect } = require('react-redux');
-const UserView = require('components/user/UserView');
 const action = require('actions');
 const attachmentActions = require('actions/document/attachments');
 
@@ -32,4 +32,4 @@ const UserViewContainer = connect(
   mapDispatchToProps
 )(UserView);
 
-module.exports = UserViewContainer;
+export default UserViewContainer;

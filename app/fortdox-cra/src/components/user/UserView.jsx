@@ -1,8 +1,8 @@
+import SearchViewContainer from 'containers/search/SearchViewContainer';
 const React = require('react');
 const HeaderContainer = require('../../containers/user/HeaderContainer');
 const CreateDocContainer = require('../../containers/document/CreateDocContainer');
 const UpdateDocContainer = require('../../containers/document/UpdateDocContainer');
-const SearchViewContainer = require('../../containers/search/SearchViewContainer');
 const InviteUserContainer = require('../../containers/invite/InviteUserContainer');
 const DownloadManager = require('../../components/general/DownloadManager');
 const SplashScreen = require('../../components/general/SplashScreen');
@@ -48,4 +48,4 @@ const UserView = ({
   );
 };
 
-module.exports = UserView;
+export default UserView;
