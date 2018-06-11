@@ -12,7 +12,6 @@ const FILE_MAX_SIZE = 30 * 1000 * 1000;
 
 export const addAttachment = files => {
   return async (dispatch, getState) => {
-    debugger;
     let state = getState();
     let { prefix } = getPrefix(state.navigation.get('currentView'));
     for (let file of Array.from(files)) {
@@ -27,7 +26,6 @@ export const addAttachment = files => {
         continue;
       }
       try {
-        debugger;
         let data = await attachmentUtils.readSource(file);
         dispatch({
           type: `${prefix}_ADD_ATTACHMENT`,
@@ -36,7 +34,6 @@ export const addAttachment = files => {
           file: data.toString('base64')
         });
       } catch (error) {
-        debugger;
         dispatch({
           type: `${prefix}_ADD_ATTACHMENT_ERROR`,
           payload: {
