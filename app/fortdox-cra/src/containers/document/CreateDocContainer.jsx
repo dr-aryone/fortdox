@@ -1,7 +1,9 @@
-import documentActions from 'actions/document/document';
-import tagActions from 'actions/document/tags';
-import fieldActions from 'actions/document/fields';
-import attachmentActions from 'actions/document/attachments';
+import {
+  Document as documentActions,
+  Tags as tagActions,
+  Fields as fieldActions,
+  Attachments as attachmentActions
+} from 'actions/document';
 
 const { connect } = require('react-redux');
 const CreateDocView = require('../../components/document/CreateDocView');

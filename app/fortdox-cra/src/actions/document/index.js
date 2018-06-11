@@ -1,11 +1,4 @@
-const doc = require('./document');
-const fields = require('./fields');
-const tags = require('./tags');
-const attachment = require('./attachments');
-
-module.exports = {
-  ...doc,
-  ...fields,
-  ...tags,
-  ...attachment
-};
+export { default as Document } from './document';
+export { default as Tags } from './tags';
+export { default as Fields } from './fields';
+export { default as Attachments } from './attachments';
