@@ -11,7 +11,6 @@ class LoginView extends React.Component {
   }
 
   render() {
-<<<<<<< HEAD
     let {
       loginAs,
       toRegisterView,
@@ -19,9 +18,6 @@ class LoginView extends React.Component {
       message,
       warning
     } = this.props;
-=======
-    let { loginAs, toRegisterView, message, warning } = this.props;
->>>>>>> keytar
 
     let userList = [];
     let storage = readStorage();
