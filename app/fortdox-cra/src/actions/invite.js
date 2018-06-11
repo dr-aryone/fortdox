@@ -239,7 +239,7 @@ export const deleteUser = email => {
           message = 'Return internal server error';
           break;
         case 404:
-          message = `${email} can\' be found.`;
+          message = `${email} can't be found.`;
           break;
       }
       return dispatch({
