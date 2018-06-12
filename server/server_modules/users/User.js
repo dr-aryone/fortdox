@@ -103,7 +103,6 @@ const verifyNewUser = (uuid, privateKey) => {
     try {
       await user.updateAttributes({
         uuid: null,
-
       });
     } catch (error) {
       console.error(error);
