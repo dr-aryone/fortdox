@@ -1,7 +1,12 @@
 const requestor = require('@edgeguideab/client-request');
 const aes = window.require('./aes.js');
 const config = require('../../config.json');
-const { readKey, readStorage } = require('actions/utilities/storage');
+const {
+  addKey,
+  readKey,
+  readStorage,
+  writeStorage
+} = require('actions/utilities/storage');
 
 const directLogin = () => {
   return async (dispatch, getState) => {
@@ -61,12 +66,29 @@ const login = () => {
     const password = state.login.get('password');
     const organization = state.login.get('organization');
     const storage = readStorage();
-    const salt = storage[organization].salt;
+    const salt = storage[email][organization].salt;
+
+    if (storage[email][organization].privateKey) {
+      try {
+        await addKey(
+          storage[email][organization].privateKey,
+          email,
+          organization
+        );
+      } catch (error) {
+        return dispatch({
+          type: 'VERIFY_LOGIN_CREDS_ERROR',
+          payload: 'Unable to migrate privateKey'
+        });
+      }
+      writeStorage(salt, email, organization);
+    }
+    
     let encryptedPrivateKey;
     try {
       encryptedPrivateKey = await readKey(email, organization);
     } catch (error) {
-      dispatch({
+      return dispatch({
         type: 'VERIFY_LOGIN_CREDS_ERROR',
         payload: 'Unable to login.'
       });

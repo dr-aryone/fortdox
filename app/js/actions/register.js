@@ -108,14 +108,7 @@ const activateOrganizaton = () => {
       });
     }
 
-    try {
-      await writeStorage(result.salt, email, response.body.organizationName);
-    } catch (error) {
-      return dispatch({
-        type: 'ACTIVATE_ORGANIZATION_ERROR',
-        payload: 'Unable to write to storage.'
-      });
-    }
+    await writeStorage(result.salt, email, response.body.organizationName);
 
     return dispatch({
       type: 'ACTIVATE_ORGANIZATION_SUCCESS',

@@ -10,9 +10,10 @@ const writeStorage = (salt, email, organization) => {
     storage = window.localStorage.getItem('fortdox');
   }
   storage = JSON.parse(storage);
-  storage[organization] = {
-    email,
-    salt
+  storage[email] = {
+    [organization]: {
+      salt
+    }
   };
 
   window.localStorage.setItem('fortdox', JSON.stringify(storage));
