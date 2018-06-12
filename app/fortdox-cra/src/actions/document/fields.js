@@ -39,6 +39,8 @@ export const addField = field => {
           payload: fields,
           nextID: nextID + 1
         });
+      default:
+        return dispatch({ type: `${prefix}_ADD_FIELD_ERROR` });
     }
   };
 };
@@ -78,7 +80,7 @@ export const docInputChange = (inputID, inputValue, type) => {
         });
       case 'encryptedText':
         fields = state[view].getIn(['docFields', 'encryptedTexts']);
-        index = fields.findIndex(field => field.get('id') == inputID);
+        index = fields.findIndex(field => field.get('id') === inputID);
         return dispatch({
           type: `${prefix}_INPUT_CHANGE_ENCRYPTED_TEXT`,
           index,
@@ -86,13 +88,15 @@ export const docInputChange = (inputID, inputValue, type) => {
         });
       case 'text': {
         fields = state[view].getIn(['docFields', 'texts']);
-        index = fields.findIndex(field => field.get('id') == inputID);
+        index = fields.findIndex(field => field.get('id') === inputID);
         return dispatch({
           type: `${prefix}_INPUT_CHANGE_TEXT`,
           index,
           value: inputValue
         });
       }
+      default:
+        return dispatch({ type: `${prefix}_DOC_INPUT_CHANGE_ERROR` });
     }
   };
 };

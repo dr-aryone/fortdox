@@ -13,12 +13,13 @@ export default function FrontPageView({ currentView }) {
     case 'VERIFY_LOGIN_VIEW':
       view = <VerifyLoginContainer />;
       break;
-    case 'REGISTER_VIEW':
-    case 'ACTIVATE_ORGANIZATION_VIEW':
-      view = <RegisterViewContainer />;
-      break;
     case 'VERIFY_USER_VIEW':
       view = <VerifyUserContainer />;
+      break;
+    case 'REGISTER_VIEW':
+    case 'ACTIVATE_ORGANIZATION_VIEW':
+    default:
+      view = <RegisterViewContainer />;
       break;
   }
   return <div className='full-page'>{view}</div>;

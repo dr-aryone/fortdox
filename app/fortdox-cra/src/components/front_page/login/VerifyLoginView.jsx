@@ -31,7 +31,10 @@ const PasswordView = ({
       {errorMsg}
       {warningMsg}
       <div className='logo'>
-        <img src={process.env.PUBLIC_URL + '/resources/logo.png'} />
+        <img
+          alt='fortdox logotype'
+          src={process.env.PUBLIC_URL + '/resources/logo.png'}
+        />
       </div>
       <h1 className='text-center'>{organization}</h1>
       <div className='box'>

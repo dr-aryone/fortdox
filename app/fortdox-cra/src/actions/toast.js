@@ -1,10 +1,8 @@
-const React = require('react');
-
 module.exports = {
   show
 };
 
-function show({text, icon, timeout}) {
+function show({ text, icon, timeout }) {
   return dispatch => {
     dispatch({
       type: 'SHOW_TOAST',

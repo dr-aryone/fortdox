@@ -76,6 +76,7 @@ export function createDocument() {
           });
         case 408:
         case 500:
+        default:
           return dispatch({
             type: 'CREATE_DOCUMENT_ERROR',
             payload: 'Cannot connect to the server. Please try again later.'
@@ -157,6 +158,7 @@ export function updateDocument() {
           });
         case 408:
         case 500:
+        default:
           return dispatch({
             type: 'UPDATE_DOCUMENT_ERROR',
             payload: 'Unable to connect to server. Please try again later.'

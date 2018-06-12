@@ -31,6 +31,12 @@ const UserView = ({
     case 'INVITE_USER_VIEW':
       page = <InviteUserContainer />;
       break;
+    default:
+      console.error(
+        'currentView has unexpected label, default to SearchViewContainer'
+      );
+      page = <SearchViewContainer />;
+      break;
   }
 
   return (

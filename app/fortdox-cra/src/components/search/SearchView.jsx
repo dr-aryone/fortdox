@@ -44,7 +44,7 @@ const SearchView = ({
   let searchLength =
     totalHits || totalHits === 0 ? (
       <p>
-        {totalHits} search result{totalHits == 1 ? '' : 's'} found.
+        {totalHits} search result{totalHits === 1 ? '' : 's'} found.
       </p>
     ) : null;
 
@@ -106,7 +106,7 @@ function renderPagination(currentIndex, onSearch, totalHits) {
           onClick={() => onSearch(start + i)}
           className={`pagination ${
             start + i === currentIndex ? 'focused' : ''
-            }`}
+          }`}
           key={start + i}
         >
           {start + i}

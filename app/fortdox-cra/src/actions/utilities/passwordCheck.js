@@ -27,6 +27,9 @@ const passwordCheck = (password, retypedPassword) => {
       case 'TOO_FEW_NUMERIC_CHARACTERS':
         errorMsg = 'Your password must include 1 numeric character.';
         break;
+      default:
+        errorMsg = 'GENERIC PASSWORD ERROR';
+        break;
     }
     return {
       valid: false,

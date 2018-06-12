@@ -55,11 +55,14 @@ class LoginView extends React.Component {
         <MessageBox message={concatMessage} />
         {warningMsg}
         <div className='logo'>
-          <img src={process.env.PUBLIC_URL + '/resources/logo.png'} />
+          <img
+            alt='Fortdox logotype'
+            src={process.env.PUBLIC_URL + '/resources/logo.png'}
+          />
         </div>
         <h1 className='text-center'>{config.name}</h1>
         <div
-          className={`box login-panel ${userList.length == 0 ? 'hide' : ''}`}
+          className={`box login-panel ${userList.length === 0 ? 'hide' : ''}`}
         >
           <h2>{userList.length > 0 ? 'Choose an account' : null}</h2>
           {userList}

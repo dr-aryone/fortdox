@@ -53,7 +53,7 @@ export function loginAs(email, organization) {
   };
 }
 
-export const login = () => {
+export function login() {
   return async (dispatch, getState) => {
     dispatch({
       type: 'VERIFY_LOGIN_CREDS_START'
@@ -103,6 +103,7 @@ export const login = () => {
           });
         case 408:
         case 500:
+        default:
           return dispatch({
             type: 'VERIFY_LOGIN_CREDS_ERROR',
             payload: 'Unable to connect to server. Please try again later.'
@@ -119,4 +120,4 @@ export const login = () => {
       }
     });
   };
-};
+}

@@ -53,16 +53,10 @@ export const getOldTags = () => {
       });
     } catch (error) {
       console.error(error);
-      switch (error.status) {
-        case 400:
-        case 404:
-        case 408:
-        case 500:
-          return dispatch({
-            type: `${prefix}_GET_OLD_TAGS_ERROR`,
-            payload: 'Unable to get old tag list.'
-          });
-      }
+      return dispatch({
+        type: `${prefix}_GET_OLD_TAGS_ERROR`,
+        payload: 'Unable to get old tag list.'
+      });
     }
     let tagList = [];
     response.body.forEach(tag => tagList.push(tag.key));
@@ -80,9 +74,9 @@ export const suggestTags = inputValue => {
     let { view, prefix } = getPrefix(state.navigation.get('currentView'));
     let oldTags = state[view].getIn(['docFields', 'tags', 'old']);
     let suggestedTags = [];
-    oldTags.some(tag => {
-      if (tag.startsWith(inputValue)) suggestedTags.push(tag);
+    oldTags.forEach(tag => {
       if (suggestedTags.length === 5) return;
+      if (tag.startsWith(inputValue)) suggestedTags.push(tag);
     });
     return dispatch({
       type: `${prefix}_INPUT_CHANGE_TAGS`,
