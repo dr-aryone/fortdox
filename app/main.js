@@ -16,7 +16,11 @@ let devtools = {};
 if (devMode) {
   devtools = require('electron-devtools-installer');
 }
-const { default: installExtension, REDUX_DEVTOOLS } = devtools;
+const {
+  default: installExtension,
+  REDUX_DEVTOOLS,
+  REACT_DEVELOPER_TOOLS
+} = devtools;
 app.setAsDefaultProtocolClient(config.name);
 
 const isSecondInstance = app.makeSingleInstance(
@@ -75,6 +79,13 @@ function createBrowserWindow() {
   if (devMode) {
     win.webContents.openDevTools();
     installExtension(REDUX_DEVTOOLS);
+    installExtension(REACT_DEVELOPER_TOOLS)
+      .then(name => {
+        console.log(`Added Extension:  ${name}`);
+      })
+      .catch(err => {
+        console.log('An error occurred: ', err);
+      });
   }
   openWindow = true;
 
