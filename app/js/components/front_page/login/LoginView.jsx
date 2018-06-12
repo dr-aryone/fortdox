@@ -15,20 +15,22 @@ class LoginView extends React.Component {
 
     let userList = [];
     let storage = readStorage();
-    Object.entries(storage).forEach(([organization, value]) => {
-      userList.push(
-        <div
-          tabIndex='0'
-          onKeyDown={event => {
-            if (event.keyCode === 13) loginAs(value.email, organization, event);
-          }}
-          onClick={event => loginAs(value.email, organization, event)}
-          key={value.email + organization}
-        >
-          <h2>{organization}</h2>
-          <h3>{value.email}</h3>
-        </div>
-      );
+    Object.entries(storage).forEach(([email, value]) => {
+      Object.keys(value).forEach((organization) => {
+        userList.push(
+          <div
+            tabIndex='0'
+            onKeyDown={(event) => {
+              if (event.keyCode === 13) loginAs(email, organization, event);
+            }}
+            onClick={(event) => loginAs(email, organization, event)}
+            key={email+organization}
+          >
+            <h2>{organization}</h2>
+            <h3>{email}</h3>
+          </div>
+        );
+      });
     });
     let concatMessage;
     if (typeof message === 'object' && message !== null) {
