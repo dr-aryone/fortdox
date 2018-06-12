@@ -1,7 +1,7 @@
-const {connect} = require('react-redux');
+import { login } from 'actions/login';
+const { connect } = require('react-redux');
 const VerifyLoginView = require('components/front_page/login/VerifyLoginView');
 const action = require('actions');
-const {login} = require('actions/login');
 
 const mapStateToProps = state => {
   return {
@@ -37,4 +37,4 @@ const VerifyLoginContainer = connect(
   mapDispatchToProps
 )(VerifyLoginView);
 
-module.exports = VerifyLoginContainer;
+export default VerifyLoginContainer;
