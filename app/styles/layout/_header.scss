@@ -1,0 +1,74 @@
+.header {
+  width: 100%;
+  background-color: $primary-color;
+  top: 0;
+  height: $header-height;
+  position: fixed;
+  color: $background-color;
+  display: flex;
+  align-items: center;
+  z-index: 1;
+  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.15), 0 0 2px rgba(0, 0, 0, 0.11);
+
+  .container {
+    width: percentage(10/12);
+    margin-left: percentage(1/12);
+    display: flex;
+    justify-content: space-between;
+
+    .organization {
+      margin-right: 10px;
+    }
+
+    .navigation {
+      user-select: none;
+
+      .material-icons {
+        font-size: 24px;
+        margin-right: 20px;
+        cursor: pointer;
+
+        &:hover {
+          color: darken($background-color, 10%);
+          border-radius: 2px;
+        }
+      }
+    }
+
+    .account {
+      user-select: none;
+      cursor: pointer;
+      box-sizing: border-box;
+      display: flex;
+      align-items: center;
+
+      .material-icons {
+        margin-right: 5px;
+      }
+
+      .account-icons {
+        &:hover {
+          color: darken($background-color, 10%);
+        }
+
+        .dropdown-wrapper {
+          left: initial;
+          right: initial;
+        }
+
+        .dropdown {
+          & li:hover {
+            background-color: transparent;
+            color: lighten($text-color, 20%);
+
+            .material-icons {
+              color: $pink;
+            }
+          }
+        }
+
+      }
+    }
+
+  }
+}
