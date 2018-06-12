@@ -1,4 +1,4 @@
-const {fromJS} = require('immutable');
+const { fromJS } = require('immutable');
 const initialState = fromJS({
   fields: {
     password: {
@@ -21,7 +21,8 @@ const initialState = fromJS({
 const verifyUser = (state = initialState, action) => {
   switch (action.type) {
     case 'INPUT_CHANGE_VERIFY_USER':
-      return state.setIn(['fields', action.inputName, 'value'], fromJS(action.inputValue))
+      return state
+        .setIn(['fields', action.inputName, 'value'], fromJS(action.inputValue))
         .setIn(['fields', action.inputName, 'error'], null);
     case 'ACTIVATE_USER_CODE_RECIVED':
       return state.merge({
@@ -36,13 +37,22 @@ const verifyUser = (state = initialState, action) => {
       return state.set('isLoading', true);
     case 'VERIFY_NEW_USER_FAIL':
       return state.merge({
-        fields: state.get('fields').mergeDeepWith((oldError, newError) => newError ? newError : oldError, action.payload),
-        isLoading: false,
+        fields: state
+          .get('fields')
+          .mergeDeepWith(
+            (oldError, newError) => (newError ? newError : oldError),
+            action.payload
+          ),
+        isLoading: false
       });
     case 'VERIFY_NEW_USER_PASSWORD_FAIL':
-      return state.set('isLoading', false).setIn(['fields', 'password', 'error'], fromJS(action.payload));
+      return state
+        .set('isLoading', false)
+        .setIn(['fields', 'password', 'error'], fromJS(action.payload));
     case 'VERIFY_NEW_USER_PASSWORD_MISSMATCH_FAIL':
-      return state.set('isLoading', false).setIn(['fields', 'retypedPassword', 'error'], fromJS(action.payload));
+      return state
+        .set('isLoading', false)
+        .setIn(['fields', 'retypedPassword', 'error'], fromJS(action.payload));
     case 'VERIFY_NEW_USER_ERROR':
     case 'RECEIVE_PRIVATE_KEY_ERROR':
       return state.merge({

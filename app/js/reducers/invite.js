@@ -1,4 +1,4 @@
-const {fromJS} = require('immutable');
+const { fromJS } = require('immutable');
 
 const initialState = fromJS({
   fields: {
@@ -18,14 +18,20 @@ const invite = (state = initialState, action) => {
     case 'SESSION_EXPIRED':
       return initialState;
     case 'INPUT_CHANGE_INVITE_USER':
-      return state.setIn(['fields', action.inputName, 'value'], fromJS(action.inputValue))
+      return state
+        .setIn(['fields', action.inputName, 'value'], fromJS(action.inputValue))
         .setIn(['fields', action.inputName, 'error'], null);
     case 'INVITE_USER_START':
       return state.set('isLoading', true);
     case 'INVITE_USER_FAIL':
       return state.merge({
         message: null,
-        fields: state.get('fields').mergeDeepWith((oldError, newError) => newError ? newError : oldError, action.payload),
+        fields: state
+          .get('fields')
+          .mergeDeepWith(
+            (oldError, newError) => (newError ? newError : oldError),
+            action.payload
+          ),
         isLoading: false,
         error: null
       });

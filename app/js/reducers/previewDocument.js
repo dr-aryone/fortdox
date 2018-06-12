@@ -1,4 +1,4 @@
-const {fromJS} = require('immutable');
+const { fromJS } = require('immutable');
 
 let initialState = fromJS({
   docFields: {
@@ -54,12 +54,19 @@ const preview = (state = initialState, action) => {
     case 'SHOW_SEARCH_FIELD':
       return state.setIn(['searchField', 'show'], true);
     case 'SEARCH_FIELD_CHANGE':
-      return state.setIn(['searchField', 'value'], fromJS(action.payload.value));
+      return state.setIn(
+        ['searchField', 'value'],
+        fromJS(action.payload.value)
+      );
     case 'OPEN_DOCUMENT_FAILED':
       return state.set('isLoading', false);
     case 'SEARCH_SUCCESS':
     case 'CHANGE_VIEW':
-      if (action.payload === 'UPDATE_DOC_VIEW' || action.payload === 'PREVIEW_DOC') return state;
+      if (
+        action.payload === 'UPDATE_DOC_VIEW' ||
+        action.payload === 'PREVIEW_DOC'
+      )
+        return state;
       else return initialState;
     case 'DELETE_DOCUMENT_SUCCESS':
       return initialState;
@@ -71,10 +78,12 @@ const preview = (state = initialState, action) => {
         error: fromJS(action.payload)
       });
     case 'PREVIEW_DOC_PREVIEW_ATTACHMENT_SUCCESS':
-      return state.merge({
-        isLoading: false,
-        error: null
-      }).setIn(['docFields', 'preview'], fromJS(action.payload));
+      return state
+        .merge({
+          isLoading: false,
+          error: null
+        })
+        .setIn(['docFields', 'preview'], fromJS(action.payload));
     case 'TAG_SEARCH_SUCCESS':
       return initialState;
     default:
