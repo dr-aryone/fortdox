@@ -38,13 +38,13 @@ export const inviteUser = () => {
       console.error(error);
       switch (error.status) {
         case 400:
-          if (error.body == 'mail')
+          if (error.body === 'mail')
             return dispatch({
               type: 'INVITE_USER_ERROR',
               payload:
                 'Invitation could not be sent. Please check the email address.'
             });
-          if (error.body == 'header')
+          if (error.body === 'header')
             return dispatch({
               type: 'INVITE_USER_ERROR',
               payload: 'Bad request. Please try again.'
@@ -98,6 +98,7 @@ export const receivePrivateKey = () => {
       switch (error.status) {
         case 408:
         case 500:
+        default:
           return dispatch({
             type: 'RECEIVE_PRIVATE_KEY_ERROR',
             payload: 'Email is already verified or the link is broken.'
@@ -132,6 +133,10 @@ export const verifyUser = () => {
           case 'retypedPassword':
             error = 'Please re-enter your password.';
             break;
+          default:
+            console.error('Unexpected error');
+            error = 'Something went terrible wrong';
+            break;
         }
         newFields[entry[0]] = {
           error: {
@@ -150,12 +155,12 @@ export const verifyUser = () => {
     let privateKey = state.verifyUser.get('privateKey');
     let pwResult = passwordCheck(password, retypedPassword);
     if (!pwResult.valid) {
-      if (pwResult.fault == 'password')
+      if (pwResult.fault === 'password')
         return dispatch({
           type: 'VERIFY_NEW_USER_PASSWORD_FAIL',
           payload: pwResult.errorMsg
         });
-      if (pwResult.fault == 'retypedPassword')
+      if (pwResult.fault === 'retypedPassword')
         return dispatch({
           type: 'VERIFY_NEW_USER_PASSWORD_MISSMATCH_FAIL',
           payload: pwResult.errorMsg
@@ -192,6 +197,7 @@ export const verifyUser = () => {
           });
         case 408:
         case 500:
+        default:
           return dispatch({
             type: 'VERIFY_NEW_USER_ERROR',
             payload: 'Unable to connect to server. Please try again later.'
@@ -235,11 +241,12 @@ export const deleteUser = email => {
       console.error(error);
       let message = 'Server error';
       switch (error.status) {
-        case 500:
-          message = 'Return internal server error';
-          break;
         case 404:
           message = `${email} can't be found.`;
+          break;
+        case 500:
+        default:
+          message = 'Return internal server error';
           break;
       }
       return dispatch({

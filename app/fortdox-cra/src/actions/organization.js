@@ -24,6 +24,11 @@ export function list() {
           break;
         case 404:
           message = 'You are not a part of an organization';
+          break;
+        default:
+          console.error('Unknown status code');
+          message = 'There was a problem and we are working on fixing it.';
+          break;
       }
       dispatch({
         type: 'LIST_USERS_ERROR',

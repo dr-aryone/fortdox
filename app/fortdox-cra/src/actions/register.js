@@ -25,6 +25,10 @@ export const activateOrganizaton = () => {
           case 'retypedPassword':
             error = 'Please re-enter your password.';
             break;
+          default:
+            console.error('Unexpected error');
+            error = 'Something went terrible wrong';
+            break;
         }
         newFields[entry[0]] = {
           error: {
@@ -45,12 +49,12 @@ export const activateOrganizaton = () => {
     let pwResult = passwordCheck(password, retypedPassword);
     if (!pwResult.valid) {
       console.error(pwResult.errorMsg);
-      if (pwResult.fault == 'password')
+      if (pwResult.fault === 'password')
         return dispatch({
           type: 'ACTIVATE_ORGANIZATION_PASSWORD_FAIL',
           payload: pwResult.errorMsg
         });
-      if (pwResult.fault == 'retypedPassword')
+      if (pwResult.fault === 'retypedPassword')
         return dispatch({
           type: 'ACTIVATE_ORGANIZATION_PASSWORD_MISSMATCH_FAIL',
           payload: pwResult.errorMsg
@@ -84,16 +88,17 @@ export const activateOrganizaton = () => {
             type: 'ACTIVATE_ORGANIZATION_ERROR',
             payload: 'Bad request. Please try again.'
           });
-        case 408:
-        case 500:
-          return dispatch({
-            type: 'ACTIVATE_ORGANIZATION_ERROR',
-            payload: 'Unable to connect to server. Please try again later.'
-          });
         case 409:
           return dispatch({
             type: 'ACTIVATE_ORGANIZATION_ERROR',
             payload: 'Organization already exists'
+          });
+        case 408:
+        case 500:
+        default:
+          return dispatch({
+            type: 'ACTIVATE_ORGANIZATION_ERROR',
+            payload: 'Unable to connect to server. Please try again later.'
           });
       }
     }
@@ -134,6 +139,9 @@ export const registerOrganization = () => {
               error: 'Please enter an email.'
             };
             break;
+          default:
+            console.error('Unexpected error');
+            error = { error: 'Something went terrible wrong' };
         }
         newFields[key[0]] = error;
       });
@@ -162,13 +170,13 @@ export const registerOrganization = () => {
             payload: 'Bad request. Please try again.'
           });
         case 409:
-          if (error.body == 'organization')
+          if (error.body === 'organization')
             return dispatch({
               type: 'REGISTER_ORGANIZATION_NAME_FAIL',
               payload:
                 'Team name already exists. Please choose a different team name.'
             });
-          if (error.body == 'user')
+          if (error.body === 'user')
             return dispatch({
               type: 'REGISTER_ORGANIZATION_EMAIL_FAIL',
               payload: 'Email already exists. Please choose a different email.'
@@ -221,6 +229,8 @@ export const verifyActivationCode = () => {
           });
         case 408:
         case 500:
+        default:
+          console.error(`The http status code was ${error.status}`);
           return dispatch({
             type: 'VERIFY_ACTIVATION_CODE_ERROR',
             payload: 'Unable to connect to server. Please try again later.'

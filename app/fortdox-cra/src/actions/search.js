@@ -2,7 +2,11 @@ const requestor = require('@edgeguideab/client-request');
 const config = require('config.json');
 export const HITS_PER_PAGE = 12;
 
-export const search = ({ index = 1, freshSearch = false, searchString } = {}) => {
+export const search = ({
+  index = 1,
+  freshSearch = false,
+  searchString
+} = {}) => {
   return async (dispatch, getState) => {
     const state = getState();
     if (freshSearch) {
@@ -47,6 +51,7 @@ export const search = ({ index = 1, freshSearch = false, searchString } = {}) =>
           });
         case 408:
         case 500:
+        default:
           return dispatch({
             type: 'SEARCH_ERROR',
             payload: 'Unable to connect to server. Please try again later.'
@@ -96,6 +101,7 @@ export const tagSearch = tag => {
           });
         case 408:
         case 500:
+        default:
           return dispatch({
             type: 'TAG_SEARCH_ERROR',
             payload: 'Unable to connect to server. Please try again later.'
