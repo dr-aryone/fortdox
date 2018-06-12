@@ -19,7 +19,8 @@
     "linux": "build --linux",
     "all": "build -mwl",
     "watch": "gulp",
-    "postinstall": "electron-builder install-app-deps"
+    "postinstall": "electron-builder install-app-deps",
+    "rebuild": "electron-rebuild -f"
   },
   "dependencies": {
     "@edgeguideab/client-request": "^1.4.8",
@@ -30,7 +31,8 @@
     "electron-updater": "^2.19.1",
     "immutable": "^3.8.2",
     "js-yaml": "^3.10.0",
-    "react": "^16.2.0",
+    "react": "^16.4.0",
+    "react-beautiful-dnd": "^6.0.2",
     "react-dom": "^16.2.0",
     "react-markdown": "^2.5.1",
     "react-redux": "^5.0.6",
@@ -58,6 +60,7 @@
     "electron-devtools-installer": "^2.2.3",
     "electron-packager": "^8.7.2",
     "electron-react-devtools": "^0.4.0",
+    "electron-rebuild": "^1.7.3",
     "eslint": "^3.15.0",
     "eslint-plugin-react": "^6.9.0",
     "gulp": "^3.9.1",
@@ -73,6 +76,7 @@
     "jest": "^22.4.2",
     "pump": "^1.0.3",
     "redux-devtools": "^3.4.1",
+    "require-rebuild": "^1.2.8",
     "vinyl-buffer": "^1.0.1",
     "vinyl-source-stream": "^1.1.2",
     "watchify": "^3.9.0"

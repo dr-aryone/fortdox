@@ -1,4 +1,4 @@
-const {fromJS} = require('immutable');
+const { fromJS } = require('immutable');
 
 const initialState = fromJS({
   currentView: 'LOGIN_VIEW',
@@ -15,7 +15,8 @@ const navigation = (state = initialState, action) => {
     case 'DELETE_DOCUMENT_SUCCESS':
     case 'DELETE_DOCUMENT_ERROR':
     case 'CREATE_DOCUMENT_SUCCESS':
-      return state.set('currentView', fromJS('USER_VIEW'))
+      return state
+        .set('currentView', fromJS('USER_VIEW'))
         .set('splashScreen', false);
     case 'PREVIEW_DOCUMENT_SUCCESS':
       return state.set('currentView', fromJS('PREVIEW_DOC'));
@@ -26,7 +27,8 @@ const navigation = (state = initialState, action) => {
     case 'DIRECT_LOGIN_FAILED':
     case 'SESSION_EXPIRED':
     case 'FORCE_BACK':
-      return state.set('currentView', fromJS('LOGIN_VIEW'))
+      return state
+        .set('currentView', fromJS('LOGIN_VIEW'))
         .set('splashScreen', false);
     case 'ACTIVATE_ORGANIZATION_CODE_RECIVED':
       return state.set('currentView', fromJS('ACTIVATE_ORGANIZATION_VIEW'));

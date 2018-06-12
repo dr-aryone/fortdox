@@ -1,4 +1,4 @@
-const {combineReducers} = require('redux');
+const { combineReducers } = require('redux');
 const navigation = require('./navigation');
 const login = require('./login');
 const register = require('./register');
@@ -28,6 +28,5 @@ const docApp = combineReducers({
   toast,
   organization
 });
-
 
 module.exports = docApp;

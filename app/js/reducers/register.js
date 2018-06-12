@@ -1,4 +1,4 @@
-const {fromJS} = require('immutable');
+const { fromJS } = require('immutable');
 
 const initialState = fromJS({
   registerFields: {
@@ -35,10 +35,18 @@ const register = (state = initialState, action) => {
     case 'SESSION_EXPIRED':
       return initialState;
     case 'INPUT_CHANGE_REGISTER_ORGANIZATION':
-      return state.setIn(['registerFields', action.inputName, 'value'], fromJS(action.inputValue))
+      return state
+        .setIn(
+          ['registerFields', action.inputName, 'value'],
+          fromJS(action.inputValue)
+        )
         .setIn(['registerFields', action.inputName, 'error'], null);
     case 'INPUT_CHANGE_ACTIVATE_ORGANIZATION':
-      return state.setIn(['activateFields', action.inputName, 'value'], fromJS(action.inputValue))
+      return state
+        .setIn(
+          ['activateFields', action.inputName, 'value'],
+          fromJS(action.inputValue)
+        )
         .setIn(['activateFields', action.inputName, 'error'], null);
     case 'REGISTER_ORGANIZATION_START':
     case 'VERIFY_ACTIVATION_CODE_START':
@@ -47,11 +55,16 @@ const register = (state = initialState, action) => {
     case 'ACTIVATE_ORGANIZATION_CODE_RECIVED':
       return state.set('activationCode', fromJS(action.payload));
     case 'VERIFY_ACTIVATION_CODE_SUCCESS':
-      return state.merge({
-        privateKey: fromJS(action.payload.privateKey),
-        isLoading: false,
-        isVerified: true
-      }).setIn(['registerFields', 'email', 'value'], fromJS(action.payload.email));
+      return state
+        .merge({
+          privateKey: fromJS(action.payload.privateKey),
+          isLoading: false,
+          isVerified: true
+        })
+        .setIn(
+          ['registerFields', 'email', 'value'],
+          fromJS(action.payload.email)
+        );
     case 'CHANGE_VIEW':
     case 'ACTIVATE_ORGANIZATION_SUCCESS':
     case 'REGISTER_ORGANIZATION_SUCCESS':
@@ -62,24 +75,46 @@ const register = (state = initialState, action) => {
         isLoading: false
       });
     case 'ACTIVATE_ORGANIZATION_PASSWORD_FAIL':
-      return state.set('isLoading', false).setIn(['activateFields', 'password', 'error'], fromJS(action.payload));
+      return state
+        .set('isLoading', false)
+        .setIn(['activateFields', 'password', 'error'], fromJS(action.payload));
     case 'ACTIVATE_ORGANIZATION_PASSWORD_MISSMATCH_FAIL':
-      return state.set('isLoading', false).setIn(['activateFields', 'retypedPassword', 'error'], fromJS(action.payload));
+      return state
+        .set('isLoading', false)
+        .setIn(
+          ['activateFields', 'retypedPassword', 'error'],
+          fromJS(action.payload)
+        );
     case 'REGISTER_ORGANIZATION_FAIL':
       return state.merge({
-        registerFields: state.get('registerFields').mergeDeepWith((oldError, newError) => newError ? newError : oldError, action.payload),
-        isLoading: false,
+        registerFields: state
+          .get('registerFields')
+          .mergeDeepWith(
+            (oldError, newError) => (newError ? newError : oldError),
+            action.payload
+          ),
+        isLoading: false
       });
     case 'ACTIVATE_ORGANIZATION_FAIL':
       return state.merge({
-        activateFields: state.get('activateFields').mergeDeepWith((oldError, newError) => newError ? newError : oldError, action.payload),
-        isLoading: false,
+        activateFields: state
+          .get('activateFields')
+          .mergeDeepWith(
+            (oldError, newError) => (newError ? newError : oldError),
+            action.payload
+          ),
+        isLoading: false
       });
     case 'REGISTER_ORGANIZATION_NAME_FAIL':
-      return state.setIn(['registerFields', 'organization', 'error'], fromJS(action.payload))
+      return state
+        .setIn(
+          ['registerFields', 'organization', 'error'],
+          fromJS(action.payload)
+        )
         .set('isLoading', false);
     case 'REGISTER_ORGANIZATION_EMAIL_FAIL':
-      return state.setIn(['registerFields', 'email', 'error'], fromJS(action.payload))
+      return state
+        .setIn(['registerFields', 'email', 'error'], fromJS(action.payload))
         .set('isLoading', false);
     case 'REGISTER_ORGANIZATION_ERROR':
       return state.merge({

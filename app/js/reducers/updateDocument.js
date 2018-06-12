@@ -1,4 +1,4 @@
-const {fromJS, List} = require('immutable');
+const { fromJS, List } = require('immutable');
 
 let initialState = fromJS({
   documentToUpdate: null,
@@ -44,7 +44,9 @@ const form = (state = initialState, action) => {
           title: fromJS(action.title),
           encryptedTexts: fromJS(action.encryptedTexts),
           texts: fromJS(action.texts),
-          tags: state.getIn(['docFields', 'tags']).set('list', fromJS(action.tags)),
+          tags: state
+            .getIn(['docFields', 'tags'])
+            .set('list', fromJS(action.tags)),
           attachments: fromJS(action.attachments),
           changelog: fromJS(action.changelog),
           nextID: fromJS(action.nextID)
@@ -61,36 +63,55 @@ const form = (state = initialState, action) => {
         .setIn(['docFields', 'title', 'value'], fromJS(action.payload))
         .setIn(['docFields', 'title', 'error'], null);
     case 'UPDATE_DOC_INPUT_CHANGE_ENCRYPTED_TEXT':
-      return state.setIn(['docFields', 'encryptedTexts'],
-        state.getIn(['docFields', 'encryptedTexts']).update(action.index, field => field.merge({
-          value: fromJS(action.value),
-          error: null
-        })));
+      return state.setIn(
+        ['docFields', 'encryptedTexts'],
+        state
+          .getIn(['docFields', 'encryptedTexts'])
+          .update(action.index, field =>
+            field.merge({
+              value: fromJS(action.value),
+              error: null
+            })
+          )
+      );
     case 'UPDATE_DOC_INPUT_CHANGE_TEXT':
-      return state.setIn(['docFields', 'texts'],
-        state.getIn(['docFields', 'texts']).update(action.index, field => field.merge({
-          value: fromJS(action.value),
-          error: null
-        })));
+      return state.setIn(
+        ['docFields', 'texts'],
+        state.getIn(['docFields', 'texts']).update(action.index, field =>
+          field.merge({
+            value: fromJS(action.value),
+            error: null
+          })
+        )
+      );
     case 'UPDATE_DOC_INPUT_CHANGE_TAGS':
-      return state.setIn(['docFields', 'tags'], state.getIn(['docFields', 'tags']).merge({
-        value: fromJS(action.value),
-        suggested: fromJS(action.suggestedTags),
-        error: null
-      }));
+      return state.setIn(
+        ['docFields', 'tags'],
+        state.getIn(['docFields', 'tags']).merge({
+          value: fromJS(action.value),
+          suggested: fromJS(action.suggestedTags),
+          error: null
+        })
+      );
     case 'UPDATE_DOC_ADD_TAG':
-      return state.setIn(['docFields', 'tags'], state.getIn(['docFields', 'tags']).merge({
-        value: '',
-        list: fromJS(action.payload),
-        suggested: [],
-        error: null
-      }));
+      return state.setIn(
+        ['docFields', 'tags'],
+        state.getIn(['docFields', 'tags']).merge({
+          value: '',
+          list: fromJS(action.payload),
+          suggested: [],
+          error: null
+        })
+      );
     case 'UPDATE_DOC_ADD_TAG_FAIL':
-      return state.setIn(['docFields', 'tags'], state.getIn(['docFields', 'tags']).merge({
-        value: '',
-        error: fromJS(action.payload),
-        suggested: []
-      }));
+      return state.setIn(
+        ['docFields', 'tags'],
+        state.getIn(['docFields', 'tags']).merge({
+          value: '',
+          error: fromJS(action.payload),
+          suggested: []
+        })
+      );
     case 'UPDATE_DOC_REMOVE_TAG':
       return state.setIn(['docFields', 'tags', 'list'], fromJS(action.payload));
     case 'UPDATE_DOC_GET_OLD_TAGS_ERROR':
@@ -98,26 +119,31 @@ const form = (state = initialState, action) => {
         error: fromJS(action.payload.error)
       });
     case 'UPDATE_DOC_GET_OLD_TAGS_SUCCESS':
-      return state
-        .setIn(['docFields', 'tags', 'old'], fromJS(action.payload));
+      return state.setIn(['docFields', 'tags', 'old'], fromJS(action.payload));
     case 'UPDATE_DOCUMENT_START':
       return state.set('isLoading', true);
     case 'UPDATE_DOCUMENT_FAIL': {
       let encryptedTexts = state.getIn(['docFields', 'encryptedTexts']);
       encryptedTexts.forEach((entry, index) => {
         if (action.emptyFieldIDs.includes(entry.get('id'))) {
-          encryptedTexts = encryptedTexts.update(index, field => field.set('error', fromJS(action.emptyFieldError)));
+          encryptedTexts = encryptedTexts.update(index, field =>
+            field.set('error', fromJS(action.emptyFieldError))
+          );
         }
       });
       let texts = state.getIn(['docFields', 'texts']);
       texts.forEach((entry, index) => {
         if (action.emptyFieldIDs.includes(entry.get('id'))) {
-          texts = texts.update(index, field => field.set('error', fromJS(action.emptyFieldError)));
+          texts = texts.update(index, field =>
+            field.set('error', fromJS(action.emptyFieldError))
+          );
         }
       });
       return state.merge({
         docFields: state.get('docFields').merge({
-          title: state.getIn(['docFields', 'title']).set('error', fromJS(action.titleError)),
+          title: state
+            .getIn(['docFields', 'title'])
+            .set('error', fromJS(action.titleError)),
           encryptedTexts,
           texts
         }),
@@ -127,7 +153,7 @@ const form = (state = initialState, action) => {
     case 'UPDATE_DOCUMENT_ERROR':
       return state.merge({
         error: fromJS(action.payload),
-        isLoading: false,
+        isLoading: false
       });
     case 'UPDATE_DOC_NEW_ENCRYPTED_TEXT_FIELD':
       return state
@@ -142,12 +168,16 @@ const form = (state = initialState, action) => {
         .setIn(['docFields', 'encryptedTexts'], fromJS(action.encryptedTexts))
         .setIn(['docFields', 'texts'], fromJS(action.texts));
     case 'UPDATE_DOC_ADD_ATTACHMENT':
-      return state
-        .setIn(['docFields', 'attachments'], state.getIn(['docFields', 'attachments']).push(fromJS({
-          name: fromJS(action.name),
-          type: fromJS(action.fileType),
-          file: fromJS(action.file)
-        })));
+      return state.setIn(
+        ['docFields', 'attachments'],
+        state.getIn(['docFields', 'attachments']).push(
+          fromJS({
+            name: fromJS(action.name),
+            type: fromJS(action.fileType),
+            file: fromJS(action.file)
+          })
+        )
+      );
     case 'UPDATE_DOC_REMOVE_ATTACHMENT':
       return state.setIn(['docFields', 'attachments'], fromJS(action.payload));
     case 'UPDATE_DOC_PREVIEW_ATTACHMENT_START':
@@ -158,18 +188,22 @@ const form = (state = initialState, action) => {
         isLoading: false
       });
     case 'UPDATE_DOC_PREVIEW_ATTACHMENT_SUCCESS':
-      return state.merge({
-        isLoading: false,
-        error: null
-      }).setIn(['docFields', 'preview'], fromJS(action.payload));
+      return state
+        .merge({
+          isLoading: false,
+          error: null
+        })
+        .setIn(['docFields', 'preview'], fromJS(action.payload));
     case 'UPDATE_DOCUMENT_SUCCESS':
       return state.set('isLoading', false);
     case 'DOCUMENT_TITLE_LOOKUP_DONE': {
       let current = state.getIn(['documentToUpdate', '_id']);
       let hits = action.payload.hits.filter(e => e._id !== current);
-      return state.set('similarDocuments', fromJS(hits))
+      return state
+        .set('similarDocuments', fromJS(hits))
         .set('isLoading', false);
-    } case 'DOCUMENT_TITLE_LOOKUP_CLEAR':
+    }
+    case 'DOCUMENT_TITLE_LOOKUP_CLEAR':
       return state.set('similarDocuments', List());
     case 'CHANGE_VIEW':
     case 'SEARCH_SUCCESS':
