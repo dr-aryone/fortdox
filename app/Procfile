@@ -1,2 +1,3 @@
-react: cd fortdox-cra && npm start
-electron: node electron-wait-react.js
+react: npm run react
+electron: npm run electron-start 
+css: cd fortdox-cra/ && npm run watch-css
