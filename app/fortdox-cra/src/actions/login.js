@@ -76,6 +76,7 @@ export function login() {
       );
       privateKey = Buffer.from(privateKey).toString('base64');
     } catch (error) {
+      console.error(error);
       return dispatch({
         type: 'VERIFY_LOGIN_CREDS_ERROR',
         payload: 'Wrong password. Please try again.',
