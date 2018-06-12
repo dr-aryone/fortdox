@@ -103,7 +103,7 @@ function renderPagination(currentIndex, onSearch, totalHits) {
     paginationButtons.forEach((value, i) => {
       paginationButtons.push(
         <button
-          onClick={() => onSearch(start + i)}
+          onClick={() => onSearch({ index: start + i })}
           className={`pagination ${
             start + i === currentIndex ? 'focused' : ''
           }`}
