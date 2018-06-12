@@ -1,5 +1,4 @@
-const electron = window.require('electron');
-const aes = electron.remote.require('./aes.js');
+import aes from 'actions/utilities/aes';
 
 export const encryptPrivateKey = (privateKey, password) => {
   return new Promise(async (resolve, reject) => {
