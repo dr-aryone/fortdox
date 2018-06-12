@@ -1,5 +1,6 @@
-import aes from 'actions/utilities/aes';
 const requestor = require('@edgeguideab/client-request');
+const electron = window.require('electron');
+const aes = electron.remote.require('./aes.js');
 const config = require('config.json');
 const { readStorage } = require('actions/utilities/storage');
 export default { login, loginAs, directLogin };
