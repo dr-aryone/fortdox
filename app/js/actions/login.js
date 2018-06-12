@@ -83,7 +83,7 @@ const login = () => {
       }
       writeStorage(salt, email, organization);
     }
-    
+
     let encryptedPrivateKey;
     try {
       encryptedPrivateKey = await readKey(email, organization);

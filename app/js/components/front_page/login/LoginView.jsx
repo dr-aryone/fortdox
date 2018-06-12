@@ -16,15 +16,15 @@ class LoginView extends React.Component {
     let userList = [];
     let storage = readStorage();
     Object.entries(storage).forEach(([email, value]) => {
-      Object.keys(value).forEach((organization) => {
+      Object.keys(value).forEach(organization => {
         userList.push(
           <div
             tabIndex='0'
-            onKeyDown={(event) => {
+            onKeyDown={event => {
               if (event.keyCode === 13) loginAs(email, organization, event);
             }}
-            onClick={(event) => loginAs(email, organization, event)}
-            key={email+organization}
+            onClick={event => loginAs(email, organization, event)}
+            key={email + organization}
           >
             <h2>{organization}</h2>
             <h3>{email}</h3>
