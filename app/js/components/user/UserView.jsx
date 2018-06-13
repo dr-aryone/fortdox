@@ -4,6 +4,7 @@ const CreateDocContainer = require('containers/document/CreateDocContainer');
 const UpdateDocContainer = require('containers/document/UpdateDocContainer');
 const SearchViewContainer = require('containers/search/SearchViewContainer');
 const InviteUserContainer = require('containers/invite/InviteUserContainer');
+const DevicesContainer = require('containers/devices/DevicesContainer');
 const DownloadManager = require('components/general/DownloadManager');
 const SplashScreen = require('components/general/SplashScreen');
 
@@ -31,6 +32,8 @@ const UserView = ({
     case 'INVITE_USER_VIEW':
       page = <InviteUserContainer />;
       break;
+    case 'DEVICES_VIEW':
+      page = <DevicesContainer />;
   }
 
   return (

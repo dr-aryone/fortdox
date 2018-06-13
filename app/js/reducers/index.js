@@ -1,4 +1,4 @@
-const {combineReducers} = require('redux');
+const { combineReducers } = require('redux');
 const navigation = require('./navigation');
 const login = require('./login');
 const register = require('./register');
@@ -12,6 +12,7 @@ const verifyUser = require('./verifyUser');
 const download = require('./download');
 const toast = require('./toast');
 const organization = require('./organization');
+const devices = require('./devices');
 
 const docApp = combineReducers({
   navigation,
@@ -26,8 +27,8 @@ const docApp = combineReducers({
   verifyUser,
   download,
   toast,
-  organization
+  organization,
+  devices
 });
-
 
 module.exports = docApp;

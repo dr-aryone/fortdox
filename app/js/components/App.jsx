@@ -4,7 +4,7 @@ const UserViewContainer = require('containers/user/UserViewContainer');
 const SplashScreen = require('components/general/SplashScreen');
 const Toast = require('components/general/Toast');
 
-const App = ({currentView, splashScreen}) => {
+const App = ({ currentView, splashScreen }) => {
   let view = null;
   switch (currentView) {
     case 'VERIFY_USER_VIEW':
@@ -14,6 +14,7 @@ const App = ({currentView, splashScreen}) => {
     case 'ACTIVATE_ORGANIZATION_VIEW':
       view = <FrontPageViewContainer />;
       break;
+    case 'DEVICES_VIEW':
     case 'INVITE_USER_VIEW':
     case 'SEARCH_VIEW':
     case 'USER_VIEW':
