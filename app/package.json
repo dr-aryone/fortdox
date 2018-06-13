@@ -66,7 +66,7 @@
     "electron": "latest",
     "electron-builder": "^19.55.0",
     "electron-builder-squirrel-windows": "^19.55.0",
-    "electron-devtools-installer": "^2.2.3",
+    "electron-devtools-installer": "^2.2.4",
     "electron-packager": "^8.7.2",
     "electron-react-devtools": "^0.4.0",
     "electron-rebuild": "^1.7.3",
