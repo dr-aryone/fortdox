@@ -26,7 +26,6 @@ Install following the tools (if they're not already installed):
 
 For debugging, install the following developer tools:
 
-* [Node Inspector](https://github.com/node-inspector/node-inspector)
 * [React Developer Tools](https://chrome.google.com/webstore/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi?hl=en)
 * [Redux DevTools](https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd?hl=en)
 
@@ -48,8 +47,6 @@ Install the Node dependencies for server in `fortdox/server`
 > npm install
 
 # Getting started
-Build the project with gulp in `fortdox/app`
-> gulp
 
 ## Set configuration files
 Configuration files that are needed to run the application with the server.
@@ -57,12 +54,47 @@ Configuration files that are needed to run the application with the server.
 ### Client
 Copy the template from `fortdox/app/config-template.json` to `fortdox/app/config.json` and fill in necessary values.
 
+This is a dummy version of the config file:
+```
+{
+  "name": "FortDox",
+  "productName": "FortDox",
+  "server": "http://localhost:8000",
+  "logo": "/resources/logo.png"
+}
+
+```
+
 ### Server
 Copy the template from `fortdox/server/server_modules/config-template.json` to `fortdox/server/server_modules/config.json` and fill in necessary values.
 
-## Client
-Run the application in `fortdox/app`
-> electron .
+This is a dummy version of the config file:
+```
+{
+  "name": "FortDox",
+  "server": "http://localhost:8000",
+  "mailer": {
+    "host": "<ENTER MAIL HOST,e.g smtp.google.com>",
+    "secure": true,
+    "port": 465,
+    "auth": {
+      "user": "<ENTER EMAIL>",
+      "pass": "<ENTER PASSWORD>"
+    }
+  },
+  "sqlConfig": {
+    "username": "<MySQL USERNAME",
+    "password": "<MySQL PASSWORD",
+    "database": "fortdox",
+    "host": "127.0.0.1",
+    "dialect": "mysql",
+    "logging": false
+  }
+}
+```
+
+
+
 
 ## Server
 Run the server in `fortdox/server`
@@ -82,12 +114,18 @@ Run mySQL (optional)
 Run database migrations in `fortdox/server`
 > sequelize db:migrate
 
+## Gulp
+Build the client project with gulp in `fortdox/app`
+> gulp
+
+## Client
+Run the application in `fortdox/app`
+> electron .
+
 # Developers
-## Debugging
+## Debugging client app
 Debugging is done on the client through the Developer Tools (`cmd + alt + I` on Mac) in the Electron window. Simply insert a debugger statement `debugger;` to trigger the developer mode. React and Redux developer tools should be visible as tabs if they are correctly installed.
 
-Debugging is done similar to the client side. Run the inspector instead of `npm start` in `fordox/server`
->nodemon --inspect main.js
 
 ## Cleanup
 On server in `fortdox/server`
