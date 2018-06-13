@@ -2,7 +2,7 @@ const requestor = require('@edgeguideab/client-request');
 const passwordCheck = require('actions/utilities/passwordCheck');
 const encryptPrivateKey = require('actions/utilities/encryptPrivateKey');
 const config = require('../../config.json');
-const {writeStorage} = require('actions/utilities/storage');
+const { writeStorage } = require('actions/utilities/storage');
 const checkEmptyFields = require('actions/utilities/checkEmptyFields');
 
 const inviteUser = () => {
@@ -38,14 +38,17 @@ const inviteUser = () => {
       console.error(error);
       switch (error.status) {
         case 400:
-          if (error.body == 'mail') return dispatch({
-            type: 'INVITE_USER_ERROR',
-            payload: 'Invitation could not be sent. Please check the email address.'
-          });
-          if (error.body == 'header') return dispatch({
-            type: 'INVITE_USER_ERROR',
-            payload: 'Bad request. Please try again.'
-          });
+          if (error.body == 'mail')
+            return dispatch({
+              type: 'INVITE_USER_ERROR',
+              payload:
+                'Invitation could not be sent. Please check the email address.'
+            });
+          if (error.body == 'header')
+            return dispatch({
+              type: 'INVITE_USER_ERROR',
+              payload: 'Bad request. Please try again.'
+            });
           break;
         case 409:
           return dispatch({
@@ -120,7 +123,7 @@ const verifyUser = () => {
     let emptyFields = checkEmptyFields(fields);
     if (emptyFields.length > 0) {
       let newFields = {};
-      emptyFields.forEach((entry) => {
+      emptyFields.forEach(entry => {
         let error;
         switch (entry[0]) {
           case 'password':
@@ -147,14 +150,16 @@ const verifyUser = () => {
     let privateKey = state.verifyUser.get('privateKey');
     let pwResult = passwordCheck(password, retypedPassword);
     if (!pwResult.valid) {
-      if (pwResult.fault == 'password') return dispatch({
-        type: 'VERIFY_NEW_USER_PASSWORD_FAIL',
-        payload: pwResult.errorMsg
-      });
-      if (pwResult.fault == 'retypedPassword') return dispatch({
-        type: 'VERIFY_NEW_USER_PASSWORD_MISSMATCH_FAIL',
-        payload: pwResult.errorMsg
-      });
+      if (pwResult.fault == 'password')
+        return dispatch({
+          type: 'VERIFY_NEW_USER_PASSWORD_FAIL',
+          payload: pwResult.errorMsg
+        });
+      if (pwResult.fault == 'retypedPassword')
+        return dispatch({
+          type: 'VERIFY_NEW_USER_PASSWORD_MISSMATCH_FAIL',
+          payload: pwResult.errorMsg
+        });
     }
 
     let result;
@@ -218,10 +223,11 @@ const deleteUser = email => {
     });
 
     const user = getState().user.get('email');
-    if (user === email) return dispatch({
-      type: 'DELETE_USER_ERROR',
-      payload: 'You can\'t remove yourself from the organization'
-    });
+    if (user === email)
+      return dispatch({
+        type: 'DELETE_USER_ERROR',
+        payload: 'You can\'t remove yourself from the organization'
+      });
 
     try {
       await requestor.delete(`${config.server}/users/${email}`);
@@ -252,4 +258,4 @@ const deleteUser = email => {
   };
 };
 
-module.exports = {inviteUser, receivePrivateKey, verifyUser, deleteUser};
+module.exports = { inviteUser, receivePrivateKey, verifyUser, deleteUser };

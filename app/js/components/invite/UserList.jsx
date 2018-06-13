@@ -14,9 +14,7 @@ module.exports = class UserList extends React.Component {
   }
 
   componentDidMount() {
-    const {
-      onMount = () => {}
-    } = this.props;
+    const { onMount = () => {} } = this.props;
     onMount();
   }
 
@@ -39,34 +37,51 @@ module.exports = class UserList extends React.Component {
   }
 
   render() {
-    const {
-      loading,
-      error,
-      users
-    } = this.props;
+    const { loading, error, users } = this.props;
 
     const domUsers = users.map(user => (
       <div className={`user ${user.pending ? 'pending' : ''}`} key={user.email}>
         <span className='email'>{user.email}</span>
         <span className='pending'>{user.pending ? '(Pending)' : ''}</span>
-        {this.props.user !== user.email ?
-          <i className='material-icons' onClick={() => this.openModal(user.email)}>clear</i>
-          : null }
+        {this.props.user !== user.email ? (
+          <i
+            className='material-icons'
+            onClick={() => this.openModal(user.email)}
+          >
+            clear
+          </i>
+        ) : null}
       </div>
     ));
 
-    const deleteDialog =
-      (<Modal show={this.state.showModal} onClose={this.closeModal} showClose={false}>
+    const deleteDialog = (
+      <Modal
+        show={this.state.showModal}
+        onClose={this.closeModal}
+        showClose={false}
+      >
         <div className='box dialog'>
           <i className='material-icons'>error_outline</i>
           <h2>Warning</h2>
-          <p>Are you sure you want to remove {this.state.userToBeDeleted} form the organization?</p>
+          <p>
+            Are you sure you want to remove {this.state.userToBeDeleted} form
+            the organization?
+          </p>
           <div className='buttons'>
-            <button onClick={() => this.onDelete()} type='button' className='warning'>Delete</button>
-            <button onClick={this.closeModal} type='button'>Cancel</button>
+            <button
+              onClick={() => this.onDelete()}
+              type='button'
+              className='warning'
+            >
+              Delete
+            </button>
+            <button onClick={this.closeModal} type='button'>
+              Cancel
+            </button>
           </div>
         </div>
-      </Modal>);
+      </Modal>
+    );
 
     return (
       <div className='user-list'>
@@ -77,7 +92,7 @@ module.exports = class UserList extends React.Component {
           </div>
           <div className='organization-users'>
             {loading ? <Loader /> : null}
-            {error ?  <ErrorBox errorMsg={error} /> : null}
+            {error ? <ErrorBox errorMsg={error} /> : null}
             {domUsers}
           </div>
         </div>
