@@ -14,8 +14,20 @@ const tryConnection = () =>
       if (!startedElectron) {
         console.log('starting electron');
         startedElectron = true;
-        const exec = require('child_process').exec;
-        exec('npm run electron-dev');
+        const spawn = require('child_process').spawn;
+        const npm = spawn('npm', ['run', 'electron-dev']);
+
+        npm.stdout.on('data', data => {
+          console.log('out: ', data.toString());
+        });
+
+        npm.stderr.on('data', data => {
+          console.log('err: ', data.toString());
+        });
+
+        npm.on('close', code => {
+          console.log('Electron stoped with code', code.toString());
+        });
       }
     }
   );
