@@ -92,7 +92,7 @@ function createBrowserWindow() {
   let openingUrl =
     process.env.ELECTRON_START_URL ||
     urlParser.format({
-      pathname: path.join(__dirname, './fortdox-cra/build/index.html'),
+      pathname: path.join(__dirname, './build/index.html'),
       protocol: 'file',
       slashes: true
     });
