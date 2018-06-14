@@ -28,6 +28,9 @@ const inputChange = (inputName, inputValue) => {
       case 'VERIFY_USER_VIEW':
         type = 'INPUT_CHANGE_VERIFY_USER';
         break;
+      case 'INVITE_VIEW':
+        type = 'INPUT_CHANGE_INVITE_VIEW';
+        break;
       default:
         console.error(`Unknown view ${currentView}`);
         return;

@@ -18,7 +18,9 @@ const FrontPageView = ({ currentView }) => {
     case 'VERIFY_ORGANIZATION_VIEW':
       view = <RegisterViewContainer />;
       break;
+    case 'INVITE_VIEW':
     case 'VERIFY_USER_VIEW':
+    case 'VERIFY_INVITE_VIEW':
       view = <VerifyUserContainer />;
       break;
   }

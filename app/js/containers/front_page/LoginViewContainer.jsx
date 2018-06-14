@@ -1,8 +1,8 @@
-const {connect} = require('react-redux');
+const { connect } = require('react-redux');
 const LoginView = require('components/front_page/login/LoginView');
 const action = require('actions');
-const {loginAs} = require('actions/login');
-const {directLogin} = require('actions/login');
+const { loginAs } = require('actions/login');
+const { directLogin } = require('actions/login');
 
 const mapStateToProps = state => {
   return {
@@ -12,7 +12,7 @@ const mapStateToProps = state => {
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {
     onMount: () => {
       dispatch(directLogin());
@@ -23,6 +23,9 @@ const mapDispatchToProps = (dispatch) => {
     },
     toRegisterView: () => {
       dispatch(action.changeView('REGISTER_VIEW'));
+    },
+    toVerifyInvite: () => {
+      dispatch(action.changeView('INVITE_VIEW'));
     }
   };
 };

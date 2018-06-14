@@ -40,6 +40,10 @@ const navigation = (state = initialState, action) => {
       return state.set('currentView', fromJS('VERIFY_USER_VIEW'));
     case 'LOGIN_AS':
       return state.set('currentView', fromJS('VERIFY_LOGIN_VIEW'));
+    case 'RECEIVE_PRIVATE_KEY_SUCCESS':
+      return state.set('currentView', fromJS('VERIFY_USER_VIEW'));
+    case 'RECEIVE_PRIVATE_KEY_ERROR':
+      return state.set('currentView', fromJS('INVITE_VIEW'));
     default:
       return state;
   }
