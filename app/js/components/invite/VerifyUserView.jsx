@@ -3,13 +3,13 @@ const LoaderOverlay = require('components/general/LoaderOverlay');
 const ErrorBox = require('components/general/ErrorBox');
 
 class VerifyUserView extends React.Component {
-  componentWillMount () {
-    if (this.props.onMount) {
+  componentWillMount() {
+    if (this.props.onMount && !this.props.privateKey) {
       this.props.onMount(this.props);
     }
   }
 
-  render () {
+  render() {
     let {
       fields,
       error,
@@ -17,11 +17,11 @@ class VerifyUserView extends React.Component {
       onChange,
       onSubmit,
       toLoginView,
-      privateKey,
+      privateKey
     } = this.props;
 
     let errorMsg = {};
-    fields.entrySeq().forEach((entry) => {
+    fields.entrySeq().forEach(entry => {
       errorMsg[entry[0]] = entry[1].get('error') ? (
         <div className='arrow-box show'>
           <span className='material-icons'>error_outline</span>

@@ -7,7 +7,9 @@ const Toast = require('components/general/Toast');
 const App = ({ currentView, splashScreen }) => {
   let view = null;
   switch (currentView) {
+    case 'INVITE_VIEW':
     case 'VERIFY_USER_VIEW':
+    case 'VERIFY_INVITE_VIEW':
     case 'LOGIN_VIEW':
     case 'VERIFY_LOGIN_VIEW':
     case 'REGISTER_VIEW':
