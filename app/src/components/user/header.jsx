@@ -16,7 +16,7 @@ class Header extends React.Component {
     window.removeEventListener('click', this.onClose, true);
   }
 
-  onClose(event) {
+  onClose() {
     if (event.target.id === 'TOGGLE-NAV')
       this.setState({
         hasBeenClicked: true
@@ -66,6 +66,12 @@ class Header extends React.Component {
               onClick={() => changeView('INVITE_USER_VIEW')}
             >
               person_add
+            </i>
+            <i
+              className='material-icons'
+              onClick={() => changeView('DEVICES_VIEW')}
+            >
+              devices
             </i>
           </span>
           <span className='account'>
