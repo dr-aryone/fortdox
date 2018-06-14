@@ -1,7 +1,12 @@
 const requestor = require('@edgeguideab/client-request');
 const aes = window.require('./aes.js');
 const config = require('../../config.json');
-const {readStorage} = require('actions/utilities/storage');
+const {
+  addKey,
+  readKey,
+  readStorage,
+  writeStorage
+} = require('actions/utilities/storage');
 
 const directLogin = () => {
   return async (dispatch, getState) => {
@@ -10,9 +15,10 @@ const directLogin = () => {
     });
 
     let state = getState();
-    if (state.verifyUser.get('forceBack')) return dispatch({
-      type: 'FORCE_BACK'
-    });
+    if (state.verifyUser.get('forceBack'))
+      return dispatch({
+        type: 'FORCE_BACK'
+      });
 
     if (localStorage.getItem('activeUser')) {
       try {
@@ -55,17 +61,48 @@ const login = () => {
     dispatch({
       type: 'VERIFY_LOGIN_CREDS_START'
     });
-    let state = getState();
-    let email = state.login.get('email');
-    let password = state.login.get('password');
-    let organization = state.login.get('organization');
-    let storage = readStorage();
-    let encryptedPrivateKey = storage[email][organization].privateKey;
-    let salt = storage[email][organization].salt;
+    const state = getState();
+    const email = state.login.get('email');
+    const password = state.login.get('password');
+    const organization = state.login.get('organization');
+    const storage = readStorage();
+    const salt = storage[email][organization].salt;
+
+    if (storage[email][organization].privateKey) {
+      try {
+        await addKey(
+          storage[email][organization].privateKey,
+          email,
+          organization
+        );
+      } catch (error) {
+        return dispatch({
+          type: 'VERIFY_LOGIN_CREDS_ERROR',
+          payload: 'Unable to migrate privateKey'
+        });
+      }
+      writeStorage(salt, email, organization);
+    }
+
+    let encryptedPrivateKey;
+    try {
+      encryptedPrivateKey = await readKey(email, organization);
+    } catch (error) {
+      return dispatch({
+        type: 'VERIFY_LOGIN_CREDS_ERROR',
+        payload: 'Unable to login.'
+      });
+    }
     let privateKey;
     try {
-      let paddedPassword = (await aes.generatePaddedKey(password, new window.Buffer(salt, 'base64'))).key;
-      privateKey = (await aes.decrypt(new window.Buffer(paddedPassword, 'base64'), new window.Buffer(encryptedPrivateKey, 'base64')));
+      let paddedPassword = (await aes.generatePaddedKey(
+        password,
+        new window.Buffer(salt, 'base64')
+      )).key;
+      privateKey = await aes.decrypt(
+        new window.Buffer(paddedPassword, 'base64'),
+        new window.Buffer(encryptedPrivateKey.split('"')[1], 'base64')
+      );
       privateKey = Buffer.from(privateKey).toString('base64');
     } catch (error) {
       return dispatch({
@@ -112,4 +149,4 @@ const login = () => {
   };
 };
 
-module.exports = {login, loginAs, directLogin};
+module.exports = { login, loginAs, directLogin };

@@ -102,7 +102,11 @@ const verifyNewUser = (uuid, privateKey) => {
     decryptMasterPassword(privateKey, encryptedMasterPassword);
     try {
       await user.updateAttributes({
+<<<<<<< HEAD
         uuid: null
+=======
+        uuid: null,
+>>>>>>> keytar
       });
     } catch (error) {
       console.error(error);

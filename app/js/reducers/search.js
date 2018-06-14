@@ -1,4 +1,4 @@
-const {fromJS} = require('immutable');
+const { fromJS } = require('immutable');
 
 const initialState = fromJS({
   searchString: '',
@@ -15,14 +15,18 @@ const initialState = fromJS({
 const search = (state = initialState, action) => {
   switch (action.type) {
     case 'SEARCH_START':
-      return state.set('isLoading', true).set('searchString', action.payload.searchString);
+      return state
+        .set('isLoading', true)
+        .set('searchString', action.payload.searchString);
     case 'OPEN_DOCUMENT_START':
     case 'TAG_SEARCH_START':
       return state.set('isLoading', true);
     case 'OPEN_DOCUMENT_DONE':
       return state.set('isLoading', false);
     case 'OPEN_DOCUMENT_FAILED':
-      return state.set('isLoading', false).set('error', 'Unable to open document');
+      return state
+        .set('isLoading', false)
+        .set('error', 'Unable to open document');
     case 'SEARCH_SUCCESS':
     case 'TAG_SEARCH_SUCCESS':
       return state.merge({

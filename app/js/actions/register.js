@@ -1,7 +1,7 @@
 const requestor = require('@edgeguideab/client-request');
 const encryptPrivateKey = require('actions/utilities/encryptPrivateKey');
 const passwordCheck = require('actions/utilities/passwordCheck');
-const { writeStorage } = require('actions/utilities/storage');
+const { addKey, writeStorage } = require('actions/utilities/storage');
 const config = require('../../config.json');
 const checkEmptyFields = require('actions/utilities/checkEmptyFields');
 
@@ -97,12 +97,19 @@ const activateOrganizaton = () => {
           });
       }
     }
-    writeStorage(
-      result.privateKey,
-      result.salt,
-      response.body.organizationName,
-      email
-    );
+
+    try {
+      await addKey(result.privateKey, email, response.body.organizationName);
+    } catch (error) {
+      console.error(error);
+      return dispatch({
+        type: 'ACTIVATE_ORGANIZATION_ERROR',
+        payload: 'Unable to add key.'
+      });
+    }
+
+    await writeStorage(result.salt, email, response.body.organizationName);
+
     return dispatch({
       type: 'ACTIVATE_ORGANIZATION_SUCCESS',
       payload: 'Team registration complete! You can now login.'
