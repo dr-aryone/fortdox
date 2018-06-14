@@ -20,7 +20,7 @@
     "all": "build -mwl",
     "postinstall": "electron-builder install-app-deps",
     "rebuild": "electron-rebuild -f",
-    "electron-dev": "ELECTRON_START_URL=http://localhost:3000 electron . --dev",
+    "electron-dev": "ELECTRON_START_URL=http://localhost:5000 electron . --dev",
     "electron-start": "node electron-wait-react.js",
     "build-css": "node-sass-chokidar styles/ -o public/css/",
     "watch-css": "npm run build-css && node-sass-chokidar styles/ -o public/css/ --watch --recursive",
