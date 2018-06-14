@@ -7,6 +7,7 @@ const {
   readKey,
   readStorage,
   writeStorage
+  writeDeviceIdToStorage,
 } = require('actions/utilities/storage');
 
 export default { login, loginAs, directLogin };
@@ -98,6 +99,7 @@ export function login() {
       });
     }
     let privateKey;
+    let deviceId = storage[email][organization].deviceId;
     try {
       let paddedPassword = (await aes.generatePaddedKey(
         password,
@@ -121,7 +123,8 @@ export function login() {
       response = await requestor.post(`${config.server}/login`, {
         body: {
           email,
-          privateKey
+          privateKey,
+          deviceId: deviceId === undefined ? undefined : deviceId
         }
       });
     } catch (error) {
@@ -145,6 +148,11 @@ export function login() {
     }
 
     localStorage.setItem('activeUser', response.body.token);
+    const serverGaveUsdeviceId = response.body.deviceId !== undefined;
+    if (serverGaveUsdeviceId) {
+      writeDeviceIdToStorage(response.body.deviceId, organization, email);
+    }
+
     return dispatch({
       type: 'VERIFY_LOGIN_CREDS_SUCCESS',
       payload: {
