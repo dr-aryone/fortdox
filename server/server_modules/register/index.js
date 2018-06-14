@@ -79,7 +79,7 @@ async function organization(req, res) {
 
 async function confirm(req, res) {
   let email = req.body.email;
-
+  let deviceId = req.body.deviceId;
   if (!req.body.privateKey) {
     logger.log('silly', `Missing private key for ${email} @ /register/confirm`);
     return res.status(400).send();
@@ -87,7 +87,7 @@ async function confirm(req, res) {
   let privateKey = Buffer.from(req.body.privateKey, 'base64');
 
   try {
-    await users.verifyUser(email, privateKey);
+    await users.verifyUser(email, privateKey, deviceId);
   } catch (error) {
     logger.log(
       'error',
