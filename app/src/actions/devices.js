@@ -1,8 +1,8 @@
 //const requestor = require('@edgeguideab/client-request');
 //const config = require('../../config.json');
-const QRCode = require('qrcode');
+import QRCode from 'qrcode';
 
-const getDevices = () => {
+export const getDevices = () => {
   return async (dispatch, getState) => {
     dispatch({
       type: 'GET_DEVICES_START'
@@ -15,7 +15,7 @@ const getDevices = () => {
   };
 };
 
-const getQRCode = () => {
+export const getQRCode = () => {
   return async (dispatch, getState) => {
     dispatch({
       type: 'GET_QR_CODE_START'
@@ -40,4 +40,4 @@ const getQRCode = () => {
   };
 };
 
-module.exports = { getQRCode, getDevices };
+export default { getQRCode, getDevices };
