@@ -199,7 +199,8 @@ const verifyUUID = async uuid => {
     }
     result = {
       email: user.email,
-      organizationId: user.organizationId
+      organizationId: user.organizationId,
+      id: user.id
     };
   } catch (error) {
     console.error(error);
