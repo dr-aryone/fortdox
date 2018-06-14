@@ -1,32 +1,42 @@
 const { spawn } = window.require('child_process');
 const keyChainPath = '/usr/bin/security';
-// const config = require('../../../config.json');
+const fortdoxKey = 'fortdox';
 
-const writeStorage = (salt, email, organization) => {
-  let storage;
-  storage = window.localStorage.getItem('fortdox');
-  if (!storage) {
-    window.localStorage.setItem('fortdox', JSON.stringify({}));
-    storage = window.localStorage.getItem('fortdox');
-  }
-  storage = JSON.parse(storage);
-  storage[email] = {
+const writeDeviceIdToStorage = (deviceId, organization, email) => {
+  let fortdoxInfo = getFortodoxInfoFromStorage();
+  fortdoxInfo[email][organization].deviceId = deviceId;
+  window.localStorage.setItem(fortdoxKey, JSON.stringify(fortdoxInfo));
+};
+
+const writeStorage = (privateKey, salt, organization, email, deviceId) => {
+  let fortdoxInfo = getFortodoxInfoFromStorage();
+  fortdoxInfo[email] = {
     [organization]: {
-      salt
+      privateKey,
+      salt,
+      deviceId
     }
   };
+  window.localStorage.setItem(fortdoxKey, JSON.stringify(fortdoxInfo));
+};
 
-  window.localStorage.setItem('fortdox', JSON.stringify(storage));
+const getFortodoxInfoFromStorage = () => {
+  let info;
+  info = window.localStorage.getItem(fortdoxKey);
+  if (!info) {
+    window.localStorage.setItem(fortdoxKey, JSON.stringify({}));
+    info = window.localStorage.getItem(fortdoxKey);
+  }
+  return JSON.parse(info);
 };
 
 const readStorage = () => {
   let storage;
-  storage = window.localStorage.getItem('fortdox');
+  storage = window.localStorage.getItem(fortdoxKey);
   if (!storage) {
-    window.localStorage.setItem('fortdox', JSON.stringify({}));
-    storage = window.localStorage.getItem('fortdox');
+    window.localStorage.setItem(fortdoxKey, JSON.stringify({}));
+    storage = window.localStorage.getItem(fortdoxKey);
   }
-
   return JSON.parse(storage);
 };
 
@@ -67,4 +77,10 @@ const readKey = (email, organization) =>
       });
   });
 
-module.exports = { writeStorage, readStorage, addKey, readKey };
+module.exports = {
+  writeStorage,
+  writeDeviceIdToStorage,
+  readStorage,
+  addKey,
+  readKey
+};
