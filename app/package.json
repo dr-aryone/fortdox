@@ -13,6 +13,7 @@
   },
   "scripts": {
     "start": "electron .",
+    "dev": "nf start",
     "mac": "build --mac",
     "win": "build --win",
     "win32": "build --win --ia32",
@@ -72,6 +73,7 @@
     "electron-rebuild": "^1.7.3",
     "eslint": "^3.15.0",
     "eslint-plugin-react": "^6.9.0",
+    "foreman": "^3.0.0",
     "gulp": "^3.9.1",
     "gulp-autoprefixer": "^3.1.1",
     "gulp-concat": "^2.6.1",
