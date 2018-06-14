@@ -6,10 +6,10 @@ const firstTimeRegistration = ({ to, organization, uuid }) => ({
   from: config.mailer.auth.user,
   content: `<p><a href="${config.server}/activation-redirect?code=${uuid}">${
     config.server
-  }/activation-redirect?code=${uuid} </a>`,
+  }/activation-redirect?code=${uuid} </a><p>Activation code:</p><p>${uuid}</p>`,
   html: `<p><a href="${config.server}/activation-redirect?code=${uuid}">${
     config.server
-  }/activation-redirect?code=${uuid} </a>`
+  }/activation-redirect?code=${uuid} </a><p>Activation code:</p><p>${uuid}</p>`
 });
 
 const newUserRegistration = ({

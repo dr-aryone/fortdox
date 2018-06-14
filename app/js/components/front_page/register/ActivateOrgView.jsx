@@ -3,13 +3,13 @@ const LoaderOverlay = require('components/general/LoaderOverlay');
 const ErrorBox = require('components/general/ErrorBox');
 
 class ActivateOrgView extends React.Component {
-  componentWillMount () {
-    if (this.props.onMount) {
+  componentWillMount() {
+    if (this.props.onMount && !this.props.isVerified) {
       this.props.onMount(this.props);
     }
   }
 
-  render () {
+  render() {
     let {
       activateFields,
       register,
@@ -19,7 +19,7 @@ class ActivateOrgView extends React.Component {
     } = this.props;
 
     let errorMsg = {};
-    activateFields.entrySeq().forEach((entry) => {
+    activateFields.entrySeq().forEach(entry => {
       errorMsg[entry[0]] = entry[1].get('error') ? (
         <div className='arrow-box show'>
           <span className='material-icons'>error_outline</span>
@@ -35,7 +35,10 @@ class ActivateOrgView extends React.Component {
         <ErrorBox errorMsg={register.activateOrgError} />
         <h1 className='text-center'>Register Team</h1>
         <div className='box'>
-          <form className={register.verifyCodeError ? 'hide' : ''} onSubmit={onRegister}>
+          <form
+            className={register.verifyCodeError ? 'hide' : ''}
+            onSubmit={onRegister}
+          >
             <label>Password:</label>
             <input
               name='password'

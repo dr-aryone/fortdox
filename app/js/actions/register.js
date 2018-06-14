@@ -1,7 +1,7 @@
 const requestor = require('@edgeguideab/client-request');
 const encryptPrivateKey = require('actions/utilities/encryptPrivateKey');
 const passwordCheck = require('actions/utilities/passwordCheck');
-const {writeStorage} = require('actions/utilities/storage');
+const { writeStorage } = require('actions/utilities/storage');
 const config = require('../../config.json');
 const checkEmptyFields = require('actions/utilities/checkEmptyFields');
 
@@ -16,7 +16,7 @@ const activateOrganizaton = () => {
     let emptyFields = checkEmptyFields(fields);
     if (emptyFields.length > 0) {
       let newFields = {};
-      emptyFields.forEach((entry) => {
+      emptyFields.forEach(entry => {
         let error;
         switch (entry[0]) {
           case 'password':
@@ -45,14 +45,16 @@ const activateOrganizaton = () => {
     let pwResult = passwordCheck(password, retypedPassword);
     if (!pwResult.valid) {
       console.error(pwResult.errorMsg);
-      if (pwResult.fault == 'password') return dispatch({
-        type: 'ACTIVATE_ORGANIZATION_PASSWORD_FAIL',
-        payload: pwResult.errorMsg
-      });
-      if (pwResult.fault == 'retypedPassword') return dispatch({
-        type: 'ACTIVATE_ORGANIZATION_PASSWORD_MISSMATCH_FAIL',
-        payload: pwResult.errorMsg
-      });
+      if (pwResult.fault == 'password')
+        return dispatch({
+          type: 'ACTIVATE_ORGANIZATION_PASSWORD_FAIL',
+          payload: pwResult.errorMsg
+        });
+      if (pwResult.fault == 'retypedPassword')
+        return dispatch({
+          type: 'ACTIVATE_ORGANIZATION_PASSWORD_MISSMATCH_FAIL',
+          payload: pwResult.errorMsg
+        });
     }
 
     let result;
@@ -95,7 +97,12 @@ const activateOrganizaton = () => {
           });
       }
     }
-    writeStorage(result.privateKey, result.salt, response.body.organizationName, email);
+    writeStorage(
+      result.privateKey,
+      result.salt,
+      response.body.organizationName,
+      email
+    );
     return dispatch({
       type: 'ACTIVATE_ORGANIZATION_SUCCESS',
       payload: 'Team registration complete! You can now login.'
@@ -155,14 +162,17 @@ const registerOrganization = () => {
             payload: 'Bad request. Please try again.'
           });
         case 409:
-          if (error.body == 'organization') return dispatch({
-            type: 'REGISTER_ORGANIZATION_NAME_FAIL',
-            payload: 'Team name already exists. Please choose a different team name.'
-          });
-          if (error.body == 'user') return dispatch({
-            type: 'REGISTER_ORGANIZATION_EMAIL_FAIL',
-            payload: 'Email already exists. Please choose a different email.'
-          });
+          if (error.body == 'organization')
+            return dispatch({
+              type: 'REGISTER_ORGANIZATION_NAME_FAIL',
+              payload:
+                'Team name already exists. Please choose a different team name.'
+            });
+          if (error.body == 'user')
+            return dispatch({
+              type: 'REGISTER_ORGANIZATION_EMAIL_FAIL',
+              payload: 'Email already exists. Please choose a different email.'
+            });
           break;
         case 408:
         case 503:
@@ -207,7 +217,8 @@ const verifyActivationCode = () => {
         case 404:
           return dispatch({
             type: 'VERIFY_ACTIVATION_CODE_ERROR',
-            payload: 'Email is already verified or the link is broken.'
+            payload:
+              'Email has already been verified or wrong code was entered. Please try again.'
           });
         case 408:
         case 500:
@@ -228,4 +239,8 @@ const verifyActivationCode = () => {
   };
 };
 
-module.exports = {activateOrganizaton, registerOrganization, verifyActivationCode};
+module.exports = {
+  activateOrganizaton,
+  registerOrganization,
+  verifyActivationCode
+};

@@ -1,5 +1,7 @@
 const db = require('app/models');
-const {decryptMasterPassword} = require('app/encryption/keys/cryptMasterPassword');
+const {
+  decryptMasterPassword
+} = require('app/encryption/keys/cryptMasterPassword');
 
 const getUser = email => {
   return new Promise(async (resolve, reject) => {
@@ -20,9 +22,8 @@ const getUser = email => {
   });
 };
 
-
-const createUser = ({email, password, organizationId, uuid}) => {
-  return new Promise(async(resolve, reject) => {
+const createUser = ({ email, password, organizationId, uuid }) => {
+  return new Promise(async (resolve, reject) => {
     let user;
     try {
       user = await db.User.findOne({
@@ -58,7 +59,7 @@ const verifyUser = (email, privateKey) => {
     let encryptedMasterPassword;
     let user;
     try {
-      user = await db.User.findOne({where: {email: email}});
+      user = await db.User.findOne({ where: { email: email } });
       if (!user) {
         return reject(404);
       }
@@ -70,13 +71,12 @@ const verifyUser = (email, privateKey) => {
     let result = decryptMasterPassword(privateKey, encryptedMasterPassword);
 
     try {
-      await user.updateAttributes({uuid: null});
+      await user.updateAttributes({ uuid: null });
     } catch (error) {
       console.error(error);
       return reject(500);
     }
     return resolve(result);
-
   });
 };
 
@@ -102,8 +102,7 @@ const verifyNewUser = (uuid, privateKey) => {
     decryptMasterPassword(privateKey, encryptedMasterPassword);
     try {
       await user.updateAttributes({
-        uuid: null,
-
+        uuid: null
       });
     } catch (error) {
       console.error(error);
@@ -113,11 +112,10 @@ const verifyNewUser = (uuid, privateKey) => {
       email: user.email,
       organization: user.Organization.name
     });
-
   });
 };
 
-const setOrganizationId = ({email, organizationId}) => {
+const setOrganizationId = ({ email, organizationId }) => {
   return new Promise(async (resolve, reject) => {
     let user;
     try {
@@ -144,10 +142,12 @@ const removeUser = (email, organizationId = null) => {
   return new Promise(async (resolve, reject) => {
     let user;
     try {
-      user = await db.User.findOne({where: {
-        email,
-        organizationId
-      }});
+      user = await db.User.findOne({
+        where: {
+          email,
+          organizationId
+        }
+      });
       if (!user) {
         return reject(404);
       }
@@ -184,7 +184,7 @@ const verifyUUID = async uuid => {
   let user;
   try {
     user = await db.User.findOne({
-      where: {uuid}
+      where: { uuid }
     });
     if (!user) {
       throw 404;
@@ -193,10 +193,9 @@ const verifyUUID = async uuid => {
       email: user.email,
       organizationId: user.organizationId
     };
-
   } catch (error) {
     console.error(error);
-    throw 500;
+    throw error;
   }
   return result;
 };

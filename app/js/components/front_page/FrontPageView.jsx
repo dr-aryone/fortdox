@@ -4,7 +4,7 @@ const RegisterViewContainer = require('containers/front_page/RegisterViewContain
 const VerifyUserContainer = require('containers/invite/VerifyUserContainer');
 const VerifyLoginContainer = require('containers/front_page/VerifyLoginContainer');
 
-const FrontPageView = ({currentView}) => {
+const FrontPageView = ({ currentView }) => {
   let view = {};
   switch (currentView) {
     case 'LOGIN_VIEW':
@@ -15,17 +15,14 @@ const FrontPageView = ({currentView}) => {
       break;
     case 'REGISTER_VIEW':
     case 'ACTIVATE_ORGANIZATION_VIEW':
+    case 'VERIFY_ORGANIZATION_VIEW':
       view = <RegisterViewContainer />;
       break;
     case 'VERIFY_USER_VIEW':
       view = <VerifyUserContainer />;
       break;
   }
-  return (
-    <div className='full-page'>
-      {view}
-    </div>
-  );
+  return <div className='full-page'>{view}</div>;
 };
 
 module.exports = FrontPageView;

@@ -12,6 +12,7 @@ const App = ({ currentView, splashScreen }) => {
     case 'VERIFY_LOGIN_VIEW':
     case 'REGISTER_VIEW':
     case 'ACTIVATE_ORGANIZATION_VIEW':
+    case 'VERIFY_ORGANIZATION_VIEW':
       view = <FrontPageViewContainer />;
       break;
     case 'DEVICES_VIEW':
