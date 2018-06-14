@@ -16,7 +16,7 @@ class Header extends React.Component {
     window.removeEventListener('click', this.onClose, true);
   }
 
-  onClose() {
+  onClose(event) {
     if (event.target.id === 'TOGGLE-NAV')
       this.setState({
         hasBeenClicked: true
