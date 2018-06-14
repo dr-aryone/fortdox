@@ -1,8 +1,8 @@
 import LoginViewContainer from 'containers/front_page/LoginViewContainer';
 import RegisterViewContainer from 'containers/front_page/RegisterViewContainer';
 import VerifyLoginContainer from 'containers/front_page/VerifyLoginContainer';
-const React = require('react');
-const VerifyUserContainer = require('containers/invite/VerifyUserContainer');
+import React from 'react';
+import VerifyUserContainer from 'containers/invite/VerifyUserContainer';
 
 export default function FrontPageView({ currentView }) {
   let view = {};
@@ -24,10 +24,8 @@ export default function FrontPageView({ currentView }) {
       view = <VerifyUserContainer />;
       break;
     default:
-      view = <RegisterViewContainer />;
+      view = <LoginViewContainer />;
       break;
   }
   return <div className='full-page'>{view}</div>;
 }
-
-module.exports = FrontPageView;

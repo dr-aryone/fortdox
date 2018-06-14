@@ -1,6 +1,8 @@
-const React = require('react');
-const LoaderOverlay = require('components/general/LoaderOverlay');
-const ErrorBox = require('components/general/ErrorBox');
+import React from 'react';
+import LoaderOverlay from 'components/general/LoaderOverlay';
+import ErrorBox from 'components/general/ErrorBox';
+
+export default ActivateOrgView;
 
 class ActivateOrgView extends React.Component {
   componentWillMount() {
@@ -71,5 +73,3 @@ class ActivateOrgView extends React.Component {
     );
   }
 }
-
-module.exports = ActivateOrgView;

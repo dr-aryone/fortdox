@@ -1,10 +1,16 @@
-const React = require('react');
-const LoaderOverlay = require('components/general/LoaderOverlay');
-const ErrorBox = require('components/general/ErrorBox');
+import React from 'react';
+import LoaderOverlay from 'components/general/LoaderOverlay';
+import ErrorBox from 'components/general/ErrorBox';
 
-const RegisterOrgView = ({registerFields, register, onChange, onCreateOrganization, toLoginView}) => {
+const RegisterOrgView = ({
+  registerFields,
+  register,
+  onChange,
+  onCreateOrganization,
+  toLoginView
+}) => {
   let errorMsg = {};
-  registerFields.entrySeq().forEach((entry) => {
+  registerFields.entrySeq().forEach(entry => {
     errorMsg[entry[0]] = entry[1].get('error') ? (
       <div className='arrow-box show'>
         <span className='material-icons'>error_outline</span>
@@ -49,4 +55,4 @@ const RegisterOrgView = ({registerFields, register, onChange, onCreateOrganizati
   );
 };
 
-module.exports = RegisterOrgView;
+export default RegisterOrgView;

@@ -3,9 +3,9 @@ import {
   verifyActivationCode,
   activateOrganizaton
 } from 'actions/register';
-const { connect } = require('react-redux');
-const RegisterView = require('components/front_page/register/RegisterView');
-const action = require('actions');
+import RegisterView from 'components/front_page/register/RegisterView';
+import { connect } from 'react-redux';
+import action from 'actions';
 
 const mapStateToProps = state => {
   return {

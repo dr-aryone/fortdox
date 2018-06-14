@@ -1,7 +1,7 @@
-const React = require('react');
-const RegisterOrgView = require('./RegisterOrgView');
-const ActivateOrgView = require('./ActivateOrgView');
-const VerifyOrgLinkView = require('./VerifyOrgLinkView');
+import React from 'react';
+import ActivateOrgView from 'components/front_page/register//ActivateOrgView';
+import RegisterOrgView from 'components/front_page/register/RegisterOrgView';
+import VerifyOrgLinkView from 'components/front_page/register/VerifyOrgLinkView';
 
 const RegisterView = ({
   currentView,
@@ -59,5 +59,4 @@ const RegisterView = ({
       return <div />;
   }
 };
-
-module.exports = RegisterView;
+export default RegisterView;
