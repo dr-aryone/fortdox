@@ -54,10 +54,9 @@ const register = (state = initialState, action) => {
         )
         .setIn(['activateFields', action.inputName, 'error'], null);
     case 'INPUT_CHANGE_VERIFY_ORGANIZATION':
-      return state.setIn(
-        ['activationCode', 'value'],
-        fromJS(action.inputValue)
-      ).setIn(['activationCode', 'error'], null);
+      return state
+        .setIn(['activationCode', 'value'], fromJS(action.inputValue))
+        .setIn(['activationCode', 'error'], null);
     case 'REGISTER_ORGANIZATION_START':
     case 'VERIFY_ACTIVATION_CODE_START':
     case 'ACTIVATE_ORGANIZATION_START':
