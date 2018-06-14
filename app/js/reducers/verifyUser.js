@@ -8,12 +8,18 @@ const initialState = fromJS({
     retypedPassword: {
       value: '',
       error: null
+    },
+    uuid: {
+      value: '',
+      error: null
+    },
+    temporaryPassword: {
+      value: '',
+      error: null
     }
   },
   error: null,
   isLoading: false,
-  uuid: '',
-  temporaryPassword: '',
   privateKey: null,
   forceBack: false
 });
@@ -21,19 +27,28 @@ const initialState = fromJS({
 const verifyUser = (state = initialState, action) => {
   switch (action.type) {
     case 'INPUT_CHANGE_INVITE_VIEW':
-      return state.set(action.inputName, action.inputValue);
     case 'INPUT_CHANGE_VERIFY_USER':
       return state
         .setIn(['fields', action.inputName, 'value'], fromJS(action.inputValue))
         .setIn(['fields', action.inputName, 'error'], null);
     case 'ACTIVATE_USER_CODE_RECIVED':
-      return state.merge({
-        uuid: fromJS(action.payload.code),
-        temporaryPassword: fromJS(action.payload.pass)
-      });
+      return state
+        .setIn(['fields', 'uuid', 'value'], action.payload.code)
+        .setIn(['fields', 'temporaryPassword', 'value'], action.payload.pass);
     case 'RECEIVE_PRIVATE_KEY_SUCCESS':
       return state.merge({
-        privateKey: fromJS(action.payload)
+        privateKey: fromJS(action.payload),
+        isLoading: false
+      });
+    case 'RECEIVE_PRIVATE_KEY_FAIL':
+      return state.merge({
+        fields: state
+          .get('fields')
+          .mergeDeepWith(
+            (oldError, newError) => (newError ? newError : oldError),
+            action.payload
+          ),
+        isLoading: false
       });
     case 'VERIFY_NEW_USER_START':
       return state.set('isLoading', true);

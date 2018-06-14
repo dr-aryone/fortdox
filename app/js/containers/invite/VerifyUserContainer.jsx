@@ -9,9 +9,7 @@ const mapStateToProps = state => {
     fields: state.verifyUser.get('fields'),
     isLoading: state.verifyUser.get('isLoading'),
     privateKey: state.verifyUser.get('privateKey'),
-    error: state.verifyUser.get('error'),
-    uuid: state.verifyUser.get('uuid'),
-    temporaryPassword: state.verifyUser.get('temporaryPassword')
+    error: state.verifyUser.get('error')
   };
 };
 

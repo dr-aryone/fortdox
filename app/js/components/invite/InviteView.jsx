@@ -4,8 +4,6 @@ const VerifyInviteView = require('./VerifyInviteView');
 
 const InviteView = ({
   currentView,
-  uuid,
-  temporaryPassword,
   fields,
   error,
   isLoading,
@@ -21,8 +19,7 @@ const InviteView = ({
     case 'VERIFY_INVITE_VIEW':
       return (
         <VerifyInviteView
-          uuid={uuid}
-          temporaryPassword={temporaryPassword}
+          fields={fields}
           error={error}
           isLoading={isLoading}
           onChange={onChange}
