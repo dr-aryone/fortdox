@@ -48,7 +48,9 @@ module.exports = class DevicesView extends React.Component {
       <Modal show={this.state.showModal} onClose={this.closeModal} showClose>
         <div className='box dialog'>
           <h2>QRCode</h2>
-          {QRCode ? <img src={QRCode} /> : null}
+          {QRCode ? (
+            <img alt='QR code containing activation code' src={QRCode} />
+          ) : null}
         </div>
       </Modal>
     );

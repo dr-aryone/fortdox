@@ -62,7 +62,7 @@ const readKey = (email, organization) =>
       .stderr.on('data', d => pwd.push(d))
       .on(
         'close',
-        code => (code == 0 ? resolve(pwd.toString()) : reject(code))
+        code => (code === 0 ? resolve(pwd.toString()) : reject(code))
       );
   });
 
