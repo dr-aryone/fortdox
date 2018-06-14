@@ -1,4 +1,5 @@
 const users = require('app/users');
+const devices = require('app/devices');
 const keygen = require('app/encryption/keys/keygen');
 const orgs = require('app/organizations');
 const es = require('app/elastic_search');
@@ -150,19 +151,16 @@ async function verify(req, res) {
     keypair.publicKey,
     masterPassword
   );
+
   try {
-    await users.setPassword(
-      {
-        email: user.email,
-        organizationId: user.organizationId
-      },
-      encryptedMasterPassword
-    );
+    let device = await devices.createDevice(user.id, encryptedMasterPassword);
     res.send({
       email: user.email,
-      privateKey: keypair.privateKey.toString('base64')
+      privateKey: keypair.privateKey.toString('base64'),
+      deviceId: device.deviceId
     });
   } catch (error) {
+    console.error(error);
     logger.log(
       'error',
       `Could not set encrypted master password for ${
