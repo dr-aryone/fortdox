@@ -1,4 +1,8 @@
-const writeStorage = (privateKey, salt, organization, email) => {
+const { spawn } = window.require('child_process');
+const keyChainPath = '/usr/bin/security';
+// const config = require('../../../config.json');
+
+const writeStorage = (salt, email, organization) => {
   let storage;
   storage = window.localStorage.getItem('fortdox');
   if (!storage) {
@@ -8,10 +12,10 @@ const writeStorage = (privateKey, salt, organization, email) => {
   storage = JSON.parse(storage);
   storage[email] = {
     [organization]: {
-      privateKey,
       salt
     }
   };
+
   window.localStorage.setItem('fortdox', JSON.stringify(storage));
 };
 
@@ -26,4 +30,40 @@ const readStorage = () => {
   return JSON.parse(storage);
 };
 
-module.exports = {writeStorage, readStorage};
+const addKey = (privateKey, email, organization) =>
+  new Promise((resolve, reject) =>
+    spawn(keyChainPath, [
+      'add-generic-password',
+      '-a',
+      `${email}?${organization}`,
+      '-s',
+      'fortdox',
+      '-w',
+      privateKey
+      //'-T',
+      //config.applicationPath
+    ])
+      .on('close', code => (code === 0 ? resolve(code) : reject(code)))
+      .on('error', reject)
+  );
+
+const readKey = (email, organization) =>
+  new Promise((resolve, reject) => {
+    const pwd = [];
+    spawn(keyChainPath, [
+      'find-generic-password',
+      '-a',
+      `${email}?${organization}`,
+      '-s',
+      'fortdox',
+      '-g'
+    ])
+      .on('error', reject)
+      .stderr.on('data', d => pwd.push(d))
+      .on(
+        'close',
+        code => (code == 0 ? resolve(pwd.toString()) : reject(code))
+      );
+  });
+
+module.exports = { writeStorage, readStorage, addKey, readKey };

@@ -2,6 +2,7 @@ const React = require('react');
 const { readStorage } = require('actions/utilities/storage');
 const config = require('../../../../config.json');
 const MessageBox = require('components/general/MessageBox');
+
 class LoginView extends React.Component {
   componentWillMount() {
     if (this.props.onMount) {
@@ -10,6 +11,7 @@ class LoginView extends React.Component {
   }
 
   render() {
+<<<<<<< HEAD
     let {
       loginAs,
       toRegisterView,
@@ -17,6 +19,9 @@ class LoginView extends React.Component {
       message,
       warning
     } = this.props;
+=======
+    let { loginAs, toRegisterView, message, warning } = this.props;
+>>>>>>> keytar
 
     let userList = [];
     let storage = readStorage();

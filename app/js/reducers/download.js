@@ -1,4 +1,4 @@
-const {fromJS, List, Map} = require('immutable');
+const { fromJS, List, Map } = require('immutable');
 
 const initialState = fromJS({
   downloads: []
@@ -10,16 +10,23 @@ const download = (state = initialState, action) => {
     case 'SESSION_EXPIRED':
       return initialState;
     case 'ATTACHMENT_DOWNLOAD_STARTED': {
-      return state.update('downloads', list => list.push(Map({
-        id: action.payload.id,
-        name: action.payload.name,
-        path: action.payload.path,
-        downloadListIndex: action.payload.downloadListIndex,
-        downloading: true,
-        progress: 0
-      })));
-    } case 'ATTACHMENT_DOWNLOAD_PROGRESS': {
-      let downloadListIndex = state.get('downloads').findIndex(e => e.get('id') === action.payload.id);
+      return state.update('downloads', list =>
+        list.push(
+          Map({
+            id: action.payload.id,
+            name: action.payload.name,
+            path: action.payload.path,
+            downloadListIndex: action.payload.downloadListIndex,
+            downloading: true,
+            progress: 0
+          })
+        )
+      );
+    }
+    case 'ATTACHMENT_DOWNLOAD_PROGRESS': {
+      let downloadListIndex = state
+        .get('downloads')
+        .findIndex(e => e.get('id') === action.payload.id);
       let updatedDownload = Map({
         id: action.payload.id,
         name: action.payload.name,
@@ -28,11 +35,17 @@ const download = (state = initialState, action) => {
         progress: action.payload.progress
       });
       if (downloadListIndex !== -1) {
-        return state.updateIn(['downloads', downloadListIndex], () => updatedDownload);
+        return state.updateIn(
+          ['downloads', downloadListIndex],
+          () => updatedDownload
+        );
       }
       return state.update('downloads', list => list.push(updatedDownload));
-    } case 'ATTACHMENT_DOWNLOAD_DONE': {
-      let downloadListIndex = state.get('downloads').findIndex(e => e.get('id') === action.payload.id);
+    }
+    case 'ATTACHMENT_DOWNLOAD_DONE': {
+      let downloadListIndex = state
+        .get('downloads')
+        .findIndex(e => e.get('id') === action.payload.id);
       let updatedDownload = Map({
         id: action.payload.id,
         name: action.payload.name,
@@ -42,19 +55,31 @@ const download = (state = initialState, action) => {
         progress: 100
       });
       if (downloadListIndex !== -1) {
-        return state.updateIn(['downloads', downloadListIndex], () => updatedDownload);
+        return state.updateIn(
+          ['downloads', downloadListIndex],
+          () => updatedDownload
+        );
       }
       return state.update('downloads', list => list.push(updatedDownload));
-    } case 'ATTACHMENT_DOWNLOAD_CLEAR': {
-      let downloadListIndex = state.get('downloads').findIndex(e => e.get('id') === action.payload.id);
+    }
+    case 'ATTACHMENT_DOWNLOAD_CLEAR': {
+      let downloadListIndex = state
+        .get('downloads')
+        .findIndex(e => e.get('id') === action.payload.id);
       if (downloadListIndex !== -1) {
-        return state.update('downloads', list => list.splice(downloadListIndex, 1));
+        return state.update('downloads', list =>
+          list.splice(downloadListIndex, 1)
+        );
       }
       return state;
-    } case 'ATTACHMENT_DOWNLOAD_CLEAR_ALL': {
+    }
+    case 'ATTACHMENT_DOWNLOAD_CLEAR_ALL': {
       return state.set('downloads', List());
-    } case 'ATTACHMENT_DOWNLOAD_ERROR': {
-      let downloadListIndex = state.get('downloads').findIndex(e => e.get('id') === action.payload.id);
+    }
+    case 'ATTACHMENT_DOWNLOAD_ERROR': {
+      let downloadListIndex = state
+        .get('downloads')
+        .findIndex(e => e.get('id') === action.payload.id);
       let updatedDownload = Map({
         id: action.payload.id,
         name: action.payload.name,
@@ -64,10 +89,14 @@ const download = (state = initialState, action) => {
         error: true
       });
       if (downloadListIndex !== -1) {
-        return state.updateIn(['downloads', downloadListIndex], () => updatedDownload);
+        return state.updateIn(
+          ['downloads', downloadListIndex],
+          () => updatedDownload
+        );
       }
       return state.update('downloads', list => list.push(updatedDownload));
-    } default: {
+    }
+    default: {
       return state;
     }
   }

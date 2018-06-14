@@ -1,4 +1,4 @@
-const {fromJS} = require('immutable');
+const { fromJS } = require('immutable');
 
 let initialState = fromJS({
   privateKey: '',
