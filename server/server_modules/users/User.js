@@ -54,7 +54,7 @@ const createUser = ({ email, password, organizationId, uuid }) => {
   });
 };
 
-const verifyUser = (email, privateKey) => {
+const verifyUser = (email, privateKey, deviceId) => {
   return new Promise(async (resolve, reject) => {
     let encryptedMasterPassword;
     let user;
@@ -63,11 +63,19 @@ const verifyUser = (email, privateKey) => {
       if (!user) {
         return reject(404);
       }
-      encryptedMasterPassword = user.password;
     } catch (error) {
       console.error(error);
       return reject(500);
     }
+
+    let userDevice = await db.Devices.findOne({
+      where: {
+        userid: user.id,
+        deviceId: deviceId
+      }
+    });
+    encryptedMasterPassword = userDevice.password;
+
     let result = decryptMasterPassword(privateKey, encryptedMasterPassword);
 
     try {

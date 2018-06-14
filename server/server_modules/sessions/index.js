@@ -1,8 +1,11 @@
 const users = require('app/users');
+const db = require('app/models');
 const statusMsg = require('app/statusMsg.json');
 const logger = require('app/logger');
-const {decryptSession, encryptSession} = require('./encryption');
-const {decryptMasterPassword} = require('app/encryption/keys/cryptMasterPassword');
+const { decryptSession, encryptSession } = require('./encryption');
+const {
+  decryptMasterPassword
+} = require('app/encryption/keys/cryptMasterPassword');
 
 module.exports = {
   login,
@@ -19,7 +22,27 @@ async function login(req, res) {
     return res.status(error).send();
   }
 
+  //NOTICE: This should be removed when everyone is migrated
+  //This is used to let the client learn the device uuid assigned to the 'main' device.
+  const requestDeviceId = req.body.deviceId;
+  let deviceIdWhereQuery = {};
+  let deviceIdMigration = false;
+  console.log('Device id is', req.body.deviceId);
+  if (requestDeviceId === undefined && user.uuid == null) {
+    console.log('migration', 'Client without device uuid, will send it back.');
+    deviceIdMigration = true;
+    deviceIdWhereQuery = { userid: user.id };
+  } else {
+    console.log('migration', 'Client with device uuid');
+    deviceIdWhereQuery = { deviceId: requestDeviceId };
+  }
+
+  const deviceOfUser = await db.Devices.findOne({
+    where: deviceIdWhereQuery
+  });
+
   let privateKey = Buffer.from(req.body.privateKey, 'base64');
+  user.password = deviceOfUser.password;
 
   try {
     await decryptMasterPassword(privateKey, user.password);
@@ -39,7 +62,8 @@ async function login(req, res) {
   });
 
   res.send({
-    token
+    token,
+    deviceId: deviceIdMigration ? deviceOfUser.deviceId : null
   });
   logger.log('info', `User ${req.body.email} has logged in!`);
 }
