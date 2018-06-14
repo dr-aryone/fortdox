@@ -9,7 +9,6 @@ const cors = require('cors');
 const config = require('app/config.json');
 const PORT = 8000;
 const devMode = process.argv[2] === '--dev';
-console.log('dev?', devMode);
 
 const job = new CronJob('*/30 * * * *', async () => {
   try {
@@ -21,7 +20,6 @@ const job = new CronJob('*/30 * * * *', async () => {
 job.start();
 
 if (devMode) {
-  console.log(config);
   app.use(cors({ origin: config.cors, credentials: true }));
 }
 app.use(bodyParser.json({ limit: '100mb' }));
@@ -36,6 +34,9 @@ app.use(
 app.use('/', routes);
 
 app.listen(PORT, () => {
+  if (devMode) {
+    logger.info('Dev mode is enabled');
+  }
   logger.info(`Server started listening on port ${PORT}`);
 });
 
