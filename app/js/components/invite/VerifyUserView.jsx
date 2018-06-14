@@ -33,7 +33,7 @@ class VerifyUserView extends React.Component {
     return (
       <div className='container'>
         <LoaderOverlay display={isLoading} />
-        <ErrorBox message={error} />
+        <ErrorBox errorMsg={error} />
         <h1 className='text-center'>Register</h1>
         <div className='box'>
           <div className={privateKey ? '' : 'hide'}>

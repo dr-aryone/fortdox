@@ -78,12 +78,25 @@ const inviteUser = () => {
 
 const receivePrivateKey = () => {
   return async (dispatch, getState) => {
-    let state = getState();
-    let uuid = state.verifyUser.get('uuid');
-    let temporaryPassword = state.verifyUser.get('temporaryPassword');
     dispatch({
       type: 'RECEIVE_PRIVATE_KEY_START'
     });
+    let state = getState();
+    let fields = state.verifyUser.get('fields');
+    let uuid = fields.getIn(['uuid', 'value']);
+    let temporaryPassword = fields.getIn(['temporaryPassword', 'value']);
+
+    let errorFields = {};
+    if (uuid === '') errorFields['uuid'] = { error: 'Please enter uuid.' };
+    if (temporaryPassword === '')
+      errorFields['temporaryPassword'] = {
+        error: 'Please enter temporary password.'
+      };
+    if (Object.keys(errorFields).length != 0)
+      return dispatch({
+        type: 'RECEIVE_PRIVATE_KEY_FAIL',
+        payload: errorFields
+      });
 
     let response;
     try {
@@ -174,7 +187,7 @@ const verifyUser = () => {
     }
 
     let response;
-    let uuid = state.verifyUser.get('uuid');
+    let uuid = state.verifyUser.getIn(['fields', 'uuid', 'value']);
     try {
       response = await requestor.post(`${config.server}/invite/confirm`, {
         body: {

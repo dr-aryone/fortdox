@@ -3,15 +3,16 @@ const LoaderOverlay = require('components/general/LoaderOverlay');
 const ErrorBox = require('components/general/ErrorBox');
 
 const VerifyInviteView = props => {
-  let {
-    uuid,
-    temporaryPassword,
-    error,
-    isLoading,
-    onChange,
-    onVerifyUser,
-    toLoginView
-  } = props;
+  let { fields, error, isLoading, onChange, onVerifyUser, toLoginView } = props;
+  let errorMsg = {};
+  fields.entrySeq().forEach(entry => {
+    errorMsg[entry[0]] = entry[1].get('error') ? (
+      <div className='arrow-box show'>
+        <span className='material-icons'>error_outline</span>
+        {entry[1].get('error')}
+      </div>
+    ) : null;
+  });
   return (
     <div className='container'>
       <LoaderOverlay display={isLoading} />
@@ -23,19 +24,21 @@ const VerifyInviteView = props => {
           <input
             name='uuid'
             type='text'
-            value={uuid}
+            value={fields.getIn(['uuid', 'value'])}
             onChange={onChange}
             className='input-block'
             autoFocus
           />
+          {errorMsg.uuid}
           <label>Enter temporary password:</label>
           <input
             name='temporaryPassword'
             type='text'
-            value={temporaryPassword}
+            value={fields.getIn(['temporaryPassword', 'value'])}
             onChange={onChange}
             className='input-block'
           />
+          {errorMsg.temporaryPassword}
           <button onClick={onVerifyUser} className='block' type='submit'>
             Submit
           </button>
