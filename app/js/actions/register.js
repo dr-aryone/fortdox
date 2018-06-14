@@ -203,7 +203,14 @@ const verifyActivationCode = () => {
     });
 
     let state = getState();
-    let activationCode = state.register.get('activationCode');
+    let activationCode = state.register.getIn(['activationCode', 'value']);
+    if (activationCode === '') {
+      return dispatch({
+        type: 'VERIFY_ACTIVATION_CODE_FAIL',
+        payload: 'Please enter the activation code.'
+      });
+    }
+
     let response;
     try {
       response = await requestor.post(`${config.server}/register/verify`, {

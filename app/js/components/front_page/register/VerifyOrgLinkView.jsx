@@ -22,6 +22,14 @@ const VerifyOrgLinkView = ({
   } else {
     concatMessage = message;
   }
+
+  const emptyField = activationCode.get('error') ? (
+    <div className='arrow-box show'>
+      <span className='material-icons'>error_outline</span>
+      {activationCode.get('error')}
+    </div>
+  ) : null;
+
   return (
     <div className='container'>
       <LoaderOverlay display={register.isLoading} />
@@ -33,11 +41,12 @@ const VerifyOrgLinkView = ({
         <input
           name='code'
           type='text'
-          value={activationCode}
+          value={activationCode.get('value')}
           onChange={onChange}
           className='input-block'
           autoFocus
         />
+        {emptyField}
         <button onClick={onVerifyCode} className='block' type='submit'>
           Verify Team
         </button>

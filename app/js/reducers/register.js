@@ -22,7 +22,10 @@ const initialState = fromJS({
     }
   },
   verifyCodeError: null,
-  activationCode: '',
+  activationCode: {
+    value: '',
+    error: null
+  },
   isVerified: false,
   privateKey: '',
   isLoading: false,
@@ -51,13 +54,16 @@ const register = (state = initialState, action) => {
         )
         .setIn(['activateFields', action.inputName, 'error'], null);
     case 'INPUT_CHANGE_VERIFY_ORGANIZATION':
-      return state.set('activationCode', fromJS(action.inputValue));
+      return state.setIn(
+        ['activationCode', 'value'],
+        fromJS(action.inputValue)
+      ).setIn(['activationCode', 'error'], null);
     case 'REGISTER_ORGANIZATION_START':
     case 'VERIFY_ACTIVATION_CODE_START':
     case 'ACTIVATE_ORGANIZATION_START':
       return state.set('isLoading', true);
     case 'ACTIVATE_ORGANIZATION_CODE_RECIVED':
-      return state.set('activationCode', fromJS(action.payload));
+      return state.setIn(['activationCode', 'value'], fromJS(action.payload));
     case 'VERIFY_ACTIVATION_CODE_SUCCESS':
       return state
         .merge({
@@ -69,6 +75,10 @@ const register = (state = initialState, action) => {
           ['registerFields', 'email', 'value'],
           fromJS(action.payload.email)
         );
+    case 'VERIFY_ACTIVATION_CODE_FAIL':
+      return state
+        .setIn(['activationCode', 'error'], action.payload)
+        .set('isLoading', false);
     case 'REGISTER_ORGANIZATION_SUCCESS':
       return initialState.set('message', fromJS(action.payload));
     case 'CHANGE_VIEW':
@@ -77,7 +87,8 @@ const register = (state = initialState, action) => {
     case 'VERIFY_ACTIVATION_CODE_ERROR':
       return state.merge({
         verifyCodeError: fromJS(action.payload),
-        isLoading: false
+        isLoading: false,
+        message: null
       });
     case 'ACTIVATE_ORGANIZATION_PASSWORD_FAIL':
       return state
@@ -129,7 +140,8 @@ const register = (state = initialState, action) => {
     case 'ACTIVATE_ORGANIZATION_ERROR':
       return state.merge({
         activateOrgError: fromJS(action.payload),
-        isLoading: false
+        isLoading: false,
+        message: null
       });
     default:
       return state;
