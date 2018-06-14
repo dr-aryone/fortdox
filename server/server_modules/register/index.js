@@ -2,7 +2,9 @@ const users = require('app/users');
 const keygen = require('app/encryption/keys/keygen');
 const orgs = require('app/organizations');
 const es = require('app/elastic_search');
-const {encryptMasterPassword} = require('app/encryption/keys/cryptMasterPassword');
+const {
+  encryptMasterPassword
+} = require('app/encryption/keys/cryptMasterPassword');
 const mailer = require('app/mailer');
 const uuidv1 = require('uuid/v1');
 const logger = require('app/logger');
@@ -43,7 +45,10 @@ async function organization(req, res) {
       organizationId
     });
   } catch (error) {
-    logger.log('error', `Could not set Organization ID (${organizationId}) for ${email}`);
+    logger.log(
+      'error',
+      `Could not set Organization ID (${organizationId}) for ${email}`
+    );
     return res.status(error).send('organization');
   }
   let mail = mailer.firstTimeRegistration({
@@ -53,16 +58,26 @@ async function organization(req, res) {
   });
   try {
     mailer.send(mail);
-    logger.log('silly', `User ${req.body.email} sent an activation mail for organization ${req.body.organization}`);
+    logger.log(
+      'silly',
+      `User ${req.body.email} sent an activation mail for organization ${
+        req.body.organization
+      }`
+    );
   } catch (error) {
-    logger.log('silly', `Could not send email to ${newUser.email} probably because email does not exist`);
+    logger.log(
+      'silly',
+      `Could not send email to ${
+        newUser.email
+      } probably because email does not exist`
+    );
     return res.status(error).send('mail');
   }
   res.send();
 }
 
 async function confirm(req, res) {
-  let email = req.body.email;  
+  let email = req.body.email;
 
   if (!req.body.privateKey) {
     logger.log('silly', `Missing private key for ${email} @ /register/confirm`);
@@ -73,14 +88,20 @@ async function confirm(req, res) {
   try {
     await users.verifyUser(email, privateKey);
   } catch (error) {
-    logger.log('error', `Could not verify user ${email}, possibly malformed/incorrect private key or mysql server is down`);
+    logger.log(
+      'error',
+      `Could not verify user ${email}, possibly malformed/incorrect private key or mysql server is down`
+    );
     return res.status(500).send();
   }
   let organizationName;
   try {
     organizationName = await users.getOrganizationName(email);
   } catch (error) {
-    logger.log('silly', `Could not connect user ${email} with an organization. Probable cause could be mysql server is down.`);
+    logger.log(
+      'silly',
+      `Could not connect user ${email} with an organization. Probable cause could be mysql server is down.`
+    );
     res.status(404).send();
   }
   try {
@@ -91,9 +112,15 @@ async function confirm(req, res) {
       organizationName,
       email: user.email
     });
-    logger.log('info', `User ${user.email} successfully created organization ${organizationName}`);
+    logger.log(
+      'info',
+      `User ${user.email} successfully created organization ${organizationName}`
+    );
   } catch (error) {
-    logger.log('error', `Check ElasticSearch and MSQL server connections. Failing that check if ${organizationName} already exists`);
+    logger.log(
+      'error',
+      `Check ElasticSearch and MSQL server connections. Failing that check if ${organizationName} already exists`
+    );
     res.status(500).send();
   }
 }
@@ -104,7 +131,12 @@ async function verify(req, res) {
   try {
     user = await users.verifyUUID(req.body.activationCode);
   } catch (error) {
-    logger.warn(`Could not verify User with UUID ${req.body.activationCode}. Probably because user does not exist or server is down.`);
+    console.log(error);
+    logger.warn(
+      `Could not verify User with UUID ${
+        req.body.activationCode
+      }. Probably because user does not exist or server is down.`
+    );
     return res.status(error).send();
   }
   try {
@@ -114,20 +146,29 @@ async function verify(req, res) {
     logger.error(error);
   }
   let masterPassword = keygen.genRandomPassword();
-  let encryptedMasterPassword = encryptMasterPassword(keypair.publicKey, masterPassword);
+  let encryptedMasterPassword = encryptMasterPassword(
+    keypair.publicKey,
+    masterPassword
+  );
   try {
-    await users.setPassword({
-      email: user.email,
-      organizationId: user.organizationId
-    },
-    encryptedMasterPassword);
+    await users.setPassword(
+      {
+        email: user.email,
+        organizationId: user.organizationId
+      },
+      encryptedMasterPassword
+    );
     res.send({
       email: user.email,
       privateKey: keypair.privateKey.toString('base64')
     });
   } catch (error) {
-    logger.log('error', `Could not set encrypted master password for ${user.email}. Check MYSQL connection, or if ${user.email} does not exist`);
+    logger.log(
+      'error',
+      `Could not set encrypted master password for ${
+        user.email
+      }. Check MYSQL connection, or if ${user.email} does not exist`
+    );
     res.status(500).send();
   }
-
 }

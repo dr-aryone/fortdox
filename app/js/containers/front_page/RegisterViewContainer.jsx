@@ -1,4 +1,4 @@
-const {connect} = require('react-redux');
+const { connect } = require('react-redux');
 const RegisterView = require('components/front_page/register/RegisterView');
 const action = require('actions');
 const register = require('actions/register');
@@ -8,6 +8,9 @@ const mapStateToProps = state => {
     currentView: state.navigation.get('currentView'),
     registerFields: state.register.get('registerFields'),
     activateFields: state.register.get('activateFields'),
+    activationCode: state.register.get('activationCode'),
+    message: state.register.get('message'),
+    isVerified: state.register.get('isVerified'),
     register: {
       verifyCodeError: state.register.get('verifyCodeError'),
       isLoading: state.register.get('isLoading'),
@@ -22,16 +25,20 @@ const mapDispatchToProps = dispatch => {
     onMount: () => {
       dispatch(register.verifyActivationCode());
     },
-    onChange: (event) => {
+    onChange: event => {
       dispatch(action.inputChange(event.target.name, event.target.value));
     },
-    onCreateOrganization: (event) => {
+    onCreateOrganization: event => {
       event.preventDefault();
       dispatch(register.registerOrganization());
     },
-    onRegister: (event) => {
+    onRegister: event => {
       event.preventDefault();
       dispatch(register.activateOrganizaton());
+    },
+    onVerifyCode: event => {
+      event.preventDefault();
+      dispatch(register.verifyActivationCode());
     },
     toLoginView: () => {
       dispatch(action.changeView('LOGIN_VIEW'));

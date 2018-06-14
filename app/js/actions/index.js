@@ -5,10 +5,13 @@ const inputChange = (inputName, inputValue) => {
     const currentView = state.navigation.get('currentView');
     switch (currentView) {
       case 'ACTIVATE_ORGANIZATION_VIEW':
-        type ='INPUT_CHANGE_ACTIVATE_ORGANIZATION';
+        type = 'INPUT_CHANGE_ACTIVATE_ORGANIZATION';
         break;
       case 'REGISTER_VIEW':
         type = 'INPUT_CHANGE_REGISTER_ORGANIZATION';
+        break;
+      case 'VERIFY_ORGANIZATION_VIEW':
+        type = 'INPUT_CHANGE_VERIFY_ORGANIZATION';
         break;
       case 'VERIFY_LOGIN_VIEW':
         type = 'INPUT_CHANGE_VERIFY_LOGIN';
@@ -63,4 +66,4 @@ const logout = () => {
   };
 };
 
-module.exports = {inputChange, changeView, logout, forceBack};
+module.exports = { inputChange, changeView, logout, forceBack };
