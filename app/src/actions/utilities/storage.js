@@ -43,7 +43,9 @@ const addKey = (privateKey, email, organization) =>
       //'-T',
       //config.applicationPath
     ])
-      .on('close', code => (code === 0 ? resolve(code) : reject(code)))
+      .on('close', code => {
+        Number(code) === 0 ? resolve(code) : reject(code);
+      })
       .on('error', reject)
   );
 
@@ -58,12 +60,11 @@ const readKey = (email, organization) =>
       'fortdox',
       '-g'
     ])
-      .on('error', reject)
+      .on('error', e => reject(e))
       .stderr.on('data', d => pwd.push(d))
-      .on(
-        'close',
-        code => (code === 0 ? resolve(pwd.toString()) : reject(code))
-      );
+      .on('close', code => {
+        Number(code) === 0 ? resolve(pwd.toString()) : reject(code);
+      });
   });
 
 module.exports = { writeStorage, readStorage, addKey, readKey };
