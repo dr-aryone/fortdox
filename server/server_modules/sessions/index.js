@@ -65,7 +65,7 @@ async function login(req, res) {
 
   res.send({
     token,
-    deviceId: deviceIdMigration ? deviceOfUser.deviceId : null
+    deviceId: deviceIdMigration ? deviceOfUser.deviceId : undefined
   });
   logger.log('info', `User ${req.body.email} has logged in!`);
 }
