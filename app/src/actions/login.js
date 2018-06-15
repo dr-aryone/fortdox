@@ -6,8 +6,8 @@ const {
   addKey,
   readKey,
   readStorage,
-  writeStorage
-  writeDeviceIdToStorage,
+  writeStorage,
+  writeDeviceIdToStorage
 } = require('actions/utilities/storage');
 
 export default { login, loginAs, directLogin };
