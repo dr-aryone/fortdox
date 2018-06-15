@@ -10,6 +10,7 @@ const {
 module.exports = {
   login,
   restrict,
+  needsMasterPassword,
   check
 };
 
@@ -56,6 +57,7 @@ async function login(req, res) {
 
   let token = encryptSession({
     privateKey: privateKey.toString('base64'),
+    deviceId: deviceOfUser.deviceId,
     email: user.email,
     organizationId: user.Organization.id,
     organization: user.Organization.name
@@ -66,6 +68,46 @@ async function login(req, res) {
     deviceId: deviceIdMigration ? deviceOfUser.deviceId : null
   });
   logger.log('info', `User ${req.body.email} has logged in!`);
+}
+
+async function needsMasterPassword(req, res, next) {
+  const userEmail = req.session.email;
+  const deviceId = req.session.deviceId;
+
+  let user;
+  debugger;
+  try {
+    user = await db.User.findOne({
+      where: {
+        email: userEmail
+      }
+    });
+  } catch (error) {
+    console.error(error);
+    res
+      .status(404)
+      .send({ error: 'No such user' })
+      .end();
+  }
+
+  let device;
+  try {
+    device = await db.Devices.findOne({
+      where: {
+        userid: user.id,
+        deviceId: deviceId
+      }
+    });
+  } catch (error) {
+    console.error(error);
+    res
+      .status(404)
+      .send({ error: 'No such device is registered with us' })
+      .end();
+  }
+
+  req.session.mp = device.password;
+  next();
 }
 
 function restrict(req, res, next) {
