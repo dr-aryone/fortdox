@@ -91,6 +91,7 @@ export function login() {
     try {
       encryptedPrivateKey = await readKey(email, organization);
     } catch (error) {
+      console.error(error);
       return dispatch({
         type: 'VERIFY_LOGIN_CREDS_ERROR',
         payload: 'Unable to login.'
