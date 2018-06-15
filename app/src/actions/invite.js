@@ -2,7 +2,7 @@ import { encryptPrivateKey } from 'actions/utilities/encryptPrivateKey';
 const requestor = require('@edgeguideab/client-request');
 const passwordCheck = require('actions/utilities/passwordCheck');
 const config = require('config.json');
-const { writeStorage } = require('actions/utilities/storage');
+const { addKey, writeStorage } = require('actions/utilities/storage');
 const checkEmptyFields = require('actions/utilities/checkEmptyFields');
 
 export const inviteUser = () => {
@@ -78,12 +78,16 @@ export const inviteUser = () => {
 
 export const receivePrivateKey = () => {
   return async (dispatch, getState) => {
-    let state = getState();
-    let uuid = state.verifyUser.get('uuid');
-    let temporaryPassword = state.verifyUser.get('temporaryPassword');
     dispatch({
       type: 'RECEIVE_PRIVATE_KEY_START'
     });
+    let state = getState();
+    let uuid = state.verifyUser.getIn(['fields', 'uuid', 'value']);
+    let temporaryPassword = state.verifyUser.getIn([
+      'fields',
+      'temporaryPassword',
+      'value'
+    ]);
 
     let response;
     try {
@@ -179,7 +183,7 @@ export const verifyUser = () => {
     }
 
     let response;
-    let uuid = state.verifyUser.get('uuid');
+    let uuid = state.verifyUser.getIn(['fields', 'uuid', 'value']);
     try {
       response = await requestor.post(`${config.server}/invite/confirm`, {
         body: {
@@ -209,7 +213,17 @@ export const verifyUser = () => {
     let organization = response.body.organization;
     let email = response.body.email;
     let encryptedPrivateKey = result.privateKey;
-    writeStorage(encryptedPrivateKey, salt, organization, email);
+    try {
+      await addKey(encryptedPrivateKey, email, organization);
+    } catch (error) {
+      console.error(error);
+      return dispatch({
+        type: 'VERIFY_NEW_USER_ERROR',
+        payload: 'Unable to store key'
+      });
+    }
+    writeStorage(salt, email, organization);
+
     return dispatch({
       type: 'VERIFY_NEW_USER_SUCCESS',
       payload: {
