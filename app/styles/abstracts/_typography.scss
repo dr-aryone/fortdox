@@ -1,17 +1,17 @@
-@import url('https://fonts.googleapis.com/css?family=Open+Sans:300,400,500,600,700');
-@import url('https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300,400,500,600,700');
-@import url('https://fonts.googleapis.com/css?family=PT+Sans');
-@import url('https://fonts.googleapis.com/css?family=Roboto+Condensed:300');
+@import url("https://fonts.googleapis.com/css?family=Open+Sans:300,400,500,600,700");
+@import url("https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300,400,500,600,700");
+@import url("https://fonts.googleapis.com/css?family=PT+Sans");
+@import url("https://fonts.googleapis.com/css?family=Roboto+Condensed:300");
 
 @font-face {
-  font-family: 'Material Icons';
+  font-family: "Material Icons";
   font-style: normal;
   font-weight: 400;
-  src: url(../fonts/material-icons.woff2) format('woff2');
+  src: url("../fonts/material-icons.woff2") format("woff2");
 }
 
 .material-icons {
-  font-family: 'Material Icons';
+  font-family: "Material Icons";
   font-weight: normal;
   font-style: normal;
   font-size: 24px;
@@ -22,24 +22,36 @@
   white-space: nowrap;
   word-wrap: normal;
   direction: ltr;
-  -webkit-font-feature-settings: 'liga';
+  -webkit-font-feature-settings: "liga";
   -webkit-font-smoothing: antialiased;
 }
 
 $text-styles: (
-  'header': (
-    'font-size': 2.5em,
-    'font-family': ('PT Sans', Arial, sans-serif),
-    'font-weight': normal
+  "header": (
+    "font-size": 2.5em,
+    "font-family": (
+      "PT Sans",
+      Arial,
+      sans-serif
+    ),
+    "font-weight": normal
   ),
-  'text': (
-    'font-size': 12px,
-    'font-family': ('Open Sans', 'Arial', sans-serif),
-    'color:': #3e3e3e
+  "text": (
+    "font-size": 12px,
+    "font-family": (
+      "Open Sans",
+      "Arial",
+      sans-serif
+    ),
+    "color:": #3e3e3e
   ),
-  'navigation': (
-    'font-size': 13px,
-    'font-family': ('Open Sans', 'Arial', sans-serif)
+  "navigation": (
+    "font-size": 13px,
+    "font-family": (
+      "Open Sans",
+      "Arial",
+      sans-serif
+    )
   )
 );
 
@@ -47,15 +59,17 @@ $text-styles: (
   text-align: center;
 }
 
-h1, h2, h3 {
+h1,
+h2,
+h3 {
   margin-top: 0px;
-  font-family: map-deep-get($text-styles, 'header', 'font-family');
-  font-weight: map-deep-get($text-styles, 'header', 'font-weight');
+  font-family: map-deep-get($text-styles, "header", "font-family");
+  font-weight: map-deep-get($text-styles, "header", "font-weight");
   padding-top: 0.65em;
 }
 
 h1 {
-  font-size: map-deep-get($text-styles, 'header', 'font-size');
+  font-size: map-deep-get($text-styles, "header", "font-size");
   color: $header-color;
 }
 

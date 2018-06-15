@@ -24,7 +24,7 @@ Install following the tools (if they're not already installed):
 * [ElasticSearch](https://www.elastic.co/)
 * [MySQL](https://www.mysql.com/)
 
-For debugging, install the following developer tools:
+For debugging, install the following developer tools, google chrome extensions:
 
 * [React Developer Tools](https://chrome.google.com/webstore/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi?hl=en)
 * [Redux DevTools](https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd?hl=en)
@@ -95,37 +95,34 @@ This is a dummy version of the config file:
 
 
 
-
 ## Server
 Run the server in `fortdox/server`
-> npm start
+> npm run dev
 
 ## ElasticSearch
-Run ElasticSearch
-> bin/elasticsearch
-
 _NOTE_: before running ElasticSearch, you need to install the ingest-attachment plugin
 > bin/elasticsearch-plugin install ingest-attachment
 
+Run ElasticSearch
+> bin/elasticsearch
+
 ## Database
-Run mySQL (optional)
+Run mySQL 
 > mysql -u root -p
 
 Run database migrations in `fortdox/server`
 > sequelize db:migrate
 
-## Gulp
-Build the client project with gulp in `fortdox/app`
-> gulp
-
 ## Client
 Run the application in `fortdox/app`
-> electron .
+> npm run dev
+
+This is using [foreman](https://github.com/strongloop/node-foreman) to mange the react process, the electron process and the sass compiler process.
+This is manged in the `Procfile`
 
 # Developers
 ## Debugging client app
 Debugging is done on the client through the Developer Tools (`cmd + alt + I` on Mac) in the Electron window. Simply insert a debugger statement `debugger;` to trigger the developer mode. React and Redux developer tools should be visible as tabs if they are correctly installed.
-
 
 ## Cleanup
 On server in `fortdox/server`
@@ -133,9 +130,7 @@ On server in `fortdox/server`
 > db:migrate
 
 Remove indicies from ElasticSearch
-> curl -XGET 'http://localhost:9200/_cat/indices?v&pretty'
-
-> curl -XDELETE 'http://localhost:9200/<index>
+> curl -X DELETE 'http://localhost:9200/_all'
 
 Clear local storage.
 

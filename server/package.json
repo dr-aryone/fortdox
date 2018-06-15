@@ -1,9 +1,10 @@
 {
   "name": "FortDox",
   "version": "1.0.2",
-  "main.js": "server.js",
+  "main": "main.js",
   "scripts": {
     "start": "node main.js",
+    "dev":"nodemon --inspect main.js --dev",
     "migrate": "sequelize db:migrate",
     "postinstall": "node -e \"var s='../server_modules',d='node_modules/app',fs=require('fs');fs.stat(d,function(e){!e||fs.symlinkSync(s,d,'dir')}); try { fs.mkdirSync('./logs') } catch(e) { console.log(e)}\""
   },
@@ -11,6 +12,7 @@
     "bcrypt": "^1.0.2",
     "body-parser": "^1.17.2",
     "client-sessions": "^0.8.0",
+    "cors": "^2.8.4",
     "cron": "^1.2.1",
     "elasticsearch": "^13.1.1",
     "express": "^4.0.0",
@@ -27,6 +29,7 @@
     "babel-eslint": "^7.2.3",
     "eslint": "^4.0.0",
     "eslint-plugin-jasmine": "^2.2.0",
+    "nodemon": "^1.17.5",
     "sequelize-cli": "^2.8.0"
   }
 }

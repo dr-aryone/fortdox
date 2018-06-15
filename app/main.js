@@ -2,7 +2,7 @@ const { app, BrowserWindow, ipcMain, Menu, shell } = require('electron');
 const path = require('path');
 const urlParser = require('url');
 const querystring = require('querystring');
-const config = require('./config.json');
+const config = require('./src/config.json');
 const autoUpdater = require('electron-updater').autoUpdater;
 const log = require('electron-log');
 log.transports.file.level = 'info';
@@ -16,7 +16,11 @@ let devtools = {};
 if (devMode) {
   devtools = require('electron-devtools-installer');
 }
-const { default: installExtension, REDUX_DEVTOOLS } = devtools;
+const {
+  default: installExtension,
+  REDUX_DEVTOOLS,
+  REACT_DEVELOPER_TOOLS
+} = devtools;
 app.setAsDefaultProtocolClient(config.name);
 
 const isSecondInstance = app.makeSingleInstance(
@@ -75,14 +79,23 @@ function createBrowserWindow() {
   if (devMode) {
     win.webContents.openDevTools();
     installExtension(REDUX_DEVTOOLS);
+    installExtension(REACT_DEVELOPER_TOOLS)
+      .then(name => {
+        console.log(`Added Extension:  ${name}`);
+      })
+      .catch(err => {
+        console.log('An error occurred: ', err);
+      });
   }
   openWindow = true;
 
-  let openingUrl = urlParser.format({
-    pathname: path.join(__dirname, 'index.html'),
-    protocol: 'file',
-    slashes: true
-  });
+  let openingUrl =
+    process.env.ELECTRON_START_URL ||
+    urlParser.format({
+      pathname: path.join(__dirname, './build/index.html'),
+      protocol: 'file',
+      slashes: true
+    });
 
   openingUrl += '?';
   if (redirectParameters) {
