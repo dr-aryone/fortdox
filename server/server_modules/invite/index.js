@@ -1,9 +1,17 @@
 const users = require('app/users');
 const keygen = require('app/encryption/keys/keygen');
-const {decryptMasterPassword} = require('app/encryption/keys/cryptMasterPassword');
-const {encryptMasterPassword} = require('app/encryption/keys/cryptMasterPassword');
-const {encryptPrivateKey} = require('app/encryption/authentication/privateKeyEncryption');
-const {decryptPrivateKey} = require('app/encryption/authentication/privateKeyEncryption');
+const {
+  decryptMasterPassword
+} = require('app/encryption/keys/cryptMasterPassword');
+const {
+  encryptMasterPassword
+} = require('app/encryption/keys/cryptMasterPassword');
+const {
+  encryptPrivateKey
+} = require('app/encryption/authentication/privateKeyEncryption');
+const {
+  decryptPrivateKey
+} = require('app/encryption/authentication/privateKeyEncryption');
 const mailer = require('app/mailer');
 const uuidv1 = require('uuid/v1');
 const logger = require('app/logger');
@@ -31,14 +39,26 @@ async function user(req, res) {
     logger.log('silly', `Could not find sender ${email} @ /invite`);
     return res.status(409).send();
   }
-  let masterPassword = decryptMasterPassword(privateKey, encryptedMasterPassword);
-  let newEncryptedMasterPassword = encryptMasterPassword(keypair.publicKey, masterPassword);
+  let masterPassword = decryptMasterPassword(
+    privateKey,
+    encryptedMasterPassword
+  );
+  let newEncryptedMasterPassword = encryptMasterPassword(
+    keypair.publicKey,
+    masterPassword
+  );
   let tempPassword = keygen.genRandomPassword();
   let encryptedPrivateKey;
   try {
-    encryptedPrivateKey = await encryptPrivateKey(tempPassword, keypair.privateKey);
+    encryptedPrivateKey = await encryptPrivateKey(
+      tempPassword,
+      keypair.privateKey
+    );
   } catch (error) {
-    logger.log('error', `Cannot encrypt temporary password for ${newUserEmail} @ /invite. \n ${error}`);
+    logger.log(
+      'error',
+      `Cannot encrypt temporary password for ${newUserEmail} @ /invite. \n ${error}`
+    );
     return res.status(500).send();
   }
   let newUser = {
@@ -50,7 +70,10 @@ async function user(req, res) {
   try {
     await users.createUser(newUser);
     await users.TempKeys.store(uuid, encryptedPrivateKey);
-    logger.log('info', `User ${newUser.email} was created and given the UUID ${uuid}`);
+    logger.log(
+      'info',
+      `User ${newUser.email} was created and given the UUID ${uuid}`
+    );
   } catch (error) {
     return res.status(error).send();
   }
@@ -63,7 +86,12 @@ async function user(req, res) {
   });
   try {
     mailer.send(mail);
-    logger.log('info', `User ${req.body.email} invited ${newUserEmail} to join ${sender.Organization.name}`);
+    logger.log(
+      'info',
+      `User ${req.body.email} invited ${newUserEmail} to join ${
+        sender.Organization.name
+      }`
+    );
   } catch (error) {
     console.error(error);
     return res.status(400).send('mail');
@@ -73,16 +101,28 @@ async function user(req, res) {
 
 async function verify(req, res) {
   let uuid = req.body.uuid;
-  let tempPassword = Buffer.from(decodeURIComponent(req.body.temporaryPassword), 'base64');
+  let tempPassword = Buffer.from(
+    decodeURIComponent(req.body.temporaryPassword),
+    'base64'
+  );
   let encryptedPrivateKey;
   let privateKey;
   try {
-    encryptedPrivateKey = new Buffer((await users.getEncryptedPrivateKey(uuid)), 'base64');
-    privateKey = (await decryptPrivateKey(tempPassword, encryptedPrivateKey)).toString('base64');
+    encryptedPrivateKey = new Buffer(
+      await users.getEncryptedPrivateKey(uuid),
+      'base64'
+    );
+    privateKey = (await decryptPrivateKey(
+      tempPassword,
+      encryptedPrivateKey
+    )).toString('base64');
     res.send({
       privateKey
     });
-    logger.log('silly', `Keypair generated and private key was sent to user with UUID ${uuid}`);
+    logger.log(
+      'silly',
+      `Keypair generated and private key was sent to user with UUID ${uuid}`
+    );
     return;
   } catch (error) {
     logger.log('error', `Could not find user with UUID ${uuid}`);
@@ -93,7 +133,10 @@ async function verify(req, res) {
 async function confirm(req, res) {
   let uuid = req.body.uuid;
   if (!req.body.privateKey) {
-    logger.log('silly', `Missing private key for ${uuid} when confirming uuid @ /invite/confirm`);
+    logger.log(
+      'silly',
+      `Missing private key for ${uuid} when confirming uuid @ /invite/confirm`
+    );
     return res.status(400).send();
   }
 
@@ -104,9 +147,15 @@ async function confirm(req, res) {
     metadata = await users.verifyNewUser(uuid, privateKey);
     await users.TempKeys.remove(uuid);
     res.send(metadata);
-    logger.log('info', `User ${metadata.email} was added to ${metadata.organization}`);
+    logger.log(
+      'info',
+      `User ${metadata.email} was added to ${metadata.organization}`
+    );
   } catch (error) {
-    logger.log('error', `Cannot verify User with uuid ${uuid} @ /invite/confirm`);
+    logger.log(
+      'error',
+      `Cannot verify User with uuid ${uuid} @ /invite/confirm`
+    );
     return res.status(500).send();
   }
 }
