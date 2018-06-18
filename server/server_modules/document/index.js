@@ -2,8 +2,13 @@ const users = require('app/users');
 const changelog = require('app/changelog');
 const es = require('app/elastic_search');
 const checkEmptyFields = require('app/utilities/checkEmptyFields');
-const {decryptDocuments, encryptDocument} = require('app/encryption/authentication/documentEncryption');
-const {decryptMasterPassword} = require('app/encryption/keys/cryptMasterPassword');
+const {
+  decryptDocuments,
+  encryptDocument
+} = require('app/encryption/authentication/documentEncryption');
+const {
+  decryptMasterPassword
+} = require('app/encryption/keys/cryptMasterPassword');
 const expect = require('@edgeguideab/expect');
 const logger = require('app/logger');
 
@@ -42,11 +47,14 @@ async function get(req, res) {
   let email = req.session.email;
   let privateKey = req.session.privateKey;
   let id = req.params.id;
-  let expectations = expect({
-    id: 'string'
-  }, {
-    id: id
-  });
+  let expectations = expect(
+    {
+      id: 'string'
+    },
+    {
+      id: id
+    }
+  );
 
   if (!expectations.wereMet()) {
     return res.status(400).send(expectations.errors());
@@ -76,10 +84,17 @@ async function get(req, res) {
   doc._source.encrypted_texts = doc._source.encrypted_texts || [];
   doc._source.attachments = doc._source.attachments || [];
   try {
-    doc._source.encrypted_texts = await decryptDocuments(doc._source.encrypted_texts, privateKey, encryptedMasterPassword);
+    doc._source.encrypted_texts = await decryptDocuments(
+      doc._source.encrypted_texts,
+      privateKey,
+      encryptedMasterPassword
+    );
   } catch (error) {
-    logger.log('error', `Decrypt error, could not decrypt with privatekey from user ${email}`);
-    return res.status(500).send({msg: 'Internal Server Error'});
+    logger.log(
+      'error',
+      `Decrypt error, could not decrypt with privatekey from user ${email}`
+    );
+    return res.status(500).send({ msg: 'Internal Server Error' });
   }
 
   let logentries;
@@ -88,7 +103,7 @@ async function get(req, res) {
   } catch (error) {
     logger.log('error', `Cannot get logentries for documentid ${doc._id}`);
   }
-  
+
   let response = {
     ...doc,
     logentries
@@ -101,14 +116,17 @@ async function checkTitle(req, res) {
   let searchString = req.query.searchString;
   let organization = req.session.organization;
 
-  let expectations = expect({
-    searchString: {
-      type: 'string',
-      allowNull: true
+  let expectations = expect(
+    {
+      searchString: {
+        type: 'string',
+        allowNull: true
+      }
+    },
+    {
+      searchString
     }
-  }, {
-    searchString
-  });
+  );
 
   if (!expectations.wereMet()) {
     return res.status(400).send(expectations.errors());
@@ -136,13 +154,19 @@ async function search(req, res) {
   let index = req.query.index;
   let response;
   try {
-    response = await es.paginationSearch({
-      searchString,
-      organization,
-      index
-    }, results);
+    response = await es.paginationSearch(
+      {
+        searchString,
+        organization,
+        index
+      },
+      results
+    );
   } catch (error) {
-    logger.log('error', `ElaticSearch error, probably malformed search query or server is down. \n ${error}`);
+    logger.log(
+      'error',
+      `ElaticSearch error, probably malformed search query or server is down. \n ${error}`
+    );
     return res.status(500).send();
   }
 
@@ -165,10 +189,17 @@ async function create(req, res) {
   let encryptedMasterPassword = req.session.mp;
 
   let fields = checkEmptyFields(req.body);
-  if (!fields.valid) return res.status(400).send({emptyFields: fields.emptyFields, reason: fields.reason});
+  if (!fields.valid)
+    return res
+      .status(400)
+      .send({ emptyFields: fields.emptyFields, reason: fields.reason });
   let encryptedTexts;
   try {
-    encryptedTexts = await encryptDocument(req.body.encryptedTexts, privateKey, encryptedMasterPassword);
+    encryptedTexts = await encryptDocument(
+      req.body.encryptedTexts,
+      privateKey,
+      encryptedMasterPassword
+    );
   } catch (error) {
     console.error(error);
     return res.status(500).send();
@@ -183,9 +214,14 @@ async function create(req, res) {
   };
   let response;
   try {
-    response = await es.addToIndex({query, organization});
+    response = await es.addToIndex({ query, organization });
     res.send(response);
-    logger.log('info', `User ${req.session.email} created a document with title ${req.body.title} and id ${response._id}`);
+    logger.log(
+      'info',
+      `User ${req.session.email} created a document with title ${
+        req.body.title
+      } and id ${response._id}`
+    );
   } catch (error) {
     logger.log('error', `Could not add document to index ${req.body.index}`);
     return res.status(500).send(error);
@@ -193,9 +229,15 @@ async function create(req, res) {
 
   try {
     await changelog.addLogEntry(response._id, req.session.email);
-    logger.log('info', `Changelog entry for document ${req.body.title} with id ${response._id}`);
+    logger.log(
+      'info',
+      `Changelog entry for document ${req.body.title} with id ${response._id}`
+    );
   } catch (error) {
-    logger.log('error', `Could not add changelog entry to for document ${response._id}`);
+    logger.log(
+      'error',
+      `Could not add changelog entry to for document ${response._id}`
+    );
     return res.status(500).send(error);
   }
 }
@@ -208,11 +250,18 @@ async function update(req, res) {
   //TODO: Get correct password here
   let encryptedMasterPassword = req.session.mp;
   let fields = checkEmptyFields(req.body);
-  if (!fields.valid) return res.status(400).send({emptyFields: fields.emptyFields, reason: fields.reason});
+  if (!fields.valid)
+    return res
+      .status(400)
+      .send({ emptyFields: fields.emptyFields, reason: fields.reason });
 
   let encryptedTexts;
   try {
-    encryptedTexts = await encryptDocument(req.body.encryptedTexts, privateKey, encryptedMasterPassword);
+    encryptedTexts = await encryptDocument(
+      req.body.encryptedTexts,
+      privateKey,
+      encryptedMasterPassword
+    );
   } catch (error) {
     console.error(error);
     return res.status(500).send();
@@ -231,20 +280,26 @@ async function update(req, res) {
 
   let response;
   try {
-    response = await es.update({query, organization});
+    response = await es.update({ query, organization });
     logger.log('info', `User ${email} updated document ${req.body.id}`);
   } catch (error) {
     logger.log('error', `Cannot update document ${req.body.id}`);
-    return res.status(500).send({msg: 'Internal Server Error'});
+    return res.status(500).send({ msg: 'Internal Server Error' });
   }
 
   try {
     await changelog.addLogEntry(req.params.id, email);
     res.send(response);
-    logger.log('info', `Added changelog entry for ${email}'s update of document ${req.params.id}`);
+    logger.log(
+      'info',
+      `Added changelog entry for ${email}'s update of document ${req.params.id}`
+    );
   } catch (error) {
-    logger.log('error', `Could not add log entry for update on document ${req.params.id}`);
-    return res.status(500).send({msg: 'Internal Server Error'});
+    logger.log(
+      'error',
+      `Could not add log entry for update on document ${req.params.id}`
+    );
+    return res.status(500).send({ msg: 'Internal Server Error' });
   }
 }
 
@@ -255,9 +310,19 @@ async function deleteDocument(req,res) {
   try {
     encryptedMasterPassword = (await users.getUser(req.session.email)).password;
     decryptMasterPassword(req.session.privateKey, encryptedMasterPassword);
-    logger.log('silly', `Successfully authenticated user ${req.session.email} for deleting document ${req.params.id}`);
+    logger.log(
+      'silly',
+      `Successfully authenticated user ${
+        req.session.email
+      } for deleting document ${req.params.id}`
+    );
   } catch (error) {
-    logger.log('error', `User ${req.session.email} tried to delete ${req.params.id} without proper authentication`);
+    logger.log(
+      'error',
+      `User ${req.session.email} tried to delete ${
+        req.params.id
+      } without proper authentication`
+    );
     res.status(409).send();
   }
 
@@ -267,18 +332,24 @@ async function deleteDocument(req,res) {
     type: req.query.type
   };
 
-  let expectations = expect({
-    index: 'string',
-    type: 'string',
-    id: 'string'
-  }, query);
+  let expectations = expect(
+    {
+      index: 'string',
+      type: 'string',
+      id: 'string'
+    },
+    query
+  );
   if (!expectations.wereMet()) {
     res.status(400).send(expectations.errors());
   } else {
     try {
       response = await es.deleteDocument(query);
       res.send(response);
-      logger.log('info', `User ${req.session.email} deleted document ${req.params.id}`);
+      logger.log(
+        'info',
+        `User ${req.session.email} deleted document ${req.params.id}`
+      );
     } catch (error) {
       logger.log('error', 'Cannot delete document!');
       return res.status(500).send();
@@ -286,7 +357,10 @@ async function deleteDocument(req,res) {
     try {
       await changelog.remove(req.params.id);
     } catch (error) {
-      logger.log('error', `Could not remove log entries for document ${req.params.id}`);
+      logger.log(
+        'error',
+        `Could not remove log entries for document ${req.params.id}`
+      );
     }
     return res.send(response);
   }
