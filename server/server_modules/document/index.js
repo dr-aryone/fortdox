@@ -71,13 +71,6 @@ async function get(req, res) {
     return res.status(500).send();
   }
 
-  let encryptedMasterPassword;
-  try {
-    encryptedMasterPassword = (await users.getUser(email)).password;
-  } catch (error) {
-    logger.log('silly', `Cannot find user ${email}`);
-    return res.status(404).send();
-  }
   //TODO: Get MP from device and not user
   let encryptedMasterPassword = req.session.mp;
 
@@ -179,12 +172,6 @@ async function search(req, res) {
 async function create(req, res) {
   let privateKey = req.session.privateKey;
   let organization = req.session.organization;
-  let encryptedMasterPassword;
-  try {
-    encryptedMasterPassword = (await users.getUser(req.session.email)).password;
-  } catch (error) {
-    return res.status(404).send();
-  }
   //TODO: The correct masterpassaword heree
   let encryptedMasterPassword = req.session.mp;
 
@@ -303,12 +290,11 @@ async function update(req, res) {
   }
 }
 
-async function deleteDocument(req,res) {
+async function deleteDocument(req, res) {
   let response;
   //TODO: Make sure that his is the correct master password from the current device!
   let encryptedMasterPassword = req.session.mp;
   try {
-    encryptedMasterPassword = (await users.getUser(req.session.email)).password;
     decryptMasterPassword(req.session.privateKey, encryptedMasterPassword);
     logger.log(
       'silly',
