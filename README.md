@@ -2,7 +2,7 @@
 FortDox is a desktop application that safely stores a teams documents and shares a team's passwords safely within the team.
 
 # Access Amazon server
-navigate to `~./ssh` and create a file `touch config`.
+navigate to `~/.ssh` and create a file `touch config`.
 
 Copy paste the following into config:
   > Host fortdox
@@ -14,16 +14,55 @@ Copy paste the following into config:
 Generate said private key.
 
 Then simply type `ssh fortdox` in the terminal.
+
+Note: If private key is downloaded, dont forget to change permission using `chmod 400 /path/to/private_key`
+
+
 # Installation
 Clone the project
 > git clone git@bitbucket.org:edgeguideab/fortdox.git
 
-Install following the tools (if they're not already installed):
+On production environmnet it can be useful to forward your own ssh agent to get access to bitbucket
 
-* [Node.js](https://nodejs.org/)
-* [ElasticSearch](https://www.elastic.co/)
-* [MySQL](https://www.mysql.com/)
 
+
+##  [Node.js](https://nodejs.org/)
+Node version 8.11.3, follow instructions [here](https://nodejs.org/en/download/package-manager/#debian-and-ubuntu-based-linux-distributions)
+
+## [ElasticSearch](https://www.elastic.co/)
+*Note:* ElasticSearch requires Java version 8+, `sudo apt-get install default-jre`)  
+
+ElasticSearch version 6.3.0, 
+Installation Instructions [here](https://www.elastic.co/guide/en/elasticsearch/reference/current/deb.html),
+Installation path (on ubuntu at least): `/usr/share/elasticsearch/bin`
+On production, use systemd or similar to manage elasticsearch as described [here](https://www.elastic.co/guide/en/elasticsearch/reference/current/deb.html#deb-running-systemd)
+
+
+*Note:* If on startup Elasticsearch complains about not being able to allocate enough memory. Simply `sudo vim /etc/elasticsearch/jvm.options` and change:a
+  > -Xms1g --> -Xms512m  
+  > -Xmx1g --> -Xmx512m
+
+
+
+## [MySQL](https://www.mysql.com/)
+`sudo apt-get install mysql-server`
+This was a bit of a problem on ubuntu 16.04
+what solved it in the end was #16 answer on this [site](https://ubuntuforums.org/showthread.php?t=1763604&page=2)
+
+## Nginx
+We use nginx on the productio and testing server as a reverse proxy, and as termination point for HTTPS/TLS.
+
+This is set up following these guides:
+
+* [lets encrypt]()
+* [reverse proxy]()
+
+To manage nginx use the following command
+`
+sudo service nginx (start|stop|restart)
+`
+
+### Debug/development tools
 For debugging, install the following developer tools, google chrome extensions:
 
 * [React Developer Tools](https://chrome.google.com/webstore/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi?hl=en)
@@ -96,8 +135,10 @@ This is a dummy version of the config file:
 
 
 ## Server
-Run the server in `fortdox/server`
+Run the server in `fortdox/server`  
 > npm run dev
+or in production:  
+> npm start
 
 ## ElasticSearch
 _NOTE_: before running ElasticSearch, you need to install the ingest-attachment plugin
@@ -106,8 +147,8 @@ _NOTE_: before running ElasticSearch, you need to install the ingest-attachment 
 Run ElasticSearch
 > bin/elasticsearch
 
-## Database
-Run mySQL 
+## MySQL Database
+Create the `fortdox` database in mysql. Run mySQL to enter the promt.
 > mysql -u root -p
 
 Run database migrations in `fortdox/server`
@@ -116,6 +157,7 @@ Run database migrations in `fortdox/server`
 ## Client
 Run the application in `fortdox/app`
 > npm run dev
+
 
 This is using [foreman](https://github.com/strongloop/node-foreman) to mange the react process, the electron process and the sass compiler process.
 This is manged in the `Procfile`
@@ -164,9 +206,7 @@ Save and quit. The crontab will now run the backup code every night at 00:00.
 
 ## Backup on Ubuntu
 
-NOTE: If on startup Elasticsearch complains about not being able to allocate enough memory. Simply `sudo vim /etc/elasticsearch/jvm.options` and change:
-  > -Xms2g --> -Xms1g
-  > -Xmx2g --> -Xmx1g
+
 
 Locate backup.sh and give it executable permissions `chmod +x backup.sh`.
 
