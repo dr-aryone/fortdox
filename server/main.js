@@ -19,9 +19,7 @@ const job = new CronJob('*/30 * * * *', async () => {
 });
 job.start();
 
-if (devMode) {
-  app.use(cors({ origin: config.cors, credentials: true }));
-}
+app.use(cors({ origin: config.cors, credentials: true }));
 app.use(bodyParser.json({ limit: '100mb' }));
 app.use(
   '/downloads',
