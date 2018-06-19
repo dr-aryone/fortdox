@@ -140,13 +140,19 @@ async function verify(req, res) {
       tempPassword,
       encryptedPrivateKey
     )).toString('base64');
+
+    let device = devices.findDeviceFromUserUUID(uuid);
+
     res.send({
-      privateKey
+      privateKey,
+      deviceId: device.deviceId
     });
+
     logger.log(
       'silly',
       `Keypair generated and private key was sent to user with UUID ${uuid}`
     );
+
     return;
   } catch (error) {
     logger.log('error', `Could not find user with UUID ${uuid}`);
