@@ -1,5 +1,4 @@
 const React = require('react');
-// const Loader = require('components/general/Loader');
 const ErrorBox = require('components/general/ErrorBox');
 const LoaderOverlay = require('components/general/LoaderOverlay');
 const MessageBox = require('components/general/MessageBox');
@@ -45,8 +44,8 @@ module.exports = class DevicesView extends React.Component {
     const {
       isLoading,
       error,
-      msg,
-      onGetQRCode,
+      message,
+      inviteDevice,
       QRCode,
       deviceId,
       devices
@@ -83,7 +82,7 @@ module.exports = class DevicesView extends React.Component {
       <div className='container-fluid'>
         <div className='inner-container'>
           <LoaderOverlay display={isLoading} />
-          <MessageBox message={msg} />
+          <MessageBox message={message} />
           <ErrorBox errorMsg={error} />
           {modal}
           <div className='title'>
@@ -97,7 +96,7 @@ module.exports = class DevicesView extends React.Component {
             </div>
             {deviceList}
           </div>
-          <button onClick={() => onGetQRCode()}>Add device</button>
+          <button onClick={() => inviteDevice()}>Add device</button>
         </div>
       </div>
     );
