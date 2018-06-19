@@ -1,4 +1,10 @@
 const db = require('app/models');
+const {
+  tempEncryptPrivatekey,
+  createNewMasterPassword
+} = require('app/encryption/keys/cryptMasterPassword');
+const logger = require('app/logger');
+const mailer = require('app/mailer');
 
 module.exports = { add, createDevice, findDeviceFromUserUUID, listDevices };
 
@@ -21,8 +27,50 @@ async function createDevice(forUserId, password, name = 'master-device') {
 }
 
 async function add(req, res) {
-  let device = await createDevice();
-  res.status(200).send(device);
+  let userid = req.session.userid;
+  let privatekey = req.session.privateKey;
+  let encryptedMasterPassword = req.session.mp;
+  let { keypair, newEncryptedMasterPassword } = await createNewMasterPassword(
+    privatekey,
+    encryptedMasterPassword
+  );
+
+  let { tempPassword, encryptedPrivateKey } = await tempEncryptPrivatekey(
+    keypair.privateKey
+  ).catch(error => {
+    console.error(error);
+    return res.status(500).send({ error: 'Nah, we cant do that today..' });
+  });
+  const newDevice = await createDevice(userid, newEncryptedMasterPassword);
+  await db.TempKeys.create({
+    uuid: newDevice.deviceId,
+    privateKey: encryptedPrivateKey
+  }).catch(error => {
+    console.error('silly', 'Could not create tempkeys');
+    console.error(error);
+  });
+  const inviteCode = 'D@' + newDevice.deviceId;
+  tempPassword = tempPassword.toString('base64');
+
+  console.log('device', 'Invitecode', inviteCode, '\npwd', tempPassword);
+
+  res.send({
+    uuid: inviteCode,
+    tempPassword: tempPassword
+  });
+  debugger;
+  const mail = {
+    to: req.session.email,
+    subject: 'Fortdox new device',
+    from: 'Fortdox',
+    content: `
+    <p>Invitation code:</p>
+    <p>${inviteCode}</p>
+    <p>Temporary password:</p>
+    <p>${tempPassword}</p>`
+  };
+
+  mailer.send(mail);
 }
 
 async function listDevices(req, res) {

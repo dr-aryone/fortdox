@@ -105,6 +105,7 @@ async function needsMasterPassword(req, res, next) {
       .end();
   }
 
+  req.session.userid = user.id;
   req.session.mp = device.password;
   next();
 }
