@@ -57,6 +57,9 @@ async function organization(req, res) {
     organization: req.body.organization,
     uuid: newUser.uuid
   });
+
+  logger.log('silly', 'Register mail code:\n', newUser.uuid);
+
   try {
     mailer.send(mail);
     logger.log(
