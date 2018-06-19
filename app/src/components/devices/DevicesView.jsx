@@ -64,17 +64,19 @@ module.exports = class DevicesView extends React.Component {
     );
 
     let deviceList = [];
-    devices.map(device => {
-      if (device.id !== deviceId)
-        deviceList.push(
-          <div className='device'>
-            <span>{device.id}</span>
-            <span>{device.name}</span>
+    let deviceName;
+    devices.forEach((device, index) => {
+      device.get('id') !== deviceId
+        ? deviceList.push(
+          <div className='device' key={index}>
+            <span>{device.get('id')}</span>
+            <span>{device.get('name')}</span>
             <span className='icon'>
               <i className='material-icons'>clear</i>
             </span>
           </div>
-        );
+          )
+        : (deviceName = device.get('name'));
     });
 
     return (
@@ -88,9 +90,9 @@ module.exports = class DevicesView extends React.Component {
             <h1>Your Devices</h1>
           </div>
           <div className='box'>
-            <div className='device'>
+            <div className='device' key={deviceId}>
               <span>{deviceId}</span>
-              <span>Device Name</span>
+              <span>{deviceName}</span>
               <span className='icon' />
             </div>
             {deviceList}

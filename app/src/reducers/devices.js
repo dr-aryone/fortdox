@@ -20,8 +20,8 @@ const devices = (state = initialState, action) => {
       return state.set('isLoading', false).set('QRCode', action.payload);
     case 'GET_DEVICES_SUCCESS':
       return state.set('isLoading', false).merge({
-        deviceId: action.payload.deviceId,
-        devices: action.payload.devices
+        deviceId: fromJS(action.payload.deviceId),
+        devices: fromJS(action.payload.devices)
       });
     case 'CHANGE_VIEW':
       return initialState;
