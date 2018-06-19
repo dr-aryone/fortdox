@@ -45,6 +45,49 @@ export const getDevices = () => {
   };
 };
 
+export const inviteDevice = () => {
+  return async (dispatch, getState) => {
+    dispatch({
+      type: 'INVITE_DEVICE_START'
+    });
+
+    const state = getState();
+    const email = state.user.get('email');
+    const organization = state.user.get('organization');
+    const storage = readStorage();
+    const deviceId = storage[email][organization].deviceId;
+
+    try {
+      await requestor.post(`${config.server}/devices/add`, {
+        body: {
+          deviceId
+        }
+      });
+    } catch (error) {
+      console.error(error);
+      switch (error.status) {
+        case 400:
+          return dispatch({
+            type: 'INVITE_DEVICE_ERROR',
+            payload: 'Bad request. Please try again.'
+          });
+        case 408:
+        case 500:
+        default:
+          return dispatch({
+            type: 'INVITE_DEVICE_ERROR',
+            payload: 'Unable to connect to server. Please try again later.'
+          });
+      }
+    }
+
+    dispatch({
+      type: 'INVITE_DEVICE_SUCCESS',
+      payload: `Invitation link has been sent to ${email}.`
+    });
+  };
+};
+
 export const getQRCode = () => {
   return async dispatch => {
     dispatch({
@@ -70,4 +113,4 @@ export const getQRCode = () => {
   };
 };
 
-export default { getQRCode, getDevices };
+export default { getQRCode, getDevices, inviteDevice };
