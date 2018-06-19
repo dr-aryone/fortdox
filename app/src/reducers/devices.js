@@ -4,6 +4,7 @@ let initialState = fromJS({
   isLoading: false,
   error: '',
   QRCode: null,
+  deviceId: '',
   devices: []
 });
 
@@ -18,7 +19,10 @@ const devices = (state = initialState, action) => {
     case 'GET_QR_CODE_SUCCESS':
       return state.set('isLoading', false).set('QRCode', action.payload);
     case 'GET_DEVICES_SUCCESS':
-      return state.set('isLoading', false).set('devices', action.payload);
+      return state.set('isLoading', false).merge({
+        deviceId: action.payload.deviceId,
+        devices: action.payload.devices
+      });
     case 'CHANGE_VIEW':
       return initialState;
     default:

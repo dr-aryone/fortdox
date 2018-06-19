@@ -19,11 +19,13 @@ export function list() {
       let message = 'Server error';
       switch (error.status) {
         case 400:
+          message = 'Bad request.';
+          break;
         case 401:
-          message = 'Bad request';
+          message = 'Unauthorized.';
           break;
         case 404:
-          message = 'You are not a part of an organization';
+          message = 'You are not part of an organization';
           break;
         default:
           console.error('Unknown status code');
