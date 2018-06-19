@@ -1,5 +1,7 @@
 const router = require('express').Router();
 const devices = require('app/devices');
-router.post('/', devices.add);
+const { restrict } = require('app/sessions');
+
+router.get('/', restrict, devices.listDevices);
 
 module.exports = router;

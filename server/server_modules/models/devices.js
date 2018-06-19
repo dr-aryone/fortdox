@@ -29,7 +29,7 @@ module.exports = function(sequelize, DataTypes) {
       classMethods: {
         associate: function(models) {
           // associations can be defined here
-          Devices.belongsTo(models.User);
+          Devices.belongsTo(models.User, { foreignKey: 'userid' });
         }
       }
     }
