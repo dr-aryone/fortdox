@@ -26,12 +26,23 @@ async function add(req, res) {
 }
 
 async function listDevices(req, res) {
-  let devices = await db.Devices.find({
-    where: {
-      email: req.session.email
-    },
-    include: [db.User]
+  let devices = await db.Devices.findAll({
+    include: [
+      {
+        model: db.User,
+        where: { email: req.session.email }
+      }
+    ]
   });
 
-  res.send(devices);
+  const result = {
+    devices: devices.map(device => {
+      return {
+        name: device.deviceName,
+        id: device.deviceId
+      };
+    })
+  };
+
+  res.send(result);
 }
