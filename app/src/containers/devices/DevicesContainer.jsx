@@ -6,7 +6,9 @@ const mapStateToProps = state => {
   return {
     isLoading: state.devices.get('isLoading'),
     error: state.devices.get('error'),
-    QRCode: state.devices.get('QRCode')
+    QRCode: state.devices.get('QRCode'),
+    deviceId: state.devices.get('deviceId'),
+    devices: state.devices.get('devices')
   };
 };
 

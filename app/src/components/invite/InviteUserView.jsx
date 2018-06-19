@@ -17,8 +17,10 @@ const InviteUserView = props => {
 
   let concatMessage = [];
   if (typeof message === 'object' && message !== null) {
-    message.entrySeq().forEach((entry) => {
-      entry[0] === 'bold' ? concatMessage.push(<b key={entry[1]}>{entry[1]}</b>) : concatMessage.push(entry[1]);
+    message.entrySeq().forEach(entry => {
+      entry[0] === 'bold'
+        ? concatMessage.push(<b key={entry[1]}>{entry[1]}</b>)
+        : concatMessage.push(entry[1]);
     });
   }
 
@@ -29,9 +31,13 @@ const InviteUserView = props => {
     </div>
   ) : null;
 
-  let msg = message ?
-    <span>{message.get('text')}<b>{message.get('bold')}</b>{message.get('text2') ? message.get('text2') : null}</span>
-  : null;
+  let msg = message ? (
+    <span>
+      {message.get('text')}
+      <b>{message.get('bold')}</b>
+      {message.get('text2') ? message.get('text2') : null}
+    </span>
+  ) : null;
 
   return (
     <div className='container-fluid'>
