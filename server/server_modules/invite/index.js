@@ -75,8 +75,8 @@ async function user(req, res) {
 
   //create device
   try {
-    let newUserId = await users.createUser(newUser).id;
-    devices.createDevice(newUserId, newEncryptedMasterPassword);
+    newUser = await users.createUser(newUser);
+    devices.createDevice(newUser.id, newEncryptedMasterPassword);
 
     await users.TempKeys.store(uuid, encryptedPrivateKey);
     logger.log(
@@ -141,8 +141,7 @@ async function verify(req, res) {
       encryptedPrivateKey
     )).toString('base64');
 
-    let device = devices.findDeviceFromUserUUID(uuid);
-
+    let device = await devices.findDeviceFromUserUUID(uuid);
     res.send({
       privateKey,
       deviceId: device.deviceId
@@ -162,6 +161,8 @@ async function verify(req, res) {
 
 async function confirm(req, res) {
   let uuid = req.body.uuid;
+  const deviceId = req.body.deviceId;
+
   if (!req.body.privateKey) {
     logger.log(
       'silly',
@@ -175,7 +176,7 @@ async function confirm(req, res) {
   let metadata;
   try {
     //TODO: Fix here
-    metadata = await users.verifyNewUser(uuid, privateKey);
+    metadata = await users.verifyNewUser(deviceId, uuid, privateKey);
     await users.TempKeys.remove(uuid);
     res.send(metadata);
     logger.log(
