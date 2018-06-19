@@ -84,6 +84,14 @@ async function user(req, res) {
     uuid,
     tempPassword: tempPassword.toString('base64')
   });
+
+  logger.log(
+    'silly',
+    'Invite mail code:\n',
+    uuid,
+    '\npwd\n',
+    tempPassword.toString('base64')
+  );
   try {
     mailer.send(mail);
     logger.log(
