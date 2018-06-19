@@ -75,7 +75,6 @@ async function needsMasterPassword(req, res, next) {
   const deviceId = req.session.deviceId;
 
   let user;
-  debugger;
   try {
     user = await db.User.findOne({
       where: {
