@@ -1,4 +1,5 @@
 const users = require('app/users');
+const devices = require('app/devices');
 const keygen = require('app/encryption/keys/keygen');
 const {
   decryptMasterPassword
@@ -24,21 +25,20 @@ module.exports = {
 
 async function user(req, res) {
   let privateKey = req.session.privateKey;
-  let newUserEmail = req.body.newUserEmail;
-  let email = req.body.email;
-  let encryptedMasterPassword;
+  let email = req.session.email;
   let organizationId = req.session.organizationId;
-  let keypair;
+  let newUserEmail = req.body.newUserEmail;
+  let encryptedMasterPassword = req.session.mp;
   let sender;
-  let uuid = uuidv1();
   try {
     sender = await users.getUser(email);
-    encryptedMasterPassword = sender.password;
-    keypair = await keygen.genKeyPair();
   } catch (error) {
     logger.log('silly', `Could not find sender ${email} @ /invite`);
     return res.status(409).send();
   }
+
+  //The keypair/masterpassword generation
+  let keypair = await keygen.genKeyPair();
   let masterPassword = decryptMasterPassword(
     privateKey,
     encryptedMasterPassword
@@ -47,6 +47,8 @@ async function user(req, res) {
     keypair.publicKey,
     masterPassword
   );
+
+  //temp password
   let tempPassword = keygen.genRandomPassword();
   let encryptedPrivateKey;
   try {
@@ -61,14 +63,21 @@ async function user(req, res) {
     );
     return res.status(500).send();
   }
+
+  //create user
+
+  let uuid = uuidv1();
   let newUser = {
     email: newUserEmail,
-    password: newEncryptedMasterPassword,
     organizationId,
     uuid
   };
+
+  //create device
   try {
-    await users.createUser(newUser);
+    let newUserId = await users.createUser(newUser).id;
+    devices.createDevice(newUserId, newEncryptedMasterPassword);
+
     await users.TempKeys.store(uuid, encryptedPrivateKey);
     logger.log(
       'info',
@@ -77,6 +86,8 @@ async function user(req, res) {
   } catch (error) {
     return res.status(error).send();
   }
+
+  //mail
   let mail = mailer.newUserRegistration({
     to: newUserEmail,
     organization: sender.Organization.name,
@@ -104,7 +115,12 @@ async function user(req, res) {
     console.error(error);
     return res.status(400).send('mail');
   }
-  res.send();
+
+  //TODO: Chnage so we send pw and uuid to client
+  res.send({
+    uuid: uuid,
+    email: newUser.email
+  });
 }
 
 async function verify(req, res) {
@@ -152,6 +168,7 @@ async function confirm(req, res) {
 
   let metadata;
   try {
+    //TODO: Fix here
     metadata = await users.verifyNewUser(uuid, privateKey);
     await users.TempKeys.remove(uuid);
     res.send(metadata);
