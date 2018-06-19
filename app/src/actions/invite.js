@@ -227,7 +227,7 @@ export const verifyUser = () => {
         payload: 'Unable to store key'
       });
     }
-    writeStorage(salt, email, organization);
+    writeStorage(salt, organization, email, deviceId);
 
     return dispatch({
       type: 'VERIFY_NEW_USER_SUCCESS',
