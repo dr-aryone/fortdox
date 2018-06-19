@@ -88,8 +88,9 @@ const verifyUser = (email, privateKey, deviceId) => {
   });
 };
 
-const verifyNewUser = (uuid, privateKey) => {
+const verifyNewUser = (deviceId, uuid, privateKey) => {
   return new Promise(async (resolve, reject) => {
+    //TODO:Make sure that this is correct from device id
     let encryptedMasterPassword;
     let user;
     try {
@@ -102,7 +103,13 @@ const verifyNewUser = (uuid, privateKey) => {
       if (!user) {
         return reject(404);
       }
-      encryptedMasterPassword = user.password;
+      const device = db.Devices.findOne({
+        where: {
+          email: user.email,
+          deviceId: deviceId
+        }
+      });
+      encryptedMasterPassword = device.password;
     } catch (error) {
       console.error(error);
       return reject(500);
