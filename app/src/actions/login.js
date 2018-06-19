@@ -150,7 +150,8 @@ export function login() {
     localStorage.setItem('activeUser', response.body.token);
     const serverGaveUsdeviceId = response.body.deviceId !== undefined;
     if (serverGaveUsdeviceId) {
-      writeDeviceIdToStorage(response.body.deviceId, organization, email);
+      deviceId = response.body.deviceId;
+      writeDeviceIdToStorage(deviceId, organization, email);
     }
 
     return dispatch({

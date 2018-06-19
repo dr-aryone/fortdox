@@ -3,33 +3,21 @@ const keyChainPath = '/usr/bin/security';
 const fortdoxKey = 'fortdox';
 
 const writeDeviceIdToStorage = (deviceId, organization, email) => {
-  let fortdoxInfo = getFortodoxInfoFromStorage();
+  let fortdoxInfo = readStorage();
   fortdoxInfo[email][organization].deviceId = deviceId;
   window.localStorage.setItem(fortdoxKey, JSON.stringify(fortdoxInfo));
 };
 
-const writeStorage = (privateKey, salt, organization, email, deviceId) => {
-  let fortdoxInfo = getFortodoxInfoFromStorage();
+const writeStorage = (salt, organization, email, deviceId) => {
+  let fortdoxInfo = readStorage();
   fortdoxInfo[email] = {
     [organization]: {
-      privateKey,
       salt,
       deviceId
     }
   };
   window.localStorage.setItem(fortdoxKey, JSON.stringify(fortdoxInfo));
 };
-
-const getFortodoxInfoFromStorage = () => {
-  let info;
-  info = window.localStorage.getItem(fortdoxKey);
-  if (!info) {
-    window.localStorage.setItem(fortdoxKey, JSON.stringify({}));
-    info = window.localStorage.getItem(fortdoxKey);
-  }
-  return JSON.parse(info);
-};
-
 const readStorage = () => {
   let storage;
   storage = window.localStorage.getItem(fortdoxKey);
