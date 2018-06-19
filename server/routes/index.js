@@ -10,7 +10,7 @@ const devices = require('./devices');
 const { restrict } = require('app/sessions');
 
 router.use('/login', login);
-router.use('/devices/', devices);
+router.use('/devices', devices);
 router.use('/register', register);
 router.use('/invite', invite);
 router.use('/document', restrict, document);
