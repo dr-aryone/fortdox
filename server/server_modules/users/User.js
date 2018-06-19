@@ -40,13 +40,13 @@ const createUser = ({ email, password, organizationId, uuid }) => {
       return reject(409);
     }
     try {
-      await db.User.create({
+      const newUser = await db.User.create({
         email: email,
         password: password,
         organizationId: organizationId,
         uuid: uuid
       });
-      return resolve(201);
+      return resolve(newUser);
     } catch (error) {
       console.error(error);
       return reject(401);
