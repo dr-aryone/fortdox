@@ -1,11 +1,15 @@
 # FortDox
+
 FortDox is a desktop application that safely stores a teams documents and shares a team's passwords safely within the team.
 
 # Access Amazon server
+
 navigate to `~./ssh` and create a file `touch config`.
 
 Copy paste the following into config:
-  > Host fortdox
+
+> Host fortdox
+
         HostName 54.246.221.36
         Port 22
         User ubuntu
@@ -14,47 +18,58 @@ Copy paste the following into config:
 Generate said private key.
 
 Then simply type `ssh fortdox` in the terminal.
+
 # Installation
+
 Clone the project
+
 > git clone git@bitbucket.org:edgeguideab/fortdox.git
 
 Install following the tools (if they're not already installed):
 
-* [Node.js](https://nodejs.org/)
-* [ElasticSearch](https://www.elastic.co/)
-* [MySQL](https://www.mysql.com/)
+- [Node.js](https://nodejs.org/)
+- [ElasticSearch](https://www.elastic.co/)
+- [MySQL](https://www.mysql.com/)
 
 For debugging, install the following developer tools, google chrome extensions:
 
-* [React Developer Tools](https://chrome.google.com/webstore/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi?hl=en)
-* [Redux DevTools](https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd?hl=en)
+- [React Developer Tools](https://chrome.google.com/webstore/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi?hl=en)
+- [Redux DevTools](https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd?hl=en)
 
 ## Switching between production and local
+
 Any teams you have previously saved (for instance your real production team), is saved in local storage.
 Local storage in electron is saved in a folder, specific to your operating system.
 In macOS this folder is `~/Library/Application\ Support/FortDox/Local\ Storage`.
 Make a backup of the contents, and you are good to go with local development.
 
 # Branches
+
 Development is done on the master branch. When a new release is to be deployed, merge master into the release branch.
-__NEVER COMMIT ANYTHING ON THE RELEASE BRANCH, ONLY ON MASTER__
+**NEVER COMMIT ANYTHING ON THE RELEASE BRANCH, ONLY ON MASTER**
 
 ## Install Node.js dependencies
+
 Install the Node dependencies for client in `fortdox/app`
+
 > npm install
 
 Install the Node dependencies for server in `fortdox/server`
+
 > npm install
 
 # Getting started
 
 ## Set configuration files
+
 Configuration files that are needed to run the application with the server.
 
 ### Client
+
 Copy the template from `fortdox/app/config-template.json` to `fortdox/app/config.json` and fill in necessary values.
 
 This is a dummy version of the config file:
+
 ```
 {
   "name": "FortDox",
@@ -62,13 +77,14 @@ This is a dummy version of the config file:
   "server": "http://localhost:8000",
   "logo": "/resources/logo.png"
 }
-
 ```
 
 ### Server
+
 Copy the template from `fortdox/server/server_modules/config-template.json` to `fortdox/server/server_modules/config.json` and fill in necessary values.
 
 This is a dummy version of the config file:
+
 ```
 {
   "name": "FortDox",
@@ -93,80 +109,102 @@ This is a dummy version of the config file:
 }
 ```
 
-
-
 ## Server
+
 Run the server in `fortdox/server`
+
 > npm run dev
 
 ## ElasticSearch
+
 _NOTE_: before running ElasticSearch, you need to install the ingest-attachment plugin
+
 > bin/elasticsearch-plugin install ingest-attachment
 
 Run ElasticSearch
+
 > bin/elasticsearch
 
 ## Database
-Run mySQL 
+
+Run mySQL
+
 > mysql -u root -p
 
 Run database migrations in `fortdox/server`
+
 > sequelize db:migrate
 
 ## Client
+
 Run the application in `fortdox/app`
+
 > npm run dev
 
 This is using [foreman](https://github.com/strongloop/node-foreman) to mange the react process, the electron process and the sass compiler process.
 This is manged in the `Procfile`
 
 # Developers
+
 ## Debugging client app
+
 Debugging is done on the client through the Developer Tools (`cmd + alt + I` on Mac) in the Electron window. Simply insert a debugger statement `debugger;` to trigger the developer mode. React and Redux developer tools should be visible as tabs if they are correctly installed.
 
 ## Cleanup
+
 On server in `fortdox/server`
+
 > db:migrate:undo:all
 > db:migrate
 
 Remove indicies from ElasticSearch
+
 > curl -X DELETE 'http://localhost:9200/_all'
 
 Clear local storage.
 
-* Open DevTools in Electron (CMD+ALT+I or CTRL+ALT+I).
-* Select the Application tab.
-* Select Clear storage and at the bottom of the page, select 'Clear site data'.
+- Open DevTools in Electron (CMD+ALT+I or CTRL+ALT+I).
+- Select the Application tab.
+- Select Clear storage and at the bottom of the page, select 'Clear site data'.
+
+Remove keys from keychain with name "Fortdox"
 
 ## Backup on Mac
 
 Locate the folder containing backup.sh and grant the file executable permissions
+
 > chmod +x backup.sh
 
 Navigate to the elasticsearch.yml file to set up path for the snapshot response
+
 > /usr/local/etc/elasticsearch
 
 Open with vim as sudo user (if elasticsearch was installed -g)
+
 > vim elasticsearch.yml
 
 In the section labled Paths, enter the desired location for the snapshot repository
+
 > path.repo /var/elasticsearch_backup
 
-Now all the "location" parameters in the backup.sh code will be relative the path you just entered.  
+Now all the "location" parameters in the backup.sh code will be relative the path you just entered.
 
 Start a crontab that will run the backup script
+
 > crontab -e
 
 Insert the following line into the crontab
-> 0 0 * * * /path/to/server/backup.sh
+
+> 0 0 \* \* \* /path/to/server/backup.sh
 
 Save and quit. The crontab will now run the backup code every night at 00:00.
 
 ## Backup on Ubuntu
 
 NOTE: If on startup Elasticsearch complains about not being able to allocate enough memory. Simply `sudo vim /etc/elasticsearch/jvm.options` and change:
-  > -Xms2g --> -Xms1g
-  > -Xmx2g --> -Xmx1g
+
+> -Xms2g --> -Xms1g
+> -Xmx2g --> -Xmx1g
 
 Locate backup.sh and give it executable permissions `chmod +x backup.sh`.
 
@@ -177,19 +215,21 @@ Now create the backup directory where you want it `sudo mkdir /var/elasticsearch
 Elasticsearch can now write to elasticsearch_backup. But the location needs to be specified in elasticsearch.yml.
 
 Open elasticsearch with your favorite editor `vim /etc/elasticsearch/elasticsearch.yml`. And under Paths set the following:
-  > path.repo /var/elasticsearch_backup
+
+> path.repo /var/elasticsearch_backup
 
 Now set up the cronjob via the `crontab -e` command by entering the line below:
- > 0 0 * * * /absolute/path/to/backup.sh
+
+> 0 0 \* \* \* /absolute/path/to/backup.sh
 
 Now restart Elasticsearch manually with the following commands:
 
-  Stop `sudo systemctl stop elasticsearch.service`
+Stop `sudo systemctl stop elasticsearch.service`
 
-  Start `sudo systemctl start elasticsearch.service`
+Start `sudo systemctl start elasticsearch.service`
 
 Now the cronjob should create a folder labled with the timestamp of the backup every night at 00:00.
-Now it should work, if not Happy Googeling!   
+Now it should work, if not Happy Googeling!
 
 # Building installer
 

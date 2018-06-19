@@ -11,7 +11,6 @@ const invite = require('./invite');
 const verifyUser = require('./verifyUser');
 const download = require('./download');
 const toast = require('./toast');
-const organization = require('./organization');
 const devices = require('./devices');
 
 const docApp = combineReducers({
@@ -27,7 +26,6 @@ const docApp = combineReducers({
   verifyUser,
   download,
   toast,
-  organization,
   devices
 });
 

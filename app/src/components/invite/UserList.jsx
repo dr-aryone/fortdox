@@ -1,6 +1,4 @@
 const React = require('react');
-const Loader = require('components/general/Loader');
-const ErrorBox = require('components/general/ErrorBox');
 const Modal = require('components/general/Modal');
 
 module.exports = class UserList extends React.Component {
@@ -37,7 +35,7 @@ module.exports = class UserList extends React.Component {
   }
 
   render() {
-    const { loading, error, users } = this.props;
+    const { users } = this.props;
 
     const domUsers = users.map(user => (
       <div className={`user ${user.pending ? 'pending' : ''}`} key={user.email}>
@@ -90,11 +88,7 @@ module.exports = class UserList extends React.Component {
           <div className='title small'>
             <h1>Users in organization</h1>
           </div>
-          <div className='organization-users'>
-            {loading ? <Loader /> : null}
-            {error ? <ErrorBox errorMsg={error} /> : null}
-            {domUsers}
-          </div>
+          <div className='organization-users'>{domUsers}</div>
         </div>
       </div>
     );
