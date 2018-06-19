@@ -1,7 +1,6 @@
 const { fromJS } = require('immutable');
 
 let initialState = fromJS({
-  privateKey: '',
   email: '',
   organization: ''
 });

@@ -42,7 +42,15 @@ module.exports = class DevicesView extends React.Component {
   }
 
   render() {
-    const { isLoading, error, msg, onGetQRCode, QRCode } = this.props;
+    const {
+      isLoading,
+      error,
+      msg,
+      onGetQRCode,
+      QRCode,
+      deviceId,
+      devices
+    } = this.props;
 
     const modal = (
       <Modal show={this.state.showModal} onClose={this.closeModal} showClose>
@@ -55,6 +63,20 @@ module.exports = class DevicesView extends React.Component {
       </Modal>
     );
 
+    let deviceList = [];
+    devices.map(device => {
+      if (device.id !== deviceId)
+        deviceList.push(
+          <div className='device'>
+            <span>{device.id}</span>
+            <span>{device.name}</span>
+            <span className='icon'>
+              <i className='material-icons'>clear</i>
+            </span>
+          </div>
+        );
+    });
+
     return (
       <div className='container-fluid'>
         <div className='inner-container'>
@@ -63,7 +85,15 @@ module.exports = class DevicesView extends React.Component {
           <ErrorBox errorMsg={error} />
           {modal}
           <div className='title'>
-            <h1>Devices</h1>
+            <h1>Your Devices</h1>
+          </div>
+          <div className='box'>
+            <div className='device'>
+              <span>{deviceId}</span>
+              <span>Device Name</span>
+              <span className='icon' />
+            </div>
+            {deviceList}
           </div>
           <button onClick={() => onGetQRCode()}>Add device</button>
         </div>
