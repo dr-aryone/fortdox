@@ -15,6 +15,7 @@
     margin-left: percentage(1/12);
     display: flex;
     justify-content: space-between;
+    align-items: center;
 
     .organization {
       margin-right: 10px;
@@ -37,10 +38,21 @@
 
     .account {
       user-select: none;
-      cursor: pointer;
       box-sizing: border-box;
       display: flex;
       align-items: center;
+
+      .user {
+        padding-right: 10px;
+
+        #organization {
+          font-weight: bold;
+        }
+
+        #email {
+          font-size: 10px;
+        }
+      }
 
       .material-icons {
         margin-right: 5px;
@@ -49,6 +61,7 @@
       .account-icons {
         &:hover {
           color: darken($background-color, 10%);
+          cursor: pointer;
         }
 
         .dropdown-wrapper {
@@ -66,9 +79,7 @@
             }
           }
         }
-
       }
     }
-
   }
 }
