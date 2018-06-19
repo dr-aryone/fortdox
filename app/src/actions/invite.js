@@ -112,7 +112,10 @@ export const receivePrivateKey = () => {
 
     return dispatch({
       type: 'RECEIVE_PRIVATE_KEY_SUCCESS',
-      payload: response.body.privateKey
+      payload: {
+        privateKey: response.body.privateKey,
+        deviceId: response.body.deviceId
+      }
     });
   };
 };
@@ -184,11 +187,13 @@ export const verifyUser = () => {
 
     let response;
     let uuid = state.verifyUser.getIn(['fields', 'uuid', 'value']);
+    let deviceId = state.verifyUser.get('deviceId');
     try {
       response = await requestor.post(`${config.server}/invite/confirm`, {
         body: {
           uuid,
-          privateKey
+          privateKey,
+          deviceId
         }
       });
     } catch (error) {
