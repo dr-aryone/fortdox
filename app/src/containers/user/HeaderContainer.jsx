@@ -4,7 +4,8 @@ const action = require('actions');
 
 const mapStateToProps = state => {
   return {
-    organization: state.user.get('organization')
+    organization: state.user.get('organization'),
+    email: state.user.get('email')
   };
 };
 
