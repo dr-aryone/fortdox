@@ -103,9 +103,10 @@ const verifyNewUser = (deviceId, uuid, privateKey) => {
       if (!user) {
         return reject(404);
       }
-      const device = db.Devices.findOne({
+
+      const device = await db.Devices.findOne({
         where: {
-          email: user.email,
+          userid: user.id,
           deviceId: deviceId
         }
       });
