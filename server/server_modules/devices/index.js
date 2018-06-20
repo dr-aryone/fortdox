@@ -5,8 +5,18 @@ const {
 } = require('app/encryption/keys/cryptMasterPassword');
 const logger = require('app/logger');
 const mailer = require('app/mailer');
+const users = require('app/users');
+const {
+  decryptPrivateKey
+} = require('app/encryption/authentication/privateKeyEncryption');
 
-module.exports = { add, createDevice, findDeviceFromUserUUID, listDevices };
+module.exports = {
+  add,
+  createDevice,
+  findDeviceFromUserUUID,
+  listDevices,
+  verify
+};
 
 async function findDeviceFromUserUUID(uuid) {
   let user = await db.User.findOne({
@@ -53,7 +63,6 @@ async function add(req, res) {
   tempPassword = tempPassword.toString('base64');
 
   console.log('device', 'Invitecode', inviteCode, '\npwd', tempPassword);
-
   res.send({
     uuid: inviteCode,
     tempPassword: tempPassword
@@ -68,6 +77,53 @@ async function add(req, res) {
   mailer.send(mail);
   console.log('Mail away!');
 }
+
+async function verify(req, res) {
+  if (
+    req.body.uuid === undefined ||
+    req.body.uuid == null ||
+    req.body.tempPassword === undefined ||
+    req.body.tempPassword === null
+  ) {
+    res.status(400).send({ error: 'Malformed request' });
+  }
+
+  const inviteCode = req.body.uuid;
+  const uuid = inviteCode.slice(1);
+
+  let tempPassword = req.body.password;
+  tempPassword = Buffer.from(decodeURIComponent(tempPassword), 'base64');
+
+  let privateKey;
+  try {
+    const encryptedPrivateKey = new Buffer(
+      await users.getEncryptedPrivateKey(uuid),
+      'base64'
+    );
+    privateKey = (await decryptPrivateKey(
+      tempPassword,
+      encryptedPrivateKey
+    )).toString('base64');
+  } catch (error) {
+    logger.log(
+      'error',
+      error,
+      'Could not find encryptedPrivatekey in TempKeys'
+    );
+    return res.status(error).send();
+  }
+
+  const newDevice = await db.Devices.findOne({
+    where: { deviceId: uuid }
+  }).catch(error => {
+    console.error('Trying verify deviceid with invitation code', error);
+    return res.status(error).send();
+  });
+
+  res.send({
+    privateKey,
+    deviceId: newDevice.deviceId
+  });
 }
 
 async function listDevices(req, res) {
