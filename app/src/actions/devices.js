@@ -58,7 +58,7 @@ export const inviteDevice = () => {
     const deviceId = storage[email][organization].deviceId;
 
     try {
-      await requestor.post(`${config.server}/devices/add`, {
+      await requestor.post(`${config.server}/devices`, {
         body: {
           deviceId
         }
@@ -120,7 +120,7 @@ export const deleteDevice = deviceId => {
     });
 
     try {
-      requestor.delete(`${config.server}/devices`, {
+      await requestor.delete(`${config.server}/devices`, {
         body: {
           deviceId
         }
