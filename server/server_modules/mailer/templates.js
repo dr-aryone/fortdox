@@ -15,13 +15,25 @@ const firstTimeRegistration = ({ to, organization, uuid }) => ({
 const newDeviceRegistration = ({ to, uuid, tempPassword }) => ({
   to,
   subject: 'Fortdox new device',
-  from: 'Frtdox',
+  from: 'Fortdox',
   content: `
+  <p><a href="${
+  config.server
+}/invite-redirect?code=${uuid}&pass=${encodeURIComponent(tempPassword)}">${
+  config.server
+}/invite-redirect?code=${uuid}&pass=${encodeURIComponent(
+  tempPassword
+)}</a></p>
   <p>Invitation code:</p>
   <p>${uuid}</p>
   <p>Temporary password:</p>
   <p>${encodeURIComponent(tempPassword)}</p>`,
   html: `
+  <p><a href="${
+  config.server
+}/invite-redirect?code=${uuid}&pass=${encodeURIComponent(tempPassword)}">${
+  config.server
+}/invite-redirect?code=${uuid}&pass=${encodeURIComponent(tempPassword)}</a>
   <p>Invitation code:</p>
   <p>${uuid}</p>
   <p>Temporary password:</p>
