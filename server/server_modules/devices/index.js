@@ -16,9 +16,42 @@ module.exports = {
   createDevice,
   findDeviceFromUserUUID,
   listDevices,
+  deleteDevice,
   verify,
   confirm
 };
+
+async function deleteDevice(req, res) {
+  const deviceIdToDelete = req.params.deviceId;
+  debugger;
+  let user = await db.User.findOne({
+    where: {
+      email: req.session.email
+    }
+  });
+
+  try {
+    await db.Devices.destroy({
+      where: {
+        userid: user.id,
+        deviceId: deviceIdToDelete
+      }
+    });
+
+    await db.TempKeys.destroy({
+      where: {
+        uuid: deviceIdToDelete
+      }
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({
+      error: 'Could not delete device'
+    });
+  }
+
+  res.send();
+}
 
 async function findDeviceFromUserUUID(uuid) {
   let user = await db.User.findOne({
