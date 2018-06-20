@@ -10,7 +10,9 @@ class Attachments extends React.Component {
     this.downloadHandler = this.downloadHandler.bind(this);
 
     this.state = {
-      showModal: false
+      showModal: false,
+      content: null,
+      showClose: true
     };
   }
 
@@ -25,12 +27,17 @@ class Attachments extends React.Component {
       case 'image/png':
       case 'image/gif':
         this.setState({
-          showModal: true
+          showModal: true,
+          content: 'image'
         });
         onPreviewAttachment(attachment, index);
         return;
       default:
-      //Do nothing
+        this.setState({
+          showModal: true,
+          content: 'default',
+          showClose: false
+        });
     }
   }
 
@@ -39,7 +46,9 @@ class Attachments extends React.Component {
       showModal: false,
       name: null,
       file: null,
-      type: null
+      type: null,
+      showClose: true,
+      content: null
     });
   }
 
@@ -57,6 +66,32 @@ class Attachments extends React.Component {
       onRemoveAttachment,
       onPreviewAttachment
     } = this.props;
+
+    let content;
+    switch (this.state.content) {
+      case 'image':
+        content = [
+          <img
+            alt='preview-attachment'
+            src={`data:${preview.get('type')};base64,${preview.get('data')}`}
+            key={0}
+          />,
+          <h3 key={1}>{preview.get('name')}</h3>
+        ];
+        break;
+      case 'default':
+        content = (
+          <div className='box dialog'>
+            <h2>File can not be previewed.</h2>
+            <button onClick={this.closeModal} type='button'>
+              ok
+            </button>
+          </div>
+        );
+        break;
+      default:
+        content = null;
+    }
 
     let attachmentList = [];
     attachments.forEach((attachment, index) => {
@@ -112,14 +147,15 @@ class Attachments extends React.Component {
         </button>
       </div>
     ) : null;
+
     return (
       <div className='attachments'>
-        <Modal show={this.state.showModal} onClose={this.closeModal} showClose>
-          <img
-            alt='preview-attachment'
-            src={`data:${preview.get('type')};base64,${preview.get('data')}`}
-          />
-          <h3>{preview.get('name')}</h3>
+        <Modal
+          show={this.state.showModal}
+          onClose={this.closeModal}
+          showClose={this.state.showClose}
+        >
+          {content}
         </Modal>
         <label>
           <h3>Attachments</h3>
