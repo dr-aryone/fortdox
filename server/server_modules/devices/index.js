@@ -33,7 +33,7 @@ async function updateName(req, res) {
       }
     });
     await db.Devices.update(
-      { name: deviceName },
+      { deviceName: deviceName },
       {
         where: {
           deviceId: deviceIdToUpdate,
