@@ -18,8 +18,35 @@ module.exports = {
   listDevices,
   deleteDevice,
   verify,
-  confirm
+  confirm,
+  updateName
 };
+
+async function updateName(req, res) {
+  let deviceIdToUpdate = req.body.deviceId;
+  let deviceName = req.body.deviceName;
+
+  try {
+    let user = await db.User.findOne({
+      where: {
+        email: req.session.email
+      }
+    });
+    await db.Devices.update(
+      { name: deviceName },
+      {
+        where: {
+          deviceId: deviceIdToUpdate,
+          userid: user.id
+        }
+      }
+    );
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ error: 'Could not update name of device' });
+  }
+  res.status(200).send();
+}
 
 async function deleteDevice(req, res) {
   const deviceIdToDelete = req.params.deviceId;
