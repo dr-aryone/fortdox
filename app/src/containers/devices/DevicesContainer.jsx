@@ -21,8 +21,9 @@ const mapDispatchToProps = dispatch => {
     inviteDevice: () => {
       dispatch(action.inviteDevice());
     },
-    onDeleteDevice: deviceId => {
-      dispatch(action.deleteDevice(deviceId));
+    onDeleteDevice: async deviceId => {
+      await dispatch(action.deleteDevice(deviceId));
+      dispatch(action.getDevices());
     },
     onUpdateDeviceName: async (deviceId, deviceName) => {
       await dispatch(action.updateDeviceName(deviceId, deviceName));

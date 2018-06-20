@@ -50,7 +50,6 @@ async function updateName(req, res) {
 
 async function deleteDevice(req, res) {
   const deviceIdToDelete = req.params.deviceId;
-  debugger;
   let user = await db.User.findOne({
     where: {
       email: req.session.email

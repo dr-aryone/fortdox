@@ -179,6 +179,16 @@ module.exports = class DevicesView extends React.Component {
         : (deviceName = device.get('name'));
     });
 
+    const displayDevices =
+      deviceList.length > 0 ? (
+        <div className='no-margin-top preview'>
+          <div className='title small'>
+            <h3>Other Devices</h3>
+          </div>
+          {deviceList}
+        </div>
+      ) : null;
+
     return (
       <div className='container-fluid'>
         <div className='inner-container'>
@@ -211,12 +221,7 @@ module.exports = class DevicesView extends React.Component {
               <span className='icon' />
             </div>
           </div>
-          <div className='no-margin-top preview'>
-            <div className='title small'>
-              <h3>Other Devices</h3>
-            </div>
-            {deviceList}
-          </div>
+          {displayDevices}
           <button onClick={() => inviteDevice()}>Add device</button>
         </div>
       </div>
