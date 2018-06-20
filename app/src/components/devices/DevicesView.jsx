@@ -85,14 +85,20 @@ module.exports = class DevicesView extends React.Component {
           <MessageBox message={message} />
           <ErrorBox errorMsg={error} />
           {modal}
-          <div className='title'>
-            <h1>Your Devices</h1>
-          </div>
-          <div className='box'>
+          <h1>Your Registered Devices</h1>
+          <div className='no-margin-top preview'>
+            <div className='title small'>
+              <h3>Current Device</h3>
+            </div>
             <div className='device' key={deviceId}>
               <span>{deviceId}</span>
               <span>{deviceName}</span>
               <span className='icon' />
+            </div>
+          </div>
+          <div className='no-margin-top preview'>
+            <div className='title small'>
+              <h3>Other Devices</h3>
             </div>
             {deviceList}
           </div>

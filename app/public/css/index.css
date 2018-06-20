@@ -617,7 +617,12 @@ label {
   .device span {
     display: flex;
     flex-grow: 1;
-    align-items: center; }
+    align-items: center;
+    padding: 0.7em 1.3em; }
+    .device span:first-child {
+      width: 45%; }
+    .device span:last-child {
+      width: 5%; }
   .device .icon {
     justify-content: flex-end; }
     .device .icon .material-icons {
@@ -1043,9 +1048,11 @@ label {
   margin-left: 8.33333%;
   padding-top: 10px; }
 
-.preview {
-  padding: 0px;
+.margin-top {
   margin-top: 30px; }
+
+.preview {
+  padding: 0px; }
   .preview .search-field input {
     width: 100%;
     padding: 0px 10px 5px; }
@@ -1054,6 +1061,9 @@ label {
     display: flex; }
     .preview .title.small h1 {
       font-size: 20px; }
+    .preview .title.small h3 {
+      padding: 0;
+      margin: 0; }
     .preview .title h1 {
       display: inline-block;
       background-color: #f5f3f3;
@@ -1094,13 +1104,17 @@ label {
         color: #209061; }
     .preview .texts h1 {
       font-size: 26px; }
-    .preview .texts h1, .preview .texts h2, .preview .texts h3, .preview .texts h4 {
+    .preview .texts h1,
+    .preview .texts h2,
+    .preview .texts h3,
+    .preview .texts h4 {
       padding: 0;
       margin: 0; }
     .preview .texts a {
       color: #118ab2;
       text-decoration: none; }
-    .preview .texts strong, .preview .texts em {
+    .preview .texts strong,
+    .preview .texts em {
       color: #363537; }
     .preview .texts p {
       margin: 8px 0; }
