@@ -1,7 +1,8 @@
 const db = require('app/models');
 const {
   tempEncryptPrivatekey,
-  createNewMasterPassword
+  createNewMasterPassword,
+  decryptMasterPassword
 } = require('app/encryption/keys/cryptMasterPassword');
 const logger = require('app/logger');
 const mailer = require('app/mailer');
@@ -15,7 +16,8 @@ module.exports = {
   createDevice,
   findDeviceFromUserUUID,
   listDevices,
-  verify
+  verify,
+  confirm
 };
 
 async function findDeviceFromUserUUID(uuid) {
@@ -82,8 +84,8 @@ async function verify(req, res) {
   if (
     req.body.uuid === undefined ||
     req.body.uuid == null ||
-    req.body.tempPassword === undefined ||
-    req.body.tempPassword === null
+    req.body.temporaryPassword === undefined ||
+    req.body.temporaryPassword === null
   ) {
     res.status(400).send({ error: 'Malformed request' });
   }
@@ -91,7 +93,7 @@ async function verify(req, res) {
   const inviteCode = req.body.uuid;
   const uuid = inviteCode.slice(1);
 
-  let tempPassword = req.body.password;
+  let tempPassword = req.body.temporaryPassword;
   tempPassword = Buffer.from(decodeURIComponent(tempPassword), 'base64');
 
   let privateKey;
@@ -124,6 +126,58 @@ async function verify(req, res) {
     privateKey,
     deviceId: newDevice.deviceId
   });
+}
+
+async function confirm(req, res) {
+  if (
+    req.body.uuid === undefined ||
+    req.body.uuid == null ||
+    req.body.deviceId === undefined ||
+    req.body.deviceId === null ||
+    req.body.privateKey === undefined ||
+    req.body.privateKey === null
+  ) {
+    res.status(400).send({ error: 'Malformed request' });
+  }
+
+  const inviteCode = req.body.uuid;
+  const uuid = inviteCode.slice(1);
+  const deviceId = req.body.deviceId;
+  const privateKey = Buffer.from(req.body.privateKey, 'base64');
+
+  //verifyNewDevice
+
+  const user = await db.User.findOne({
+    include: [{ model: db.Devices, where: { deviceId: deviceId } }]
+  });
+  const device = await db.Devices.findOne({
+    where: { deviceId: deviceId, userid: user.id }
+  });
+
+  const encryptedMasterPassword = device.password;
+  //check to see that it works...
+  decryptMasterPassword(privateKey, encryptedMasterPassword);
+
+  await db.TempKeys.destroy({
+    where: {
+      deviceId
+    }
+  }).catch(error => {
+    console.error(error);
+    return res.status(500).send({
+      error: 'Something wentr terribly wrong, we are working hard to fix it'
+    });
+  });
+
+  //set device as activated
+  db.Devices.update(
+    {
+      activated: true
+    },
+    { where: { deviceId: deviceId } }
+  );
+
+  res.status(200).send();
 }
 
 async function listDevices(req, res) {
