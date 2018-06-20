@@ -1,4 +1,5 @@
 const users = require('app/users');
+const db = require('app/models');
 const devices = require('app/devices');
 const keygen = require('app/encryption/keys/keygen');
 const orgs = require('app/organizations');
@@ -112,6 +113,12 @@ async function confirm(req, res) {
     await es.createIndex(organizationName);
     await orgs.activateOrganization(organizationName);
     let user = await users.getUser(email);
+
+    await db.Devices.update(
+      { activated: true },
+      { where: { deviceId: deviceId } }
+    );
+
     res.status(200).send({
       organizationName,
       email: user.email
