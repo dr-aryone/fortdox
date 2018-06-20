@@ -2,17 +2,18 @@ const users = require('app/users');
 const devices = require('app/devices');
 const keygen = require('app/encryption/keys/keygen');
 const {
-  decryptMasterPassword
-} = require('app/encryption/keys/cryptMasterPassword');
-const {
-  encryptMasterPassword
-} = require('app/encryption/keys/cryptMasterPassword');
-const {
   encryptPrivateKey
 } = require('app/encryption/authentication/privateKeyEncryption');
 const {
   decryptPrivateKey
 } = require('app/encryption/authentication/privateKeyEncryption');
+
+const {
+  decryptMasterPassword,
+  encryptMasterPassword,
+  tempEncryptPrivatekey,
+  createNewMasterPassword
+} = require('app/encryption/keys/cryptMasterPassword');
 const mailer = require('app/mailer');
 const uuidv1 = require('uuid/v1');
 const logger = require('app/logger');
@@ -37,32 +38,17 @@ async function user(req, res) {
     return res.status(409).send();
   }
 
-  //The keypair/masterpassword generation
-  let keypair = await keygen.genKeyPair();
-  let masterPassword = decryptMasterPassword(
+  let { keypair, newEncryptedMasterPassword } = await createNewMasterPassword(
     privateKey,
     encryptedMasterPassword
   );
-  let newEncryptedMasterPassword = encryptMasterPassword(
-    keypair.publicKey,
-    masterPassword
-  );
 
-  //temp password
-  let tempPassword = keygen.genRandomPassword();
-  let encryptedPrivateKey;
-  try {
-    encryptedPrivateKey = await encryptPrivateKey(
-      tempPassword,
-      keypair.privateKey
-    );
-  } catch (error) {
-    logger.log(
-      'error',
-      `Cannot encrypt temporary password for ${newUserEmail} @ /invite. \n ${error}`
-    );
-    return res.status(500).send();
-  }
+  let { tempPassword, encryptedPrivateKey } = await tempEncryptPrivatekey(
+    keypair.privateKey
+  ).catch(error => {
+    console.error(error);
+    return res.status(500).send({ error: 'Nah, we cant do that today..' });
+  });
 
   //create user
 
@@ -119,7 +105,7 @@ async function user(req, res) {
   //TODO: Chnage so we send pw and uuid to client
   res.send({
     uuid: uuid,
-    email: newUser.email
+    tempPassword: tempPassword
   });
 }
 
