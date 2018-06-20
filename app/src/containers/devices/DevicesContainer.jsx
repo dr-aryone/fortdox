@@ -1,4 +1,4 @@
-const { connect } = require('react-redux');
+import { connect } from 'react-redux';
 const SearchView = require('components/devices/DevicesView');
 const action = require('actions/devices');
 
@@ -23,6 +23,10 @@ const mapDispatchToProps = dispatch => {
     },
     onDeleteDevice: deviceId => {
       dispatch(action.deleteDevice(deviceId));
+    },
+    onUpdateDeviceName: async (deviceId, deviceName) => {
+      await dispatch(action.updateDeviceName(deviceId, deviceName));
+      dispatch(action.getDevices());
     }
   };
 };
@@ -32,4 +36,4 @@ const DevicesContainer = connect(
   mapDispatchToProps
 )(SearchView);
 
-module.exports = DevicesContainer;
+export default DevicesContainer;
