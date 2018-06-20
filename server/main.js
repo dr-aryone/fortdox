@@ -5,8 +5,6 @@ const cleanup = require('app/database_cleanup/cleanup');
 const CronJob = require('cron').CronJob;
 const logger = require('app/logger');
 const routes = require('./routes');
-const cors = require('cors');
-const config = require('app/config.json');
 const PORT = 8000;
 const devMode = process.argv[2] === '--dev';
 
@@ -19,7 +17,30 @@ const job = new CronJob('*/30 * * * *', async () => {
 });
 job.start();
 
-app.use(cors({ origin: config.cors, credentials: true }));
+const allowCrossDomain = function(req, res, next) {
+  res.header('Access-Control-Allow-Origin', req.headers.origin);
+  res.header('Access-Control-Allow-Credentials', true);
+  res.header(
+    'Access-Control-Allow-Methods',
+    'OPTION,GET,PUT,POST,DELETE,PATCH'
+  );
+  res.header(
+    'Access-Control-Allow-Headers',
+    req.get('Access-Control-Request-Headers')
+  );
+  res.header('Vary', 'Origin,Access-Control-Request-Headers');
+
+  if (req.method.toUpperCase() === 'OPTIONS') {
+    res.statusCode = 204;
+    res.setHeader('Content-Length', '0');
+    res.end();
+  } else {
+    next();
+  }
+};
+
+app.use(allowCrossDomain);
+
 app.use(bodyParser.json({ limit: '100mb' }));
 app.use(
   '/downloads',
