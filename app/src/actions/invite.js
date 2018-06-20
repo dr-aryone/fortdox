@@ -4,6 +4,7 @@ const passwordCheck = require('actions/utilities/passwordCheck');
 const config = require('config.json');
 const { addKey, writeStorage } = require('actions/utilities/storage');
 const checkEmptyFields = require('actions/utilities/checkEmptyFields');
+const deviceIdentifier = '@';
 
 export const inviteUser = () => {
   return async (dispatch, getState) => {
@@ -91,12 +92,17 @@ export const receivePrivateKey = () => {
 
     let response;
     try {
-      response = await requestor.post(`${config.server}/invite/verify`, {
-        body: {
-          temporaryPassword,
-          uuid
+      response = await requestor.post(
+        uuid.charAt(0) === deviceIdentifier
+          ? `${config.server}/devices/verify`
+          : `${config.server}/invite/verify`,
+        {
+          body: {
+            temporaryPassword,
+            uuid
+          }
         }
-      });
+      );
     } catch (error) {
       console.error(error);
       switch (error.status) {
