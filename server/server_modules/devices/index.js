@@ -49,7 +49,7 @@ async function add(req, res) {
     console.error('silly', 'Could not create tempkeys');
     console.error(error);
   });
-  const inviteCode = 'D@' + newDevice.deviceId;
+  const inviteCode = '@' + newDevice.deviceId;
   tempPassword = tempPassword.toString('base64');
 
   console.log('device', 'Invitecode', inviteCode, '\npwd', tempPassword);
@@ -58,19 +58,16 @@ async function add(req, res) {
     uuid: inviteCode,
     tempPassword: tempPassword
   });
-  debugger;
-  const mail = {
+
+  const mail = mailer.newDeviceRegistration({
     to: req.session.email,
-    subject: 'Fortdox new device',
-    from: 'Fortdox',
-    content: `
-    <p>Invitation code:</p>
-    <p>${inviteCode}</p>
-    <p>Temporary password:</p>
-    <p>${tempPassword}</p>`
-  };
+    uuid: inviteCode,
+    tempPassword: tempPassword
+  });
 
   mailer.send(mail);
+  console.log('Mail away!');
+}
 }
 
 async function listDevices(req, res) {

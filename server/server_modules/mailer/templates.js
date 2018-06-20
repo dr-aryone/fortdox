@@ -12,6 +12,22 @@ const firstTimeRegistration = ({ to, organization, uuid }) => ({
   }/activation-redirect?code=${uuid} </a><p>Activation code:</p><p>${uuid}</p>`
 });
 
+const newDeviceRegistration = ({ to, uuid, tempPassword }) => ({
+  to,
+  subject: 'Fortdox new device',
+  from: 'Frtdox',
+  content: `
+  <p>Invitation code:</p>
+  <p>${uuid}</p>
+  <p>Temporary password:</p>
+  <p>${encodeURIComponent(tempPassword)}</p>`,
+  html: `
+  <p>Invitation code:</p>
+  <p>${uuid}</p>
+  <p>Temporary password:</p>
+  <p>${encodeURIComponent(tempPassword)}</p>`
+});
+
 const newUserRegistration = ({
   to,
   organization,
@@ -46,5 +62,6 @@ const newUserRegistration = ({
 
 module.exports = {
   firstTimeRegistration,
-  newUserRegistration
+  newUserRegistration,
+  newDeviceRegistration
 };
