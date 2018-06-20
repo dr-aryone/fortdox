@@ -90,6 +90,18 @@ export const receivePrivateKey = () => {
       'value'
     ]);
 
+    let errorFields = {};
+    if (uuid === '') errorFields['uuid'] = { error: 'Please enter uuid.' };
+    if (temporaryPassword === '')
+      errorFields['temporaryPassword'] = {
+        error: 'Please enter temporary password.'
+      };
+    if (Object.keys(errorFields).length != 0)
+      return dispatch({
+        type: 'RECEIVE_PRIVATE_KEY_FAIL',
+        payload: errorFields
+      });
+
     let response;
     try {
       response = await requestor.post(
