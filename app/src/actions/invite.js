@@ -195,13 +195,18 @@ export const verifyUser = () => {
     let uuid = state.verifyUser.getIn(['fields', 'uuid', 'value']);
     let deviceId = state.verifyUser.get('deviceId');
     try {
-      response = await requestor.post(`${config.server}/invite/confirm`, {
-        body: {
-          uuid,
-          privateKey,
-          deviceId
+      response = await requestor.post(
+        uuid.charAt(0) === deviceIdentifier
+          ? `${config.server}/devices/confirm`
+          : `${config.server}/invite/confirm`,
+        {
+          body: {
+            uuid,
+            privateKey,
+            deviceId
+          }
         }
-      });
+      );
     } catch (error) {
       console.error(error);
       switch (error.status) {
