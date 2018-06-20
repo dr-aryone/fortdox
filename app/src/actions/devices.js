@@ -120,11 +120,7 @@ export const deleteDevice = deviceId => {
     });
 
     try {
-      await requestor.delete(`${config.server}/devices`, {
-        body: {
-          deviceId
-        }
-      });
+      await requestor.delete(`${config.server}/devices/${deviceId}`);
     } catch (error) {
       console.error(error);
       switch (error.status) {
