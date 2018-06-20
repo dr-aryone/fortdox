@@ -142,4 +142,44 @@ export const deleteDevice = deviceId => {
   };
 };
 
-export default { getQRCode, getDevices, inviteDevice, deleteDevice };
+export const updateDeviceName = (deviceId, deviceName) => {
+  return async dispatch => {
+    dispatch({
+      type: 'UPDATE_DEVICE_NAME_START'
+    });
+
+    try {
+      await requestor.patch(`${config.server}/devices`, {
+        body: {
+          deviceId,
+          deviceName
+        }
+      });
+    } catch (error) {
+      console.error(error);
+      switch (error.status) {
+        case 400:
+        case 404:
+        case 500:
+        default:
+          return dispatch({
+            type: 'UPDATE_DEVICE_NAME_ERROR',
+            payload: 'Unable to connect to server. Please try again.'
+          });
+      }
+    }
+
+    dispatch({
+      type: 'UPDATE_DEVICE_NAME_SUCCESS',
+      payload: 'Device name has been updated.'
+    });
+  };
+};
+
+export default {
+  getQRCode,
+  getDevices,
+  inviteDevice,
+  deleteDevice,
+  updateDeviceName
+};
