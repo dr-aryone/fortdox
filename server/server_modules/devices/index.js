@@ -146,12 +146,16 @@ async function confirm(req, res) {
   const privateKey = Buffer.from(req.body.privateKey, 'base64');
 
   //verifyNewDevice
-
-  const user = await db.User.findOne({
-    include: [{ model: db.Devices, where: { deviceId: deviceId } }]
+  const deviceJoinUser = await db.Devices.findOne({
+    where: { deviceId: deviceId },
+    include: [{ model: db.User }]
   });
   const device = await db.Devices.findOne({
-    where: { deviceId: deviceId, userid: user.id }
+    where: { deviceId: deviceId, userid: deviceJoinUser.User.id }
+  });
+
+  const org = await db.Organization.findOne({
+    where: { id: deviceJoinUser.User.organizationId }
   });
 
   const encryptedMasterPassword = device.password;
@@ -160,7 +164,7 @@ async function confirm(req, res) {
 
   await db.TempKeys.destroy({
     where: {
-      deviceId
+      uuid: deviceId
     }
   }).catch(error => {
     console.error(error);
@@ -177,7 +181,10 @@ async function confirm(req, res) {
     { where: { deviceId: deviceId } }
   );
 
-  res.status(200).send();
+  res.status(200).send({
+    email: deviceJoinUser.User.email,
+    organization: org.name
+  });
 }
 
 async function listDevices(req, res) {
