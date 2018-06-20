@@ -627,7 +627,9 @@ label {
     justify-content: flex-end; }
     .device .icon .material-icons {
       font-size: 20px;
-      color: #fe4a49; }
+      color: #fe4a49;
+      font-weight: bold;
+      cursor: pointer; }
 
 .input-field {
   display: flex;

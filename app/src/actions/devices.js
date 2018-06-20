@@ -113,4 +113,37 @@ export const getQRCode = () => {
   };
 };
 
-export default { getQRCode, getDevices, inviteDevice };
+export const deleteDevice = deviceId => {
+  return async dispatch => {
+    dispatch({
+      type: 'DELETE_DEVICE_START'
+    });
+
+    try {
+      requestor.delete(`${config.server}/devices`, {
+        body: {
+          deviceId
+        }
+      });
+    } catch (error) {
+      console.error(error);
+      switch (error.status) {
+        case 400:
+        case 500:
+        case 404:
+        default:
+          return dispatch({
+            type: 'DELETE_DEVICE_ERROR',
+            payload: 'Unable to connect to server. Please try again.'
+          });
+      }
+    }
+
+    dispatch({
+      type: 'DELETE_DEVICE_SUCCESS',
+      payload: `${deviceId} has been deleted.`
+    });
+  };
+};
+
+export default { getQRCode, getDevices, inviteDevice, deleteDevice };

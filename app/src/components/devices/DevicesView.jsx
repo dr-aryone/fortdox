@@ -10,7 +10,8 @@ module.exports = class DevicesView extends React.Component {
     this.openModal = this.openModal.bind(this);
     this.closeModal = this.closeModal.bind(this);
     this.state = {
-      showModal: false
+      showModal: false,
+      showDialog: false
     };
   }
 
@@ -35,9 +36,23 @@ module.exports = class DevicesView extends React.Component {
     });
   }
 
+  openDialog(deviceId) {
+    this.setState({
+      showDialog: true,
+      deviceToBeDeleted: deviceId
+    });
+  }
+
+  closeDialog() {
+    this.setState({
+      showDialog: false,
+      deviceToBeDeleted: null
+    });
+  }
+
   onDelete() {
-    this.props.onDeleteUser(this.state.userToBeDeleted);
-    this.closeModal();
+    this.props.onDeleteDevice(this.state.deviceToBeDeleted);
+    this.closeDialog();
   }
 
   render() {
@@ -62,6 +77,34 @@ module.exports = class DevicesView extends React.Component {
       </Modal>
     );
 
+    const dialog = (
+      <Modal
+        show={this.state.showDialog}
+        onClose={this.closeDialog}
+        showClose={false}
+      >
+        <div className='box dialog'>
+          <i className='material-icons'>error_outline</i>
+          <h2>Warning</h2>
+          <p>
+            Are you sure you want to delete {this.state.deviceToBeDeleted} ?
+          </p>
+          <div className='buttons'>
+            <button
+              onClick={() => this.onDelete()}
+              type='button'
+              className='warning'
+            >
+              Delete
+            </button>
+            <button onClick={this.closeDialog} type='button'>
+              Cancel
+            </button>
+          </div>
+        </div>
+      </Modal>
+    );
+
     let deviceList = [];
     let deviceName;
     devices.forEach((device, index) => {
@@ -71,7 +114,12 @@ module.exports = class DevicesView extends React.Component {
             <span>{device.get('id')}</span>
             <span>{device.get('name')}</span>
             <span className='icon'>
-              <i className='material-icons'>clear</i>
+              <i
+                className='material-icons'
+                onClick={() => this.openDialog(device.get('id'))}
+              >
+                  clear
+                </i>
             </span>
           </div>
           )
@@ -85,6 +133,7 @@ module.exports = class DevicesView extends React.Component {
           <MessageBox message={message} />
           <ErrorBox errorMsg={error} />
           {modal}
+          {dialog}
           <h1>Your Registered Devices</h1>
           <div className='no-margin-top preview'>
             <div className='title small'>

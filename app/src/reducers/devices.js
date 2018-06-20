@@ -14,10 +14,12 @@ const devices = (state = initialState, action) => {
     case 'GET_DEVICES_START':
     case 'GET_QR_CODE_START':
     case 'INVITE_DEVICE_START':
+    case 'DELETE_DEVICE_START':
       return state.set('isLoading', true).set('error', '');
     case 'GET_QR_CODE_ERROR':
     case 'GET_DEVICES_ERROR':
     case 'INVITE_DEVICE_ERROR':
+    case 'DELETE_DEVICE_ERROR':
       return state.merge({
         error: fromJS(action.payload),
         message: '',
@@ -32,6 +34,7 @@ const devices = (state = initialState, action) => {
         deviceId: fromJS(action.payload.deviceId),
         devices: fromJS(action.payload.devices)
       });
+    case 'DELETE_DEVICE_SUCCESS':
     case 'INVITE_DEVICE_SUCCESS':
       return state
         .set('isLoading', false)
