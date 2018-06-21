@@ -11,8 +11,8 @@ $search-padding: 30px;
     margin-left: percentage(2/12);
   }
 
-  &.big{
-    width: 100%
+  &.big {
+    width: 100%;
   }
 }
 
@@ -123,7 +123,6 @@ $search-padding: 30px;
     word-break: break-all;
   }
 
-
   .highlight {
     background-color: lighten($yellow, 5%);
     padding: 0px 5px;
@@ -178,7 +177,6 @@ $search-padding: 30px;
     @extend .box;
     padding: 0px;
     flex-grow: 1;
-
   }
 
   .attachments {
@@ -232,24 +230,32 @@ $search-padding: 30px;
   padding-top: 10px;
 }
 
+.margin-top {
+  margin-top: $search-padding;
+}
+
 .preview {
   @extend .box;
   padding: 0px;
-  margin-top: $search-padding;
 
   .search-field input {
     width: 100%;
     padding: 0px 10px 5px;
   }
 
- .title {
-   padding: 1.3em;
-   display: flex;
-   &.small {
-     h1 {
-       font-size: 20px;
-     }
-   }
+  .title {
+    padding: 1.3em;
+    display: flex;
+    &.small {
+      h1 {
+        font-size: 20px;
+      }
+
+      h3 {
+        padding: 0;
+        margin: 0;
+      }
+    }
 
     h1 {
       display: inline-block;
@@ -309,7 +315,10 @@ $search-padding: 30px;
       font-size: 26px;
     }
 
-    h1, h2, h3, h4 {
+    h1,
+    h2,
+    h3,
+    h4 {
       padding: 0;
       margin: 0;
     }
@@ -319,7 +328,8 @@ $search-padding: 30px;
       text-decoration: none;
     }
 
-    strong, em {
+    strong,
+    em {
       color: $text-color;
     }
 

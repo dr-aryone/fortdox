@@ -58,7 +58,7 @@ export const inviteDevice = () => {
     const deviceId = storage[email][organization].deviceId;
 
     try {
-      await requestor.post(`${config.server}/devices/add`, {
+      await requestor.post(`${config.server}/devices`, {
         body: {
           deviceId
         }
@@ -113,4 +113,73 @@ export const getQRCode = () => {
   };
 };
 
-export default { getQRCode, getDevices, inviteDevice };
+export const deleteDevice = deviceId => {
+  return async dispatch => {
+    dispatch({
+      type: 'DELETE_DEVICE_START'
+    });
+
+    try {
+      await requestor.delete(`${config.server}/devices/${deviceId}`);
+    } catch (error) {
+      console.error(error);
+      switch (error.status) {
+        case 400:
+        case 500:
+        case 404:
+        default:
+          return dispatch({
+            type: 'DELETE_DEVICE_ERROR',
+            payload: 'Unable to connect to server. Please try again.'
+          });
+      }
+    }
+
+    dispatch({
+      type: 'DELETE_DEVICE_SUCCESS',
+      payload: `${deviceId} has been deleted.`
+    });
+  };
+};
+
+export const updateDeviceName = (deviceId, deviceName) => {
+  return async dispatch => {
+    dispatch({
+      type: 'UPDATE_DEVICE_NAME_START'
+    });
+
+    try {
+      await requestor.patch(`${config.server}/devices`, {
+        body: {
+          deviceId,
+          deviceName
+        }
+      });
+    } catch (error) {
+      console.error(error);
+      switch (error.status) {
+        case 400:
+        case 404:
+        case 500:
+        default:
+          return dispatch({
+            type: 'UPDATE_DEVICE_NAME_ERROR',
+            payload: 'Unable to connect to server. Please try again.'
+          });
+      }
+    }
+
+    dispatch({
+      type: 'UPDATE_DEVICE_NAME_SUCCESS',
+      payload: 'Device name has been updated.'
+    });
+  };
+};
+
+export default {
+  getQRCode,
+  getDevices,
+  inviteDevice,
+  deleteDevice,
+  updateDeviceName
+};
