@@ -1,16 +1,17 @@
+import DragAndDropView from 'components/document/components/DragAndDropView';
 const React = require('react');
 const LoaderOverlay = require('components/general/LoaderOverlay');
 const DocumentForm = require('./form/DocumentForm');
 const ErrorBox = require('components/general/ErrorBox');
 
 class CreateDocView extends React.Component {
-  componentWillMount () {
+  componentWillMount() {
     if (this.props.onMount) {
       this.props.onMount(this.props);
     }
   }
 
-  render () {
+  render() {
     let {
       docFields,
       error,
@@ -57,13 +58,18 @@ class CreateDocView extends React.Component {
             onPreviewAttachment={onPreviewAttachment}
             onDownloadAttachment={onDownloadAttachment}
           >
-            <button onClick={onCreate} type='submit'>Create</button>
-            <button onClick={onCancel} type='submit'>Cancel</button>
+            <button onClick={onCreate} type='submit'>
+              Create
+            </button>
+            <button onClick={onCancel} type='submit'>
+              Cancel
+            </button>
           </DocumentForm>
+          <DragAndDropView />
         </div>
       </div>
     );
   }
 }
 
-module.exports = CreateDocView;
+export default CreateDocView;
