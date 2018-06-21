@@ -21,6 +21,7 @@ const initialState = fromJS({
   error: null,
   isLoading: false,
   privateKey: null,
+  deviceId: null,
   forceBack: false
 });
 
@@ -37,7 +38,8 @@ const verifyUser = (state = initialState, action) => {
         .setIn(['fields', 'temporaryPassword', 'value'], action.payload.pass);
     case 'RECEIVE_PRIVATE_KEY_SUCCESS':
       return state.merge({
-        privateKey: fromJS(action.payload),
+        privateKey: fromJS(action.payload.privateKey),
+        deviceId: fromJS(action.payload.deviceId),
         isLoading: false
       });
     case 'RECEIVE_PRIVATE_KEY_FAIL':

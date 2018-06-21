@@ -6,9 +6,11 @@ const invite = require('./invite');
 const document = require('./document');
 const tags = require('./tags');
 const users = require('./users');
-const {restrict} = require('app/sessions');
+const devices = require('./devices');
+const { restrict } = require('app/sessions');
 
 router.use('/login', login);
+router.use('/devices', devices);
 router.use('/register', register);
 router.use('/invite', invite);
 router.use('/document', restrict, document);

@@ -40,13 +40,13 @@ const createUser = ({ email, password, organizationId, uuid }) => {
       return reject(409);
     }
     try {
-      await db.User.create({
+      const newUser = await db.User.create({
         email: email,
         password: password,
         organizationId: organizationId,
         uuid: uuid
       });
-      return resolve(201);
+      return resolve(newUser);
     } catch (error) {
       console.error(error);
       return reject(401);
@@ -54,7 +54,7 @@ const createUser = ({ email, password, organizationId, uuid }) => {
   });
 };
 
-const verifyUser = (email, privateKey) => {
+const verifyUser = (email, privateKey, deviceId) => {
   return new Promise(async (resolve, reject) => {
     let encryptedMasterPassword;
     let user;
@@ -63,11 +63,19 @@ const verifyUser = (email, privateKey) => {
       if (!user) {
         return reject(404);
       }
-      encryptedMasterPassword = user.password;
     } catch (error) {
       console.error(error);
       return reject(500);
     }
+
+    let userDevice = await db.Devices.findOne({
+      where: {
+        userid: user.id,
+        deviceId: deviceId
+      }
+    });
+    encryptedMasterPassword = userDevice.password;
+
     let result = decryptMasterPassword(privateKey, encryptedMasterPassword);
 
     try {
@@ -80,8 +88,9 @@ const verifyUser = (email, privateKey) => {
   });
 };
 
-const verifyNewUser = (uuid, privateKey) => {
+const verifyNewUser = (deviceId, uuid, privateKey) => {
   return new Promise(async (resolve, reject) => {
+    //TODO:Make sure that this is correct from device id
     let encryptedMasterPassword;
     let user;
     try {
@@ -94,7 +103,14 @@ const verifyNewUser = (uuid, privateKey) => {
       if (!user) {
         return reject(404);
       }
-      encryptedMasterPassword = user.password;
+
+      const device = await db.Devices.findOne({
+        where: {
+          userid: user.id,
+          deviceId: deviceId
+        }
+      });
+      encryptedMasterPassword = device.password;
     } catch (error) {
       console.error(error);
       return reject(500);
@@ -191,7 +207,8 @@ const verifyUUID = async uuid => {
     }
     result = {
       email: user.email,
-      organizationId: user.organizationId
+      organizationId: user.organizationId,
+      id: user.id
     };
   } catch (error) {
     console.error(error);

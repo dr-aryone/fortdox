@@ -10,8 +10,8 @@
     "postinstall": "node -e \"var s='../server_modules',d='node_modules/app',fs=require('fs');fs.stat(d,function(e){!e||fs.symlinkSync(s,d,'dir')}); try { fs.mkdirSync('./logs') } catch(e) { console.log(e)}\""
   },
   "dependencies": {
-    "bcrypt": "^1.0.2",
-    "body-parser": "^1.17.2",
+    "bcrypt": "^1.0.3",
+    "body-parser": "^1.18.3",
     "client-sessions": "^0.8.0",
     "cron": "^1.2.1",
     "elasticsearch": "^13.1.1",
@@ -26,11 +26,10 @@
     "winston": "^2.3.1"
   },
   "devDependencies": {
-    "@edgeguideab/expect": "^1.7.8",
+    "@edgeguideab/expect": "^1.7.9",
     "babel-eslint": "^7.2.3",
-    "eslint": "^4.0.0",
-    "eslint-plugin-jasmine": "^2.2.0",
-    "nodemon": "^1.17.5",
+    "eslint": "^4.19.1",
+    "eslint-plugin-jasmine": "^2.10.1",
     "sequelize-cli": "^2.8.0"
   }
 }

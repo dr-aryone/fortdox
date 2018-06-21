@@ -4,6 +4,7 @@ const passwordCheck = require('actions/utilities/passwordCheck');
 const config = require('config.json');
 const { addKey, writeStorage } = require('actions/utilities/storage');
 const checkEmptyFields = require('actions/utilities/checkEmptyFields');
+const deviceIdentifier = '@';
 
 export const inviteUser = () => {
   return async (dispatch, getState) => {
@@ -89,14 +90,31 @@ export const receivePrivateKey = () => {
       'value'
     ]);
 
+    let errorFields = {};
+    if (uuid === '') errorFields['uuid'] = { error: 'Please enter uuid.' };
+    if (temporaryPassword === '')
+      errorFields['temporaryPassword'] = {
+        error: 'Please enter temporary password.'
+      };
+    if (Object.keys(errorFields).length != 0)
+      return dispatch({
+        type: 'RECEIVE_PRIVATE_KEY_FAIL',
+        payload: errorFields
+      });
+
     let response;
     try {
-      response = await requestor.post(`${config.server}/invite/verify`, {
-        body: {
-          temporaryPassword,
-          uuid
+      response = await requestor.post(
+        uuid.charAt(0) === deviceIdentifier
+          ? `${config.server}/devices/verify`
+          : `${config.server}/invite/verify`,
+        {
+          body: {
+            temporaryPassword,
+            uuid
+          }
         }
-      });
+      );
     } catch (error) {
       console.error(error);
       switch (error.status) {
@@ -112,7 +130,10 @@ export const receivePrivateKey = () => {
 
     return dispatch({
       type: 'RECEIVE_PRIVATE_KEY_SUCCESS',
-      payload: response.body.privateKey
+      payload: {
+        privateKey: response.body.privateKey,
+        deviceId: response.body.deviceId
+      }
     });
   };
 };
@@ -184,13 +205,20 @@ export const verifyUser = () => {
 
     let response;
     let uuid = state.verifyUser.getIn(['fields', 'uuid', 'value']);
+    let deviceId = state.verifyUser.get('deviceId');
     try {
-      response = await requestor.post(`${config.server}/invite/confirm`, {
-        body: {
-          uuid,
-          privateKey
+      response = await requestor.post(
+        uuid.charAt(0) === deviceIdentifier
+          ? `${config.server}/devices/confirm`
+          : `${config.server}/invite/confirm`,
+        {
+          body: {
+            uuid,
+            privateKey,
+            deviceId
+          }
         }
-      });
+      );
     } catch (error) {
       console.error(error);
       switch (error.status) {
@@ -222,7 +250,7 @@ export const verifyUser = () => {
         payload: 'Unable to store key'
       });
     }
-    writeStorage(salt, email, organization);
+    writeStorage(salt, organization, email, deviceId);
 
     return dispatch({
       type: 'VERIFY_NEW_USER_SUCCESS',

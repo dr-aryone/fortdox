@@ -14,11 +14,13 @@ async function listOrganizationMembers(req, res) {
         where: {
           id: organizationId
         },
-        include: [{
-          model: db.User,
-          as: 'users',
-          attributes: ['email', 'uuid']
-        }]
+        include: [
+          {
+            model: db.User,
+            as: 'users',
+            attributes: ['email', 'uuid']
+          }
+        ]
       }),
       db.TempKeys.findAll({
         attributes: ['uuid']
@@ -34,11 +36,13 @@ async function listOrganizationMembers(req, res) {
     return;
   }
   tempKeys = tempKeys || [];
-  res.send(organization.users.map(user => {
-    const pending = tempKeys.find(k => k.uuid === user.uuid);
-    return {
-      email: user.email,
-      pending: !!pending
-    };
-  }));
+  res.send(
+    organization.users.map(user => {
+      const pending = tempKeys.find(k => k.uuid === user.uuid);
+      return {
+        email: user.email,
+        pending: !!pending
+      };
+    })
+  );
 }

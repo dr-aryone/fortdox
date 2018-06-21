@@ -28,7 +28,7 @@ class Header extends React.Component {
     window.removeEventListener('click', this.onClose, true);
   }
 
-  clickHandler = (event, button, logout) => {
+  clickHandler(event, button, logout) {
     if (button === 'TOGGLE-NAV' && this.state.hasBeenClicked)
       return this.setState({
         hasBeenClicked: false
@@ -40,10 +40,10 @@ class Header extends React.Component {
       return logout();
     }
     return this.setState({ show: !this.state.show });
-  };
+  }
 
   render() {
-    let { organization, changeView, logout } = this.props;
+    let { organization, email, changeView, logout } = this.props;
 
     return (
       <div className='header'>
@@ -75,7 +75,10 @@ class Header extends React.Component {
             </i>
           </span>
           <span className='account'>
-            <span className='organization'>{organization}</span>
+            <span className='user'>
+              <div id='organization'>{organization}</div>
+              <div id='email'>{email}</div>
+            </span>
             <div
               className='account-icons'
               onClick={event => this.clickHandler(event, 'TOGGLE-NAV', null)}
