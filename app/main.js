@@ -64,10 +64,6 @@ app.on('open-url', (event, url) => {
 
 app.on('ready', () => {
   createBrowserWindow();
-  // if (dev) {
-  //   autoUpdater.setFeedURL(`${config.server}/downloads?version=${app.getVersion()}&platform=${process.platform}`);
-  //   autoUpdater.checkForUpdates();
-  // }
 });
 
 function createBrowserWindow() {

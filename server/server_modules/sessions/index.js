@@ -83,7 +83,7 @@ async function needsMasterPassword(req, res, next) {
     });
   } catch (error) {
     console.error(error);
-    res
+    return res
       .status(404)
       .send({ error: 'No such user' })
       .end();
@@ -99,9 +99,16 @@ async function needsMasterPassword(req, res, next) {
     });
   } catch (error) {
     console.error(error);
-    res
+    return res
       .status(404)
       .send({ error: 'No such device is registered with us' })
+      .end();
+  }
+
+  if (device === null || user === null) {
+    return res
+      .status(401)
+      .send({ error: 'You are not welcome here' })
       .end();
   }
 

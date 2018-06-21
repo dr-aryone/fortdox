@@ -1,4 +1,3 @@
-const users = require('app/users');
 const changelog = require('app/changelog');
 const es = require('app/elastic_search');
 const checkEmptyFields = require('app/utilities/checkEmptyFields');
@@ -71,7 +70,6 @@ async function get(req, res) {
     return res.status(500).send();
   }
 
-  //TODO: Get MP from device and not user
   let encryptedMasterPassword = req.session.mp;
 
   doc._source.encrypted_texts = doc._source.encrypted_texts || [];
@@ -172,7 +170,6 @@ async function search(req, res) {
 async function create(req, res) {
   let privateKey = req.session.privateKey;
   let organization = req.session.organization;
-  //TODO: The correct masterpassaword heree
   let encryptedMasterPassword = req.session.mp;
 
   let fields = checkEmptyFields(req.body);
@@ -234,7 +231,6 @@ async function update(req, res) {
   let privateKey = req.session.privateKey;
   let organization = req.session.organization;
 
-  //TODO: Get correct password here
   let encryptedMasterPassword = req.session.mp;
   let fields = checkEmptyFields(req.body);
   if (!fields.valid)
@@ -292,7 +288,6 @@ async function update(req, res) {
 
 async function deleteDocument(req, res) {
   let response;
-  //TODO: Make sure that his is the correct master password from the current device!
   let encryptedMasterPassword = req.session.mp;
   try {
     decryptMasterPassword(req.session.privateKey, encryptedMasterPassword);

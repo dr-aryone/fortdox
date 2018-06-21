@@ -90,7 +90,6 @@ const verifyUser = (email, privateKey, deviceId) => {
 
 const verifyNewUser = (deviceId, uuid, privateKey) => {
   return new Promise(async (resolve, reject) => {
-    //TODO:Make sure that this is correct from device id
     let encryptedMasterPassword;
     let user;
     try {
