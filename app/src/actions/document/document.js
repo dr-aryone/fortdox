@@ -54,8 +54,9 @@ export function createDocument() {
       });
     });
 
+    let response;
     try {
-      await requestor.post(`${config.server}/document`, {
+      response = await requestor.post(`${config.server}/document`, {
         body: {
           title,
           encryptedTexts,
@@ -84,11 +85,17 @@ export function createDocument() {
       }
     }
 
-    return dispatch({
-      type: 'CREATE_DOCUMENT_SUCCESS',
-      payload: 'Document created!',
-      docFields
-    });
+    return dispatch(
+      openDocument(response.body._id, true, () => {
+        let state = getState();
+        let docFields = state.updateDocument.get('docFields');
+        return dispatch({
+          type: 'CREATE_DOCUMENT_SUCCESS',
+          payload: 'Document has been created!',
+          docFields
+        });
+      })
+    );
   };
 }
 
