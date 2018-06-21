@@ -2,9 +2,9 @@ import SearchViewContainer from 'containers/search/SearchViewContainer';
 import CreateDocContainer from 'containers/document/CreateDocContainer';
 import UpdateDocContainer from 'containers/document/UpdateDocContainer';
 import InviteUserContainer from '../../containers/invite/InviteUserContainer';
+import DevicesContainer from 'containers/devices/DevicesContainer';
 const React = require('react');
 const HeaderContainer = require('containers/user/HeaderContainer');
-const DevicesContainer = require('containers/devices/DevicesContainer');
 const DownloadManager = require('components/general/DownloadManager');
 const SplashScreen = require('components/general/SplashScreen');
 

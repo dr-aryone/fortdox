@@ -120,6 +120,10 @@ const verifyNewUser = (deviceId, uuid, privateKey) => {
       await user.updateAttributes({
         uuid: null
       });
+      await db.Devices.update(
+        { activated: true },
+        { where: { deviceId: deviceId } }
+      );
     } catch (error) {
       console.error(error);
       return reject(500);

@@ -1,8 +1,11 @@
 'use strict';
 const config = require('../config.json');
 const nodemailer = require('nodemailer');
-const {firstTimeRegistration} = require('./templates.js');
-const {newUserRegistration} = require('./templates.js');
+const {
+  firstTimeRegistration,
+  newDeviceRegistration,
+  newUserRegistration
+} = require('./templates.js');
 
 let transporter = nodemailer.createTransport(config.mailer);
 
@@ -20,7 +23,6 @@ module.exports = {
 
 function send(mailOptions) {
   return new Promise((resolve, reject) => {
-
     transporter.sendMail(mailOptions, (error, info) => {
       if (error) {
         return reject(error);
@@ -33,5 +35,6 @@ function send(mailOptions) {
 module.exports = {
   send,
   newUserRegistration,
+  newDeviceRegistration,
   firstTimeRegistration
 };

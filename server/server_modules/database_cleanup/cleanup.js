@@ -19,7 +19,7 @@ module.exports = async () => {
     console.error(error);
     throw 404;
   }
-  const organizationCleanupPromises = inactiveOrganizations.map(async (entry) => {
+  const organizationCleanupPromises = inactiveOrganizations.map(async entry => {
     if (entry.createdAt < birthTimeToDelete) {
       try {
         let users = await db.User.findAll({
@@ -62,26 +62,38 @@ module.exports = async () => {
     throw 500;
   }
 
-  const tempKeysDeletionPromises = tempKeysOfInActivateUsers.map(async tempKey => {
-    if (tempKey.createdAt < birthTimeToDelete) {
-      return;
+  const tempKeysDeletionPromises = tempKeysOfInActivateUsers.map(
+    async tempKey => {
+      if (tempKey.createdAt < birthTimeToDelete) {
+        return;
+      }
+      try {
+        await tempKey.destroy();
+        await db.User.destroy({
+          where: {
+            uuid: tempKey.uuid
+          }
+        });
+      } catch (error) {
+        console.error(error);
+        throw 500;
+      }
     }
-    try {
-      await tempKey.destroy();
-      await db.User.destroy({
-        where: {
-          uuid: tempKey.uuid
-        }
-      });
-    } catch (error) {
-      console.error(error);
-      throw 500;
-    }
-  });
+  );
   try {
     await Promise.all(tempKeysDeletionPromises);
   } catch (error) {
     logger.error(error);
     throw 500;
   }
+
+  const inactiveDevices = await db.Devices.findAll({
+    where: {
+      activated: false
+    }
+  });
+
+  inactiveDevices.map(async inactiveDevice => {
+    await inactiveDevice.destroy();
+  });
 };

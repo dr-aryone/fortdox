@@ -84,7 +84,7 @@ module.exports = class UserList extends React.Component {
     return (
       <div className='user-list'>
         {deleteDialog}
-        <div className='preview'>
+        <div className='preview no-margin-top'>
           <div className='title small'>
             <h1>Users in organization</h1>
           </div>

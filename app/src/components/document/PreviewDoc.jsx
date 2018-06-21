@@ -98,13 +98,13 @@ class PreviewDoc extends React.Component {
             {docFields.getIn(['tags', 'list']).size > 0 ? tags : null}
             {docFields.get('attachments').size > 0 ? attachments : null}
           </div>
-        ) : null;
+      ) : null;
 
     return (
       <div>
         <LoaderOverlay display={isLoading} />
         <ErrorBox errorMsg={error} />
-        <div className='preview'>
+        <div className='preview margin-top'>
           {searchField.get('show') ? (
             <SearchField
               value={searchField.get('value')}
