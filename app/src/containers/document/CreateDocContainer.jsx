@@ -20,6 +20,9 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
+    onUpdateId: (fromId, toId) => {
+      dispatch(fieldActions.updateFieldPositon(fromId, toId));
+    },
     onChange: (event, type) => {
       dispatch(
         fieldActions.docInputChange(event.target.name, event.target.value, type)

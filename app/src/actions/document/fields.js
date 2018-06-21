@@ -45,6 +45,98 @@ export const addField = field => {
   };
 };
 
+export const updateFieldPositon = (fromId, toId) => {
+  return (dispatch, getState) => {
+    dispatch({
+      type: 'UPDATE_FIELD_POSITION_START'
+    });
+    const state = getState();
+    const encryptedTexts = state.createDocument.getIn([
+      'docFields',
+      'encryptedTexts'
+    ]);
+    const texts = state.createDocument.getIn(['docFields', 'texts']);
+    const diff = fromId - toId;
+
+    let updatedEts = [];
+    let updatedTexts = [];
+
+    if (diff > 0) {
+      encryptedTexts.forEach(et => {
+        if (et.get('id') === fromId) {
+          updatedEts.push({
+            value: et.get('value'),
+            label: et.get('label'),
+            error: et.get('error'),
+            id: toId
+          });
+        } else {
+          et.get('id') < fromId
+            ? updatedEts.push({
+              value: et.get('value'),
+              label: et.get('label'),
+              error: et.get('error'),
+              id: et.get('id') + 1
+            })
+            : updatedEts.push({
+              value: et.get('value'),
+              label: et.get('label'),
+              error: et.get('error'),
+              id: et.get('id')
+            });
+        }
+      });
+
+      texts.forEach(t => {
+        if (t.get('id') === fromId) {
+          updatedTexts.push({
+            value: t.get('value'),
+            label: t.get('label'),
+            error: t.get('error'),
+            id: toId
+          });
+        } else {
+          t.get('id') < fromId
+            ? updatedTexts.push({
+              value: t.get('value'),
+              label: t.get('label'),
+              error: t.get('error'),
+              id: t.get('id') + 1
+            })
+            : updatedTexts.push({
+              value: t.get('value'),
+              label: t.get('label'),
+              error: t.get('error'),
+              id: t.get('id')
+            });
+        }
+      });
+    } else {
+      updatedEts = encryptedTexts.forEach(et => {
+        if (et.id === fromId) {
+          et.id = toId;
+        }
+        if (et.id < fromId) {
+          et.id -= 1;
+        }
+      });
+
+      updatedTexts = texts.forEach(t => {
+        if (t.id === fromId) {
+          t.id = toId;
+        }
+        if (t.id < fromId) {
+          t.id -= 1;
+        }
+      });
+    }
+    dispatch({
+      type: 'UPDATE_FIELD_POSITION_SUCCESS',
+      payload: { updatedEts, updatedTexts }
+    });
+  };
+};
+
 export const removeField = id => {
   return (dispatch, getState) => {
     let state = getState();
@@ -180,5 +272,6 @@ export default {
   removeField,
   docInputChange,
   docTitleChange,
+  updateFieldPositon,
   clearSimilarDocuments
 };
