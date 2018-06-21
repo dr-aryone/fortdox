@@ -199,12 +199,9 @@ async function confirm(req, res) {
     res.status(400).send({ error: 'Malformed request' });
   }
 
-  const inviteCode = req.body.uuid;
-  const uuid = inviteCode.slice(1);
   const deviceId = req.body.deviceId;
   const privateKey = Buffer.from(req.body.privateKey, 'base64');
 
-  //verifyNewDevice
   const deviceJoinUser = await db.Devices.findOne({
     where: { deviceId: deviceId },
     include: [{ model: db.User }]
@@ -218,7 +215,6 @@ async function confirm(req, res) {
   });
 
   const encryptedMasterPassword = device.password;
-  //check to see that it works...
   decryptMasterPassword(privateKey, encryptedMasterPassword);
 
   await db.TempKeys.destroy({
@@ -232,7 +228,6 @@ async function confirm(req, res) {
     });
   });
 
-  //set device as activated
   db.Devices.update(
     {
       activated: true

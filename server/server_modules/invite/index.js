@@ -1,16 +1,10 @@
 const users = require('app/users');
 const devices = require('app/devices');
-const keygen = require('app/encryption/keys/keygen');
-const {
-  encryptPrivateKey
-} = require('app/encryption/authentication/privateKeyEncryption');
 const {
   decryptPrivateKey
 } = require('app/encryption/authentication/privateKeyEncryption');
 
 const {
-  decryptMasterPassword,
-  encryptMasterPassword,
   tempEncryptPrivatekey,
   createNewMasterPassword
 } = require('app/encryption/keys/cryptMasterPassword');
@@ -50,8 +44,6 @@ async function user(req, res) {
     return res.status(500).send({ error: 'Nah, we cant do that today..' });
   });
 
-  //create user
-
   let uuid = uuidv1();
   let newUser = {
     email: newUserEmail,
@@ -59,7 +51,6 @@ async function user(req, res) {
     uuid
   };
 
-  //create device
   try {
     newUser = await users.createUser(newUser);
     devices.createDevice(newUser.id, newEncryptedMasterPassword);
@@ -73,7 +64,6 @@ async function user(req, res) {
     return res.status(error).send();
   }
 
-  //mail
   let mail = mailer.newUserRegistration({
     to: newUserEmail,
     organization: sender.Organization.name,
@@ -102,7 +92,6 @@ async function user(req, res) {
     return res.status(400).send('mail');
   }
 
-  //TODO: Chnage so we send pw and uuid to client
   res.send({
     uuid: uuid,
     tempPassword: tempPassword
@@ -161,7 +150,6 @@ async function confirm(req, res) {
 
   let metadata;
   try {
-    //TODO: Fix here
     metadata = await users.verifyNewUser(deviceId, uuid, privateKey);
     await users.TempKeys.remove(uuid);
     res.send(metadata);
