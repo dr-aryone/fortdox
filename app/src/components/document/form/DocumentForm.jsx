@@ -1,3 +1,4 @@
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 const React = require('react');
 const DocumentInputField = require('./DocumentInputField');
 const DocumentTextArea = require('./DocumentTextArea');
@@ -9,6 +10,7 @@ const Changelog = require('./Changelog');
 
 const DocumentForm = ({
   onSubmit,
+  onUpdateId,
   docFields,
   changelog,
   onChange,
@@ -28,24 +30,50 @@ const DocumentForm = ({
   onSimilarDocumentClick
 }) => {
   let title = docFields.get('title');
-  let encryptedTextFields = docFields.get('encryptedTexts')
+  let encryptedTextFields = docFields
+    .get('encryptedTexts')
     .map(field => field.set('encrypted', true));
   let textFields = docFields.get('texts');
   let tags = docFields.get('tags');
 
+  //DnD
+  const onDragEnd = result => {
+    console.log('Drag ended..', result);
+
+    if (!result.destination) {
+      return;
+    }
+    onUpdateId(result.source.index, result.destination.index);
+  };
+
+  const getListStyle = isDraggingOver => ({
+    background: isDraggingOver ? 'lightblue' : 'lightgrey',
+    padding: 8,
+    width: 250
+  });
+
   let fields = encryptedTextFields
     .concat(textFields)
-    .sort((textA, textB) => textA.get('id') < textB.get('id') ? -1 : 1)
+    .sort((textA, textB) => (textA.get('id') < textB.get('id') ? -1 : 1))
     .map((field, index) => (
-      <DocumentTextArea
-        input={field}
-        type={field.get('encrypted') ? 'encryptedText' : 'text'}
-        key={index}
-        onChange={onChange}
-        onRemoveField={onRemoveField}
-      />
-    )
-  );
+      <Draggable key={index} draggableId={index} index={index}>
+        {(provided, snapshot) => (
+          <div
+            ref={provided.innerRef}
+            {...provided.draggableProps}
+            {...provided.dragHandleProps}
+          >
+            <DocumentTextArea
+              input={field}
+              type={field.get('encrypted') ? 'encryptedText' : 'text'}
+              key={index}
+              onChange={onChange}
+              onRemoveField={onRemoveField}
+            />
+          </div>
+        )}
+      </Draggable>
+    ));
 
   return (
     <form onSubmit={onSubmit} className='document'>
@@ -67,12 +95,21 @@ const DocumentForm = ({
               onClick={onSimilarDocumentClick}
             />
           </div>
-          {fields}
+          <DragDropContext onDragEnd={onDragEnd}>
+            <Droppable droppableId='droppable-fields'>
+              {(provided, snapshot) => (
+                <div
+                  ref={provided.innerRef}
+                  style={getListStyle(snapshot.isDraggingOver)}
+                >
+                  {fields}
+                </div>
+              )}
+            </Droppable>
+          </DragDropContext>
           <BottomPanel onAddField={onAddField} />
         </div>
-        <div className='buttons'>
-          {children}
-        </div>
+        <div className='buttons'>{children}</div>
       </div>
       <div className='side-panel box'>
         <DocumentTags
@@ -89,10 +126,12 @@ const DocumentForm = ({
           onPreviewAttachment={onPreviewAttachment}
           onDownloadAttachment={onDownloadAttachment}
         />
-        {changelog ? <Changelog changelog={docFields.get('changelog')} /> : null}
+        {changelog ? (
+          <Changelog changelog={docFields.get('changelog')} />
+        ) : null}
       </div>
     </form>
   );
 };
 
-module.exports = DocumentForm;
+export default DocumentForm;

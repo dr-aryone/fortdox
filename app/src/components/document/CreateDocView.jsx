@@ -1,7 +1,6 @@
-import DragAndDropView from 'components/document/components/DragAndDropView';
+import DocumentForm from './form/DocumentForm';
 const React = require('react');
 const LoaderOverlay = require('components/general/LoaderOverlay');
-const DocumentForm = require('./form/DocumentForm');
 const ErrorBox = require('components/general/ErrorBox');
 
 class CreateDocView extends React.Component {
@@ -13,6 +12,7 @@ class CreateDocView extends React.Component {
 
   render() {
     let {
+      onUpdateId,
       docFields,
       error,
       onAddTag,
@@ -41,6 +41,7 @@ class CreateDocView extends React.Component {
           <ErrorBox errorMsg={error} />
           <h1>Create Document</h1>
           <DocumentForm
+            onUpdateId={onUpdateId}
             docFields={docFields}
             similarDocuments={similarDocuments}
             onCloseSimilarDocuments={onCloseSimilarDocuments}
@@ -65,7 +66,6 @@ class CreateDocView extends React.Component {
               Cancel
             </button>
           </DocumentForm>
-          <DragAndDropView />
         </div>
       </div>
     );
