@@ -19,10 +19,12 @@
   }
 
   &-inner {
-    display: inline-block;
+    display: inline-flex;
     position: relative;
     max-height: 80vh;
     max-width: 80vh;
+    flex-direction: column;
+    align-items: center;
 
     h3 {
       text-align: center;
