@@ -66,6 +66,7 @@ const register = (state = initialState, action) => {
     case 'VERIFY_ACTIVATION_CODE_SUCCESS':
       return state
         .merge({
+          deviceId: fromJS(action.payload.deviceId),
           privateKey: fromJS(action.payload.privateKey),
           isLoading: false,
           isVerified: true

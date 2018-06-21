@@ -1,12 +1,16 @@
 const users = require('app/users');
+const db = require('app/models');
 const statusMsg = require('app/statusMsg.json');
 const logger = require('app/logger');
-const {decryptSession, encryptSession} = require('./encryption');
-const {decryptMasterPassword} = require('app/encryption/keys/cryptMasterPassword');
+const { decryptSession, encryptSession } = require('./encryption');
+const {
+  decryptMasterPassword
+} = require('app/encryption/keys/cryptMasterPassword');
 
 module.exports = {
   login,
   restrict,
+  needsMasterPassword,
   check
 };
 
@@ -19,7 +23,27 @@ async function login(req, res) {
     return res.status(error).send();
   }
 
+  //NOTICE: This should be removed when everyone is migrated
+  //This is used to let the client learn the device uuid assigned to the 'main' device.
+  const requestDeviceId = req.body.deviceId;
+  let deviceIdWhereQuery = {};
+  let deviceIdMigration = false;
+  console.log('Device id is', req.body.deviceId);
+  if (requestDeviceId === undefined && user.uuid == null) {
+    console.log('migration', 'Client without device uuid, will send it back.');
+    deviceIdMigration = true;
+    deviceIdWhereQuery = { userid: user.id };
+  } else {
+    console.log('migration', 'Client with device uuid');
+    deviceIdWhereQuery = { deviceId: requestDeviceId };
+  }
+
+  const deviceOfUser = await db.Devices.findOne({
+    where: deviceIdWhereQuery
+  });
+
   let privateKey = Buffer.from(req.body.privateKey, 'base64');
+  user.password = deviceOfUser.password;
 
   try {
     await decryptMasterPassword(privateKey, user.password);
@@ -33,15 +57,57 @@ async function login(req, res) {
 
   let token = encryptSession({
     privateKey: privateKey.toString('base64'),
+    deviceId: deviceOfUser.deviceId,
     email: user.email,
     organizationId: user.Organization.id,
     organization: user.Organization.name
   });
 
   res.send({
-    token
+    token,
+    deviceId: deviceIdMigration ? deviceOfUser.deviceId : undefined
   });
   logger.log('info', `User ${req.body.email} has logged in!`);
+}
+
+async function needsMasterPassword(req, res, next) {
+  const userEmail = req.session.email;
+  const deviceId = req.session.deviceId;
+
+  let user;
+  try {
+    user = await db.User.findOne({
+      where: {
+        email: userEmail
+      }
+    });
+  } catch (error) {
+    console.error(error);
+    res
+      .status(404)
+      .send({ error: 'No such user' })
+      .end();
+  }
+
+  let device;
+  try {
+    device = await db.Devices.findOne({
+      where: {
+        userid: user.id,
+        deviceId: deviceId
+      }
+    });
+  } catch (error) {
+    console.error(error);
+    res
+      .status(404)
+      .send({ error: 'No such device is registered with us' })
+      .end();
+  }
+
+  req.session.userid = user.id;
+  req.session.mp = device.password;
+  next();
 }
 
 function restrict(req, res, next) {

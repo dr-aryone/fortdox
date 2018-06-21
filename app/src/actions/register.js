@@ -71,12 +71,15 @@ export const activateOrganizaton = () => {
         payload: 'Verification of the link failed.'
       });
     }
+
+    let deviceId = state.register.get('deviceId');
     let response;
     try {
       response = await requestor.post(`${config.server}/register/confirm`, {
         body: {
           email,
-          privateKey
+          privateKey,
+          deviceId
         }
       });
     } catch (error) {
@@ -113,8 +116,7 @@ export const activateOrganizaton = () => {
       });
     }
 
-    await writeStorage(result.salt, email, response.body.organizationName);
-
+    writeStorage(result.salt, response.body.organizationName, email, deviceId);
     return dispatch({
       type: 'ACTIVATE_ORGANIZATION_SUCCESS',
       payload: 'Team registration complete! You can now login.'
@@ -257,7 +259,8 @@ export const verifyActivationCode = () => {
       type: 'VERIFY_ACTIVATION_CODE_SUCCESS',
       payload: {
         email: response.body.email,
-        privateKey: response.body.privateKey.toString('base64')
+        privateKey: response.body.privateKey.toString('base64'),
+        deviceId: response.body.deviceId
       }
     });
   };

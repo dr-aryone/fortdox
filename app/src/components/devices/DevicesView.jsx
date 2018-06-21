@@ -1,5 +1,4 @@
 const React = require('react');
-// const Loader = require('components/general/Loader');
 const ErrorBox = require('components/general/ErrorBox');
 const LoaderOverlay = require('components/general/LoaderOverlay');
 const MessageBox = require('components/general/MessageBox');
@@ -42,7 +41,15 @@ module.exports = class DevicesView extends React.Component {
   }
 
   render() {
-    const { isLoading, error, msg, onGetQRCode, QRCode } = this.props;
+    const {
+      isLoading,
+      error,
+      message,
+      inviteDevice,
+      QRCode,
+      deviceId,
+      devices
+    } = this.props;
 
     const modal = (
       <Modal show={this.state.showModal} onClose={this.closeModal} showClose>
@@ -55,17 +62,41 @@ module.exports = class DevicesView extends React.Component {
       </Modal>
     );
 
+    let deviceList = [];
+    let deviceName;
+    devices.forEach((device, index) => {
+      device.get('id') !== deviceId
+        ? deviceList.push(
+          <div className='device' key={index}>
+            <span>{device.get('id')}</span>
+            <span>{device.get('name')}</span>
+            <span className='icon'>
+              <i className='material-icons'>clear</i>
+            </span>
+          </div>
+          )
+        : (deviceName = device.get('name'));
+    });
+
     return (
       <div className='container-fluid'>
         <div className='inner-container'>
           <LoaderOverlay display={isLoading} />
-          <MessageBox message={msg} />
+          <MessageBox message={message} />
           <ErrorBox errorMsg={error} />
           {modal}
           <div className='title'>
-            <h1>Devices</h1>
+            <h1>Your Devices</h1>
           </div>
-          <button onClick={() => onGetQRCode()}>Add device</button>
+          <div className='box'>
+            <div className='device' key={deviceId}>
+              <span>{deviceId}</span>
+              <span>{deviceName}</span>
+              <span className='icon' />
+            </div>
+            {deviceList}
+          </div>
+          <button onClick={() => inviteDevice()}>Add device</button>
         </div>
       </div>
     );

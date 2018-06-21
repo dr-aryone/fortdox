@@ -1,0 +1,18 @@
+.device {
+  display: flex;
+
+  span {
+    display: flex;
+    flex-grow: 1;
+    align-items: center;
+  }
+
+  .icon {
+    justify-content: flex-end;
+
+    .material-icons {
+      font-size: 20px;
+      color: $red;
+    }
+  }
+}

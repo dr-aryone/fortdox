@@ -13,9 +13,7 @@
     },
     "sourceType": "module"
   },
-  "plugins": [
-    "react"
-  ],
+  "plugins": ["react"],
   "globals": {
     "require": true,
     "module": true,
@@ -25,6 +23,7 @@
   },
   "rules": {
     "brace-style": "error",
+    "react/jsx-filename-extension": 0,
     "react/jsx-uses-react": 1,
     "react/prop-types": "off",
     "react/jsx-sort-props": "off",
@@ -42,30 +41,47 @@
     "arrow-body-style": "off",
     "linebreak-style": "off",
     "no-console": ["warn", { "allow": ["warn", "error"] }],
-    "no-unused-vars": ["error", {
-      "varsIgnorePattern": "^React$"
-      }],
-    "func-style": [2, "declaration", {
-      "allowArrowFunctions": true
-    }],
+    "no-unused-vars": [
+      "error",
+      {
+        "varsIgnorePattern": "^React$"
+      }
+    ],
+    "func-style": [
+      2,
+      "declaration",
+      {
+        "allowArrowFunctions": true
+      }
+    ],
     "jsx-quotes": ["error", "prefer-single"],
     "react/jsx-first-prop-new-line": ["error", "multiline"],
-    "react/jsx-max-props-per-line": ["error", {
-      "maximum": 4
-      }],
-      "react/jsx-indent": ["error", 2],
-      "react/jsx-indent-props": ["error", 2],
-      "react/prefer-stateless-function": "error",
+    "react/jsx-max-props-per-line": [
+      "error",
+      {
+        "maximum": 4
+      }
+    ],
+    "react/jsx-indent": ["error", 2],
+    "react/jsx-indent-props": ["error", 2],
+    "react/prefer-stateless-function": "error",
     "comma-spacing": "error",
-    "indent": ["error", 2, {
-      "SwitchCase": 1,
-      "MemberExpression": 1
-    }],
+    "indent": [
+      "error",
+      2,
+      {
+        "SwitchCase": 1,
+        "MemberExpression": 1
+      }
+    ],
     "space-before-blocks": ["error", "always"],
-    "keyword-spacing": ["error", {
-      "before": true,
-      "after": true
-    }],
+    "keyword-spacing": [
+      "error",
+      {
+        "before": true,
+        "after": true
+      }
+    ],
     "quotes": ["error", "single"],
     "semi": ["error", "always"]
   }

@@ -1,32 +1,30 @@
 const { spawn } = window.require('child_process');
 const keyChainPath = '/usr/bin/security';
-// const config = require('../../../config.json');
+const fortdoxKey = 'fortdox';
 
-const writeStorage = (salt, email, organization) => {
-  let storage;
-  storage = window.localStorage.getItem('fortdox');
-  if (!storage) {
-    window.localStorage.setItem('fortdox', JSON.stringify({}));
-    storage = window.localStorage.getItem('fortdox');
-  }
-  storage = JSON.parse(storage);
-  storage[email] = {
-    [organization]: {
-      salt
-    }
-  };
-
-  window.localStorage.setItem('fortdox', JSON.stringify(storage));
+const writeDeviceIdToStorage = (deviceId, organization, email) => {
+  let fortdoxInfo = readStorage();
+  fortdoxInfo[email][organization].deviceId = deviceId;
+  window.localStorage.setItem(fortdoxKey, JSON.stringify(fortdoxInfo));
 };
 
+const writeStorage = (salt, organization, email, deviceId) => {
+  let fortdoxInfo = readStorage();
+  fortdoxInfo[email] = {
+    [organization]: {
+      salt,
+      deviceId
+    }
+  };
+  window.localStorage.setItem(fortdoxKey, JSON.stringify(fortdoxInfo));
+};
 const readStorage = () => {
   let storage;
-  storage = window.localStorage.getItem('fortdox');
+  storage = window.localStorage.getItem(fortdoxKey);
   if (!storage) {
-    window.localStorage.setItem('fortdox', JSON.stringify({}));
-    storage = window.localStorage.getItem('fortdox');
+    window.localStorage.setItem(fortdoxKey, JSON.stringify({}));
+    storage = window.localStorage.getItem(fortdoxKey);
   }
-
   return JSON.parse(storage);
 };
 
@@ -67,4 +65,10 @@ const readKey = (email, organization) =>
       });
   });
 
-module.exports = { writeStorage, readStorage, addKey, readKey };
+module.exports = {
+  writeStorage,
+  writeDeviceIdToStorage,
+  readStorage,
+  addKey,
+  readKey
+};

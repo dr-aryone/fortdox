@@ -1,4 +1,5 @@
 const users = require('app/users');
+const devices = require('app/devices');
 const keygen = require('app/encryption/keys/keygen');
 const orgs = require('app/organizations');
 const es = require('app/elastic_search');
@@ -56,6 +57,9 @@ async function organization(req, res) {
     organization: req.body.organization,
     uuid: newUser.uuid
   });
+
+  logger.log('silly', 'Register mail code:\n', newUser.uuid);
+
   try {
     mailer.send(mail);
     logger.log(
@@ -78,7 +82,7 @@ async function organization(req, res) {
 
 async function confirm(req, res) {
   let email = req.body.email;
-
+  let deviceId = req.body.deviceId;
   if (!req.body.privateKey) {
     logger.log('silly', `Missing private key for ${email} @ /register/confirm`);
     return res.status(400).send();
@@ -86,7 +90,7 @@ async function confirm(req, res) {
   let privateKey = Buffer.from(req.body.privateKey, 'base64');
 
   try {
-    await users.verifyUser(email, privateKey);
+    await users.verifyUser(email, privateKey, deviceId);
   } catch (error) {
     logger.log(
       'error',
@@ -150,19 +154,16 @@ async function verify(req, res) {
     keypair.publicKey,
     masterPassword
   );
+
   try {
-    await users.setPassword(
-      {
-        email: user.email,
-        organizationId: user.organizationId
-      },
-      encryptedMasterPassword
-    );
+    let device = await devices.createDevice(user.id, encryptedMasterPassword);
     res.send({
       email: user.email,
-      privateKey: keypair.privateKey.toString('base64')
+      privateKey: keypair.privateKey.toString('base64'),
+      deviceId: device.deviceId
     });
   } catch (error) {
+    console.error(error);
     logger.log(
       'error',
       `Could not set encrypted master password for ${
