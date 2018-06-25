@@ -96,7 +96,7 @@ export const receivePrivateKey = () => {
       errorFields['temporaryPassword'] = {
         error: 'Please enter temporary password.'
       };
-    if (Object.keys(errorFields).length != 0)
+    if (Object.keys(errorFields).length !== 0)
       return dispatch({
         type: 'RECEIVE_PRIVATE_KEY_FAIL',
         payload: errorFields
