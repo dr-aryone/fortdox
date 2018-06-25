@@ -106,20 +106,27 @@ async function add(req, res) {
     encryptedMasterPassword
   );
 
-  let { tempPassword, encryptedPrivateKey } = await tempEncryptPrivatekey(
-    keypair.privateKey
-  ).catch(error => {
+  let tempPassword, encryptedPrivateKey;
+  try {
+    ({ tempPassword, encryptedPrivateKey } = await tempEncryptPrivatekey(
+      keypair.privateKey
+    ));
+  } catch (error) {
     console.error(error);
     return res.status(500).send({ error: 'Nah, we cant do that today..' });
-  });
+  }
+
   const newDevice = await createDevice(userid, newEncryptedMasterPassword);
-  await db.TempKeys.create({
-    uuid: newDevice.deviceId,
-    privateKey: encryptedPrivateKey
-  }).catch(error => {
+  try {
+    await db.TempKeys.create({
+      uuid: newDevice.deviceId,
+      privateKey: encryptedPrivateKey
+    });
+  } catch (error) {
     console.error('silly', 'Could not create tempkeys');
     console.error(error);
-  });
+  }
+
   const inviteCode = '@' + newDevice.deviceId;
   tempPassword = tempPassword.toString('base64');
 
@@ -174,12 +181,15 @@ async function verify(req, res) {
     return res.status(error).send();
   }
 
-  const newDevice = await db.Devices.findOne({
-    where: { deviceId: uuid }
-  }).catch(error => {
+  let newDevice;
+  try {
+    newDevice = await db.Devices.findOne({
+      where: { deviceId: uuid }
+    });
+  } catch (error) {
     console.error('Trying verify deviceid with invitation code', error);
     return res.status(error).send();
-  });
+  }
 
   res.send({
     privateKey,
@@ -217,16 +227,18 @@ async function confirm(req, res) {
   const encryptedMasterPassword = device.password;
   decryptMasterPassword(privateKey, encryptedMasterPassword);
 
-  await db.TempKeys.destroy({
-    where: {
-      uuid: deviceId
-    }
-  }).catch(error => {
+  try {
+    await db.TempKeys.destroy({
+      where: {
+        uuid: deviceId
+      }
+    });
+  } catch (error) {
     console.error(error);
     return res.status(500).send({
       error: 'Something wentr terribly wrong, we are working hard to fix it'
     });
-  });
+  }
 
   db.Devices.update(
     {

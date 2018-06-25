@@ -37,12 +37,15 @@ async function user(req, res) {
     encryptedMasterPassword
   );
 
-  let { tempPassword, encryptedPrivateKey } = await tempEncryptPrivatekey(
-    keypair.privateKey
-  ).catch(error => {
+  let tempPassword, encryptedPrivateKey;
+  try {
+    ({ tempPassword, encryptedPrivateKey } = await tempEncryptPrivatekey(
+      keypair.privateKey
+    ));
+  } catch (error) {
     console.error(error);
     return res.status(500).send({ error: 'Nah, we cant do that today..' });
-  });
+  }
 
   let uuid = uuidv1();
   let newUser = {
