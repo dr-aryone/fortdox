@@ -710,7 +710,8 @@ label {
     justify-content: space-between;
     align-items: center;
     background-color: #f5f3f3;
-    padding: 15px; }
+    padding: 15px;
+    cursor: -webkit-grab; }
     .document label h3 {
       margin: 0;
       padding: 0; }

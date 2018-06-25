@@ -47,17 +47,15 @@ export const addField = field => {
 
 export const updateFieldPositon = (fromId, toId) => {
   return (dispatch, getState) => {
-    dispatch({
-      type: 'UPDATE_FIELD_POSITION_START'
-    });
     const state = getState();
-    const encryptedTexts = state.createDocument.getIn([
-      'docFields',
-      'encryptedTexts'
-    ]);
-    const texts = state.createDocument.getIn(['docFields', 'texts']);
-    const diff = fromId - toId;
+    let { view, prefix } = getPrefix(state.navigation.get('currentView'));
+    dispatch({
+      type: `${prefix}_UPDATE_FIELD_POSITION_START`
+    });
 
+    const encryptedTexts = state[view].getIn(['docFields', 'encryptedTexts']);
+    const texts = state[view].getIn(['docFields', 'texts']);
+    const diff = fromId - toId;
     let updatedEncryptedTexts = [];
     let updatedTexts = [];
 
@@ -97,7 +95,7 @@ export const updateFieldPositon = (fromId, toId) => {
       });
     }
     dispatch({
-      type: 'UPDATE_FIELD_POSITION_SUCCESS',
+      type: `${prefix}_UPDATE_FIELD_POSITION_SUCCESS`,
       payload: { updatedEncryptedTexts, updatedTexts }
     });
   };
@@ -139,7 +137,7 @@ export const docInputChange = (inputId, inputValue, type) => {
       case 'encryptedText':
         fields = state[view].getIn(['docFields', 'encryptedTexts']);
         updatedFields = fields.map(text => {
-          return text.get('id') === parseInt(inputId)
+          return text.get('id') === parseInt(inputId, 10)
             ? text.set('value', inputValue)
             : text;
         });
@@ -150,7 +148,7 @@ export const docInputChange = (inputId, inputValue, type) => {
       case 'text': {
         fields = state[view].getIn(['docFields', 'texts']);
         updatedFields = fields.map(text => {
-          return text.get('id') === parseInt(inputId)
+          return text.get('id') === parseInt(inputId, 10)
             ? text.set('value', inputValue)
             : text;
         });

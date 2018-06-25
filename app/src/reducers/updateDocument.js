@@ -200,6 +200,13 @@ const form = (state = initialState, action) => {
         default:
           return initialState;
       }
+    case 'UPDATE_DOC_UPDATE_FIELD_POSITION_SUCCESS':
+      return state
+        .setIn(
+          ['docFields', 'encryptedTexts'],
+          action.payload.updatedEncryptedTexts
+        )
+        .setIn(['docFields', 'texts'], action.payload.updatedTexts);
     case 'LOGOUT':
     case 'SESSION_EXPIRED':
       return initialState;

@@ -180,11 +180,13 @@ const form = (state = initialState, action) => {
     case 'SESSION_EXPIRED':
     case 'CHANGE_VIEW':
       return initialState;
-    case 'UPDATE_FIELD_POSITION_SUCCESS':
-      return state.setIn(
-        ['docFields', 'encryptedTexts'],
-        action.payload.updatedEncryptedTexts
-      );
+    case 'CREATE_DOC_UPDATE_FIELD_POSITION_SUCCESS':
+      return state
+        .setIn(
+          ['docFields', 'encryptedTexts'],
+          action.payload.updatedEncryptedTexts
+        )
+        .setIn(['docFields', 'texts'], action.payload.updatedTexts);
     default:
       return state;
   }
