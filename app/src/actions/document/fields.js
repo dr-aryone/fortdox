@@ -79,7 +79,6 @@ export const updateFieldPositon = (fromId, toId) => {
         }
       });
     } else {
-      debugger;
       updatedEncryptedTexts = encryptedTexts.map(text => {
         if (text.get('id') === fromId) return text.set('id', toId);
         else {
@@ -125,12 +124,12 @@ export const removeField = id => {
   };
 };
 
-export const docInputChange = (inputID, inputValue, type) => {
+export const docInputChange = (inputId, inputValue, type) => {
   return (dispatch, getState) => {
     let state = getState();
     let { view, prefix } = getPrefix(state.navigation.get('currentView'));
     let fields;
-    let index;
+    let updatedFields;
     switch (type) {
       case 'title':
         return dispatch({
@@ -139,19 +138,25 @@ export const docInputChange = (inputID, inputValue, type) => {
         });
       case 'encryptedText':
         fields = state[view].getIn(['docFields', 'encryptedTexts']);
-        index = fields.findIndex(field => field.get('id') === inputID);
+        updatedFields = fields.map(text => {
+          return text.get('id') === parseInt(inputId)
+            ? text.set('value', inputValue)
+            : text;
+        });
         return dispatch({
           type: `${prefix}_INPUT_CHANGE_ENCRYPTED_TEXT`,
-          index,
-          value: inputValue
+          payload: updatedFields
         });
       case 'text': {
         fields = state[view].getIn(['docFields', 'texts']);
-        index = fields.findIndex(field => field.get('id') === inputID);
+        updatedFields = fields.map(text => {
+          return text.get('id') === parseInt(inputId)
+            ? text.set('value', inputValue)
+            : text;
+        });
         return dispatch({
           type: `${prefix}_INPUT_CHANGE_TEXT`,
-          index,
-          value: inputValue
+          payload: updatedFields
         });
       }
       default:

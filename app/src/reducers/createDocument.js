@@ -47,25 +47,10 @@ const form = (state = initialState, action) => {
     case 'CREATE_DOC_INPUT_CHANGE_ENCRYPTED_TEXT':
       return state.setIn(
         ['docFields', 'encryptedTexts'],
-        state
-          .getIn(['docFields', 'encryptedTexts'])
-          .update(action.index, field =>
-            field.merge({
-              value: fromJS(action.value),
-              error: null
-            })
-          )
+        fromJS(action.payload)
       );
     case 'CREATE_DOC_INPUT_CHANGE_TEXT':
-      return state.setIn(
-        ['docFields', 'texts'],
-        state.getIn(['docFields', 'texts']).update(action.index, field =>
-          field.merge({
-            value: fromJS(action.value),
-            error: null
-          })
-        )
-      );
+      return state.setIn(['docFields', 'texts'], fromJS(action.payload));
     case 'CREATE_DOC_INPUT_CHANGE_TAGS':
       return state.setIn(
         ['docFields', 'tags'],
