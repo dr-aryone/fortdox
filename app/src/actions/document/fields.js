@@ -58,81 +58,48 @@ export const updateFieldPositon = (fromId, toId) => {
     const texts = state.createDocument.getIn(['docFields', 'texts']);
     const diff = fromId - toId;
 
-    let updatedEts = [];
+    let updatedEncryptedTexts = [];
     let updatedTexts = [];
 
     if (diff > 0) {
-      encryptedTexts.forEach(et => {
-        if (et.get('id') === fromId) {
-          updatedEts.push({
-            value: et.get('value'),
-            label: et.get('label'),
-            error: et.get('error'),
-            id: toId
-          });
-        } else {
-          et.get('id') < fromId
-            ? updatedEts.push({
-              value: et.get('value'),
-              label: et.get('label'),
-              error: et.get('error'),
-              id: et.get('id') + 1
-            })
-            : updatedEts.push({
-              value: et.get('value'),
-              label: et.get('label'),
-              error: et.get('error'),
-              id: et.get('id')
-            });
+      updatedEncryptedTexts = encryptedTexts.map(text => {
+        if (text.get('id') === fromId) return text.set('id', toId);
+        else {
+          return text.get('id') < fromId && text.get('id') >= toId
+            ? text.set('id', text.get('id') + 1)
+            : text;
         }
       });
-
-      texts.forEach(t => {
-        if (t.get('id') === fromId) {
-          updatedTexts.push({
-            value: t.get('value'),
-            label: t.get('label'),
-            error: t.get('error'),
-            id: toId
-          });
-        } else {
-          t.get('id') < fromId
-            ? updatedTexts.push({
-              value: t.get('value'),
-              label: t.get('label'),
-              error: t.get('error'),
-              id: t.get('id') + 1
-            })
-            : updatedTexts.push({
-              value: t.get('value'),
-              label: t.get('label'),
-              error: t.get('error'),
-              id: t.get('id')
-            });
+      updatedTexts = texts.map(text => {
+        if (text.get('id') === fromId) return text.set('id', toId);
+        else {
+          return text.get('id') < fromId && text.get('id') >= toId
+            ? text.set('id', text.get('id') + 1)
+            : text;
         }
       });
     } else {
-      updatedEts = encryptedTexts.forEach(et => {
-        if (et.id === fromId) {
-          et.id = toId;
-        }
-        if (et.id < fromId) {
-          et.id -= 1;
+      debugger;
+      updatedEncryptedTexts = encryptedTexts.map(text => {
+        if (text.get('id') === fromId) return text.set('id', toId);
+        else {
+          return text.get('id') > fromId && text.get('id') <= toId
+            ? text.set('id', text.get('id') - 1)
+            : text;
         }
       });
-
-      updatedTexts = texts.forEach(t => {
-        if (t.id === fromId) {
-          t.id = toId;
-        }
-        if (t.id < fromId) {
-          t.id -= 1;
+      updatedTexts = texts.map(text => {
+        if (text.get('id') === fromId) return text.set('id', toId);
+        else {
+          return text.get('id') > fromId && text.get('id') <= toId
+            ? text.set('id', text.get('id') - 1)
+            : text;
         }
       });
     }
     dispatch({
       type: 'UPDATE_FIELD_POSITION_SUCCESS',
-      payload: { updatedEts, updatedTexts }
+      payload: { updatedEncryptedTexts, updatedTexts }
     });
   };
 };

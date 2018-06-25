@@ -196,12 +196,10 @@ const form = (state = initialState, action) => {
     case 'CHANGE_VIEW':
       return initialState;
     case 'UPDATE_FIELD_POSITION_SUCCESS':
-      return state
-        .setIn(
-          ['docFields', 'encryptedTexts'],
-          fromJS(action.payload.updatedEts)
-        )
-        .setIn(['docFields', 'texts'], fromJS(action.payload.updatedTexts));
+      return state.setIn(
+        ['docFields', 'encryptedTexts'],
+        action.payload.updatedEncryptedTexts
+      );
     default:
       return state;
   }
