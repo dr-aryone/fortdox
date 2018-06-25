@@ -1,6 +1,6 @@
+import DocumentForm from './form/DocumentForm';
 const React = require('react');
 const LoaderOverlay = require('components/general/LoaderOverlay');
-const DocumentForm = require('./form/DocumentForm');
 const ErrorBox = require('components/general/ErrorBox');
 const Modal = require('components/general/Modal');
 
@@ -14,7 +14,7 @@ class UpdateDocView extends React.Component {
     };
   }
 
-  componentWillMount () {
+  componentWillMount() {
     if (this.props.onMount) {
       this.props.onMount(this.props);
     }
@@ -32,10 +32,11 @@ class UpdateDocView extends React.Component {
     });
   }
 
-  render () {
+  render() {
     let {
       docFields,
       error,
+      onUpdateId,
       onAddTag,
       onRemoveTag,
       onChange,
@@ -59,10 +60,13 @@ class UpdateDocView extends React.Component {
     return (
       <div className='container-fluid'>
         <LoaderOverlay display={isLoading} />
-        <div className={`update-view inner-container ${isLoading ? 'hide' : ''}`}>
+        <div
+          className={`update-view inner-container ${isLoading ? 'hide' : ''}`}
+        >
           <ErrorBox errorMsg={error} />
           <h1>Update Document</h1>
           <DocumentForm
+            onUpdateId={onUpdateId}
             docFields={docFields}
             changelog={docFields.get('changelog')}
             similarDocuments={similarDocuments}
@@ -81,18 +85,32 @@ class UpdateDocView extends React.Component {
             onPreviewAttachment={onPreviewAttachment}
             onDownloadAttachment={onDownloadAttachment}
           >
-            <button onClick={onUpdate} type='submit'>Update</button>
-            <button onClick={toSearchView} type='button'>Back</button>
-            <button onClick={this.openModal} type='button' className='warning'>Delete</button>
+            <button onClick={onUpdate} type='submit'>
+              Update
+            </button>
+            <button onClick={toSearchView} type='button'>
+              Back
+            </button>
+            <button onClick={this.openModal} type='button' className='warning'>
+              Delete
+            </button>
           </DocumentForm>
-          <Modal show={this.state.showModal} onClose={this.closeModal} showClose={false}>
+          <Modal
+            show={this.state.showModal}
+            onClose={this.closeModal}
+            showClose={false}
+          >
             <div className='box dialog'>
               <i className='material-icons'>error_outline</i>
               <h2>Warning</h2>
               <p>Are you sure you want to delete the document?</p>
               <div className='buttons'>
-                <button onClick={onDelete} type='button' className='warning'>Delete</button>
-                <button onClick={this.closeModal} type='button'>Cancel</button>
+                <button onClick={onDelete} type='button' className='warning'>
+                  Delete
+                </button>
+                <button onClick={this.closeModal} type='button'>
+                  Cancel
+                </button>
               </div>
             </div>
           </Modal>
@@ -102,4 +120,4 @@ class UpdateDocView extends React.Component {
   }
 }
 
-module.exports = UpdateDocView;
+export default UpdateDocView;

@@ -2,9 +2,9 @@ import documentActions from 'actions/document/document';
 import tagActions from 'actions/document/tags';
 import fieldActions from 'actions/document/fields';
 import attachmentActions from 'actions/document/attachments';
+import UpdateDocView from '../../components/document/UpdateDocView';
 
 const { connect } = require('react-redux');
-const UpdateDocView = require('../../components/document/UpdateDocView');
 const action = require('../../actions');
 
 const mapStateToProps = state => {
@@ -18,6 +18,9 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
+    onUpdateId: (fromId, toId) => {
+      dispatch(fieldActions.updateFieldPositon(fromId, toId));
+    },
     onChange: (event, type) => {
       dispatch(
         fieldActions.docInputChange(event.target.name, event.target.value, type)

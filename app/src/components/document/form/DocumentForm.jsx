@@ -38,40 +38,34 @@ const DocumentForm = ({
 
   //DnD
   const onDragEnd = result => {
-    console.log('Drag ended..', result);
-
     if (!result.destination) {
       return;
     }
     onUpdateId(result.source.index, result.destination.index);
   };
 
-  const getListStyle = isDraggingOver => ({
-    background: isDraggingOver ? 'lightblue' : 'lightgrey',
-    padding: 8,
-    width: 250
-  });
-
   let fields = encryptedTextFields
     .concat(textFields)
     .sort((textA, textB) => (textA.get('id') < textB.get('id') ? -1 : 1))
     .map((field, index) => (
       <Draggable key={index} draggableId={index} index={index}>
-        {(provided, snapshot) => (
-          <div
-            ref={provided.innerRef}
-            {...provided.draggableProps}
-            {...provided.dragHandleProps}
-          >
-            <DocumentTextArea
-              input={field}
-              type={field.get('encrypted') ? 'encryptedText' : 'text'}
-              key={index}
-              onChange={onChange}
-              onRemoveField={onRemoveField}
-            />
-          </div>
-        )}
+        {provided => {
+          return (
+            <div
+              ref={provided.innerRef}
+              {...provided.draggableProps}
+              {...provided.dragHandleProps}
+            >
+              <DocumentTextArea
+                input={field}
+                type={field.get('encrypted') ? 'encryptedText' : 'text'}
+                key={index}
+                onChange={onChange}
+                onRemoveField={onRemoveField}
+              />
+            </div>
+          );
+        }}
       </Draggable>
     ));
 
@@ -97,14 +91,7 @@ const DocumentForm = ({
           </div>
           <DragDropContext onDragEnd={onDragEnd}>
             <Droppable droppableId='droppable-fields'>
-              {(provided, snapshot) => (
-                <div
-                  ref={provided.innerRef}
-                  style={getListStyle(snapshot.isDraggingOver)}
-                >
-                  {fields}
-                </div>
-              )}
+              {provided => <div ref={provided.innerRef}>{fields}</div>}
             </Droppable>
           </DragDropContext>
           <BottomPanel onAddField={onAddField} />
