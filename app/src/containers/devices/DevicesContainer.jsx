@@ -15,6 +15,9 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
+    getQRCode: () => {
+      dispatch(action.getQRCode());
+    },
     onMount: () => {
       dispatch(action.getDevices());
     },
