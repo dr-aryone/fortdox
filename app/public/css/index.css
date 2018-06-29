@@ -631,6 +631,22 @@ label {
       font-weight: bold;
       cursor: pointer; }
 
+.big-button-container {
+  display: flex;
+  flex-direction: row; }
+  .big-button-container .big-button {
+    display: flex;
+    flex-grow: 1;
+    justify-content: center;
+    align-items: center;
+    width: 30vh;
+    height: 30vh;
+    margin: 20px;
+    font-size: 2em;
+    flex-direction: column; }
+    .big-button-container .big-button .material-icons {
+      font-size: 6.5em; }
+
 .input-field {
   display: flex;
   flex-direction: column;

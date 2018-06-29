@@ -11,21 +11,24 @@ module.exports = class DevicesView extends React.Component {
     this.closeModal = this.closeModal.bind(this);
     this.openDialog = this.openDialog.bind(this);
     this.closeDialog = this.closeDialog.bind(this);
+    this.openQRModal = this.openQRModal.bind(this);
+    this.closeQRModal = this.closeQRModal.bind(this);
     this.inputChange = this.inputChange.bind(this);
     this.handleKeyDown = this.handleKeyDown.bind(this);
     this.state = {
       showModal: false,
-      showDialog: false
+      showDialog: false,
+      showQRModal: false
     };
-  }
-
-  componentWillReceiveProps({ QRCode } = this.props) {
-    if (QRCode) this.openModal();
   }
 
   componentDidMount() {
     const { onMount = () => {} } = this.props;
     onMount();
+  }
+
+  componentWillReceiveProps({ QRCode } = this.props) {
+    if (QRCode) this.openQRModal();
   }
 
   openModal() {
@@ -36,7 +39,8 @@ module.exports = class DevicesView extends React.Component {
 
   closeModal() {
     this.setState({
-      showModal: false
+      showModal: false,
+      QRCode: null
     });
   }
 
@@ -51,6 +55,18 @@ module.exports = class DevicesView extends React.Component {
     this.setState({
       showDialog: false,
       deviceToBeDeleted: null
+    });
+  }
+
+  openQRModal() {
+    this.setState({
+      showQRModal: true
+    });
+  }
+
+  closeQRModal() {
+    this.setState({
+      showQRModal: false
     });
   }
 
@@ -91,19 +107,29 @@ module.exports = class DevicesView extends React.Component {
     }
   }
 
-  render() {
-    const {
-      isLoading,
-      error,
-      message,
-      inviteDevice,
-      QRCode,
-      deviceId,
-      devices
-    } = this.props;
+  onSendEmail() {
+    this.props.inviteDevice();
+    this.setState({
+      showModal: false
+    });
+  }
 
-    const modal = (
-      <Modal show={this.state.showModal} onClose={this.closeModal} showClose>
+  onGetQRCode() {
+    this.props.getQRCode();
+    this.setState({
+      showModal: false
+    });
+  }
+
+  render() {
+    const { isLoading, error, message, QRCode, deviceId, devices } = this.props;
+
+    const QRCodeDialog = (
+      <Modal
+        show={this.state.showQRModal}
+        onClose={this.closeQRModal}
+        showClose
+      >
         <div className='box dialog'>
           <h2>QRCode</h2>
           {QRCode ? (
@@ -113,7 +139,20 @@ module.exports = class DevicesView extends React.Component {
       </Modal>
     );
 
-    const dialog = (
+    const modal = (
+      <Modal show={this.state.showModal} onClose={this.closeModal}>
+        <div className='big-button-container'>
+          <button className='big-button' onClick={() => this.onGetQRCode()}>
+            Get QR Code
+          </button>
+          <button className='big-button' onClick={() => this.onSendEmail()}>
+            Send invitation link <i className='material-icons'>email</i>
+          </button>
+        </div>
+      </Modal>
+    );
+
+    const deleteDeviceDialog = (
       <Modal
         show={this.state.showDialog}
         onClose={this.closeDialog}
@@ -196,7 +235,8 @@ module.exports = class DevicesView extends React.Component {
           <MessageBox message={message} />
           <ErrorBox errorMsg={error} />
           {modal}
-          {dialog}
+          {QRCodeDialog}
+          {deleteDeviceDialog}
           <h1>Your Registered Devices</h1>
           <div className='no-margin-top preview'>
             <div className='title small'>
@@ -222,7 +262,7 @@ module.exports = class DevicesView extends React.Component {
             </div>
           </div>
           {displayDevices}
-          <button onClick={() => inviteDevice()}>Add device</button>
+          <button onClick={() => this.openModal()}>Add device</button>
         </div>
       </div>
     );

@@ -27,3 +27,24 @@
     }
   }
 }
+
+.big-button-container {
+  display: flex;
+  flex-direction: row;
+
+  .big-button {
+    display: flex;
+    flex-grow: 1;
+    justify-content: center;
+    align-items: center;
+    width: 30vh;
+    height: 30vh;
+    margin: 20px;
+    font-size: 2em;
+    flex-direction: column;
+
+    .material-icons {
+      font-size: 6.5em;
+    }
+  }
+}

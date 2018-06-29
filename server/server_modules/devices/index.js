@@ -136,14 +136,16 @@ async function add(req, res) {
     tempPassword: tempPassword
   });
 
-  const mail = mailer.newDeviceRegistration({
-    to: req.session.email,
-    uuid: inviteCode,
-    tempPassword: tempPassword
-  });
+  if (req.body.email) {
+    const mail = mailer.newDeviceRegistration({
+      to: req.session.email,
+      uuid: inviteCode,
+      tempPassword: tempPassword
+    });
 
-  mailer.send(mail);
-  console.log('Mail away!');
+    mailer.send(mail);
+    console.log('Mail away!');
+  }
 }
 
 async function verify(req, res) {

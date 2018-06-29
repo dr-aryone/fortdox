@@ -2,5 +2,6 @@
   "name": "FortDox",
   "productName": "FortDox",
   "server": "https://fortdox.edgeguide.se",
-  "logo": "/resources/logo.png"
+  "logo": "/resources/logo.png",
+  "applicationPath": "/Applications/FortDox.app"
 }
