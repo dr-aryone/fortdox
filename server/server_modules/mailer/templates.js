@@ -19,25 +19,25 @@ const newDeviceRegistration = ({ to, uuid, tempPassword }) => ({
   content: `
   <p><a href="${
   config.server
-  }/invite-redirect?code=${uuid}&pass=${encodeURIComponent(tempPassword)}">${
-    config.server
-  }/invite-redirect?code=${uuid}&pass=${encodeURIComponent(
-    tempPassword
-  )}</a></p>
+}/invite-redirect?code=${uuid}&pass=${encodeURIComponent(tempPassword)}">${
+  config.server
+}/invite-redirect?code=${uuid}&pass=${encodeURIComponent(
+  tempPassword
+)}</a></p>
   <p>Invitation code:</p>
   <p>${uuid}</p>
   <p>Temporary password:</p>
-  <p>${encodeURIComponent(tempPassword)}</p>`,
+  <p>${tempPassword}</p>`,
   html: `
   <p><a href="${
   config.server
-  }/invite-redirect?code=${uuid}&pass=${encodeURIComponent(tempPassword)}">${
-    config.server
-  }/invite-redirect?code=${uuid}&pass=${encodeURIComponent(tempPassword)}</a>
+}/invite-redirect?code=${uuid}&pass=${encodeURIComponent(tempPassword)}">${
+  config.server
+}/invite-redirect?code=${uuid}&pass=${encodeURIComponent(tempPassword)}</a>
   <p>Invitation code:</p>
   <p>${uuid}</p>
   <p>Temporary password:</p>
-  <p>${encodeURIComponent(tempPassword)}</p>`
+  <p>${tempPassword}</p>`
 });
 
 const newUserRegistration = ({
