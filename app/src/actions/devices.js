@@ -124,10 +124,11 @@ export const getQRCode = () => {
           });
       }
     }
-
     let QRCodeURI;
     QRCode.toDataURL(
-      `${response.body.uuid}@${response.body.tempPassword}`,
+      `${response.body.uuid}${config.codeSplitter}${
+        response.body.tempPassword
+      }`,
       { scale: 10 },
       function(error, url) {
         if (error) {

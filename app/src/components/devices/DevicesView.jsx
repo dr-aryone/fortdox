@@ -27,8 +27,9 @@ module.exports = class DevicesView extends React.Component {
     onMount();
   }
 
-  componentWillReceiveProps({ QRCode } = this.props) {
-    if (QRCode) this.openQRModal();
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.QRCode !== this.props.QRCode)
+      this.openQRModal(nextProps.QRCode);
   }
 
   openModal() {
@@ -39,8 +40,7 @@ module.exports = class DevicesView extends React.Component {
 
   closeModal() {
     this.setState({
-      showModal: false,
-      QRCode: null
+      showModal: false
     });
   }
 
@@ -58,15 +58,17 @@ module.exports = class DevicesView extends React.Component {
     });
   }
 
-  openQRModal() {
+  openQRModal(QRCode) {
     this.setState({
-      showQRModal: true
+      showQRModal: true,
+      QRCode: QRCode
     });
   }
 
   closeQRModal() {
     this.setState({
-      showQRModal: false
+      showQRModal: false,
+      QRCOde: null
     });
   }
 
@@ -133,7 +135,10 @@ module.exports = class DevicesView extends React.Component {
         <div className='box dialog'>
           <h2>QRCode</h2>
           {QRCode ? (
-            <img alt='QR code containing activation code' src={QRCode} />
+            <img
+              alt='QR code containing activation code'
+              src={this.state.QRCode}
+            />
           ) : null}
         </div>
       </Modal>
