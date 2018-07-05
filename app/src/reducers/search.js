@@ -22,6 +22,7 @@ const search = (state = initialState, action) => {
     case 'TAG_SEARCH_START':
       return state.set('isLoading', true);
     case 'OPEN_DOCUMENT_DONE':
+    case 'OPEN_DOCUMENT_ERROR':
       return state.set('isLoading', false);
     case 'OPEN_DOCUMENT_FAILED':
       return state
