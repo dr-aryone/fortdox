@@ -9,6 +9,7 @@ const { privateKeyParser, copyParser } = require('lib/remarkableExtensions');
 const PrivateKey = require('./customMarkdown/PrivateKey');
 const Copy = require('./customMarkdown/Copy');
 const SearchField = require('./components/SearchField');
+const { formatDate } = require('components/general/formatDate');
 
 let markdown = new Remarkable({
   breaks: true,
@@ -74,7 +75,7 @@ class PreviewDoc extends React.Component {
               <h3>Created</h3>
             </label>
             <div className='text'>
-              {changelog.getIn([0, 'createdAt'])} by{' '}
+              {formatDate(changelog.getIn([0, 'createdAt']))} by{' '}
               {changelog.getIn([0, 'user'])}
             </div>
           </div>
@@ -83,8 +84,8 @@ class PreviewDoc extends React.Component {
               <h3>Last edited</h3>
             </label>
             <div className='text'>
-              {changelog.getIn([changelog.size - 1, 'createdAt'])} by{' '}
-              {changelog.getIn([changelog.size - 1, 'user'])}
+              {formatDate(changelog.getIn([changelog.size - 1, 'createdAt']))}{' '}
+              by {changelog.getIn([changelog.size - 1, 'user'])}
             </div>
           </div>
         </div>

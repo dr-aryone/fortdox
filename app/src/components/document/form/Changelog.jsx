@@ -1,6 +1,7 @@
 const React = require('react');
 const Modal = require('components/general/Modal');
-const {Map} = require('immutable');
+const { Map } = require('immutable');
+const { formatDate } = require('components/general/formatDate');
 
 class Changelog extends React.Component {
   constructor(props) {
@@ -26,33 +27,44 @@ class Changelog extends React.Component {
   }
 
   render() {
-    const {
-      changelog = Map()
-    } = this.props;
+    const { changelog = Map() } = this.props;
 
     let changelogBox = [];
     changelog.forEach(entry => {
       changelogBox.push(
-        <p key={entry.get('id')}>{entry.get('createdAt')} by {entry.get('user')}</p>
+        <p key={entry.get('id')}>
+          {entry.get('createdAt')} by {entry.get('user')}
+        </p>
       );
     });
 
     return (
       <div className='meta-data'>
-        <Modal show={this.state.showModal} onClose={this.closeModal} showClose docMode>
-          <div className='title'><h2>Changelog</h2></div>
-          <div className='text'>
-            {changelogBox}
+        <Modal
+          show={this.state.showModal}
+          onClose={this.closeModal}
+          showClose
+          docMode
+        >
+          <div className='title'>
+            <h2>Changelog</h2>
           </div>
+          <div className='text'>{changelogBox}</div>
         </Modal>
-        <label><h3>Created</h3></label>
+        <label>
+          <h3>Created</h3>
+        </label>
         <div className='text'>
-          {changelog.getIn([0, 'createdAt'])} by {changelog.getIn([0, 'user'])}
+          {formatDate(changelog.getIn([0, 'createdAt']))} by{' '}
+          {changelog.getIn([0, 'user'])}
         </div>
 
-        <label><h3>Last edited</h3></label>
+        <label>
+          <h3>Last edited</h3>
+        </label>
         <div className='text edit' onClick={() => this.openModal()}>
-          {changelog.getIn([changelog.size - 1, 'createdAt'])} by {changelog.getIn([changelog.size - 1, 'user'])}
+          {formatDate(changelog.getIn([changelog.size - 1, 'createdAt']))} by{' '}
+          {changelog.getIn([changelog.size - 1, 'user'])}
         </div>
       </div>
     );

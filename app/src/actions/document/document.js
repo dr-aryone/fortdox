@@ -173,11 +173,17 @@ export function updateDocument() {
       }
     }
 
-    return dispatch({
-      type: 'UPDATE_DOCUMENT_SUCCESS',
-      payload: 'Document updated!',
-      docFields: newDoc
-    });
+    return dispatch(
+      openDocument(oldDoc.get('_id'), true, () => {
+        let state = getState();
+        let docFields = state.updateDocument.get('docFields');
+        return dispatch({
+          type: 'UPDATE_DOCUMENT_SUCCESS',
+          payload: 'Document has been updated!',
+          docFields
+        });
+      })
+    );
   };
 }
 
