@@ -83,10 +83,7 @@ async function needsMasterPassword(req, res, next) {
     });
   } catch (error) {
     console.error(error);
-    return res
-      .status(404)
-      .send({ error: 'No such user' })
-      .end();
+    return res.status(500).send({ error: 'Internal Server Error' });
   }
 
   let device;
@@ -99,17 +96,11 @@ async function needsMasterPassword(req, res, next) {
     });
   } catch (error) {
     console.error(error);
-    return res
-      .status(404)
-      .send({ error: 'No such device is registered with us' })
-      .end();
+    return res.status(500).send({ error: 'Internal Server Error' });
   }
 
   if (device === null || user === null) {
-    return res
-      .status(401)
-      .send({ error: 'You are not welcome here' })
-      .end();
+    return res.status(401).send({ error: 'Unauthorized.' });
   }
 
   req.session.userid = user.id;
@@ -121,7 +112,7 @@ function restrict(req, res, next) {
   let authorization = req.headers.authorization;
   if (!authorization) {
     return res.status(401).send({
-      error: 'missing authorization header'
+      error: 'Unauthorized.'
     });
   }
 
@@ -129,7 +120,7 @@ function restrict(req, res, next) {
 
   if (!encodedToken) {
     return res.status(401).send({
-      error: 'no bearer token in header'
+      error: 'Unauthorized.'
     });
   }
 
@@ -141,7 +132,7 @@ function restrict(req, res, next) {
     logger.info('Invalid session');
     logger.error(error);
     return res.status(401).send({
-      error: 'sessionExpired'
+      error: 'Session Expired.'
     });
   }
 
