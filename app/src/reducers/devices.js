@@ -6,7 +6,8 @@ let initialState = fromJS({
   message: '',
   QRCode: null,
   deviceId: '',
-  devices: []
+  devices: [],
+  refresh: false
 });
 
 const devices = (state = initialState, action) => {
@@ -34,7 +35,8 @@ const devices = (state = initialState, action) => {
     case 'GET_DEVICES_SUCCESS':
       return state.set('isLoading', false).merge({
         deviceId: fromJS(action.payload.deviceId),
-        devices: fromJS(action.payload.devices)
+        devices: fromJS(action.payload.devices),
+        refresh: false
       });
     case 'UPDATE_DEVICE_NAME_SUCCESS':
     case 'DELETE_DEVICE_SUCCESS':
@@ -43,7 +45,11 @@ const devices = (state = initialState, action) => {
         .set('isLoading', false)
         .set('message', fromJS(action.payload));
     case 'CHANGE_VIEW':
-      return initialState;
+      if (action.payload === 'DEVICES_VIEW') {
+        return state.set('refresh', true);
+      } else {
+        return initialState;
+      }
     default:
       return state;
   }

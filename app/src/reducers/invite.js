@@ -10,12 +10,12 @@ const initialState = fromJS({
   users: [],
   error: null,
   isLoading: false,
-  message: null
+  message: null,
+  refresh: false
 });
 
 const invite = (state = initialState, action) => {
   switch (action.type) {
-    case 'CHANGE_VIEW':
     case 'LOGOUT':
     case 'SESSION_EXPIRED':
       return initialState;
@@ -60,7 +60,16 @@ const invite = (state = initialState, action) => {
     case 'LIST_USERS_ERROR':
       return state.set('isLoading', false).set('error', action.payload);
     case 'LIST_USERS_SUCCESS':
-      return state.set('isLoading', false).set('users', action.payload);
+      return state
+        .set('isLoading', false)
+        .set('refresh', false)
+        .set('users', action.payload);
+    case 'CHANGE_VIEW':
+      if (action.payload === 'INVITE_USER_VIEW') {
+        return state.set('refresh', true);
+      } else {
+        return state;
+      }
     default:
       return state;
   }
