@@ -32,6 +32,31 @@ async function user(req, res) {
     return res.status(409).send();
   }
 
+  if (sender.email === newUserEmail) {
+    logger.log('silly', 'User tried to self-invite');
+    return res.status(500).send();
+  }
+
+  let uuid = uuidv1();
+  let newUser = {
+    email: newUserEmail,
+    organizationId,
+    uuid
+  };
+
+  try {
+    newUser = await users.createUser(newUser);
+  } catch (error) {
+    logger.log(
+      'silly',
+      'Could not create user',
+      newUser.email,
+      'because of',
+      error
+    );
+    return res.status(500).send({ error: 'Internatl Server Error' });
+  }
+
   let { keypair, newEncryptedMasterPassword } = await createNewMasterPassword(
     privateKey,
     encryptedMasterPassword
@@ -47,17 +72,8 @@ async function user(req, res) {
     return res.status(500).send({ error: 'Nah, we cant do that today..' });
   }
 
-  let uuid = uuidv1();
-  let newUser = {
-    email: newUserEmail,
-    organizationId,
-    uuid
-  };
-
   try {
-    newUser = await users.createUser(newUser);
     devices.createDevice(newUser.id, newEncryptedMasterPassword);
-
     await users.TempKeys.store(uuid, encryptedPrivateKey);
     logger.log(
       'info',
