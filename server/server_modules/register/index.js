@@ -114,8 +114,15 @@ async function confirm(req, res) {
     await orgs.activateOrganization(organizationName);
     let user = await users.getUser(email);
 
+    let deviceName = req.body.deviceName
+      ? req.body.deviceName
+      : 'Generic Device';
+
     await db.Devices.update(
-      { activated: true },
+      {
+        activated: true,
+        deviceName: deviceName
+      },
       { where: { deviceId: deviceId } }
     );
 

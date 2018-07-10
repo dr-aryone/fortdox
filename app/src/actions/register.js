@@ -4,6 +4,7 @@ const passwordCheck = require('actions/utilities/passwordCheck');
 const { addKey, writeStorage } = require('actions/utilities/storage');
 const config = require('config.json');
 const checkEmptyFields = require('actions/utilities/checkEmptyFields');
+const { hostname } = require('actions/utilities/hostname');
 
 export const activateOrganizaton = () => {
   return async (dispatch, getState) => {
@@ -73,13 +74,16 @@ export const activateOrganizaton = () => {
     }
 
     let deviceId = state.register.get('deviceId');
+    debugger;
+    const deviceName = hostname();
     let response;
     try {
       response = await requestor.post(`${config.server}/register/confirm`, {
         body: {
           email,
           privateKey,
-          deviceId
+          deviceId,
+          deviceName
         }
       });
     } catch (error) {
