@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-const SearchView = require('components/devices/DevicesView');
+const DeviceView = require('components/devices/DevicesView');
 const action = require('actions/devices');
 
 const mapStateToProps = state => {
@@ -9,7 +9,8 @@ const mapStateToProps = state => {
     message: state.devices.get('message'),
     QRCode: state.devices.get('QRCode'),
     deviceId: state.devices.get('deviceId'),
-    devices: state.devices.get('devices')
+    devices: state.devices.get('devices'),
+    refresh: state.devices.get('refresh')
   };
 };
 
@@ -17,6 +18,9 @@ const mapDispatchToProps = dispatch => {
   return {
     getQRCode: () => {
       dispatch(action.getQRCode());
+    },
+    onRefresh: () => {
+      dispatch(action.getDevices());
     },
     onMount: () => {
       dispatch(action.getDevices());
@@ -38,6 +42,6 @@ const mapDispatchToProps = dispatch => {
 const DevicesContainer = connect(
   mapStateToProps,
   mapDispatchToProps
-)(SearchView);
+)(DeviceView);
 
 export default DevicesContainer;

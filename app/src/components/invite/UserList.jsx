@@ -15,6 +15,11 @@ module.exports = class UserList extends React.Component {
     const { onMount = () => {} } = this.props;
     onMount();
   }
+  componentDidUpdate() {
+    if (this.props.refresh) {
+      this.props.onRefresh();
+    }
+  }
 
   openModal(user) {
     this.setState({
