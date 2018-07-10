@@ -9,7 +9,8 @@ const mapStateToProps = state => {
     fields: state.invite.get('fields'),
     isLoading: state.invite.get('isLoading'),
     message: state.invite.get('message'),
-    error: state.invite.get('error')
+    error: state.invite.get('error'),
+    refresh: state.invite.get('refresh')
   };
 };
 
