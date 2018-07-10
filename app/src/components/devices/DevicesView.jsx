@@ -27,6 +27,12 @@ module.exports = class DevicesView extends React.Component {
     onMount();
   }
 
+  componentDidUpdate() {
+    if (this.props.refresh) {
+      this.props.onRefresh();
+    }
+  }
+
   componentWillReceiveProps(nextProps) {
     if (nextProps.QRCode !== this.props.QRCode)
       this.openQRModal(nextProps.QRCode);

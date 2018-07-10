@@ -5,13 +5,17 @@ const { list } = require('actions/organization');
 const mapStateToProps = state => {
   return {
     user: state.user.get('email'),
-    users: state.invite.get('users')
+    users: state.invite.get('users'),
+    refresh: state.invite.get('refresh')
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
     onMount: () => {
+      dispatch(list());
+    },
+    onRefresh: () => {
       dispatch(list());
     }
   };
