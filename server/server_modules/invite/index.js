@@ -168,8 +168,14 @@ async function confirm(req, res) {
   let privateKey = Buffer.from(req.body.privateKey, 'base64');
 
   let metadata;
+  let deviceName = req.body.deviceName ? req.body.deviceName : 'Generic Device';
   try {
-    metadata = await users.verifyNewUser(deviceId, uuid, privateKey);
+    metadata = await users.verifyNewUser(
+      deviceId,
+      deviceName,
+      uuid,
+      privateKey
+    );
     await users.TempKeys.remove(uuid);
     res.send(metadata);
     logger.log(
