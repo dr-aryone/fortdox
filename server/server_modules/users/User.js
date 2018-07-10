@@ -88,7 +88,7 @@ const verifyUser = (email, privateKey, deviceId) => {
   });
 };
 
-const verifyNewUser = (deviceId, uuid, privateKey) => {
+const verifyNewUser = (deviceId, deviceName, uuid, privateKey) => {
   return new Promise(async (resolve, reject) => {
     let encryptedMasterPassword;
     let user;
@@ -120,7 +120,10 @@ const verifyNewUser = (deviceId, uuid, privateKey) => {
         uuid: null
       });
       await db.Devices.update(
-        { activated: true },
+        {
+          activated: true,
+          deviceName: deviceName
+        },
         { where: { deviceId: deviceId } }
       );
     } catch (error) {
