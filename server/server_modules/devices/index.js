@@ -242,9 +242,12 @@ async function confirm(req, res) {
     });
   }
 
+  let deviceName = req.body.deviceName ? req.body.deviceName : 'Generic Device';
+
   db.Devices.update(
     {
-      activated: true
+      activated: true,
+      deviceName: deviceName
     },
     { where: { deviceId: deviceId } }
   );
