@@ -5,7 +5,7 @@ const config = require('config.json');
 const { addKey, writeStorage } = require('actions/utilities/storage');
 const checkEmptyFields = require('actions/utilities/checkEmptyFields');
 const deviceIdentifier = '@';
-const os = window.require('os');
+const { hostname } = require('actions/utilities/hostname');
 
 export const inviteUser = () => {
   return async (dispatch, getState) => {
@@ -207,7 +207,7 @@ export const verifyUser = () => {
     let response;
     let uuid = state.verifyUser.getIn(['fields', 'uuid', 'value']);
     let deviceId = state.verifyUser.get('deviceId');
-    let deviceName = os.hostname().replace('.local', '');
+    let deviceName = hostname();
     deviceName = deviceName ? deviceName : 'Desktop Device';
 
     try {
