@@ -1,29 +1,47 @@
 .device {
   display: flex;
 
+  input {
+    width: 45%;
+  }
+
   span {
     display: flex;
     flex-grow: 1;
     align-items: center;
     padding: 0.7em 1.3em;
 
-    &:first-child {
+    input {
+      margin: 0;
+    }
+
+    &.id {
+      width: 50%;
+    }
+
+    &.name {
       width: 45%;
+
+      .material-icons {
+        font-size: 20px;
+        cursor: pointer;
+        margin-left: 20px;
+        color: $primary-color;
+        padding: 0;
+        flex-grow: 0;
+      }
     }
 
-    &:last-child {
+    &.icon {
       width: 5%;
-    }
-  }
+      justify-content: flex-end;
 
-  .icon {
-    justify-content: flex-end;
-
-    .material-icons {
-      font-size: 20px;
-      color: $red;
-      font-weight: bold;
-      cursor: pointer;
+      .material-icons {
+        font-size: 20px;
+        color: $red;
+        font-weight: bold;
+        cursor: pointer;
+      }
     }
   }
 }
