@@ -74,7 +74,6 @@ export const activateOrganizaton = () => {
     }
 
     let deviceId = state.register.get('deviceId');
-    debugger;
     const deviceName = hostname();
     let response;
     try {

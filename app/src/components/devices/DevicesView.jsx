@@ -15,10 +15,14 @@ module.exports = class DevicesView extends React.Component {
     this.closeQRModal = this.closeQRModal.bind(this);
     this.inputChange = this.inputChange.bind(this);
     this.handleKeyDown = this.handleKeyDown.bind(this);
+    this.outsideInputClickHandler = this.outsideInputClickHandler.bind(this);
+    this.closeEditMode = this.closeEditMode.bind(this);
+
     this.state = {
       showModal: false,
       showDialog: false,
-      showQRModal: false
+      showQRModal: false,
+      showChangeDialog: false
     };
   }
 
@@ -31,6 +35,10 @@ module.exports = class DevicesView extends React.Component {
     if (this.props.refresh) {
       this.props.onRefresh();
     }
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('click', this.outsideInputClickHandler, false);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -86,7 +94,34 @@ module.exports = class DevicesView extends React.Component {
   editMode(deviceId, deviceName) {
     this.setState({
       deviceId,
-      deviceName
+      deviceName,
+      oldDeviceName: deviceName
+    });
+    window.addEventListener('click', this.outsideInputClickHandler, true);
+  }
+
+  updateDeviceName() {
+    this.props.onUpdateDeviceName(this.state.deviceId, this.state.deviceName);
+    this.closeEditMode();
+  }
+
+  outsideInputClickHandler(e) {
+    if (e.target.id === 'save')
+      this.props.onUpdateDeviceName(this.state.deviceId, this.state.deviceName);
+    else if (this.state.oldDeviceName !== this.state.deviceName)
+      return this.setState({
+        showChangeDialog: true
+      });
+
+    this.closeEditMode();
+  }
+
+  closeEditMode() {
+    window.removeEventListener('click', this.outsideInputClickHandler, true);
+    return this.setState({
+      deviceId: null,
+      deviceName: null,
+      showChangeDialog: false
     });
   }
 
@@ -102,6 +137,7 @@ module.exports = class DevicesView extends React.Component {
 
     if (e.keyCode === enter_key) {
       this.props.onUpdateDeviceName(this.state.deviceId, this.state.deviceName);
+      window.removeEventListener('click', this.outsideInputClickHandler, true);
       this.setState({
         deviceId: null,
         deviceName: null
@@ -131,7 +167,6 @@ module.exports = class DevicesView extends React.Component {
 
   render() {
     const { isLoading, error, message, QRCode, deviceId, devices } = this.props;
-
     const QRCodeDialog = (
       <Modal
         show={this.state.showQRModal}
@@ -191,14 +226,36 @@ module.exports = class DevicesView extends React.Component {
       </Modal>
     );
 
+    const inputChangeDialog = (
+      <Modal
+        show={this.state.showChangeDialog}
+        onClose={this.closeEditMode}
+        showClose={false}
+      >
+        <div className='box dialog'>
+          <i className='material-icons'>error_outline</i>
+          <h2>Unsaved Changes</h2>
+          <p>Do you want to save the new device name?</p>
+          <div className='buttons'>
+            <button onClick={this.closeEditMode} type='button'>
+              Cancel
+            </button>
+            <button onClick={() => this.updateDeviceName()} type='button'>
+              Save
+            </button>
+          </div>
+        </div>
+      </Modal>
+    );
+
     let deviceList = [];
-    let deviceName;
+    let currentDevice;
     devices.forEach((device, index) => {
-      device.get('id') !== deviceId
-        ? deviceList.push(
-          <div className='device' key={index}>
-            <span>{device.get('id')}</span>
-            {this.state.deviceId === device.get('id') ? (
+      let deviceComponent = (
+        <div className='device' key={index}>
+          <span className='id'>{device.get('id')}</span>
+          {this.state.deviceId === device.get('id') ? (
+            <span className='name'>
               <input
                 autoFocus
                 name={this.state.deviceId}
@@ -207,26 +264,35 @@ module.exports = class DevicesView extends React.Component {
                 value={this.state.deviceName}
                 onKeyDown={this.handleKeyDown}
               />
-              ) : (
-                <span
-                  onClick={() =>
-                    this.editMode(device.get('id'), device.get('name'))
-                  }
-                >
-                  {device.get('name')}
-                </span>
-              )}
-            <span className='icon'>
-              <i
-                className='material-icons'
-                onClick={() => this.openDialog(device.get('id'))}
-              >
-                  clear
-                </i>
+              <span className='material-icons' id='save'>
+                check
+              </span>
             </span>
-          </div>
-          )
-        : (deviceName = device.get('name'));
+          ) : (
+            <span
+              className='name'
+              onClick={() =>
+                this.editMode(device.get('id'), device.get('name'))
+              }
+            >
+              {device.get('name')}
+              <i className='material-icons'>create</i>
+            </span>
+          )}
+          <span className='icon'>
+            <i
+              className='material-icons'
+              onClick={() => this.openDialog(device.get('id'))}
+            >
+              clear
+            </i>
+          </span>
+        </div>
+      );
+
+      device.get('id') === deviceId
+        ? (currentDevice = deviceComponent)
+        : deviceList.push(deviceComponent);
     });
 
     const displayDevices =
@@ -248,29 +314,13 @@ module.exports = class DevicesView extends React.Component {
           {modal}
           {QRCodeDialog}
           {deleteDeviceDialog}
+          {inputChangeDialog}
           <h1>Your Registered Devices</h1>
           <div className='no-margin-top preview'>
             <div className='title small'>
               <h3>Current Device</h3>
             </div>
-            <div className='device' key={deviceId}>
-              <span>{deviceId}</span>
-              {this.state.deviceId === deviceId ? (
-                <input
-                  autoFocus
-                  name={this.state.deviceId}
-                  onChange={this.inputChange}
-                  type='text'
-                  value={this.state.deviceName}
-                  onKeyDown={this.handleKeyDown}
-                />
-              ) : (
-                <span onClick={() => this.editMode(deviceId, deviceName)}>
-                  {deviceName}
-                </span>
-              )}
-              <span className='icon' />
-            </div>
+            {currentDevice}
           </div>
           {displayDevices}
           <button onClick={() => this.openModal()}>Add device</button>
