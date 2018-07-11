@@ -1,12 +1,12 @@
 .dialog {
   text-align: center;
-  
+
   i {
     color: $red;
     font-size: 70px;
   }
 
-  button.warning {
+  button:first-child {
     margin-right: 15px;
   }
 }
