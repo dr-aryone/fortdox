@@ -177,7 +177,7 @@ button {
   .dialog i {
     color: #fe4a49;
     font-size: 70px; }
-  .dialog button.warning {
+  .dialog button:first-child {
     margin-right: 15px; }
 
 input {
@@ -614,22 +614,34 @@ label {
 
 .device {
   display: flex; }
+  .device input {
+    width: 45%; }
   .device span {
     display: flex;
     flex-grow: 1;
     align-items: center;
     padding: 0.7em 1.3em; }
-    .device span:first-child {
+    .device span input {
+      margin: 0; }
+    .device span.id {
+      width: 50%; }
+    .device span.name {
       width: 45%; }
-    .device span:last-child {
-      width: 5%; }
-  .device .icon {
-    justify-content: flex-end; }
-    .device .icon .material-icons {
-      font-size: 20px;
-      color: #fe4a49;
-      font-weight: bold;
-      cursor: pointer; }
+      .device span.name .material-icons {
+        font-size: 20px;
+        cursor: pointer;
+        margin-left: 20px;
+        color: #118ab2;
+        padding: 0;
+        flex-grow: 0; }
+    .device span.icon {
+      width: 5%;
+      justify-content: flex-end; }
+      .device span.icon .material-icons {
+        font-size: 20px;
+        color: #fe4a49;
+        font-weight: bold;
+        cursor: pointer; }
 
 .big-button-container {
   display: flex;

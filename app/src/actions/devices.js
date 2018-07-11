@@ -207,7 +207,7 @@ export const updateDeviceName = (deviceId, deviceName) => {
 
     dispatch({
       type: 'UPDATE_DEVICE_NAME_SUCCESS',
-      payload: 'Device name has been updated.'
+      payload: `${deviceName} has been updated.`
     });
   };
 };
