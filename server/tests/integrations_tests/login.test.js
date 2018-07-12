@@ -1,15 +1,27 @@
 const request = require('request-promise');
 const fs = require('fs-extra');
 
-const steps = 1;
+const steps = 2;
 let sucess = 0;
 
 test()
-  .then(() => {
+  .then(credentials => {
     console.log('Sucess!');
     console.log();
     console.log('### TEST SUMMARY ###');
     console.log(`${sucess} steps passed of ${steps} of login flow test.`);
+
+    fs.writeFile(
+      './tmp/credentials-token.tmp.json',
+      JSON.stringify(credentials),
+      error => {
+        if (error) {
+          console.error('Could not write file', error);
+          return;
+        }
+        console.log('Credentials written to ./tmp/credentials-token.tmp.json');
+      }
+    );
   })
   .catch(error => {
     console.error('Test of login flow failed:');
@@ -17,14 +29,12 @@ test()
     console.error('\t*  ', error.message);
     console.log();
     console.log('### TEST SUMMARY ###');
-    console.log(
-      `${sucess} steps passed of ${steps} of Registration flow test.`
-    );
+    console.log(`${sucess} steps passed of ${steps} of login flow test.`);
   });
 
 async function test() {
   //read credentials files obtained from registraion.test.js
-  const credentials = JSON.parse(fs.readFileSync('./tmp/credentials.tmp.json'));
+  let credentials = JSON.parse(fs.readFileSync('./tmp/credentials.tmp.json'));
   let token;
   try {
     token = await login(credentials);
@@ -32,7 +42,17 @@ async function test() {
   } catch (error) {
     throw error;
   }
-  console.log('Token', token);
+
+  try {
+    await loginCheck(token.token);
+    sucess++;
+  } catch (error) {
+    throw error;
+  }
+
+  credentials.token = token.token;
+
+  return credentials;
 }
 
 async function login(credentials) {
@@ -53,13 +73,12 @@ async function login(credentials) {
   }
 }
 
-async function loginCheck(body, token) {
-  //TODO:fix auyth
+async function loginCheck(token) {
   try {
-    let response = await request('http://localhost/login/check', {
-      method: 'POST',
-      body: body,
-      json: true
+    let response = await request('http://localhost:8000/login/check', {
+      auth: {
+        bearer: token
+      }
     });
     return response;
   } catch (error) {
