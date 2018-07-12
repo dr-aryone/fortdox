@@ -90,3 +90,5 @@ async function loginCheck(token) {
     };
   }
 }
+
+module.exports = { login };
