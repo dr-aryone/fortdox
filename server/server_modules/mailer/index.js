@@ -22,6 +22,10 @@ module.exports = {
 };
 
 function send(mailOptions) {
+  if (mailOptions.to.includes('example.org')) {
+    return Promise.resolve('Faked message');
+  }
+
   return new Promise((resolve, reject) => {
     transporter.sendMail(mailOptions, (error, info) => {
       if (error) {
