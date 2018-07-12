@@ -3,7 +3,7 @@ const prompt = require('syncprompt');
 const fs = require('fs-extra');
 
 const steps = 3;
-let sucesss = 0;
+let success = 0;
 
 test()
   .then(credentials => {
@@ -11,7 +11,7 @@ test()
     console.log();
     console.log('### TEST SUMMARY ###');
     console.log(
-      `${sucesss} steps passed of ${steps} of registration flow test.`
+      `${success} steps passed of ${steps} of registration flow test.`
     );
 
     fs.writeFile(
@@ -33,19 +33,19 @@ test()
     console.log();
     console.log('### TEST SUMMARY ###');
     console.log(
-      `${sucesss} steps passed of ${steps} of Registration flow test.`
+      `${success} steps passed of ${steps} of Registration flow test.`
     );
   });
 
 async function test() {
   const testOrg = {
-    email: 'david.skeppstedt+testtest@gmail.com',
-    organization: 'Test2'
+    email: 'test@example.org',
+    organization: 'Test'
   };
 
   try {
     await registerOrganization(testOrg);
-    sucesss++;
+    success++;
   } catch (error) {
     throw error;
   }
@@ -56,7 +56,7 @@ async function test() {
   let credentials;
   try {
     credentials = await verifyOrganization({ activationCode });
-    sucesss++;
+    success++;
   } catch (error) {
     throw error;
   }
@@ -65,7 +65,7 @@ async function test() {
 
   try {
     await confirmOrganization(credentials);
-    sucesss++;
+    success++;
   } catch (error) {
     throw error;
   }
