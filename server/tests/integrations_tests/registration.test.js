@@ -14,12 +14,12 @@ test()
       `${sucesss} steps passed of ${steps} of registration flow test.`
     );
 
-    fs.writeFile('./credentials.json', JSON.stringify(credentials), error => {
+    fs.writeFile('./tmp/credentials.json', JSON.stringify(credentials), error => {
       if (error) {
         console.error('Could not write file', error);
         return;
       }
-      console.log('Credentials written to credentials.json');
+      console.log('Credentials written to /tmp/credentials.json');
     });
   })
   .catch(error => {
