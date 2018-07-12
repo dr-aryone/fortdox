@@ -1,6 +1,6 @@
 /**
  * This script is useful when developing FortDox
- * It's main purpose is to clean up elasticsearch,MySQL and keychain to let a developer get a clean sheet. (all those organizations you know..)
+ * Its main purpose is to clean up elasticsearch,MySQL and keychain to let a developer get a clean sheet. (all those organizations you know..)
  * Use at own risk.
  * author: David Skeppstedt
  */
