@@ -43,18 +43,20 @@ function runCleankeychain() {
       console.error('Keychain could not be cleaned');
     });
 }
-async function cleanKeychain() {
-  const security = spawn('security', [
-    'delete-generic-password',
-    '-s',
-    'fortdox'
-  ]);
-  security.on('error', error => {
-    throw error;
-  });
+function cleanKeychain() {
+  return new Promise((resolve, reject) => {
+    const security = spawn('security', [
+      'delete-generic-password',
+      '-s',
+      'fortdox'
+    ]);
+    security.on('error', error => {
+      reject(error);
+    });
 
-  security.on('close', code => {
-    return code;
+    security.on('close', code => {
+      resolve(code);
+    });
   });
 }
 
