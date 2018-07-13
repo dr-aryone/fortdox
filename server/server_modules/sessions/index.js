@@ -38,9 +38,23 @@ async function login(req, res) {
     deviceIdWhereQuery = { deviceId: requestDeviceId };
   }
 
-  const deviceOfUser = await db.Devices.findOne({
-    where: deviceIdWhereQuery
-  });
+  let deviceOfUser;
+  try {
+    deviceOfUser = await db.Devices.findOne({
+      where: deviceIdWhereQuery
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send();
+  }
+
+  if (!deviceOfUser) {
+    logger.log(
+      'silly',
+      '/login: No existing device with id' + req.body.deviceId
+    );
+    return res.status(404).send();
+  }
 
   let privateKey = Buffer.from(req.body.privateKey, 'base64');
   user.password = deviceOfUser.password;
