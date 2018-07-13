@@ -1,13 +1,10 @@
 const request = require('request-promise');
-const uuidv4 = require('uuid/v4');
 const fs = require('fs-extra');
 const expect = require('@edgeguideab/expect');
-const { login } = require('./login.it.js');
 
 const steps = 1;
 let success = 0;
 const testName = 'Document Flow Test';
-run();
 function run() {
   console.log(`### ${testName} ###`);
   return test()
@@ -63,17 +60,27 @@ async function createDocument(credentials) {
       json: true
     });
 
-    // const expectations = expect(
-    //   { email: 'string', organization: 'string' },
-    //   response
-    // );
+    const expectations = expect(
+      {
+        _index: 'string',
+        _type: 'string',
+        _id: 'string',
+        _version: 'number',
+        result: 'string',
+        forced_refresh: 'boolean',
+        _shards: 'object',
+        _seq_no: 'number',
+        _primary_term: 'number'
+      },
+      response
+    );
 
-    // if (!expectations.wereMet()) {
-    //   throw {
-    //     message: `/invite/verify did not return expected fields..
-    //               Extra info ${expectations.errors().toString()}`
-    //   };
-    // }
+    if (!expectations.wereMet()) {
+      throw {
+        message: `/invite/verify did not return expected fields..
+                  Extra info ${expectations.errors().toString()}`
+      };
+    }
 
     return response;
   } catch (error) {
@@ -85,3 +92,5 @@ async function createDocument(credentials) {
     };
   }
 }
+
+module.exports = { run };

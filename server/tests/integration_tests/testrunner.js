@@ -4,6 +4,7 @@ const registerTest = require('./registration.it');
 const loginTest = require('./login.it');
 const deviceTest = require('./device.it');
 const inviteTest = require('./invite.it');
+const documentTest = require('./documents.it');
 
 flags.defineBoolean('register', false);
 flags.defineBoolean('clean', false);
@@ -32,7 +33,8 @@ async function run() {
   loginTest
     .run()
     .then(deviceTest.run)
-    .then(inviteTest.run);
+    .then(inviteTest.run)
+    .then(documentTest.run);
 }
 
 function clean() {
