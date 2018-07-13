@@ -21,7 +21,7 @@ function run() {
       });
     })
     .catch(error => {
-      console.error('Test of login flow failed:');
+      console.error('Test of device flow failed:');
       console.log();
       console.error('\t*  ', error.message);
       console.log();
