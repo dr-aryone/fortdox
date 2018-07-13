@@ -7,6 +7,7 @@
     "forever": "forever start main.js",
     "dev": "nodemon --inspect main.js --dev",
     "migrate": "sequelize db:migrate",
+    "test": "node tests/integration_tests/testrunner.js",
     "postinstall": "node -e \"var s='../server_modules',d='node_modules/app',fs=require('fs');fs.stat(d,function(e){!e||fs.symlinkSync(s,d,'dir')}); try { fs.mkdirSync('./logs') } catch(e) { console.log(e)}\""
   },
   "dependencies": {
