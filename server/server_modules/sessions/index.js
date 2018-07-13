@@ -100,6 +100,7 @@ async function needsMasterPassword(req, res, next) {
   }
 
   if (device === null || user === null) {
+    logger.info('auth', 'no device or user');
     return res.status(401).send({ error: 'Unauthorized.' });
   }
 
@@ -111,6 +112,7 @@ async function needsMasterPassword(req, res, next) {
 function restrict(req, res, next) {
   let authorization = req.headers.authorization;
   if (!authorization) {
+    logger.info('auth', 'No Header');
     return res.status(401).send({
       error: 'Unauthorized.'
     });
@@ -119,6 +121,7 @@ function restrict(req, res, next) {
   let encodedToken = authorization.split('Bearer ')[1];
 
   if (!encodedToken) {
+    logger.info('auth', 'No token');
     return res.status(401).send({
       error: 'Unauthorized.'
     });
@@ -129,7 +132,7 @@ function restrict(req, res, next) {
   try {
     decodedToken = decryptSession(encodedToken);
   } catch (error) {
-    logger.info('Invalid session');
+    logger.info('auth', 'Invalid session');
     logger.error(error);
     return res.status(401).send({
       error: 'Session Expired.'
