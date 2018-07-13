@@ -11,7 +11,7 @@ flags.parse();
 
 run();
 
-function run() {
+async function run() {
   const runRegister = flags.get('register');
   const runClean = flags.get('clean');
 
@@ -27,17 +27,12 @@ function run() {
   }
 
   if (runRegister) {
-    registerTest
-      .run()
-      .then(loginTest.run)
-      .then(deviceTest.run)
-      .then(inviteTest.run);
-  } else {
-    loginTest
-      .run()
-      .then(deviceTest.run)
-      .then(inviteTest.run);
+    await registerTest.run();
   }
+  loginTest
+    .run()
+    .then(deviceTest.run)
+    .then(inviteTest.run);
 }
 
 function clean() {
