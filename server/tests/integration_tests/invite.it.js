@@ -2,7 +2,7 @@ const request = require('request-promise');
 const uuidv4 = require('uuid/v4');
 const fs = require('fs-extra');
 const expect = require('@edgeguideab/expect');
-const { login } = require('./login.test.js');
+const { login } = require('./login.it.js');
 
 const steps = 4;
 let success = 0;

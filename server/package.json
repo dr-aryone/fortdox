@@ -39,6 +39,7 @@
   },
   "nodemonConfig": {
     "ignore": [
+      "*.it.js",
       "*.test.js",
       "*.tmp.json"
     ]

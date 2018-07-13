@@ -1,9 +1,9 @@
 const flags = require('flags');
 const { execSync } = require('child_process');
-const registerTest = require('./registration.test');
-const loginTest = require('./login.test');
-const deviceTest = require('./device.test');
-const inviteTest = require('./invite.test');
+const registerTest = require('./registration.it');
+const loginTest = require('./login.it');
+const deviceTest = require('./device.it');
+const inviteTest = require('./invite.it');
 
 flags.defineBoolean('register', false);
 flags.defineBoolean('clean', false);
@@ -36,6 +36,6 @@ async function run() {
 }
 
 function clean() {
-  const buffer = execSync('node dev_cleanup.test.js');
+  const buffer = execSync('node dev_cleanup.it.js');
   console.log(String(buffer));
 }
