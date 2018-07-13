@@ -11,4 +11,4 @@ app/release-build
 *.log
 server/distribution/*
 !server/distribution/.keepme
-server/tests/integrations_tests/tmp/*
+server/tests/integration_tests/tmp/*

@@ -5,12 +5,13 @@ const fs = require('fs-extra');
 const steps = 3;
 let success = 0;
 function run() {
+  console.log('### Registration Flow Test ###');
   return test()
     .then(credentials => {
       return new Promise((resolve, reject) => {
         console.log('Sucess!');
         console.log();
-        console.log('### TEST SUMMARY ###');
+        console.log('TEST SUMMARY Registration Flow Test ###');
         console.log(
           `${success} steps passed of ${steps} of registration flow test.`
         );
