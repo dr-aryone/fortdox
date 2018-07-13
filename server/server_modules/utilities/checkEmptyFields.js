@@ -1,10 +1,16 @@
 const checkEmptyFields = doc => {
   let emptyFields = {};
   let valid = true;
+
   if (doc.title.trim() === '') {
     valid = false;
     emptyFields.title = 'Title field can not be empty.';
   }
+
+  if (doc.encryptedTexts.length === 0 && doc.texts.length === 0) {
+    valid = false;
+  }
+
   let encryptedTexts = [];
   doc.encryptedTexts.forEach(field => {
     if (field.text.trim() === '') {
@@ -12,6 +18,7 @@ const checkEmptyFields = doc => {
       encryptedTexts.push(field.id);
     }
   });
+
   emptyFields.encryptedTexts = encryptedTexts;
   let texts = [];
   doc.texts.forEach(field => {
@@ -20,10 +27,12 @@ const checkEmptyFields = doc => {
       texts.push(field.id);
     }
   });
+
   emptyFields.texts = texts;
   let reason;
+
   if (!valid) reason = 'Fields can not be empty.';
-  return {valid, emptyFields, reason};
+  return { valid, emptyFields, reason };
 };
 
 module.exports = checkEmptyFields;

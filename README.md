@@ -194,6 +194,33 @@ This is manged in the `Procfile`
 
 # Developers
 
+## Tests
+
+### Unit tests
+Unit testing is handel using [jest](https://jestjs.io/).
+
+Create a test file that has `test.js` file ending. Add a test.
+Simply run `npm test` to let jest do its magic.
+
+### Integration testing
+To test complex flow like register,invite, new device, etc, we use the following system:  
+All integration tests should be placed under the folder `tests/integraiton_test` and have a the file ending `it.js` to not interfere with jest.
+
+To add a new test, the best way is to use one of the exisiting ones as your template.
+The main idea is to have an exported function named `run` that contain summary of test result and one async function namend `test`
+that contain all the testing logic
+
+
+When you are done, it should be added to `testrunner.it.js`, in the appropirate order you wish to run the tests.  
+For example, the registration tests has to be run at least once before the other tests to generat the needed credentials.
+
+The following flags can be used on the testrunner script:  
+* --register: Run dev_cleanup.it.js and start the testing flow from registraion.
+* --clean: Run dev_cleanup.it.js them exit
+
+The testrunner can be run via `npm run integrationtest [-- [--register,--clean]]`.
+
+
 ## Debugging client app
 
 Debugging is done on the client through the Developer Tools (`cmd + alt + I` on Mac) in the Electron window. Simply insert a debugger statement `debugger;` to trigger the developer mode. React and Redux developer tools should be visible as tabs if they are correctly installed.

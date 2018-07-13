@@ -23,6 +23,7 @@ module.exports = {
 };
 
 async function updateName(req, res) {
+  logger.info('device', 'update name');
   let deviceIdToUpdate = req.body.deviceId;
   let deviceName = req.body.deviceName;
 
@@ -49,6 +50,7 @@ async function updateName(req, res) {
 }
 
 async function deleteDevice(req, res) {
+  logger.info('device', 'delete device');
   const deviceIdToDelete = req.params.deviceId;
   let user = await db.User.findOne({
     where: {
@@ -98,6 +100,7 @@ async function createDevice(forUserId, password, name = 'master-device') {
 }
 
 async function add(req, res) {
+  logger.info('device', 'add');
   let userid = req.session.userid;
   let privatekey = req.session.privateKey;
   let encryptedMasterPassword = req.session.mp;
@@ -149,6 +152,7 @@ async function add(req, res) {
 }
 
 async function verify(req, res) {
+  logger.info('device', 'verify');
   if (
     req.body.uuid === undefined ||
     req.body.uuid == null ||
@@ -200,6 +204,7 @@ async function verify(req, res) {
 }
 
 async function confirm(req, res) {
+  logger.info('device', 'confirm');
   if (
     req.body.uuid === undefined ||
     req.body.uuid == null ||
