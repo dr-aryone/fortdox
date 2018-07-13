@@ -4,12 +4,13 @@ const fs = require('fs-extra');
 const steps = 2;
 let sucess = 0;
 function run() {
+  console.log('### Login flow Test ###');
   return test()
     .then(credentials => {
       return new Promise((resolve, reject) => {
         console.log('Sucess!');
         console.log();
-        console.log('### TEST SUMMARY ###');
+        console.log('TEST SUMMARY Login flow test ###');
         console.log(`${sucess} steps passed of ${steps} of login flow test.`);
 
         fs.writeFile(

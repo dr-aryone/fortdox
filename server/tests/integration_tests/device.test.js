@@ -7,12 +7,13 @@ const steps = 6;
 let success = 0;
 
 function run() {
+  console.log('### Device Flow Test ###');
   return test()
     .then(() => {
       return new Promise(resolve => {
         console.log('Sucess!');
         console.log();
-        console.log('### TEST SUMMARY ###');
+        console.log('TEST SUMMARY Device Flow Test ###');
         console.log(`${success} steps passed of ${steps} of device flow test.`);
 
         console.log();
