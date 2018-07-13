@@ -4,39 +4,45 @@ const fs = require('fs-extra');
 
 const steps = 3;
 let success = 0;
+function run() {
+  return test()
+    .then(credentials => {
+      return new Promise((resolve, reject) => {
+        console.log('Sucess!');
+        console.log();
+        console.log('### TEST SUMMARY ###');
+        console.log(
+          `${success} steps passed of ${steps} of registration flow test.`
+        );
 
-test()
-  .then(credentials => {
-    console.log('Sucess!');
-    console.log();
-    console.log('### TEST SUMMARY ###');
-    console.log(
-      `${success} steps passed of ${steps} of registration flow test.`
-    );
-
-    fs.writeFile(
-      './tmp/credentials.tmp.json',
-      JSON.stringify(credentials),
-      error => {
-        if (error) {
-          console.error('Could not write file', error);
-          return;
-        }
-        console.log('Credentials written to ./tmp/credentials.tmp.json');
-      }
-    );
-  })
-  .catch(error => {
-    console.error('Test of registration flow failed:');
-    console.log();
-    console.error('\t*  ', error.message);
-    console.log();
-    console.log('### TEST SUMMARY ###');
-    console.log(
-      `${success} steps passed of ${steps} of Registration flow test.`
-    );
-  });
-
+        fs.writeFile(
+          `${__dirname}/tmp/credentials.tmp.json`,
+          JSON.stringify(credentials),
+          error => {
+            if (error) {
+              console.error('Could not write file', error);
+              reject();
+            }
+            console.log(
+              `Credentials written to ${__dirname}/tmp/credentials.tmp.json`
+            );
+            console.log();
+            resolve();
+          }
+        );
+      });
+    })
+    .catch(error => {
+      console.error('Test of registration flow failed:');
+      console.log();
+      console.error('\t*  ', error.message);
+      console.log();
+      console.log('### TEST SUMMARY ###');
+      console.log(
+        `${success} steps passed of ${steps} of Registration flow test.`
+      );
+    });
+}
 async function test() {
   const testOrg = {
     email: 'test@example.org',
@@ -126,3 +132,5 @@ async function confirmOrganization(credentials) {
     };
   }
 }
+
+module.exports = { run };

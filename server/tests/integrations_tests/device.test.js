@@ -6,38 +6,32 @@ const { login } = require('./login.test.js');
 const steps = 6;
 let success = 0;
 
-test()
-  .then(() => {
-    console.log('Sucess!');
-    console.log();
-    console.log('### TEST SUMMARY ###');
-    console.log(`${success} steps passed of ${steps} of device flow test.`);
+function run() {
+  return test()
+    .then(() => {
+      return new Promise(resolve => {
+        console.log('Sucess!');
+        console.log();
+        console.log('### TEST SUMMARY ###');
+        console.log(`${success} steps passed of ${steps} of device flow test.`);
 
-    // fs.writeFile(
-    //   './tmp/credentials-token.tmp.json',
-    //   JSON.stringify(credentials),
-    //   error => {
-    //     if (error) {
-    //       console.error('Could not write file', error);
-    //       return;
-    //     }
-    //     console.log('Credentials written to ./tmp/credentials-token.tmp.json');
-    //   }
-    // );
-  })
-  .catch(error => {
-    console.error('Test of login flow failed:');
-    console.log();
-    console.error('\t*  ', error.message);
-    console.log();
-    console.log('### TEST SUMMARY ###');
-    console.log(`${success} steps passed of ${steps} of deivce flow test.`);
-  });
-
+        console.log();
+        resolve();
+      });
+    })
+    .catch(error => {
+      console.error('Test of login flow failed:');
+      console.log();
+      console.error('\t*  ', error.message);
+      console.log();
+      console.log('### TEST SUMMARY ###');
+      console.log(`${success} steps passed of ${steps} of deivce flow test.`);
+    });
+}
 async function test() {
   //read credentials files obtained from login.test.js
   let credentials = JSON.parse(
-    fs.readFileSync('./tmp/credentials-token.tmp.json')
+    fs.readFileSync(`${__dirname}/tmp/credentials-token.tmp.json`)
   );
 
   let devices;
@@ -264,3 +258,7 @@ async function deleteDevice(credentials) {
     };
   }
 }
+
+module.exports = {
+  run
+};

@@ -3,38 +3,46 @@ const fs = require('fs-extra');
 
 const steps = 2;
 let sucess = 0;
+function run() {
+  return test()
+    .then(credentials => {
+      return new Promise((resolve, reject) => {
+        console.log('Sucess!');
+        console.log();
+        console.log('### TEST SUMMARY ###');
+        console.log(`${sucess} steps passed of ${steps} of login flow test.`);
 
-test()
-  .then(credentials => {
-    console.log('Sucess!');
-    console.log();
-    console.log('### TEST SUMMARY ###');
-    console.log(`${sucess} steps passed of ${steps} of login flow test.`);
-
-    fs.writeFile(
-      './tmp/credentials-token.tmp.json',
-      JSON.stringify(credentials),
-      error => {
-        if (error) {
-          console.error('Could not write file', error);
-          return;
-        }
-        console.log('Credentials written to ./tmp/credentials-token.tmp.json');
-      }
-    );
-  })
-  .catch(error => {
-    console.error('Test of login flow failed:');
-    console.log();
-    console.error('\t*  ', error.message);
-    console.log();
-    console.log('### TEST SUMMARY ###');
-    console.log(`${sucess} steps passed of ${steps} of login flow test.`);
-  });
-
+        fs.writeFile(
+          `${__dirname}/tmp/credentials-token.tmp.json`,
+          JSON.stringify(credentials),
+          error => {
+            if (error) {
+              console.error('Could not write file', error);
+              reject();
+            }
+            console.log(
+              `Credentials written to ${__dirname}/tmp/credentials-token.tmp.json`
+            );
+            console.log();
+            resolve();
+          }
+        );
+      });
+    })
+    .catch(error => {
+      console.error('Test of login flow failed:');
+      console.log();
+      console.error('\t*  ', error.message);
+      console.log();
+      console.log('### TEST SUMMARY ###');
+      console.log(`${sucess} steps passed of ${steps} of login flow test.`);
+    });
+}
 async function test() {
   //read credentials files obtained from registraion.test.js
-  let credentials = JSON.parse(fs.readFileSync('./tmp/credentials.tmp.json'));
+  let credentials = JSON.parse(
+    fs.readFileSync(`${__dirname}/tmp/credentials.tmp.json`)
+  );
   let token;
   try {
     token = await login(credentials);
@@ -91,4 +99,4 @@ async function loginCheck(token) {
   }
 }
 
-module.exports = { login };
+module.exports = { run, login };
