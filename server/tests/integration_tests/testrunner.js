@@ -3,6 +3,7 @@ const { execSync } = require('child_process');
 const registerTest = require('./registration.test');
 const loginTest = require('./login.test');
 const deviceTest = require('./device.test');
+const inviteTest = require('./invite.test');
 
 flags.defineBoolean('register', false);
 flags.defineBoolean('clean', false);
@@ -29,9 +30,13 @@ function run() {
     registerTest
       .run()
       .then(loginTest.run)
-      .then(deviceTest.run);
+      .then(deviceTest.run)
+      .then(inviteTest.run);
   } else {
-    loginTest.run().then(deviceTest.run);
+    loginTest
+      .run()
+      .then(deviceTest.run)
+      .then(inviteTest.run);
   }
 }
 

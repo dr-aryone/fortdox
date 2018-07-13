@@ -8,8 +8,6 @@ const steps = 4;
 let success = 0;
 const testName = 'Invite Flow Test';
 
-run();
-
 function run() {
   console.log(`### ${testName} ###`);
   return test()
@@ -181,3 +179,5 @@ async function confirmUser(newUser) {
     };
   }
 }
+
+module.exports = { run };
