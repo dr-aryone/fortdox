@@ -1,7 +1,7 @@
 const request = require('request-promise');
 const fs = require('fs-extra');
 const expect = require('@edgeguideab/expect');
-const { login } = require('./login.test.js');
+const { login } = require('./login.it.js');
 
 const steps = 6;
 let success = 0;
