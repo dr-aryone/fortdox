@@ -113,7 +113,7 @@ async function user(req, res) {
 
   res.send({
     uuid: uuid,
-    tempPassword: tempPassword
+    tempPassword: tempPassword.toString('base64')
   });
 }
 
