@@ -3,6 +3,7 @@ const db = require('app/models');
 const statusMsg = require('app/statusMsg.json');
 const logger = require('app/logger');
 const { decryptSession, encryptSession } = require('./encryption');
+const { isObjEmpty } = require('./isEmpty');
 const {
   decryptMasterPassword
 } = require('app/encryption/keys/cryptMasterPassword');
@@ -74,7 +75,8 @@ async function login(req, res) {
     deviceId: deviceOfUser.deviceId,
     email: user.email,
     organizationId: user.Organization.id,
-    organization: user.Organization.name
+    organization: user.Organization.name,
+    organizationIndex: user.Organization.indexName
   });
 
   res.send({
@@ -155,6 +157,14 @@ function restrict(req, res, next) {
 
   decodedToken.privateKey = Buffer.from(decodedToken.privateKey, 'base64');
   req.session = decodedToken;
+
+  if (isObjEmpty(decodedToken)) {
+    logger.info('auth', 'Invalid session', decodedToken);
+    return res.status(401).send({
+      error: 'Session invalid'
+    });
+  }
+
   next();
 }
 
