@@ -24,14 +24,15 @@ module.exports = {
 async function getAttachment(req, res) {
   let id = req.params.id;
   let attachmentIndex = req.params.attachmentIndex;
-  let organization = req.session.organization;
+  let organizationIndex = req.session.organizationIndex;
+
   let attachment;
 
   try {
     attachment = await es.getAttachment({
       documentId: id,
       attachmentIndex,
-      organization
+      organizationIndex
     });
   } catch (error) {
     logger.error(error);
@@ -42,7 +43,7 @@ async function getAttachment(req, res) {
 }
 
 async function get(req, res) {
-  let organization = req.session.organization;
+  let organizationIndex = req.session.organizationIndex;
   let email = req.session.email;
   let privateKey = req.session.privateKey;
   let id = req.params.id;
@@ -62,7 +63,7 @@ async function get(req, res) {
   let doc;
   try {
     doc = await es.getDocument({
-      organization,
+      organizationIndex,
       documentId: id
     });
   } catch (error) {
@@ -105,7 +106,7 @@ async function get(req, res) {
 
 async function checkTitle(req, res) {
   let searchString = req.query.searchString;
-  let organization = req.session.organization;
+  let organizationIndex = req.session.organizationIndex;
 
   let expectations = expect(
     {
@@ -126,7 +127,7 @@ async function checkTitle(req, res) {
   let response;
   try {
     response = await es.searchForDuplicates({
-      organization: organization.toLowerCase(),
+      organization: organizationIndex,
       searchString: searchString
     });
   } catch (error) {
@@ -140,7 +141,7 @@ async function checkTitle(req, res) {
 
 async function search(req, res) {
   let searchString = req.query.searchString;
-  let organization = req.session.organization;
+  let organizationIndex = req.session.organizationIndex;
   let results = req.query.results;
   let index = req.query.index;
   let response;
@@ -148,7 +149,7 @@ async function search(req, res) {
     response = await es.paginationSearch(
       {
         searchString,
-        organization,
+        organizationIndex,
         index
       },
       results
@@ -169,7 +170,7 @@ async function search(req, res) {
 
 async function create(req, res) {
   let privateKey = req.session.privateKey;
-  let organization = req.session.organization;
+  let organizationIndex = req.session.organizationIndex;
   let encryptedMasterPassword = req.session.mp;
 
   let fields = checkEmptyFields(req.body);
@@ -198,7 +199,7 @@ async function create(req, res) {
   };
   let response;
   try {
-    response = await es.addToIndex({ query, organization });
+    response = await es.addToIndex({ query, organizationIndex });
     res.send(response);
     logger.log(
       'info',
@@ -229,7 +230,7 @@ async function create(req, res) {
 async function update(req, res) {
   let email = req.session.email;
   let privateKey = req.session.privateKey;
-  let organization = req.session.organization;
+  let organizationIndex = req.session.organizationIndex;
 
   let encryptedMasterPassword = req.session.mp;
   let fields = checkEmptyFields(req.body);
@@ -263,7 +264,7 @@ async function update(req, res) {
 
   let response;
   try {
-    response = await es.update({ query, organization });
+    response = await es.update({ query, organizationIndex });
     logger.log('info', `User ${email} updated document ${req.body.id}`);
   } catch (error) {
     logger.log('error', `Cannot update document ${req.body.id}`);
@@ -308,7 +309,7 @@ async function deleteDocument(req, res) {
   }
 
   let query = {
-    index: req.session.organization.toLowerCase(),
+    index: req.session.organizationIndex,
     id: req.params.id,
     type: req.query.type
   };

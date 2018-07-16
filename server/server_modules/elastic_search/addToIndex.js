@@ -1,7 +1,7 @@
 const uuid = require('uuid');
 
 module.exports = client => {
-  const addToIndex = ({query, organization}) => {
+  const addToIndex = ({ query, organizationIndex }) => {
     return new Promise(async (resolve, reject) => {
       let response;
       let attachments = query.attachments || [];
@@ -13,7 +13,7 @@ module.exports = client => {
 
       try {
         response = await client.index({
-          index: organization.toLowerCase(),
+          index: organizationIndex,
           type: 'fortdox_document',
           body: {
             title: query.title,

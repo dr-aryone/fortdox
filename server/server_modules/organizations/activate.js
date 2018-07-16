@@ -1,6 +1,6 @@
 const db = require('app/models');
 
-module.exports = organization => {
+module.exports = (organization, indexName) => {
   return new Promise(async (resolve, reject) => {
     let org;
     try {
@@ -19,13 +19,11 @@ module.exports = organization => {
     }
 
     try {
-      await org.updateAttributes({activated: true});
+      await org.updateAttributes({ activated: true, indexName });
       return resolve();
     } catch (error) {
       console.error(error);
       return reject(500);
     }
-
-
   });
 };
