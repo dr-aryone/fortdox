@@ -9,6 +9,7 @@ const {
 } = require('app/encryption/keys/cryptMasterPassword');
 const mailer = require('app/mailer');
 const uuidv1 = require('uuid/v1');
+const uuidv4 = require('uuid/v4');
 const logger = require('app/logger');
 
 module.exports = {
@@ -110,8 +111,9 @@ async function confirm(req, res) {
     res.status(404).send();
   }
   try {
-    await es.createIndex(organizationName);
-    await orgs.activateOrganization(organizationName);
+    const organizationIndexName = uuidv4();
+    await es.createIndex(organizationIndexName);
+    await orgs.activateOrganization(organizationName, organizationIndexName);
     let user = await users.getUser(email);
 
     let deviceName = req.body.deviceName
