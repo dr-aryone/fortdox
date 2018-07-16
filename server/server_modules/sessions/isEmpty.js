@@ -2,6 +2,7 @@ function isObjEmpty(obj, root = true) {
   let result = false;
 
   if (root && Object.entries(obj).length === 0) {
+    //this is to check if we send in an object like this {}
     return true;
   }
 
