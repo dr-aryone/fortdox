@@ -1,23 +1,32 @@
 module.exports = function(sequelize, DataTypes) {
-  var Organization = sequelize.define('Organization', {
-    id : {
-      type: DataTypes.INTEGER,
-      primaryKey:  true,
-      autoIncrement: true
+  var Organization = sequelize.define(
+    'Organization',
+    {
+      id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true
+      },
+      name: {
+        unique: true,
+        allowNull: false,
+        type: DataTypes.STRING
+      },
+      activated: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false
+      },
+      indexName: {
+        unique: true,
+        allowNull: true,
+        type: DataTypes.STRING
+      }
     },
-    name: {
-      unique: true,
-      allowNull: false,
-      type: DataTypes.STRING
-    },
-    activated: {
-      type: DataTypes.BOOLEAN,
-      allowNull: false,
-      defaultValue: false
+    {
+      updatedAt: false
     }
-  }, {
-    updatedAt: false
-  });
+  );
 
   Organization.associate = function(models) {
     Organization.hasMany(models.User, {

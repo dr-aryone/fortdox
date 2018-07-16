@@ -1,10 +1,10 @@
 module.exports = client => {
-  const createIndex = organizationName => {
+  const createIndex = organizationIndex => {
     return new Promise(async (resolve, reject) => {
       try {
         await attachmentPlugin();
         await client.indices.create({
-          index: organizationName.toLowerCase(),
+          index: organizationIndex,
           body: {
             mappings: {
               fortdox_document: {
@@ -104,5 +104,5 @@ module.exports = client => {
       return resolve();
     });
   };
-  return {createIndex};
+  return { createIndex };
 };

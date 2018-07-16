@@ -1,10 +1,14 @@
 module.exports = client => {
-  const getAttachment = ({organization, documentId, attachmentIndex}) => {
+  const getAttachment = ({
+    organizationIndex,
+    documentId,
+    attachmentIndex
+  }) => {
     return new Promise(async (resolve, reject) => {
       let response;
       try {
         response = await client.get({
-          index: organization.toLowerCase(),
+          index: organizationIndex,
           type: 'fortdox_document',
           id: documentId,
           _sourceExclude: ['texts', 'title', 'encrypted_texts']

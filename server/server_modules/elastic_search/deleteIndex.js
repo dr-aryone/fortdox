@@ -1,9 +1,9 @@
 module.exports = client => {
-  const deleteIndex = organizationName => {
+  const deleteIndex = organizationIndex => {
     return new Promise(async (resolve, reject) => {
       try {
         await client.indices.delete({
-          index: organizationName.toLowerCase()
+          index: organizationIndex
         });
         return resolve(200);
       } catch (error) {

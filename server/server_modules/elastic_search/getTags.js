@@ -1,10 +1,10 @@
 module.exports = client => {
-  const getTags = organization => {
+  const getTags = organizationIndex => {
     return new Promise(async (resolve, reject) => {
       let response;
       try {
         response = await client.search({
-          index: organization.toLowerCase(),
+          index: organizationIndex.toLowerCase(),
           body: {
             aggs: {
               distinct_tags: {
