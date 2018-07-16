@@ -1,27 +1,31 @@
 module.exports = client => {
   const paginationSearch = (query, limit = 10) => {
     return new Promise(async (resolve, reject) => {
-      let from = (query.index > 0) ? query.index * limit - limit : 0;
+      let from = query.index > 0 ? query.index * limit - limit : 0;
       let response;
       try {
         response = await client.search({
-          index: query.organization.toLowerCase(),
+          index: query.organizationIndex,
           body: {
             query: {
               bool: {
-                should: [{
-                  query_string: {
-                    query: `*${query.searchString}*~`
+                should: [
+                  {
+                    query_string: {
+                      query: `*${query.searchString}*~`
+                    }
+                  },
+                  {
+                    regexp: {
+                      _all: '.*' + query.searchString + '.*'
+                    }
+                  },
+                  {
+                    fuzzy: {
+                      _all: query.searchString
+                    }
                   }
-                }, {
-                  regexp: {
-                    _all: '.*' + query.searchString + '.*'
-                  }
-                }, {
-                  fuzzy: {
-                    _all: query.searchString
-                  }
-                }]
+                ]
               }
             },
             highlight: {
@@ -38,7 +42,7 @@ module.exports = client => {
             from: from,
             size: limit
           },
-          _sourceExclude: ['attachments', 'encrypted_texts'],
+          _sourceExclude: ['attachments', 'encrypted_texts']
         });
         return resolve(response);
       } catch (error) {
@@ -48,12 +52,12 @@ module.exports = client => {
     });
   };
 
-  const paginationSearchAll = (query) => {
+  const paginationSearchAll = query => {
     query.index = '_all';
     return paginationSearch(query);
   };
 
-  const searchForDuplicates = ({organization, searchString}) => {
+  const searchForDuplicates = ({ organization, searchString }) => {
     return new Promise(async (resolve, reject) => {
       if (searchString.length < 3) {
         return resolve([]);
@@ -66,15 +70,18 @@ module.exports = client => {
           body: {
             query: {
               bool: {
-                should: [{
-                  regexp: {
-                    _all: `.*${searchString}.*`
+                should: [
+                  {
+                    regexp: {
+                      _all: `.*${searchString}.*`
+                    }
+                  },
+                  {
+                    fuzzy: {
+                      _all: searchString
+                    }
                   }
-                }, {
-                  fuzzy: {
-                    _all: searchString
-                  }
-                }]
+                ]
               }
             }
           },

@@ -6,10 +6,10 @@ module.exports = {
 };
 
 async function get(req, res) {
-  let organization = req.session.organization;
+  let organizationIndex = req.session.organizationIndex;
   let response;
   try {
-    response = await es.getTags(organization);
+    response = await es.getTags(organizationIndex);
     return res.send(response.aggregations.distinct_tags.buckets);
   } catch (error) {
     logger.log('error', 'Could not get tags!');

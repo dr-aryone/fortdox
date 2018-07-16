@@ -1,13 +1,13 @@
 const uuid = require('uuid');
 
 module.exports = client => {
-  const update = ({query, organization}) => {
+  const update = ({ query, organizationIndex }) => {
     return new Promise(async (resolve, reject) => {
       let response;
 
       try {
         let current = await client.get({
-          index: organization.toLowerCase(),
+          index: organizationIndex,
           type: 'fortdox_document',
           id: query.id
         });
@@ -17,13 +17,15 @@ module.exports = client => {
             attachment.name = `${uuid()}-${attachment.name}`;
             return attachment;
           }
-          let storedAttachment = current._source.attachments.find(a => a.name === attachment.name) || {};
+          let storedAttachment =
+            current._source.attachments.find(a => a.name === attachment.name) ||
+            {};
           attachment.file = storedAttachment.file;
           return attachment;
         });
 
         response = await client.update({
-          index: organization.toLowerCase(),
+          index: organizationIndex,
           type: 'fortdox_document',
           id: query.id,
           refresh: true,
