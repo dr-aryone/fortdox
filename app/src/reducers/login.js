@@ -19,6 +19,11 @@ const login = (state = initialState, action) => {
         email: fromJS(action.payload.email),
         organization: fromJS(action.payload.organization)
       });
+    case 'WRONG_VERSION':
+      return state.set(
+        'warning',
+        'You have the wrong version of FortDox. Please update.'
+      );
     case 'SESSION_EXPIRED':
       return state.set('warning', 'Session expired, please login again');
     case 'VERIFY_LOGIN_CREDS_START':
