@@ -83,7 +83,7 @@ class CreateDocView extends Component {
       onCancel
     } = this.props;
 
-    let editDialog = (
+    let editedDialog = (
       <Modal
         show={this.state.showEditDialog}
         onClose={this.closeEditDialog}
@@ -95,6 +95,9 @@ class CreateDocView extends Component {
           <p>Do you want to save your changes?</p>
           <div className='buttons'>
             <button onClick={onCancel} type='button'>
+              {'Don\'t Save'}
+            </button>
+            <button onClick={this.closeEditDialog} type='button'>
               Cancel
             </button>
             <button
@@ -116,7 +119,7 @@ class CreateDocView extends Component {
         <div className='inner-container'>
           <LoaderOverlay display={isLoading} />
           <ErrorBox errorMsg={error} />
-          {editDialog}
+          {editedDialog}
           <h1>Create Document</h1>
           <DocumentForm
             docFields={docFields}

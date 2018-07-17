@@ -51,6 +51,17 @@ const form = (state = initialState, action) => {
           changelog: fromJS(action.changelog),
           nextID: fromJS(action.nextID)
         }),
+        oldDocFields: state.get('docFields').merge({
+          title: fromJS(action.title),
+          encryptedTexts: fromJS(action.encryptedTexts),
+          texts: fromJS(action.texts),
+          tags: state
+            .getIn(['docFields', 'tags'])
+            .set('list', fromJS(action.tags)),
+          attachments: fromJS(action.attachments),
+          changelog: fromJS(action.changelog),
+          nextID: fromJS(action.nextID)
+        }),
         isLoading: false,
         searchField: {
           show: false
