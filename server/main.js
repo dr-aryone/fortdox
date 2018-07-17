@@ -39,7 +39,9 @@ const allowCrossDomain = function(req, res, next) {
   }
 };
 
+const { checkVersion } = require('./versionMiddleware');
 app.use(allowCrossDomain);
+app.use(checkVersion);
 
 app.use(bodyParser.json({ limit: '100mb' }));
 app.use(
