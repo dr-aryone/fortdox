@@ -10,6 +10,7 @@ const action = require('../../actions');
 const mapStateToProps = state => {
   return {
     docFields: state.updateDocument.get('docFields'),
+    oldDocFields: state.updateDocument.get('oldDocFields'),
     error: state.updateDocument.get('error'),
     isLoading: state.updateDocument.get('isLoading'),
     similarDocuments: state.updateDocument.get('similarDocuments')
