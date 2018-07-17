@@ -4,9 +4,9 @@ import {
   Fields as fieldActions,
   Attachments as attachmentActions
 } from 'actions/document';
+import CreateDocView from 'components/document/CreateDocView';
 
 const { connect } = require('react-redux');
-const CreateDocView = require('../../components/document/CreateDocView');
 const action = require('../../actions');
 
 const mapStateToProps = state => {
