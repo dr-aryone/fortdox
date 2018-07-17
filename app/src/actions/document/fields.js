@@ -96,7 +96,7 @@ export const updateFieldPositon = (fromId, toId) => {
     }
     dispatch({
       type: `${prefix}_UPDATE_FIELD_POSITION_SUCCESS`,
-      payload: { updatedEncryptedTexts, updatedTexts }
+      payload: { updatedEncryptedTexts, updatedTexts, toId }
     });
   };
 };

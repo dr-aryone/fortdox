@@ -17,7 +17,6 @@ class TextAreaContainer extends Component {
       onUpdateId,
       onDrop,
       onHideElement,
-      hasMoved,
       elementToHide
     } = this.props;
     let encryptedTextFields = docFields
@@ -36,7 +35,6 @@ class TextAreaContainer extends Component {
           onRemoveField={onRemoveField}
           onUpdateId={onUpdateId}
           onDrop={onDrop}
-          hasMoved={hasMoved}
           onHideElement={onHideElement}
           elementToHide={elementToHide}
         />

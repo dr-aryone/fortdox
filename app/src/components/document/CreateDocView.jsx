@@ -17,7 +17,6 @@ class CreateDocView extends React.Component {
       onDrop,
       onHideElement,
       error,
-      hasMoved,
       elementToHide,
       onAddTag,
       onRemoveTag,
@@ -47,7 +46,6 @@ class CreateDocView extends React.Component {
           <DocumentForm
             onUpdateId={onUpdateId}
             docFields={docFields}
-            hasMoved={hasMoved}
             elementToHide={elementToHide}
             similarDocuments={similarDocuments}
             onCloseSimilarDocuments={onCloseSimilarDocuments}
