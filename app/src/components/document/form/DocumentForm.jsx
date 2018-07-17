@@ -11,6 +11,10 @@ const DocumentForm = ({
   onSubmit,
   onUpdateId,
   docFields,
+  onDrop,
+  onHideElement,
+  hasMoved,
+  elementToHide,
   changelog,
   onChange,
   onTitleChange,
@@ -56,6 +60,10 @@ const DocumentForm = ({
             onRemoveField={onRemoveField}
             onChange={onChange}
             onUpdateId={onUpdateId}
+            onDrop={onDrop}
+            onHideElement={onHideElement}
+            hasMoved={hasMoved}
+            elementToHide={elementToHide}
           />
           <BottomPanel onAddField={onAddField} />
         </div>

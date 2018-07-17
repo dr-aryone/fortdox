@@ -237,11 +237,30 @@ export const clearSimilarDocuments = () => {
   };
 };
 
+export const onDrop = () => {
+  return async dispatch => {
+    return dispatch({
+      type: 'FIELD_DROPPED'
+    });
+  };
+};
+
+export const onHideElement = id => {
+  return async dispatch => {
+    return dispatch({
+      type: 'HIDE_ELEMENT',
+      payload: id
+    });
+  };
+};
+
 export default {
   addField,
   removeField,
   docInputChange,
   docTitleChange,
   updateFieldPositon,
-  clearSimilarDocuments
+  clearSimilarDocuments,
+  onDrop,
+  onHideElement
 };

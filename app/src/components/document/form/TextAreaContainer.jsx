@@ -10,28 +10,37 @@ class TextAreaContainer extends Component {
   }
 
   render() {
-    const { docFields, onRemoveField, onChange, onUpdateId } = this.props;
+    const {
+      docFields,
+      onRemoveField,
+      onChange,
+      onUpdateId,
+      onDrop,
+      onHideElement,
+      hasMoved,
+      elementToHide
+    } = this.props;
     let encryptedTextFields = docFields
       .get('encryptedTexts')
       .map(field => field.set('encrypted', true));
     let textFields = docFields.get('texts');
-    return (
-      <div>
-        {encryptedTextFields
-          .concat(textFields)
-          .sort((textA, textB) => (textA.get('id') < textB.get('id') ? -1 : 1))
-          .map((field, index) => (
-            <TextArea
-              field={field}
-              type={field.get('encrypted') ? 'encryptedText' : 'text'}
-              key={index}
-              onChange={onChange}
-              onRemoveField={onRemoveField}
-              onUpdateId={onUpdateId}
-            />
-          ))}
-      </div>
-    );
+    return encryptedTextFields
+      .concat(textFields)
+      .sort((textA, textB) => (textA.get('id') < textB.get('id') ? -1 : 1))
+      .map((field, index) => (
+        <TextArea
+          field={field}
+          type={field.get('encrypted') ? 'encryptedText' : 'text'}
+          key={index}
+          onChange={onChange}
+          onRemoveField={onRemoveField}
+          onUpdateId={onUpdateId}
+          onDrop={onDrop}
+          hasMoved={hasMoved}
+          onHideElement={onHideElement}
+          elementToHide={elementToHide}
+        />
+      ));
   }
 }
 
