@@ -35,7 +35,9 @@ let initialState = fromJS({
   },
   error: null,
   isLoading: false,
-  similarDocuments: []
+  similarDocuments: [],
+  hasMoved: false,
+  elementToHide: null
 });
 
 const form = (state = initialState, action) => {
@@ -186,7 +188,12 @@ const form = (state = initialState, action) => {
           ['docFields', 'encryptedTexts'],
           action.payload.updatedEncryptedTexts
         )
-        .setIn(['docFields', 'texts'], action.payload.updatedTexts);
+        .setIn(['docFields', 'texts'], action.payload.updatedTexts)
+        .set('hasMoved', true);
+    case 'FIELD_DROPPED':
+      return state.set('hasMoved', false).set('elementToHide', null);
+    case 'HIDE_ELEMENT':
+      return state.set('elementToHide', action.payload);
     default:
       return state;
   }

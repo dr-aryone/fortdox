@@ -13,13 +13,11 @@ const textSource = {
 };
 
 const textTarget = {
-  drop(props, monitor, component: TextArea | null) {
-    if (!component) {
-      return null;
-    }
-
+  hover(props, monitor, component: TextArea | null) {
     const dragIndex = monitor.getItem().props.field.get('id');
     const hoverIndex = props.field.get('id');
+    if (!component) return null;
+    if (props.hasMoved) return;
 
     if (dragIndex === hoverIndex) return;
 
@@ -33,6 +31,10 @@ const textTarget = {
     if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) return;
 
     props.onUpdateId(dragIndex, hoverIndex);
+    props.onHideElement(hoverIndex);
+  },
+  drop(props) {
+    props.onDrop();
   }
 };
 
@@ -46,6 +48,7 @@ class TextArea extends Component {
     const {
       field,
       type,
+      elementToHide,
       onChange,
       onRemoveField,
       connectDragSource,
@@ -56,15 +59,18 @@ class TextArea extends Component {
       minHeight: `${field.get('value').split('\n').length}em`
     };
 
+    const opacity = field.get('id') === elementToHide ? 0 : 1;
+
     return (
       connectDragSource &&
       connectDropTarget &&
       connectDragSource(
         connectDropTarget(
           <div
-            className={`grab-cursor field-field ${
+            className={`input-field grab-cursor ${
               field.get('error') ? 'warning' : ''
             }`}
+            style={{ opacity }}
             ref={node => (this.node = node)}
           >
             <label>

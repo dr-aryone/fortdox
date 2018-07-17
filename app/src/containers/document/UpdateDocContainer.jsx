@@ -12,7 +12,9 @@ const mapStateToProps = state => {
     docFields: state.updateDocument.get('docFields'),
     error: state.updateDocument.get('error'),
     isLoading: state.updateDocument.get('isLoading'),
-    similarDocuments: state.updateDocument.get('similarDocuments')
+    similarDocuments: state.updateDocument.get('similarDocuments'),
+    hasMoved: state.createDocument.get('hasMoved'),
+    elementToHide: state.createDocument.get('elementToHide')
   };
 };
 
@@ -20,6 +22,12 @@ const mapDispatchToProps = dispatch => {
   return {
     onUpdateId: (fromId, toId) => {
       dispatch(fieldActions.updateFieldPositon(fromId, toId));
+    },
+    onDrop: () => {
+      dispatch(fieldActions.onDrop());
+    },
+    onHideElement: id => {
+      dispatch(fieldActions.onHideElement(id));
     },
     onChange: (event, type) => {
       dispatch(
