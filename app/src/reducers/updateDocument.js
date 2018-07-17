@@ -56,8 +56,8 @@ const form = (state = initialState, action) => {
           show: false
         }
       });
-    case 'OPEN_DOCUMENT_FAILED':
-      return state.set('isLoading', false);
+    case 'OPEN_DOCUMENT_ERROR':
+      return state.set('isLoading', false).set('error', fromJS(action.payload));
     case 'UPDATE_DOC_INPUT_CHANGE_TITLE':
       return state
         .setIn(['docFields', 'title', 'value'], fromJS(action.payload))
