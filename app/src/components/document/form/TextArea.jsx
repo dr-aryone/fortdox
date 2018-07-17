@@ -24,12 +24,14 @@ const textTarget = {
 
     const rawComponent = component.getDecoratedComponentInstance();
     const hoverBoundingRect = rawComponent.node.getBoundingClientRect();
-    const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
+    const breakPoint = (hoverBoundingRect.bottom - hoverBoundingRect.top) * 0.3;
     const clientOffset = monitor.getClientOffset();
-    const hoverClientY = clientOffset.y - hoverBoundingRect.top;
+    const hoverClientY =
+      dragIndex < hoverIndex
+        ? clientOffset.y - hoverBoundingRect.top
+        : hoverBoundingRect.bottom - clientOffset.y;
 
-    if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) return;
-    if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) return;
+    if (hoverClientY < breakPoint) return;
 
     props.onUpdateId(dragIndex, hoverIndex);
     props.onHideElement(hoverIndex);
