@@ -1,11 +1,31 @@
-const checkVersion = function(req, res, next) {};
+const config = require('app/config');
+const checkVersion = function(req, res, next) {
+  if (req.method.toUpperCase() === 'OPTIONS') {
+    next();
+    return;
+  }
 
-function correctVersion(req) {
-  const header = req.headers['X-FORTDOX-VERSION'];
-  console.log(header);
-  if (header) {
-    const version = header.version;
-    if (version) {
+  const version = req.get('X-FORTDOX-VERSION');
+
+  if (correctVersion(version)) {
+    next();
+  } else {
+    res.set('X-FORTDOX-REQUIRED-VERSION', config.clientVersion);
+    res.statusCode = 400;
+    res.send({
+      message: `
+The version of your client is no longer supported, please update to ${
+  config.clientVersion
+}.
+    If you need help please contact the FortDox developers.`
+    });
+    res.end();
+  }
+};
+
+function correctVersion(version) {
+  if (version) {
+    if (version === config.clientVersion) {
       return true;
     }
   }
