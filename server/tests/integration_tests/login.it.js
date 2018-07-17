@@ -1,8 +1,12 @@
-const request = require('request-promise');
-const fs = require('fs-extra');
+const config = require('app/config');
+let request = require('request-promise').defaults({
+  headers: { 'x-fortdox-version': config.clientVersion }
+});
 
+const fs = require('fs-extra');
 const steps = 2;
 let sucess = 0;
+
 function run() {
   console.log('### Login flow Test ###');
   return test()

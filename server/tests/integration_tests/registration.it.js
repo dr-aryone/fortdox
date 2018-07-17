@@ -1,9 +1,14 @@
-const request = require('request-promise');
+const config = require('app/config');
+let request = require('request-promise').defaults({
+  headers: { 'x-fortdox-version': config.clientVersion }
+});
+
 const prompt = require('syncprompt');
 const fs = require('fs-extra');
 
 const steps = 3;
 let success = 0;
+
 function run() {
   console.log('### Registration Flow Test ###');
   return test()
