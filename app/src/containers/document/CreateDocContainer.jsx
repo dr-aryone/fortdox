@@ -4,7 +4,7 @@ import {
   Fields as fieldActions,
   Attachments as attachmentActions
 } from 'actions/document';
-import CreateDocView from '../../components/document/CreateDocView';
+import CreateDocView from 'components/document/CreateDocView';
 
 const { connect } = require('react-redux');
 const action = require('../../actions');

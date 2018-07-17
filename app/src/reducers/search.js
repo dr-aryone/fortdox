@@ -14,6 +14,8 @@ const initialState = fromJS({
 
 const search = (state = initialState, action) => {
   switch (action.type) {
+    case 'CHANGE_VIEW':
+      return state.set('error', null).set('message', null);
     case 'SEARCH_START':
       return state
         .set('isLoading', true)

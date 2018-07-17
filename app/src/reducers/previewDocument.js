@@ -58,8 +58,8 @@ const preview = (state = initialState, action) => {
         ['searchField', 'value'],
         fromJS(action.payload.value)
       );
-    case 'OPEN_DOCUMENT_FAILED':
-      return state.set('isLoading', false);
+    case 'OPEN_DOCUMENT_ERROR':
+      return state.set('isLoading', false).set('error', fromJS(action.payload));
     case 'SEARCH_SUCCESS':
     case 'CHANGE_VIEW':
       if (

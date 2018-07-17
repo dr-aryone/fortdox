@@ -4,7 +4,7 @@ module.exports = client => {
       let response;
       try {
         response = await client.search({
-          index: organizationIndex.toLowerCase(),
+          index: organizationIndex,
           body: {
             aggs: {
               distinct_tags: {
