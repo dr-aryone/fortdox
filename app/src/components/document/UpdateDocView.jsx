@@ -54,7 +54,10 @@ class UpdateDocView extends React.Component {
       onTitleChange,
       similarDocuments,
       onCloseSimilarDocuments,
-      onSimilarDocumentClick
+      onSimilarDocumentClick,
+      onDrop,
+      onHideElement,
+      elementToHide
     } = this.props;
 
     return (
@@ -84,6 +87,9 @@ class UpdateDocView extends React.Component {
             onRemoveAttachment={onRemoveAttachment}
             onPreviewAttachment={onPreviewAttachment}
             onDownloadAttachment={onDownloadAttachment}
+            onDrop={onDrop}
+            onHideElement={onHideElement}
+            elementToHide={elementToHide}
           >
             <button onClick={onUpdate} type='submit'>
               Update

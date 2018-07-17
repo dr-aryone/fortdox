@@ -8,17 +8,18 @@ const Type = {
 
 const textSource = {
   beginDrag(props) {
-    return { props };
+    return {
+      index: props.field.get('id')
+    };
   }
 };
 
 const textTarget = {
   hover(props, monitor, component: TextArea | null) {
-    const dragIndex = monitor.getItem().props.field.get('id');
+    const dragIndex = monitor.getItem().index;
     const hoverIndex = props.field.get('id');
-    if (!component) return null;
-    if (props.hasMoved) return;
 
+    if (!component) return null;
     if (dragIndex === hoverIndex) return;
 
     const rawComponent = component.getDecoratedComponentInstance();
@@ -32,6 +33,7 @@ const textTarget = {
 
     props.onUpdateId(dragIndex, hoverIndex);
     props.onHideElement(hoverIndex);
+    monitor.getItem().index = hoverIndex;
   },
   drop(props) {
     props.onDrop();
