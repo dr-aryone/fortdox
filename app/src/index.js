@@ -22,7 +22,17 @@ const querystring = window.require('querystring');
 let queryParameters = querystring.parse(url.parse(window.location.href).query);
 let loginActions = require('./actions/login');
 
-request.bind(`${config.server}/*`, sessionQueryMiddleWare);
+request.bind(`${config.server}/*`, middlewareChain);
+
+function middlewareChain(data) {
+  return sessionQueryMiddleWare(versionMiddleware(data));
+}
+
+function versionMiddleware({ url, options }) {
+  options.headers = options.headers || {};
+  options.headers['x-fortdox-version'] = '1.0';
+  return { url, options };
+}
 
 function sessionQueryMiddleWare({ url, options }) {
   options.headers = options.headers || {};
