@@ -1,6 +1,7 @@
 {
   "name": "FortDox",
   "server": "https://fortdox.edgeguide.se",
+  "clientVersion": "1.0",
   "cors":"http://localhost:5000",
   "sqlConfig": {
     "username": "{you username}",
