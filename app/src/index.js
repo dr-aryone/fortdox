@@ -45,6 +45,16 @@ function sessionQueryMiddleWare({ url, options }) {
 }
 
 request.bindResponseMiddleware(oReq => {
+  if (oReq.status === 400) {
+    const version = oReq.getResponseHeader('x-fortdox-required-version');
+    if (version) {
+      //TODO: promot auto update dialog..
+      console.error('SCREAM!');
+      console.error('You have to update to', version);
+      store.dispatch({ type: 'WRONG_VERSION' });
+    }
+  }
+
   if (oReq.status === 401) {
     let message;
     try {
