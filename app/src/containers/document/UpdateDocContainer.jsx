@@ -2,9 +2,9 @@ import documentActions from 'actions/document/document';
 import tagActions from 'actions/document/tags';
 import fieldActions from 'actions/document/fields';
 import attachmentActions from 'actions/document/attachments';
+import UpdateDocView from '../../components/document/UpdateDocView';
 
 const { connect } = require('react-redux');
-const UpdateDocView = require('../../components/document/UpdateDocView');
 const action = require('../../actions');
 
 const mapStateToProps = state => {
@@ -12,12 +12,23 @@ const mapStateToProps = state => {
     docFields: state.updateDocument.get('docFields'),
     error: state.updateDocument.get('error'),
     isLoading: state.updateDocument.get('isLoading'),
-    similarDocuments: state.updateDocument.get('similarDocuments')
+    similarDocuments: state.updateDocument.get('similarDocuments'),
+    hasMoved: state.createDocument.get('hasMoved'),
+    elementToHide: state.createDocument.get('elementToHide')
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
+    onUpdateId: (fromId, toId) => {
+      dispatch(fieldActions.updateFieldPositon(fromId, toId));
+    },
+    onDrop: () => {
+      dispatch(fieldActions.onDrop());
+    },
+    onHideElement: id => {
+      dispatch(fieldActions.onHideElement(id));
+    },
     onChange: (event, type) => {
       dispatch(
         fieldActions.docInputChange(event.target.name, event.target.value, type)

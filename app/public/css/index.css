@@ -668,7 +668,8 @@ label {
     margin: 15px;
     margin-bottom: 10px; }
   .input-field .textarea {
-    padding: 15px; }
+    padding: 15px;
+    padding-bottom: 10px; }
   .input-field.warning div.arrow_box {
     display: flex; }
   .input-field.warning input {
@@ -738,7 +739,8 @@ label {
     justify-content: space-between;
     align-items: center;
     background-color: #f5f3f3;
-    padding: 15px; }
+    padding: 15px;
+    cursor: -webkit-grab; }
     .document label h3 {
       margin: 0;
       padding: 0; }
@@ -821,12 +823,14 @@ label {
   margin-bottom: 10px; }
   .tag-inner div {
     padding: 10px;
-    background-color: #FFF;
+    background-color: #fff;
     border-bottom: 1px solid #fafafa;
     word-wrap: break-word; }
   .tag-inner div:last-child {
     border-bottom: none; }
-  .tag-inner div:hover, .tag-inner div:focus, .tag-inner .active {
+  .tag-inner div:hover,
+  .tag-inner div:focus,
+  .tag-inner .active {
     background-color: #fafafa;
     cursor: pointer;
     outline: 0; }
@@ -860,7 +864,7 @@ label {
 
 .dropdown {
   list-style-type: none;
-  background-color: #FFF;
+  background-color: #fff;
   padding: 0px;
   border-radius: 1px;
   text-align: left;
@@ -874,7 +878,7 @@ label {
     border-bottom: 1px solid #f5f3f3;
     display: flex;
     align-items: center;
-    transition: font-size .25s, padding .25s, opacity .5s .25s; }
+    transition: font-size 0.25s, padding 0.25s, opacity 0.5s 0.25s; }
     .dropdown.show li .material-icons {
       color: #118ab2;
       margin-right: 10px;
