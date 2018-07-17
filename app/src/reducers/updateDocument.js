@@ -30,7 +30,8 @@ let initialState = fromJS({
   },
   error: null,
   isLoading: false,
-  similarDocuments: []
+  similarDocuments: [],
+  elementToHide: null
 });
 
 const form = (state = initialState, action) => {
@@ -65,25 +66,10 @@ const form = (state = initialState, action) => {
     case 'UPDATE_DOC_INPUT_CHANGE_ENCRYPTED_TEXT':
       return state.setIn(
         ['docFields', 'encryptedTexts'],
-        state
-          .getIn(['docFields', 'encryptedTexts'])
-          .update(action.index, field =>
-            field.merge({
-              value: fromJS(action.value),
-              error: null
-            })
-          )
+        fromJS(action.payload)
       );
     case 'UPDATE_DOC_INPUT_CHANGE_TEXT':
-      return state.setIn(
-        ['docFields', 'texts'],
-        state.getIn(['docFields', 'texts']).update(action.index, field =>
-          field.merge({
-            value: fromJS(action.value),
-            error: null
-          })
-        )
-      );
+      return state.setIn(['docFields', 'texts'], fromJS(action.payload));
     case 'UPDATE_DOC_INPUT_CHANGE_TAGS':
       return state.setIn(
         ['docFields', 'tags'],
@@ -215,6 +201,17 @@ const form = (state = initialState, action) => {
         default:
           return initialState;
       }
+    case 'UPDATE_DOC_UPDATE_FIELD_POSITION_SUCCESS':
+      return state
+        .setIn(
+          ['docFields', 'encryptedTexts'],
+          action.payload.updatedEncryptedTexts
+        )
+        .setIn(['docFields', 'texts'], action.payload.updatedTexts);
+    case 'FIELD_DROPPED':
+      return state.set('elementToHide', null);
+    case 'HIDE_ELEMENT':
+      return state.set('elementToHide', action.payload);
     case 'LOGOUT':
     case 'SESSION_EXPIRED':
       return initialState;

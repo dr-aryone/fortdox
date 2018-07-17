@@ -4,9 +4,9 @@ import {
   Fields as fieldActions,
   Attachments as attachmentActions
 } from 'actions/document';
+import CreateDocView from '../../components/document/CreateDocView';
 
 const { connect } = require('react-redux');
-const CreateDocView = require('../../components/document/CreateDocView');
 const action = require('../../actions');
 
 const mapStateToProps = state => {
@@ -14,12 +14,23 @@ const mapStateToProps = state => {
     docFields: state.createDocument.get('docFields'),
     error: state.createDocument.get('error'),
     isLoading: state.createDocument.get('isLoading'),
-    similarDocuments: state.updateDocument.get('similarDocuments')
+    similarDocuments: state.updateDocument.get('similarDocuments'),
+    hasMoved: state.createDocument.get('hasMoved'),
+    elementToHide: state.createDocument.get('elementToHide')
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
+    onUpdateId: (fromId, toId) => {
+      dispatch(fieldActions.updateFieldPositon(fromId, toId));
+    },
+    onDrop: () => {
+      dispatch(fieldActions.onDrop());
+    },
+    onHideElement: id => {
+      dispatch(fieldActions.onHideElement(id));
+    },
     onChange: (event, type) => {
       dispatch(
         fieldActions.docInputChange(event.target.name, event.target.value, type)

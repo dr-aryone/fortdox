@@ -45,6 +45,62 @@ export const addField = field => {
   };
 };
 
+export const updateFieldPositon = (fromId, toId) => {
+  return (dispatch, getState) => {
+    const state = getState();
+    let { view, prefix } = getPrefix(state.navigation.get('currentView'));
+    dispatch({
+      type: `${prefix}_UPDATE_FIELD_POSITION_START`
+    });
+
+    const encryptedTexts = state[view].getIn(['docFields', 'encryptedTexts']);
+    const texts = state[view].getIn(['docFields', 'texts']);
+    const diff = fromId - toId;
+    let updatedEncryptedTexts = [];
+    let updatedTexts = [];
+
+    if (diff > 0) {
+      updatedEncryptedTexts = encryptedTexts.map(text => {
+        if (text.get('id') === fromId) return text.set('id', toId);
+        else {
+          return text.get('id') < fromId && text.get('id') >= toId
+            ? text.set('id', text.get('id') + 1)
+            : text;
+        }
+      });
+      updatedTexts = texts.map(text => {
+        if (text.get('id') === fromId) return text.set('id', toId);
+        else {
+          return text.get('id') < fromId && text.get('id') >= toId
+            ? text.set('id', text.get('id') + 1)
+            : text;
+        }
+      });
+    } else {
+      updatedEncryptedTexts = encryptedTexts.map(text => {
+        if (text.get('id') === fromId) return text.set('id', toId);
+        else {
+          return text.get('id') > fromId && text.get('id') <= toId
+            ? text.set('id', text.get('id') - 1)
+            : text;
+        }
+      });
+      updatedTexts = texts.map(text => {
+        if (text.get('id') === fromId) return text.set('id', toId);
+        else {
+          return text.get('id') > fromId && text.get('id') <= toId
+            ? text.set('id', text.get('id') - 1)
+            : text;
+        }
+      });
+    }
+    dispatch({
+      type: `${prefix}_UPDATE_FIELD_POSITION_SUCCESS`,
+      payload: { updatedEncryptedTexts, updatedTexts, toId }
+    });
+  };
+};
+
 export const removeField = id => {
   return (dispatch, getState) => {
     let state = getState();
@@ -66,12 +122,12 @@ export const removeField = id => {
   };
 };
 
-export const docInputChange = (inputID, inputValue, type) => {
+export const docInputChange = (inputId, inputValue, type) => {
   return (dispatch, getState) => {
     let state = getState();
     let { view, prefix } = getPrefix(state.navigation.get('currentView'));
     let fields;
-    let index;
+    let updatedFields;
     switch (type) {
       case 'title':
         return dispatch({
@@ -80,19 +136,25 @@ export const docInputChange = (inputID, inputValue, type) => {
         });
       case 'encryptedText':
         fields = state[view].getIn(['docFields', 'encryptedTexts']);
-        index = fields.findIndex(field => field.get('id') === inputID);
+        updatedFields = fields.map(text => {
+          return text.get('id') === parseInt(inputId, 10)
+            ? text.set('value', inputValue)
+            : text;
+        });
         return dispatch({
           type: `${prefix}_INPUT_CHANGE_ENCRYPTED_TEXT`,
-          index,
-          value: inputValue
+          payload: updatedFields
         });
       case 'text': {
         fields = state[view].getIn(['docFields', 'texts']);
-        index = fields.findIndex(field => field.get('id') === inputID);
+        updatedFields = fields.map(text => {
+          return text.get('id') === parseInt(inputId, 10)
+            ? text.set('value', inputValue)
+            : text;
+        });
         return dispatch({
           type: `${prefix}_INPUT_CHANGE_TEXT`,
-          index,
-          value: inputValue
+          payload: updatedFields
         });
       }
       default:
@@ -175,10 +237,30 @@ export const clearSimilarDocuments = () => {
   };
 };
 
+export const onDrop = () => {
+  return async dispatch => {
+    return dispatch({
+      type: 'FIELD_DROPPED'
+    });
+  };
+};
+
+export const onHideElement = id => {
+  return async dispatch => {
+    return dispatch({
+      type: 'HIDE_ELEMENT',
+      payload: id
+    });
+  };
+};
+
 export default {
   addField,
   removeField,
   docInputChange,
   docTitleChange,
-  clearSimilarDocuments
+  updateFieldPositon,
+  clearSimilarDocuments,
+  onDrop,
+  onHideElement
 };

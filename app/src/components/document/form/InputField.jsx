@@ -1,9 +1,11 @@
 const React = require('react');
 
-const DocumentInputField = ({input, type, onChange}) => {
+const InputField = ({ input, type, onChange }) => {
   return (
     <div className={`input-field ${input.get('error') ? 'warning' : ''}`}>
-      <label><h3>{input.get('label')}</h3></label>
+      <label>
+        <h3>{input.get('label')}</h3>
+      </label>
       <input
         name={input.get('id')}
         onChange={onChange}
@@ -18,4 +20,4 @@ const DocumentInputField = ({input, type, onChange}) => {
   );
 };
 
-module.exports = DocumentInputField;
+module.exports = InputField;

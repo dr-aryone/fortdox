@@ -1,19 +1,23 @@
+import DocumentForm from './form/DocumentForm';
 const React = require('react');
 const LoaderOverlay = require('components/general/LoaderOverlay');
-const DocumentForm = require('./form/DocumentForm');
 const ErrorBox = require('components/general/ErrorBox');
 
 class CreateDocView extends React.Component {
-  componentWillMount () {
+  componentWillMount() {
     if (this.props.onMount) {
       this.props.onMount(this.props);
     }
   }
 
-  render () {
+  render() {
     let {
+      onUpdateId,
       docFields,
+      onDrop,
+      onHideElement,
       error,
+      elementToHide,
       onAddTag,
       onRemoveTag,
       onChange,
@@ -40,7 +44,9 @@ class CreateDocView extends React.Component {
           <ErrorBox errorMsg={error} />
           <h1>Create Document</h1>
           <DocumentForm
+            onUpdateId={onUpdateId}
             docFields={docFields}
+            elementToHide={elementToHide}
             similarDocuments={similarDocuments}
             onCloseSimilarDocuments={onCloseSimilarDocuments}
             onSimilarDocumentClick={onSimilarDocumentClick}
@@ -56,9 +62,15 @@ class CreateDocView extends React.Component {
             onRemoveAttachment={onRemoveAttachment}
             onPreviewAttachment={onPreviewAttachment}
             onDownloadAttachment={onDownloadAttachment}
+            onDrop={onDrop}
+            onHideElement={onHideElement}
           >
-            <button onClick={onCreate} type='submit'>Create</button>
-            <button onClick={onCancel} type='submit'>Cancel</button>
+            <button onClick={onCreate} type='submit'>
+              Create
+            </button>
+            <button onClick={onCancel} type='submit'>
+              Cancel
+            </button>
           </DocumentForm>
         </div>
       </div>
@@ -66,4 +78,4 @@ class CreateDocView extends React.Component {
   }
 }
 
-module.exports = CreateDocView;
+export default CreateDocView;

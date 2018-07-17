@@ -1,7 +1,7 @@
 const React = require('react');
 const LoaderOverlay = require('components/general/LoaderOverlay');
 const ErrorBox = require('components/general/ErrorBox');
-const DocumentTags = require('./form/DocumentTags');
+const Tags = require('./form/Tags');
 const Attachments = require('./form/Attachments');
 const Remarkable = require('remarkable');
 const RemarkableReactRenderer = require('remarkable-react').default;
@@ -54,7 +54,7 @@ class PreviewDoc extends React.Component {
     let title = docFields.getIn(['title', 'value']);
     let texts = this.renderTexts(docFields);
     let tags = docFields.get('tags') ? (
-      <DocumentTags tags={docFields.get('tags')} onTagSearch={onTagSearch} />
+      <Tags tags={docFields.get('tags')} onTagSearch={onTagSearch} />
     ) : null;
     let attachments = docFields.get('attachments') ? (
       <Attachments

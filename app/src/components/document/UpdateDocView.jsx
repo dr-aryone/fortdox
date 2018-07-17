@@ -1,6 +1,6 @@
+import DocumentForm from './form/DocumentForm';
 const React = require('react');
 const LoaderOverlay = require('components/general/LoaderOverlay');
-const DocumentForm = require('./form/DocumentForm');
 const ErrorBox = require('components/general/ErrorBox');
 const Modal = require('components/general/Modal');
 
@@ -36,6 +36,7 @@ class UpdateDocView extends React.Component {
     let {
       docFields,
       error,
+      onUpdateId,
       onAddTag,
       onRemoveTag,
       onChange,
@@ -53,7 +54,10 @@ class UpdateDocView extends React.Component {
       onTitleChange,
       similarDocuments,
       onCloseSimilarDocuments,
-      onSimilarDocumentClick
+      onSimilarDocumentClick,
+      onDrop,
+      onHideElement,
+      elementToHide
     } = this.props;
 
     return (
@@ -65,6 +69,7 @@ class UpdateDocView extends React.Component {
           <ErrorBox errorMsg={error} />
           <h1>Update Document</h1>
           <DocumentForm
+            onUpdateId={onUpdateId}
             docFields={docFields}
             changelog={docFields.get('changelog')}
             similarDocuments={similarDocuments}
@@ -82,6 +87,9 @@ class UpdateDocView extends React.Component {
             onRemoveAttachment={onRemoveAttachment}
             onPreviewAttachment={onPreviewAttachment}
             onDownloadAttachment={onDownloadAttachment}
+            onDrop={onDrop}
+            onHideElement={onHideElement}
+            elementToHide={elementToHide}
           >
             <button onClick={onUpdate} type='submit'>
               Update
@@ -118,4 +126,4 @@ class UpdateDocView extends React.Component {
   }
 }
 
-module.exports = UpdateDocView;
+export default UpdateDocView;
