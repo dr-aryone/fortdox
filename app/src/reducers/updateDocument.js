@@ -52,13 +52,24 @@ const form = (state = initialState, action) => {
           changelog: fromJS(action.changelog),
           nextID: fromJS(action.nextID)
         }),
+        oldDocFields: state.get('docFields').merge({
+          title: fromJS(action.title),
+          encryptedTexts: fromJS(action.encryptedTexts),
+          texts: fromJS(action.texts),
+          tags: state
+            .getIn(['docFields', 'tags'])
+            .set('list', fromJS(action.tags)),
+          attachments: fromJS(action.attachments),
+          changelog: fromJS(action.changelog),
+          nextID: fromJS(action.nextID)
+        }),
         isLoading: false,
         searchField: {
           show: false
         }
       });
-    case 'OPEN_DOCUMENT_FAILED':
-      return state.set('isLoading', false);
+    case 'OPEN_DOCUMENT_ERROR':
+      return state.set('isLoading', false).set('error', fromJS(action.payload));
     case 'UPDATE_DOC_INPUT_CHANGE_TITLE':
       return state
         .setIn(['docFields', 'title', 'value'], fromJS(action.payload))

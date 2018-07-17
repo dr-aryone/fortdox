@@ -6,7 +6,11 @@
     font-size: 70px;
   }
 
-  button:first-child {
+  button {
     margin-right: 15px;
+
+    &:last-child {
+      margin-right: 0px;
+    }
   }
 }

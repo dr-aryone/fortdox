@@ -237,8 +237,9 @@ export function openDocument(id, skipTimeout, showPreview) {
         setUpdateDocument(response.body, showPreview);
       }, timeout);
     } catch (error) {
-      dispatch({
-        type: 'OPEN_DOCUMENT_ERROR'
+      return dispatch({
+        type: 'OPEN_DOCUMENT_ERROR',
+        payload: 'Unable to open document.'
       });
     }
 

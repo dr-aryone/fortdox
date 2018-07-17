@@ -177,8 +177,10 @@ button {
   .dialog i {
     color: #fe4a49;
     font-size: 70px; }
-  .dialog button:first-child {
+  .dialog button {
     margin-right: 15px; }
+    .dialog button:last-child {
+      margin-right: 0px; }
 
 input {
   box-sizing: border-box;
