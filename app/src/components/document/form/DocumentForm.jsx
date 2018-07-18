@@ -26,7 +26,7 @@ const DocumentForm = ({
   onRemoveAttachment,
   onPreviewAttachment,
   onDownloadAttachment,
-  children,
+  children: buttons,
   similarDocuments,
   onCloseSimilarDocuments,
   onSimilarDocumentClick
@@ -65,7 +65,7 @@ const DocumentForm = ({
           />
           <BottomPanel onAddField={onAddField} />
         </div>
-        <div className='buttons'>{children}</div>
+        {buttons}
       </div>
       <div className='side-panel box'>
         <Tags
