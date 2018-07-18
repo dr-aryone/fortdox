@@ -16,6 +16,4 @@ To prepare the new FortDox.app file for release do the following:
 Know problems:
 * This does not work in development due to not running signd version of our app.
 * After the prompt to update appears and you press restart it take approximatildy 30 sec without any feedback before it relanuches the updated version.
-
-What is left:
-* Remove console logs and replace with better loggin on server
+* If an update fails, you need to restart FortDox before we can try downloading again.
