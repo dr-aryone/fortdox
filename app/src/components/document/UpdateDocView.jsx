@@ -17,6 +17,18 @@ class UpdateDocView extends React.Component {
     };
   }
 
+  componentWillReceiveProps({ checkFields } = this.props) {
+    if (checkFields) {
+      if (this.hasBeenEdited(this.props.docFields)) {
+        return this.setState({
+          showEditDialog: true
+        });
+      }
+
+      return this.props.hasChecked();
+    }
+  }
+
   componentWillMount() {
     if (this.props.onMount) {
       this.props.onMount(this.props);
@@ -106,7 +118,8 @@ class UpdateDocView extends React.Component {
   }
 
   checkEdits(docFields) {
-    if (!this.hasBeenEdited(docFields)) return this.props.toSearchView();
+    if (!this.hasBeenEdited(docFields))
+      return this.props.hasChecked('SEARCH_VIEW');
     return this.setState({
       showEditDialog: true
     });
@@ -136,7 +149,6 @@ class UpdateDocView extends React.Component {
       onPreviewAttachment,
       onDownloadAttachment,
       isLoading,
-      toSearchView,
       onTitleChange,
       similarDocuments,
       onCloseSimilarDocuments,
@@ -180,7 +192,7 @@ class UpdateDocView extends React.Component {
           <p>Do you want to save your changes?</p>
           <div className='buttons'>
             <button
-              onClick={toSearchView}
+              onClick={() => this.props.hasChecked('SEARCH_VIEW')}
               className='first-button'
               type='button'
             >

@@ -212,7 +212,6 @@ const form = (state = initialState, action) => {
         .set('nextViewAfterCheck', action.paylaod);
     case 'CREATE_DOC_FIELDS_CHECKED':
       return state.set('fieldsChecked', true);
-
     default:
       return state;
   }

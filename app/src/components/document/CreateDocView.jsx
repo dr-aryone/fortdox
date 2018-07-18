@@ -25,6 +25,7 @@ class CreateDocView extends Component {
       return this.props.hasChecked();
     }
   }
+
   componentWillMount() {
     if (this.props.onMount) {
       this.props.onMount(this.props);
