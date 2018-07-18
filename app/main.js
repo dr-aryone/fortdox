@@ -1,14 +1,20 @@
-const { app, BrowserWindow, ipcMain, Menu, shell } = require('electron');
+const {
+  app,
+  BrowserWindow,
+  ipcMain,
+  Menu,
+  shell,
+  dialog,
+  autoUpdater
+} = require('electron');
 const path = require('path');
 const urlParser = require('url');
 const querystring = require('querystring');
 const config = require('./src/config.json');
-const autoUpdater = require('electron-updater').autoUpdater;
 const log = require('electron-log');
 log.transports.file.level = 'info';
 let win;
 let redirectParameters = null;
-autoUpdater.logger = log;
 let openWindow = false;
 let pollingJob;
 const devMode = process.argv[2] === '--dev' ? true : false;
@@ -185,7 +191,22 @@ function createBrowserWindow() {
       label: name,
       submenu: [
         {
-          role: 'about'
+          label: `About ${config.name}`,
+          click: () => {
+            const dialogOps = {
+              type: 'none',
+              buttons: ['Ok', 'Check for Updates'],
+              defaultId: 0,
+              title: 'About FortDox',
+              message: `FortDox Version ${config.clientVersion}`
+            };
+
+            dialog.showMessageBox(win, dialogOps, response => {
+              if (response === 1) {
+                autoUpdater.checkForUpdates();
+              }
+            });
+          }
         },
         {
           type: 'separator'
@@ -295,23 +316,69 @@ ipcMain.on('stop', () => {
   clearInterval(pollingJob);
 });
 
-autoUpdater.on('checking-for-update', () => {
-  log.info('Checking for updates..');
-});
-
-autoUpdater.on('update-available', info => {
-  log.info('Update available!! \n' + JSON.stringify(info));
-});
-
-autoUpdater.on('update-not-available', () => {
-  log.info('No update available');
-});
-
-autoUpdater.on('update-downloaded', (event, info) => {
-  log.info('Update downloaded!! \n' + info);
-  autoUpdater.quitAndInstall();
-});
-
 app.on('window-all-closed', () => {
   app.quit();
+});
+
+const updateFeed = `${config.server}/update/${config.clientVersion}`;
+autoUpdater.setFeedURL(updateFeed);
+
+//events
+autoUpdater.on('error', error => {
+  console.error('Update problem', error);
+  const dialogOps = {
+    type: 'error',
+    buttons: ['Ok'],
+    title: 'FortDox Update',
+    message: `Error updating application 
+    ${'' + error}
+  `
+  };
+
+  dialog.showMessageBox(dialogOps, response => {});
+});
+
+autoUpdater.on('checking-for-update', () => {
+  console.log('Checking for updated started!');
+});
+
+autoUpdater.on('update-available', () => {
+  console.log('Update avaiable! Download will start');
+  const dialogOps = {
+    type: 'info',
+    button: ['Ok'],
+    title: 'FortDox Update',
+    message:
+      'Update avaiable! Download will start.\n You will be notified when it is ready.'
+  };
+
+  dialog.showMessageBox(win, dialogOps, response => {});
+});
+autoUpdater.on('update-not-available', () => {
+  console.log('No update avaiable.');
+  const dialogOps = {
+    type: 'info',
+    buttons: ['Ok'],
+    title: 'FortDox Update',
+    message: 'No Update Available '
+  };
+
+  dialog.showMessageBox(win, dialogOps, response => {});
+});
+
+autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
+  const dialogOps = {
+    type: 'info',
+    buttons: ['Restart', 'Later'],
+    title: 'FortDox Update',
+    message: process.platform === 'win32' ? releaseNotes : releaseName,
+    detail:
+      'A new version has been downloaded. Restart the application to apply the updates.'
+  };
+
+  dialog.showMessageBox(dialogOps, response => {
+    if (response === 0) {
+      autoUpdater.quitAndInstall();
+    }
+  });
 });
