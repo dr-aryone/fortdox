@@ -72,6 +72,8 @@ app.on('ready', () => {
   createBrowserWindow();
 });
 
+let menu;
+
 function createBrowserWindow() {
   win = new BrowserWindow({
     width: 1280,
@@ -260,8 +262,8 @@ function createBrowserWindow() {
       }
     ];
   }
-
-  Menu.setApplicationMenu(Menu.buildFromTemplate(template));
+  menu = Menu.buildFromTemplate(template);
+  Menu.setApplicationMenu(menu);
 
   win.on('closed', () => {
     win = null;
@@ -323,7 +325,7 @@ app.on('window-all-closed', () => {
 const updateFeed = `${config.server}/update/${config.clientVersion}`;
 autoUpdater.setFeedURL(updateFeed);
 
-//events
+//autoUpdater events
 autoUpdater.on('error', error => {
   console.error('Update problem', error);
   const dialogOps = {
@@ -334,16 +336,38 @@ autoUpdater.on('error', error => {
     ${'' + error}
   `
   };
-
+  updateInfo.updating = false;
   dialog.showMessageBox(dialogOps, response => {});
 });
 
+let updateInfo = {
+  updatingInternal: false,
+  valueListener: function() {
+    console.error('You forgot to bind the listener');
+  },
+
+  get updating() {
+    return this.updating;
+  },
+  set updating(change) {
+    this.updatingInternal = change;
+    this.valueListener(change);
+  },
+
+  registerListener: function(listener) {
+    this.valueListener = listener;
+  }
+};
+
+updateInfo.registerListener(function(value) {
+  menu.items[0].submenu.items[0].enabled = !value;
+});
+
 autoUpdater.on('checking-for-update', () => {
-  console.log('Checking for updated started!');
+  updateInfo.updating = true;
 });
 
 autoUpdater.on('update-available', () => {
-  console.log('Update avaiable! Download will start');
   const dialogOps = {
     type: 'info',
     button: ['Ok'],
@@ -352,10 +376,10 @@ autoUpdater.on('update-available', () => {
       'Update avaiable! Download will start.\n You will be notified when it is ready.'
   };
 
-  dialog.showMessageBox(win, dialogOps, response => {});
+  dialog.showMessageBox(win, dialogOps, () => {});
 });
 autoUpdater.on('update-not-available', () => {
-  console.log('No update avaiable.');
+  updateInfo.updating = false;
   const dialogOps = {
     type: 'info',
     buttons: ['Ok'],
@@ -363,7 +387,7 @@ autoUpdater.on('update-not-available', () => {
     message: 'No Update Available '
   };
 
-  dialog.showMessageBox(win, dialogOps, response => {});
+  dialog.showMessageBox(win, dialogOps, () => {});
 });
 
 autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
@@ -380,5 +404,6 @@ autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
     if (response === 0) {
       autoUpdater.quitAndInstall();
     }
+    updateInfo.updating = false;
   });
 });
