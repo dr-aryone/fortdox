@@ -2,7 +2,7 @@ const router = require('express').Router();
 const config = require('app/config');
 
 router.get('/release', (req, res) => {
-  res.sendFile('test.zip', {
+  res.sendFile(config.release.filename, {
     root: `${__dirname.split('/server_modules')[0]}/public/`,
     dotfiles: 'deny'
   });

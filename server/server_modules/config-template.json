@@ -21,6 +21,7 @@
   },
   "clientVersion": "{a version number}",
   "release":{
+    "filename":"test.zip",
     "url":"/update/release",
     "name": "FortDox",
     "notes": "The all new summer update of FortDoxs is finally here!"
