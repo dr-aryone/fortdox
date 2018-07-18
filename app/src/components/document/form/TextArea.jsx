@@ -93,7 +93,7 @@ class TextArea extends Component {
         <div className='box dialog danger'>
           <i className='material-icons'>error_outline</i>
           <h2>Warning</h2>
-          <p>Are you sure you want to delete this textfield?</p>
+          <p>Are you sure you want to delete this text field?</p>
           <div className='buttons'>
             <button onClick={this.closeDeleteDialog} type='button'>
               Cancel
