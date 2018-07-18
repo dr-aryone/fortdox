@@ -17,6 +17,7 @@ let middlewares = Redux.compose(
 );
 const store = Redux.createStore(reducer, {}, middlewares);
 const ipcRenderer = window.require('electron').ipcRenderer;
+const { autoUpdater } = window.require('electron').remote.require('electron');
 const url = window.require('url');
 const querystring = window.require('querystring');
 let queryParameters = querystring.parse(url.parse(window.location.href).query);
@@ -30,7 +31,7 @@ function middlewareChain(data) {
 
 function versionMiddleware({ url, options }) {
   options.headers = options.headers || {};
-  options.headers['x-fortdox-version'] = '1.0';
+  options.headers['x-fortdox-version'] = `${config.clientVersion}`;
   return { url, options };
 }
 
@@ -48,10 +49,8 @@ request.bindResponseMiddleware(oReq => {
   if (oReq.status === 400) {
     const version = oReq.getResponseHeader('x-fortdox-required-version');
     if (version) {
-      //TODO: promot auto update dialog..
-      console.error('SCREAM!');
-      console.error('You have to update to', version);
       store.dispatch({ type: 'WRONG_VERSION' });
+      autoUpdater.checkForUpdates();
     }
   }
 
