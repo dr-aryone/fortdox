@@ -36,7 +36,10 @@ let initialState = fromJS({
   error: null,
   isLoading: false,
   similarDocuments: [],
-  elementToHide: null
+  elementToHide: null,
+  checkFields: false,
+  fieldsChecked: false,
+  nextViewAfterCheck: null
 });
 
 const form = (state = initialState, action) => {
@@ -44,12 +47,12 @@ const form = (state = initialState, action) => {
     case 'CREATE_DOC_INPUT_CHANGE_TITLE':
       return state
         .setIn(['docFields', 'title', 'value'], fromJS(action.payload))
-        .setIn(['docFields', 'title', 'error'], null);
+        .setIn(['docFields', 'title', 'error'], null)
+        .set('checkFields', false);
     case 'CREATE_DOC_INPUT_CHANGE_ENCRYPTED_TEXT':
-      return state.setIn(
-        ['docFields', 'encryptedTexts'],
-        fromJS(action.payload)
-      );
+      return state
+        .setIn(['docFields', 'encryptedTexts'], fromJS(action.payload))
+        .set('checkFields', false);
     case 'CREATE_DOC_INPUT_CHANGE_TEXT':
       return state.setIn(['docFields', 'texts'], fromJS(action.payload));
     case 'CREATE_DOC_INPUT_CHANGE_TAGS':
@@ -62,15 +65,17 @@ const form = (state = initialState, action) => {
         })
       );
     case 'CREATE_DOC_ADD_TAG':
-      return state.setIn(
-        ['docFields', 'tags'],
-        state.getIn(['docFields', 'tags']).merge({
-          value: '',
-          list: fromJS(action.payload),
-          suggested: [],
-          error: null
-        })
-      );
+      return state
+        .setIn(
+          ['docFields', 'tags'],
+          state.getIn(['docFields', 'tags']).merge({
+            value: '',
+            list: fromJS(action.payload),
+            suggested: [],
+            error: null
+          })
+        )
+        .set('checkFields', false);
     case 'CREATE_DOC_ADD_TAG_FAIL':
       return state.set(
         'tags',
@@ -81,7 +86,9 @@ const form = (state = initialState, action) => {
         })
       );
     case 'CREATE_DOC_REMOVE_TAG':
-      return state.setIn(['docFields', 'tags', 'list'], fromJS(action.payload));
+      return state
+        .setIn(['docFields', 'tags', 'list'], fromJS(action.payload))
+        .set('checkFields', false);
     case 'CREATE_DOC_GET_OLD_TAGS_START':
       return state.set('isLoading', true);
     case 'CREATE_DOC_GET_OLD_TAGS_ERROR':
@@ -136,28 +143,35 @@ const form = (state = initialState, action) => {
     case 'CREATE_DOC_NEW_ENCRYPTED_TEXT_FIELD':
       return state
         .setIn(['docFields', 'encryptedTexts'], fromJS(action.payload))
-        .setIn(['docFields', 'nextID'], fromJS(action.nextID));
+        .setIn(['docFields', 'nextID'], fromJS(action.nextID))
+        .set('checkFields', false);
     case 'CREATE_DOC_NEW_TEXT_FIELD':
       return state
         .setIn(['docFields', 'texts'], fromJS(action.payload))
-        .setIn(['docFields', 'nextID'], fromJS(action.nextID));
+        .setIn(['docFields', 'nextID'], fromJS(action.nextID))
+        .set('checkFields', false);
     case 'CREATE_DOC_REMOVE_FIELD':
       return state
         .setIn(['docFields', 'encryptedTexts'], fromJS(action.encryptedTexts))
-        .setIn(['docFields', 'texts'], fromJS(action.texts));
+        .setIn(['docFields', 'texts'], fromJS(action.texts))
+        .set('checkFields', false);
     case 'CREATE_DOC_ADD_ATTACHMENT':
-      return state.setIn(
-        ['docFields', 'attachments'],
-        state.getIn(['docFields', 'attachments']).push(
-          fromJS({
-            name: fromJS(action.name),
-            type: fromJS(action.fileType),
-            file: fromJS(action.file)
-          })
+      return state
+        .setIn(
+          ['docFields', 'attachments'],
+          state.getIn(['docFields', 'attachments']).push(
+            fromJS({
+              name: fromJS(action.name),
+              type: fromJS(action.fileType),
+              file: fromJS(action.file)
+            })
+          )
         )
-      );
+        .set('checkFields', false);
     case 'CREATE_DOC_REMOVE_ATTACHMENT':
-      return state.setIn(['docFields', 'attachments'], fromJS(action.payload));
+      return state
+        .setIn(['docFields', 'attachments'], fromJS(action.payload))
+        .set('checkFields', false);
     case 'CREATE_DOC_PREVIEW_ATTACHMENT_START':
       return state.set('isLoading', true);
     case 'CREATE_DOC_PREVIEW_ATTACHMENT_FAIL':
@@ -188,10 +202,17 @@ const form = (state = initialState, action) => {
           action.payload.updatedEncryptedTexts
         )
         .setIn(['docFields', 'texts'], action.payload.updatedTexts);
-    case 'FIELD_DROPPED':
-      return state.set('elementToHide', null);
-    case 'HIDE_ELEMENT':
+    case 'CREATE_DOC_FIELD_DROPPED':
+      return state.set('elementToHide', null).set('checkFields', false);
+    case 'CREATE_DOC_HIDE_ELEMENT':
       return state.set('elementToHide', action.payload);
+    case 'CREATE_DOC_CHECK_FIELDS':
+      return state
+        .set('checkFields', true)
+        .set('nextViewAfterCheck', action.paylaod);
+    case 'CREATE_DOC_FIELDS_CHECKED':
+      return state.set('fieldsChecked', true);
+
     default:
       return state;
   }

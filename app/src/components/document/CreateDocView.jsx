@@ -14,6 +14,17 @@ class CreateDocView extends Component {
     };
   }
 
+  componentWillReceiveProps({ checkFields } = this.props) {
+    if (checkFields) {
+      if (this.hasBeenEdited(this.props.docFields)) {
+        return this.setState({
+          showEditDialog: true
+        });
+      }
+
+      return this.props.hasChecked();
+    }
+  }
   componentWillMount() {
     if (this.props.onMount) {
       this.props.onMount(this.props);
@@ -53,7 +64,8 @@ class CreateDocView extends Component {
   }
 
   checkEdits(docFields) {
-    if (!this.hasBeenEdited(docFields)) return this.props.onCancel();
+    if (!this.hasBeenEdited(docFields))
+      return this.props.hasChecked('SEARCH_VIEW');
 
     return this.setState({
       showEditDialog: true
@@ -83,8 +95,7 @@ class CreateDocView extends Component {
       isLoading,
       similarDocuments,
       onCloseSimilarDocuments,
-      onSimilarDocumentClick,
-      onCancel
+      onSimilarDocumentClick
     } = this.props;
 
     let editedDialog = (
@@ -98,7 +109,13 @@ class CreateDocView extends Component {
           <h2>Document has been changed.</h2>
           <p>Do you want to save your changes?</p>
           <div className='buttons'>
-            <button className='first-button' onClick={onCancel} type='button'>
+            <button
+              className='first-button'
+              onClick={() => {
+                this.props.hasChecked('SEARCH_VIEW');
+              }}
+              type='button'
+            >
               {'Don\'t Save'}
             </button>
             <button onClick={this.closeEditDialog} type='button'>
