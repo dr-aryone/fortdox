@@ -4,5 +4,6 @@
   "server": "https://fortdox.edgeguide.se",
   "logo": "/resources/logo.png",
   "codeSplitter": "@@",
+  "applicationPath": "/Applications/FortDox.app",
   "clientVersion":"{a version number}"
 }
