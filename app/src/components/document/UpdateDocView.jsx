@@ -152,34 +152,38 @@ class UpdateDocView extends React.Component {
         onClose={this.closeDeleteDialog}
         showClose={false}
       >
-        <div className='box dialog'>
+        <div className='box dialog danger'>
           <i className='material-icons'>error_outline</i>
           <h2>Warning</h2>
           <p>Are you sure you want to delete the document?</p>
-          <div className='buttons'>
-            <button onClick={onDelete} type='button' className='warning'>
-              Delete
-            </button>
+          <div className='doc-buttons'>
             <button onClick={this.closeDeleteDialog} type='button'>
               Cancel
+            </button>
+            <button onClick={onDelete} type='button' className='warning'>
+              Delete
             </button>
           </div>
         </div>
       </Modal>
     );
 
-    let editedDialog = (
+    const editedDialog = (
       <Modal
         show={this.state.showEditDialog}
         onClose={this.closeEditDialog}
         showClose={false}
       >
-        <div className='box dialog'>
+        <div className='box dialog warning'>
           <i className='material-icons'>error_outline</i>
-          <p>Document has been changed.</p>
+          <h2>Document has been changed.</h2>
           <p>Do you want to save your changes?</p>
           <div className='buttons'>
-            <button onClick={toSearchView} type='button'>
+            <button
+              onClick={toSearchView}
+              className='first-button'
+              type='button'
+            >
               {'Don\'t save'}
             </button>
             <button onClick={this.closeEditDialog} type='button'>
@@ -232,19 +236,26 @@ class UpdateDocView extends React.Component {
             onHideElement={onHideElement}
             elementToHide={elementToHide}
           >
-            <button onClick={onUpdate} type='submit'>
-              Update
-            </button>
-            <button onClick={() => this.checkEdits(docFields)} type='button'>
-              Cancel
-            </button>
-            <button
-              onClick={this.openDeleteDialog}
-              type='button'
-              className='warning'
-            >
-              Delete
-            </button>
+            <div className='buttons update'>
+              <button
+                onClick={this.openDeleteDialog}
+                type='button'
+                className='warning'
+              >
+                Delete
+              </button>
+              <div>
+                <button
+                  onClick={() => this.checkEdits(docFields)}
+                  type='button'
+                >
+                  Cancel
+                </button>
+                <button onClick={onUpdate} type='submit'>
+                  Update
+                </button>
+              </div>
+            </div>
           </DocumentForm>
         </div>
       </div>

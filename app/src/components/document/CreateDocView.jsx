@@ -93,12 +93,12 @@ class CreateDocView extends Component {
         onClose={this.closeEditDialog}
         showClose={false}
       >
-        <div className='box dialog'>
-          <i className='material-icons'>error_outline</i>
-          <p>Document has been changed.</p>
+        <div className='box dialog warning'>
+          <i className='material-icons'>warning</i>
+          <h2>Document has been changed.</h2>
           <p>Do you want to save your changes?</p>
           <div className='buttons'>
-            <button onClick={onCancel} type='button'>
+            <button className='first-button' onClick={onCancel} type='button'>
               {'Don\'t Save'}
             </button>
             <button onClick={this.closeEditDialog} type='button'>
@@ -147,12 +147,14 @@ class CreateDocView extends Component {
             onDrop={onDrop}
             onHideElement={onHideElement}
           >
-            <button onClick={() => this.checkEdits(docFields)} type='button'>
-              Cancel
-            </button>
-            <button onClick={onCreate} type='submit'>
-              Create
-            </button>
+            <div className='doc-buttons'>
+              <button onClick={() => this.checkEdits(docFields)} type='button'>
+                Cancel
+              </button>
+              <button onClick={onCreate} type='submit'>
+                Create
+              </button>
+            </div>
           </DocumentForm>
         </div>
       </div>

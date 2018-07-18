@@ -1,16 +1,30 @@
 .dialog {
   text-align: center;
 
-  i {
-    color: $red;
-    font-size: 70px;
+  &.danger {
+    i {
+      color: $red;
+      font-size: 70px;
+    }
+  }
+
+  &.warning {
+    i {
+      color: $yellow;
+      font-size: 70px;
+    }
   }
 
   button {
     margin-right: 15px;
+    margin-top: 15px;
 
     &:last-child {
       margin-right: 0px;
+    }
+
+    &.first-button {
+      margin-right: 45px;
     }
   }
 }
