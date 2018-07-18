@@ -51,6 +51,7 @@ request.bindResponseMiddleware(oReq => {
     if (version) {
       store.dispatch({ type: 'WRONG_VERSION' });
       autoUpdater.checkForUpdates();
+      return;
     }
   }
 
