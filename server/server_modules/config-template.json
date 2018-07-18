@@ -1,7 +1,6 @@
 {
   "name": "FortDox",
   "server": "https://fortdox.edgeguide.se",
-  "clientVersion": "1.0",
   "cors":"http://localhost:5000",
   "sqlConfig": {
     "username": "{you username}",
@@ -19,5 +18,11 @@
       "user": "{your username}",
       "pass": "{your password}"
     }
+  },
+  "clientVersion": "{a version number}",
+  "release":{
+    "url":"/update/release",
+    "name": "FortDox",
+    "notes": "The all new summer update of FortDoxs is finally here!"
   }
 }
