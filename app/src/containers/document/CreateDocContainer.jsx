@@ -15,13 +15,16 @@ const mapStateToProps = state => {
     error: state.createDocument.get('error'),
     isLoading: state.createDocument.get('isLoading'),
     similarDocuments: state.updateDocument.get('similarDocuments'),
-    hasMoved: state.createDocument.get('hasMoved'),
-    elementToHide: state.createDocument.get('elementToHide')
+    elementToHide: state.createDocument.get('elementToHide'),
+    checkFields: state.createDocument.get('checkFields')
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
+    hasChecked: nextView => {
+      dispatch(documentActions.hasChecked(nextView));
+    },
     onUpdateId: (fromId, toId) => {
       dispatch(fieldActions.updateFieldPositon(fromId, toId));
     },
@@ -45,9 +48,6 @@ const mapDispatchToProps = dispatch => {
     onCreate: event => {
       event.preventDefault();
       dispatch(documentActions.createDocument());
-    },
-    onCancel: () => {
-      dispatch(action.changeView('SEARCH_VIEW'));
     },
     onAddTag: tag => {
       dispatch(tagActions.addTag(tag));

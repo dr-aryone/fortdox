@@ -238,17 +238,23 @@ export const clearSimilarDocuments = () => {
 };
 
 export const onDrop = () => {
-  return async dispatch => {
+  return async (dispatch, getState) => {
+    const state = getState();
+    const currentView = state.navigation.get('currentView');
+    const { prefix } = getPrefix(currentView);
     return dispatch({
-      type: 'FIELD_DROPPED'
+      type: `${prefix}_FIELD_DROPPED`
     });
   };
 };
 
 export const onHideElement = id => {
-  return async dispatch => {
+  return async (dispatch, getState) => {
+    const state = getState();
+    const currentView = state.navigation.get('currentView');
+    const { prefix } = getPrefix(currentView);
     return dispatch({
-      type: 'HIDE_ELEMENT',
+      type: `${prefix}_HIDE_ELEMENT`,
       payload: id
     });
   };
