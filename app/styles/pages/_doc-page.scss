@@ -356,3 +356,10 @@
     border-bottom: none;
   }
 }
+
+.doc-header {
+  display: flex;
+  button {
+    margin-right: 15px;
+  }
+}

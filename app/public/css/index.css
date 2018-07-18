@@ -912,6 +912,11 @@ label {
   .dropdown li:last-child {
     border-bottom: none; }
 
+.doc-header {
+  display: flex; }
+  .doc-header button {
+    margin-right: 15px; }
+
 .full-page {
   height: 100vh;
   width: 100%;
