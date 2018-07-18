@@ -131,6 +131,7 @@ class CreateDocView extends Component {
             Create Document
           </h1>
           <DocumentForm
+            titleAutofocus
             onUpdateId={onUpdateId}
             docFields={docFields}
             elementToHide={elementToHide}

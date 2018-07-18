@@ -8,6 +8,7 @@ const SimilarDocumentsList = require('./SimilarDocumentsList');
 const Changelog = require('./Changelog');
 
 const DocumentForm = ({
+  titleAutofocus,
   onSubmit,
   onUpdateId,
   docFields,
@@ -40,6 +41,7 @@ const DocumentForm = ({
         <div>
           <div className='title-container'>
             <InputField
+              titleAutofocus={titleAutofocus}
               input={title}
               type='text'
               key='title'
