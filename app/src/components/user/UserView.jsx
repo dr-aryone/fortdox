@@ -45,7 +45,7 @@ const UserView = ({
 
   return (
     <div className='wrapper'>
-      <SplashScreen show={splashScreen} />;
+      <SplashScreen show={splashScreen} />
       <HeaderContainer />
       {page}
       <DownloadManager

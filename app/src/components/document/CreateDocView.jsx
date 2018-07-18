@@ -124,7 +124,12 @@ class CreateDocView extends Component {
           <LoaderOverlay display={isLoading} />
           <ErrorBox errorMsg={error} />
           {editedDialog}
-          <h1>Create Document</h1>
+          <h1 className='doc-header'>
+            <button type='button' onClick={() => this.checkEdits(docFields)}>
+              Back
+            </button>
+            Create Document
+          </h1>
           <DocumentForm
             onUpdateId={onUpdateId}
             docFields={docFields}

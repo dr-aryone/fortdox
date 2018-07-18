@@ -212,7 +212,12 @@ class UpdateDocView extends React.Component {
           className={`update-view inner-container ${isLoading ? 'hide' : ''}`}
         >
           <ErrorBox errorMsg={error} />
-          <h1>Update Document</h1>
+          <h1 className='doc-header'>
+            <button type='button' onClick={() => this.checkEdits(docFields)}>
+              Back
+            </button>
+            Update Document
+          </h1>
           <DocumentForm
             onUpdateId={onUpdateId}
             docFields={docFields}
@@ -236,7 +241,7 @@ class UpdateDocView extends React.Component {
             onHideElement={onHideElement}
             elementToHide={elementToHide}
           >
-            <div className='buttons update'>
+            <div className='doc-buttons update'>
               <button
                 onClick={this.openDeleteDialog}
                 type='button'
