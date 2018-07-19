@@ -35,14 +35,19 @@ export const inviteUser = newUser => {
     let newUserEmail = newUser ? newUser : fields.getIn(['email', 'value']);
     let email = state.user.get('email');
     try {
-      await requestor.post(
-        newUser ? `${config.server}/reinvite` : `${config.server}/invite`,
-        {
+      if (newUser) {
+        await requestor.post(`${config.server}/reinvite`, {
+          body: {
+            reinviteUser: newUserEmail
+          }
+        });
+      } else {
+        await requestor.post(`${config.server}/invite`, {
           body: {
             newUserEmail
           }
-        }
-      );
+        });
+      }
     } catch (error) {
       console.error(error);
       switch (error.status) {
