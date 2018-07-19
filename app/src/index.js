@@ -17,7 +17,6 @@ let middlewares = Redux.compose(
 );
 const store = Redux.createStore(reducer, {}, middlewares);
 const ipcRenderer = window.require('electron').ipcRenderer;
-//const { autoUpdater } = window.require('electron').remote.require('electron');
 const url = window.require('url');
 const querystring = window.require('querystring');
 let queryParameters = querystring.parse(url.parse(window.location.href).query);
