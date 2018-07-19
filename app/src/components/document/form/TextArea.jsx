@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { DragSource, DropTarget } from 'react-dnd';
 import flow from 'lodash/flow';
+import Modal from 'components/general/Modal';
 
 const Type = {
   TEXT: 'text'
@@ -45,7 +46,25 @@ const textTarget = {
 class TextArea extends Component {
   constructor(props) {
     super(props);
-    this.props = props;
+    this.closeDeleteDialog = this.closeDeleteDialog.bind(this);
+    this.state = {
+      showDeleteDialog: false
+    };
+  }
+
+  onDeleteField(field) {
+    if (field.get('value').trim() === '')
+      return this.props.onRemoveField(field.get('id'));
+
+    this.setState({
+      showDeleteDialog: true
+    });
+  }
+
+  closeDeleteDialog() {
+    this.setState({
+      showDeleteDialog: false
+    });
   }
 
   render() {
@@ -65,6 +84,32 @@ class TextArea extends Component {
 
     const opacity = field.get('id') === elementToHide ? 0 : 1;
 
+    const deleteDialog = (
+      <Modal
+        show={this.state.showDeleteDialog}
+        onClose={this.closeDeleteDialog}
+        showClose={false}
+      >
+        <div className='box dialog danger'>
+          <i className='material-icons'>error_outline</i>
+          <h2>Warning</h2>
+          <p>Are you sure you want to delete this text field?</p>
+          <div className='buttons'>
+            <button onClick={this.closeDeleteDialog} type='button'>
+              Cancel
+            </button>
+            <button
+              onClick={() => onRemoveField(field.get('id'))}
+              type='button'
+              className='warning'
+            >
+              Delete
+            </button>
+          </div>
+        </div>
+      </Modal>
+    );
+
     return (
       connectDragSource &&
       connectDropTarget &&
@@ -77,11 +122,12 @@ class TextArea extends Component {
             style={{ opacity }}
             ref={node => (this.node = node)}
           >
+            {this.state.showDeleteDialog && deleteDialog}
             <label>
               <h3>{field.get('label')}</h3>
               <i
                 className='material-icons'
-                onClick={() => onRemoveField(field.get('id'))}
+                onClick={() => this.onDeleteField(field)}
               >
                 delete
               </i>

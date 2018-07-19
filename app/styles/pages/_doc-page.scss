@@ -272,8 +272,14 @@
     width: 100%;
   }
 
-  .buttons {
+  .doc-buttons {
     padding: 15px;
+    display: flex;
+    justify-content: flex-end;
+
+    &.update {
+      justify-content: space-between;
+    }
 
     button {
       margin-right: 15px;
@@ -348,5 +354,12 @@
 
   & li:last-child {
     border-bottom: none;
+  }
+}
+
+.doc-header {
+  display: flex;
+  button {
+    margin-right: 15px;
   }
 }

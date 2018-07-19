@@ -1,3 +1,5 @@
+import { getPrefix } from './utilities';
+import { changeView } from 'actions';
 const { fromJS } = require('immutable');
 const requestor = require('@edgeguideab/client-request');
 const config = require('config.json');
@@ -7,7 +9,9 @@ export default {
   updateDocument,
   previewDocument,
   deleteDocument,
-  openDocument
+  openDocument,
+  hasChecked,
+  unCheck
 };
 
 export function createDocument() {
@@ -15,6 +19,7 @@ export function createDocument() {
     dispatch({
       type: 'CREATE_DOCUMENT_START'
     });
+
     let state = getState();
     let docFields = state.createDocument.get('docFields');
     let { titleError, emptyFieldIDs, emptyFieldError } = checkEmptyDocFields(
@@ -338,5 +343,29 @@ export function checkEmptyDocFields(docFields) {
     if (field.get('value').trim() === '') emptyFieldIDs.push(field.get('id'));
   });
 
-  return { titleError, emptyFieldIDs, emptyFieldError };
+  return { titleError, emptyFieldIDs, emptyFieldError, hasChecked };
+}
+
+export function hasChecked(nextView) {
+  return async (dispatch, getState) => {
+    const state = getState();
+    const currentView = state.navigation.get('currentView');
+    const { view, prefix } = getPrefix(currentView);
+    dispatch({
+      type: `${prefix}_FIELDS_CHECKED`
+    });
+
+    dispatch(
+      changeView(nextView ? nextView : state[view].get('nextViewAfterCheck'))
+    );
+  };
+}
+
+export function unCheck() {
+  return async (dispatch, getState) => {
+    const state = getState();
+    const currentView = state.navigation.get('currentView');
+    const { prefix } = getPrefix(currentView);
+    dispatch({ type: `${prefix}_UNCHECK_FIELD` });
+  };
 }

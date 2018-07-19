@@ -13,8 +13,22 @@ class UpdateDocView extends React.Component {
     this.hasBeenEdited = this.hasBeenEdited.bind(this);
     this.state = {
       showDeleteDialog: false,
-      showEditDialog: false
+      showEditDialog: false,
+      nextView: null
     };
+  }
+
+  componentWillReceiveProps({ checkFields, nextViewAfterCheck } = this.props) {
+    if (checkFields) {
+      if (this.hasBeenEdited(this.props.docFields)) {
+        return this.setState({
+          showEditDialog: true,
+          nextView: nextViewAfterCheck
+        });
+      }
+
+      return this.props.hasChecked();
+    }
   }
 
   componentWillMount() {
@@ -106,7 +120,8 @@ class UpdateDocView extends React.Component {
   }
 
   checkEdits(docFields) {
-    if (!this.hasBeenEdited(docFields)) return this.props.toSearchView();
+    if (!this.hasBeenEdited(docFields))
+      return this.props.hasChecked('SEARCH_VIEW');
     return this.setState({
       showEditDialog: true
     });
@@ -114,7 +129,8 @@ class UpdateDocView extends React.Component {
 
   closeEditDialog() {
     return this.setState({
-      showEditDialog: false
+      showEditDialog: false,
+      nextView: null
     });
   }
 
@@ -136,7 +152,6 @@ class UpdateDocView extends React.Component {
       onPreviewAttachment,
       onDownloadAttachment,
       isLoading,
-      toSearchView,
       onTitleChange,
       similarDocuments,
       onCloseSimilarDocuments,
@@ -152,37 +167,51 @@ class UpdateDocView extends React.Component {
         onClose={this.closeDeleteDialog}
         showClose={false}
       >
-        <div className='box dialog'>
+        <div className='box dialog danger'>
           <i className='material-icons'>error_outline</i>
           <h2>Warning</h2>
           <p>Are you sure you want to delete the document?</p>
-          <div className='buttons'>
-            <button onClick={onDelete} type='button' className='warning'>
-              Delete
-            </button>
+          <div className='doc-buttons'>
             <button onClick={this.closeDeleteDialog} type='button'>
               Cancel
+            </button>
+            <button onClick={onDelete} type='button' className='warning'>
+              Delete
             </button>
           </div>
         </div>
       </Modal>
     );
 
-    let editedDialog = (
+    const editedDialog = (
       <Modal
         show={this.state.showEditDialog}
         onClose={this.closeEditDialog}
         showClose={false}
       >
-        <div className='box dialog'>
+        <div className='box dialog warning'>
           <i className='material-icons'>error_outline</i>
-          <p>Document has been changed.</p>
+          <h2>Document has been changed.</h2>
           <p>Do you want to save your changes?</p>
           <div className='buttons'>
-            <button onClick={toSearchView} type='button'>
+            <button
+              onClick={() =>
+                this.props.hasChecked(
+                  this.state.nextView ? this.state.nextView : 'SEARCH_VIEW'
+                )
+              }
+              className='first-button'
+              type='button'
+            >
               {'Don\'t save'}
             </button>
-            <button onClick={this.closeEditDialog} type='button'>
+            <button
+              onClick={() => {
+                this.closeEditDialog();
+                this.props.onUnCheckField();
+              }}
+              type='button'
+            >
               Cancel
             </button>
             <button
@@ -208,7 +237,12 @@ class UpdateDocView extends React.Component {
           className={`update-view inner-container ${isLoading ? 'hide' : ''}`}
         >
           <ErrorBox errorMsg={error} />
-          <h1>Update Document</h1>
+          <h1 className='doc-header'>
+            <button type='button' onClick={() => this.checkEdits(docFields)}>
+              Back
+            </button>
+            Update Document
+          </h1>
           <DocumentForm
             onUpdateId={onUpdateId}
             docFields={docFields}
@@ -232,19 +266,26 @@ class UpdateDocView extends React.Component {
             onHideElement={onHideElement}
             elementToHide={elementToHide}
           >
-            <button onClick={onUpdate} type='submit'>
-              Update
-            </button>
-            <button onClick={() => this.checkEdits(docFields)} type='button'>
-              Cancel
-            </button>
-            <button
-              onClick={this.openDeleteDialog}
-              type='button'
-              className='warning'
-            >
-              Delete
-            </button>
+            <div className='doc-buttons update'>
+              <button
+                onClick={this.openDeleteDialog}
+                type='button'
+                className='warning'
+              >
+                Delete
+              </button>
+              <div>
+                <button
+                  onClick={() => this.checkEdits(docFields)}
+                  type='button'
+                >
+                  Cancel
+                </button>
+                <button onClick={onUpdate} type='submit'>
+                  Update
+                </button>
+              </div>
+            </div>
           </DocumentForm>
         </div>
       </div>
