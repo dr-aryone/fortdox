@@ -12,7 +12,7 @@ const checkEmptyFields = require('actions/utilities/checkEmptyFields');
 const deviceIdentifier = '@';
 const { hostname } = require('actions/utilities/hostname');
 
-export const inviteUser = () => {
+export const inviteUser = newUser => {
   return async (dispatch, getState) => {
     dispatch({
       type: 'INVITE_USER_START'
@@ -21,7 +21,7 @@ export const inviteUser = () => {
     let state = getState();
     let fields = state.invite.get('fields');
     let emptyFields = checkEmptyFields(fields);
-    if (emptyFields.count() > 0) {
+    if (emptyFields.count() > 0 && !newUser) {
       let errorField = {};
       errorField[emptyFields.get(0)[0]] = {
         error: 'Please enter an email'
@@ -32,15 +32,17 @@ export const inviteUser = () => {
       });
     }
 
-    let newUserEmail = fields.getIn(['email', 'value']);
+    let newUserEmail = newUser ? newUser : fields.getIn(['email', 'value']);
     let email = state.user.get('email');
     try {
-      await requestor.post(`${config.server}/invite`, {
-        body: {
-          email,
-          newUserEmail
+      await requestor.post(
+        newUser ? `${config.server}/reinvite` : `${config.server}/invite`,
+        {
+          body: {
+            newUserEmail
+          }
         }
-      });
+      );
     } catch (error) {
       console.error(error);
       switch (error.status) {

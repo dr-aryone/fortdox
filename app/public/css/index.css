@@ -455,10 +455,15 @@ label {
       font-size: 10px; }
       .organization-users .user > span.pending:not(:empty) {
         margin-left: 10px; }
-    .organization-users .user > i.material-icons {
-      color: #fe4a49; }
-      .organization-users .user > i.material-icons:hover {
-        cursor: pointer; }
+    .organization-users .user > span {
+      margin-left: 10px; }
+      .organization-users .user > span > i {
+        color: #3c3c3c; }
+        .organization-users .user > span > i.danger {
+          color: #fe4a49;
+          margin-right: 10px; }
+        .organization-users .user > span > i:hover {
+          cursor: pointer; }
 
 .wrapper {
   top: 0;
