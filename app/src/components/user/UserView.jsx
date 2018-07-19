@@ -37,7 +37,8 @@ const UserView = ({
       break;
     default:
       console.error(
-        'currentView has unexpected label, default to SearchViewContainer'
+        currentView,
+        'is unexpected label, default to SearchViewContainer'
       );
       page = <SearchViewContainer />;
       break;
@@ -45,7 +46,7 @@ const UserView = ({
 
   return (
     <div className='wrapper'>
-      <SplashScreen show={splashScreen} />;
+      <SplashScreen show={splashScreen} />
       <HeaderContainer />
       {page}
       <DownloadManager

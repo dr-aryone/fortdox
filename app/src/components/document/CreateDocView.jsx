@@ -10,8 +10,22 @@ class CreateDocView extends Component {
     this.closeEditDialog = this.closeEditDialog.bind(this);
     this.hasBeenEdited = this.hasBeenEdited.bind(this);
     this.state = {
-      showEditDialog: false
+      showEditDialog: false,
+      nextView: null
     };
+  }
+
+  componentWillReceiveProps({ checkFields, nextViewAfterCheck } = this.props) {
+    if (checkFields) {
+      if (this.hasBeenEdited(this.props.docFields)) {
+        return this.setState({
+          showEditDialog: true,
+          nextView: nextViewAfterCheck
+        });
+      }
+
+      return this.props.hasChecked();
+    }
   }
 
   componentWillMount() {
@@ -22,7 +36,8 @@ class CreateDocView extends Component {
 
   closeEditDialog() {
     return this.setState({
-      showEditDialog: false
+      showEditDialog: false,
+      nextView: null
     });
   }
 
@@ -53,7 +68,8 @@ class CreateDocView extends Component {
   }
 
   checkEdits(docFields) {
-    if (!this.hasBeenEdited(docFields)) return this.props.onCancel();
+    if (!this.hasBeenEdited(docFields))
+      return this.props.hasChecked('SEARCH_VIEW');
 
     return this.setState({
       showEditDialog: true
@@ -84,7 +100,7 @@ class CreateDocView extends Component {
       similarDocuments,
       onCloseSimilarDocuments,
       onSimilarDocumentClick,
-      onCancel
+      onUnCheckField
     } = this.props;
 
     let editedDialog = (
@@ -93,21 +109,35 @@ class CreateDocView extends Component {
         onClose={this.closeEditDialog}
         showClose={false}
       >
-        <div className='box dialog'>
-          <i className='material-icons'>error_outline</i>
-          <p>Document has been changed.</p>
+        <div className='box dialog warning'>
+          <i className='material-icons'>warning</i>
+          <h2>Document has been changed.</h2>
           <p>Do you want to save your changes?</p>
           <div className='buttons'>
-            <button onClick={onCancel} type='button'>
+            <button
+              className='first-button'
+              onClick={() =>
+                this.props.hasChecked(
+                  this.state.nextView ? this.state.nextView : 'SEARCH_VIEW'
+                )
+              }
+              type='button'
+            >
               {'Don\'t Save'}
             </button>
-            <button onClick={this.closeEditDialog} type='button'>
+            <button
+              onClick={() => {
+                onUnCheckField();
+                this.closeEditDialog();
+              }}
+              type='button'
+            >
               Cancel
             </button>
             <button
               onClick={e => {
-                this.closeEditDialog();
                 onCreate(e);
+                this.closeEditDialog();
               }}
               type='button'
             >
@@ -124,8 +154,14 @@ class CreateDocView extends Component {
           <LoaderOverlay display={isLoading} />
           <ErrorBox errorMsg={error} />
           {editedDialog}
-          <h1>Create Document</h1>
+          <h1 className='doc-header'>
+            <button type='button' onClick={() => this.checkEdits(docFields)}>
+              Back
+            </button>
+            Create Document
+          </h1>
           <DocumentForm
+            titleAutofocus
             onUpdateId={onUpdateId}
             docFields={docFields}
             elementToHide={elementToHide}
@@ -147,12 +183,14 @@ class CreateDocView extends Component {
             onDrop={onDrop}
             onHideElement={onHideElement}
           >
-            <button onClick={() => this.checkEdits(docFields)} type='button'>
-              Cancel
-            </button>
-            <button onClick={onCreate} type='submit'>
-              Create
-            </button>
+            <div className='doc-buttons'>
+              <button onClick={() => this.checkEdits(docFields)} type='button'>
+                Cancel
+              </button>
+              <button onClick={onCreate} type='submit'>
+                Create
+              </button>
+            </div>
           </DocumentForm>
         </div>
       </div>

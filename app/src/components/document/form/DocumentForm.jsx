@@ -8,6 +8,7 @@ const SimilarDocumentsList = require('./SimilarDocumentsList');
 const Changelog = require('./Changelog');
 
 const DocumentForm = ({
+  titleAutofocus,
   onSubmit,
   onUpdateId,
   docFields,
@@ -26,7 +27,7 @@ const DocumentForm = ({
   onRemoveAttachment,
   onPreviewAttachment,
   onDownloadAttachment,
-  children,
+  children: buttons,
   similarDocuments,
   onCloseSimilarDocuments,
   onSimilarDocumentClick
@@ -40,6 +41,7 @@ const DocumentForm = ({
         <div>
           <div className='title-container'>
             <InputField
+              titleAutofocus={titleAutofocus}
               input={title}
               type='text'
               key='title'
@@ -65,7 +67,7 @@ const DocumentForm = ({
           />
           <BottomPanel onAddField={onAddField} />
         </div>
-        <div className='buttons'>{children}</div>
+        {buttons}
       </div>
       <div className='side-panel box'>
         <Tags

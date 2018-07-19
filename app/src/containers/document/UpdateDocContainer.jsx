@@ -5,7 +5,6 @@ import attachmentActions from 'actions/document/attachments';
 import UpdateDocView from '../../components/document/UpdateDocView';
 
 const { connect } = require('react-redux');
-const action = require('../../actions');
 
 const mapStateToProps = state => {
   return {
@@ -14,13 +13,20 @@ const mapStateToProps = state => {
     error: state.updateDocument.get('error'),
     isLoading: state.updateDocument.get('isLoading'),
     similarDocuments: state.updateDocument.get('similarDocuments'),
-    hasMoved: state.createDocument.get('hasMoved'),
-    elementToHide: state.createDocument.get('elementToHide')
+    elementToHide: state.updateDocument.get('elementToHide'),
+    checkFields: state.updateDocument.get('checkFields'),
+    nextViewAfterCheck: state.updateDocument.get('nextViewAfterCheck')
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
+    onUnCheckField: () => {
+      dispatch(documentActions.unCheck());
+    },
+    hasChecked: nextView => {
+      dispatch(documentActions.hasChecked(nextView));
+    },
     onUpdateId: (fromId, toId) => {
       dispatch(fieldActions.updateFieldPositon(fromId, toId));
     },
@@ -44,9 +50,6 @@ const mapDispatchToProps = dispatch => {
     onUpdate: event => {
       event.preventDefault();
       dispatch(documentActions.updateDocument());
-    },
-    toSearchView: () => {
-      dispatch(action.changeView('PREVIEW_DOC'));
     },
     onDelete: () => {
       dispatch(documentActions.deleteDocument());

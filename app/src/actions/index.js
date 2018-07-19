@@ -1,3 +1,5 @@
+const { getPrefix } = require('actions/document/utilities');
+
 const inputChange = (inputName, inputValue) => {
   return (dispatch, getState) => {
     let state = getState();
@@ -44,8 +46,26 @@ const inputChange = (inputName, inputValue) => {
 };
 
 const changeView = nextView => {
-  return dispatch => {
-    dispatch({
+  return (dispatch, getState) => {
+    const state = getState();
+    const currentView = state.navigation.get('currentView');
+
+    if (
+      currentView === 'CREATE_DOC_VIEW' ||
+      currentView === 'UPDATE_DOC_VIEW'
+    ) {
+      if (nextView === 'CREATE_DOC_VIEW' && currentView === 'CREATE_DOC_VIEW')
+        return;
+      const { view, prefix } = getPrefix(currentView);
+      if (!state[view].get('fieldsChecked')) {
+        return dispatch({
+          type: `${prefix}_CHECK_FIELDS`,
+          payload: nextView
+        });
+      }
+    }
+
+    return dispatch({
       type: 'CHANGE_VIEW',
       payload: nextView
     });

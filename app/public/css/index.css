@@ -174,13 +174,19 @@ button {
 
 .dialog {
   text-align: center; }
-  .dialog i {
+  .dialog.danger i {
     color: #fe4a49;
     font-size: 70px; }
+  .dialog.warning i {
+    color: #ffe74c;
+    font-size: 70px; }
   .dialog button {
-    margin-right: 15px; }
+    margin-right: 15px;
+    margin-top: 15px; }
     .dialog button:last-child {
       margin-right: 0px; }
+    .dialog button.first-button {
+      margin-right: 45px; }
 
 input {
   box-sizing: border-box;
@@ -846,9 +852,13 @@ label {
   padding: 0px; }
   .main-panel .text {
     width: 100%; }
-  .main-panel .buttons {
-    padding: 15px; }
-    .main-panel .buttons button {
+  .main-panel .doc-buttons {
+    padding: 15px;
+    display: flex;
+    justify-content: flex-end; }
+    .main-panel .doc-buttons.update {
+      justify-content: space-between; }
+    .main-panel .doc-buttons button {
       margin-right: 15px; }
 
 .dropdown-wrapper {
@@ -901,6 +911,11 @@ label {
       color: #ff5964; }
   .dropdown li:last-child {
     border-bottom: none; }
+
+.doc-header {
+  display: flex; }
+  .doc-header button {
+    margin-right: 15px; }
 
 .full-page {
   height: 100vh;
