@@ -56,7 +56,7 @@ const invite = (state = initialState, action) => {
     case 'DELETE_USER_SUCCESS':
       return initialState.set('message', fromJS(action.payload));
     case 'LIST_USERS_START':
-      return state.set('isLoading', true).set('error', '');
+      return state.set('isLoading', true);
     case 'LIST_USERS_ERROR':
       return state.set('isLoading', false).set('error', action.payload);
     case 'LIST_USERS_SUCCESS':

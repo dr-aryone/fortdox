@@ -10,7 +10,7 @@ const InviteUserView = props => {
     message,
     error,
     onChange,
-    onSend,
+    onInvite,
     isLoading,
     onDeleteUser
   } = props;
@@ -51,7 +51,7 @@ const InviteUserView = props => {
         <div className='box'>
           <div className='texts'>
             <p>Invite a new user to the organization.</p>
-            <form onSubmit={onSend} className='input-bar'>
+            <form onSubmit={onInvite} className='input-bar'>
               <input
                 name='email'
                 type='text'
@@ -61,12 +61,12 @@ const InviteUserView = props => {
                 className='block'
                 autoFocus
               />
-              <button onClick={onSend}>Send</button>
+              <button onClick={onInvite}>Send</button>
             </form>
             {errorMsg}
           </div>
         </div>
-        <UserList onDeleteUser={onDeleteUser} />
+        <UserList onDeleteUser={onDeleteUser} onInvite={onInvite} />
       </div>
     </div>
   );

@@ -4,10 +4,11 @@ const Modal = require('components/general/Modal');
 module.exports = class UserList extends React.Component {
   constructor(props) {
     super(props);
-    this.openModal = this.openModal.bind(this);
-    this.closeModal = this.closeModal.bind(this);
+    this.openDeleteDialog = this.openDeleteDialog.bind(this);
+    this.closeDeleteDialog = this.closeDeleteDialog.bind(this);
     this.state = {
-      showModal: false
+      showDeleteDialog: false,
+      showReinviteDialog: false
     };
   }
 
@@ -21,22 +22,42 @@ module.exports = class UserList extends React.Component {
     }
   }
 
-  openModal(user) {
+  openDeleteDialog(user) {
     this.setState({
       userToBeDeleted: user,
-      showModal: true
+      showDeleteDialog: true
     });
   }
 
-  closeModal() {
+  closeDeleteDialog() {
     this.setState({
-      showModal: false
+      showDeleteDialog: false,
+      userToBeDeleted: null
+    });
+  }
+
+  openReinviteDialog(user) {
+    this.setState({
+      userToBeReinvited: user,
+      showReinviteDialog: true
+    });
+  }
+
+  closeReinviteDialog() {
+    this.setState({
+      showReinviteDialog: false,
+      userToBeReinvited: null
     });
   }
 
   onDelete() {
     this.props.onDeleteUser(this.state.userToBeDeleted);
-    this.closeModal();
+    this.closeDeleteDialog();
+  }
+
+  onReinvite(e) {
+    this.props.onInvite(e, this.state.userToBeReinvited);
+    this.closeReinviteDialog();
   }
 
   render() {
@@ -46,24 +67,32 @@ module.exports = class UserList extends React.Component {
       <div className={`user ${user.pending ? 'pending' : ''}`} key={user.email}>
         <span className='email'>{user.email}</span>
         <span className='pending'>{user.pending ? '(Pending)' : ''}</span>
-        {this.props.user !== user.email ? (
-          <i
-            className='material-icons'
-            onClick={() => this.openModal(user.email)}
-          >
-            clear
-          </i>
-        ) : null}
+        {this.props.user !== user.email && (
+          <span>
+            <i
+              className='material-icons danger'
+              onClick={() => this.openDeleteDialog(user.email)}
+            >
+              clear
+            </i>
+            <i
+              className='material-icons'
+              onClick={() => this.openReinviteDialog(user.email)}
+            >
+              contact_mail
+            </i>
+          </span>
+        )}
       </div>
     ));
 
     const deleteDialog = (
       <Modal
-        show={this.state.showModal}
-        onClose={this.closeModal}
+        show={this.state.showDeleteDialog}
+        onClose={this.closeDeleteDialog}
         showClose={false}
       >
-        <div className='box dialog'>
+        <div className='box dialog danger'>
           <i className='material-icons'>error_outline</i>
           <h2>Warning</h2>
           <p>
@@ -71,6 +100,9 @@ module.exports = class UserList extends React.Component {
             the organization?
           </p>
           <div className='buttons'>
+            <button onClick={this.closeDeleteDialog} type='button'>
+              Cancel
+            </button>
             <button
               onClick={() => this.onDelete()}
               type='button'
@@ -78,8 +110,31 @@ module.exports = class UserList extends React.Component {
             >
               Delete
             </button>
-            <button onClick={this.closeModal} type='button'>
+          </div>
+        </div>
+      </Modal>
+    );
+
+    const reinviteDialog = (
+      <Modal
+        show={this.state.showReinviteDialog}
+        onClose={this.closeReinviteDialog}
+        showClose={false}
+      >
+        <div className='box dialog danger'>
+          <i className='material-icons'>error_outline</i>
+          <h2>Warning</h2>
+          <p>
+            Are you sure you want to reinvite {this.state.userToBeReinvited} to
+            the organization?
+          </p>
+          <p>All devices connected to the user will be deleted.</p>
+          <div className='buttons'>
+            <button onClick={this.closeReinviteDialog} type='button'>
               Cancel
+            </button>
+            <button onClick={e => this.onReinvite(e)} type='button'>
+              Reinvite
             </button>
           </div>
         </div>
@@ -89,6 +144,7 @@ module.exports = class UserList extends React.Component {
     return (
       <div className='user-list'>
         {deleteDialog}
+        {reinviteDialog}
         <div className='preview no-margin-top'>
           <div className='title small'>
             <h1>Users in organization</h1>

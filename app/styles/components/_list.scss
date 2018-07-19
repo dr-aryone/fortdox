@@ -30,11 +30,18 @@
       }
     }
 
-    > i.material-icons {
-      color: $red;
+    > span {
+      margin-left: 10px;
+      > i {
+        color: $charcoal;
+        &.danger {
+          color: $red;
+          margin-right: 10px;
+        }
 
-      &:hover{
-        cursor: pointer;
+        &:hover {
+          cursor: pointer;
+        }
       }
     }
   }
