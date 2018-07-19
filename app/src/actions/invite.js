@@ -2,7 +2,12 @@ import { encryptPrivateKey } from 'actions/utilities/encryptPrivateKey';
 const requestor = require('@edgeguideab/client-request');
 const passwordCheck = require('actions/utilities/passwordCheck');
 const config = require('config.json');
-const { addKey, writeStorage } = require('actions/utilities/storage');
+const {
+  addKey,
+  writeStorage,
+  readKey,
+  deleteKey
+} = require('actions/utilities/storage');
 const checkEmptyFields = require('actions/utilities/checkEmptyFields');
 const deviceIdentifier = '@';
 const { hostname } = require('actions/utilities/hostname');
@@ -246,15 +251,40 @@ export const verifyUser = () => {
     let organization = response.body.organization;
     let email = response.body.email;
     let encryptedPrivateKey = result.privateKey;
+
+    let oldUser;
+    try {
+      oldUser = await readKey(email, organization);
+    } catch (error) {
+      console.error(error);
+      return dispatch({
+        type: 'VERIFY_NEW_USER_ERROR',
+        payload: 'Unable to register. Please try again later.'
+      });
+    }
+
+    if (oldUser.split('"')[0].trim() === 'password:') {
+      try {
+        await deleteKey(email, organization);
+      } catch (error) {
+        console.error(error);
+        return dispatch({
+          type: 'VERIFY_NEW_USER_ERROR',
+          payload: 'Unable to register. Please try again later.'
+        });
+      }
+    }
+
     try {
       await addKey(encryptedPrivateKey, email, organization);
     } catch (error) {
       console.error(error);
       return dispatch({
         type: 'VERIFY_NEW_USER_ERROR',
-        payload: 'Unable to store key'
+        payload: 'Unable to register. Please try again later.'
       });
     }
+
     writeStorage(salt, organization, email, deviceId);
 
     return dispatch({

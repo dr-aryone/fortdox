@@ -65,10 +65,26 @@ const readKey = (email, organization) =>
       });
   });
 
+const deleteKey = (email, organization) => {
+  new Promise((resolve, reject) => {
+    spawn(keyChainPath, [
+      'delete-generic-password',
+      '-a',
+      `${email}?${organization}`,
+      '-s',
+      `${config.name}`
+    ])
+      .on('error', e => reject(e))
+      .on('close', code => {
+        Number(code) === 0 ? resolve() : reject(code);
+      });
+  });
+};
 module.exports = {
   writeStorage,
   writeDeviceIdToStorage,
   readStorage,
   addKey,
-  readKey
+  readKey,
+  deleteKey
 };

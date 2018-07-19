@@ -6,6 +6,7 @@
  */
 const { spawn } = require('child_process');
 const fs = require('fs-extra');
+const config = require('app/config.json');
 
 //First delete everything from elasticsearch
 cleanES();
@@ -48,7 +49,7 @@ function cleanKeychain() {
     const security = spawn('security', [
       'delete-generic-password',
       '-s',
-      'fortdox'
+      `${config.name}`
     ]);
     security.on('error', error => {
       reject(error);
