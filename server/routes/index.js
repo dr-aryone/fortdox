@@ -19,6 +19,6 @@ router.use('/document', restrict, document);
 router.use('/tags', restrict, tags);
 router.use('/users', restrict, users);
 router.use('/update', update);
-router.use('/reinvite', reinvite);
+router.use('/reinvite', restrict, reinvite);
 
 module.exports = router;

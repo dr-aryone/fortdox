@@ -32,7 +32,7 @@ async function createDevice(
   encryptedPrivateKey
 ) {
   try {
-    devices.createDevice(newUser.id, newEncryptedMasterPassword);
+    await devices.createDevice(newUser.id, newEncryptedMasterPassword);
     await users.TempKeys.store(newUser.uuid, encryptedPrivateKey);
     logger.log(
       'info',
