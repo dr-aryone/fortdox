@@ -1,14 +1,20 @@
-const { app, BrowserWindow, ipcMain, Menu, shell } = require('electron');
+const {
+  app,
+  BrowserWindow,
+  ipcMain,
+  Menu,
+  shell,
+  dialog,
+  autoUpdater
+} = require('electron');
 const path = require('path');
 const urlParser = require('url');
 const querystring = require('querystring');
 const config = require('./src/config.json');
-const autoUpdater = require('electron-updater').autoUpdater;
 const log = require('electron-log');
 log.transports.file.level = 'info';
 let win;
 let redirectParameters = null;
-autoUpdater.logger = log;
 let openWindow = false;
 let pollingJob;
 const devMode = process.argv[2] === '--dev' ? true : false;
@@ -65,6 +71,8 @@ app.on('open-url', (event, url) => {
 app.on('ready', () => {
   createBrowserWindow();
 });
+
+let menu;
 
 function createBrowserWindow() {
   win = new BrowserWindow({
@@ -185,7 +193,22 @@ function createBrowserWindow() {
       label: name,
       submenu: [
         {
-          role: 'about'
+          label: `About ${config.name}`,
+          click: () => {
+            const dialogOps = {
+              type: 'none',
+              buttons: ['Ok', 'Check for Updates'],
+              defaultId: 0,
+              title: 'About FortDox',
+              message: `FortDox Version ${config.clientVersion}`
+            };
+
+            dialog.showMessageBox(win, dialogOps, response => {
+              if (response === 1) {
+                autoUpdater.checkForUpdates();
+              }
+            });
+          }
         },
         {
           type: 'separator'
@@ -239,8 +262,8 @@ function createBrowserWindow() {
       }
     ];
   }
-
-  Menu.setApplicationMenu(Menu.buildFromTemplate(template));
+  menu = Menu.buildFromTemplate(template);
+  Menu.setApplicationMenu(menu);
 
   win.on('closed', () => {
     win = null;
@@ -295,23 +318,116 @@ ipcMain.on('stop', () => {
   clearInterval(pollingJob);
 });
 
-autoUpdater.on('checking-for-update', () => {
-  log.info('Checking for updates..');
-});
-
-autoUpdater.on('update-available', info => {
-  log.info('Update available!! \n' + JSON.stringify(info));
-});
-
-autoUpdater.on('update-not-available', () => {
-  log.info('No update available');
-});
-
-autoUpdater.on('update-downloaded', (event, info) => {
-  log.info('Update downloaded!! \n' + info);
-  autoUpdater.quitAndInstall();
-});
-
 app.on('window-all-closed', () => {
   app.quit();
+});
+
+ipcMain.on('outdated-client', () => {
+  updateDialog();
+});
+
+function updateDialog() {
+  if (updateInfo.updating) {
+    return;
+  }
+
+  const dialogOps = {
+    type: 'question',
+    buttons: ['Update', 'Cancel'],
+    defaultId: 0,
+    title: 'Outdated version',
+    message: 'You use an old version, do you want to update now?'
+  };
+
+  dialog.showMessageBox(win, dialogOps, response => {
+    if (response === 0) {
+      autoUpdater.checkForUpdates();
+    }
+  });
+}
+
+const updateFeed = `${config.server}/update/${config.clientVersion}`;
+autoUpdater.setFeedURL(updateFeed);
+
+//autoUpdater events
+autoUpdater.on('error', error => {
+  console.error('Update problem', error);
+  const dialogOps = {
+    type: 'error',
+    buttons: ['Ok'],
+    title: 'FortDox Update',
+    message: `Error updating application 
+    ${'' + error}
+  `
+  };
+  updateInfo.updating = false;
+  dialog.showMessageBox(dialogOps, response => {});
+});
+
+let updateInfo = {
+  updatingInternal: false,
+  valueListener: function() {
+    console.error('You forgot to bind the listener');
+  },
+
+  get updating() {
+    return this.updatingInternal;
+  },
+  set updating(change) {
+    this.updatingInternal = change;
+    this.valueListener(change);
+  },
+
+  registerListener: function(listener) {
+    this.valueListener = listener;
+  }
+};
+
+updateInfo.registerListener(function(value) {
+  menu.items[0].submenu.items[0].enabled = !value;
+});
+
+autoUpdater.on('checking-for-update', () => {
+  updateInfo.updating = true;
+});
+
+autoUpdater.on('update-available', () => {
+  const dialogOps = {
+    type: 'info',
+    button: ['Ok'],
+    title: 'FortDox Update',
+    message:
+      'Update avaiable! Download will start.\n You will be notified when it is ready.'
+  };
+
+  dialog.showMessageBox(win, dialogOps, () => {});
+});
+autoUpdater.on('update-not-available', () => {
+  updateInfo.updating = false;
+  const dialogOps = {
+    type: 'info',
+    buttons: ['Ok'],
+    title: 'FortDox Update',
+    message: 'No Update Available '
+  };
+
+  dialog.showMessageBox(win, dialogOps, () => {});
+});
+
+autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
+  const dialogOps = {
+    type: 'info',
+    buttons: ['Restart', 'Later'],
+    title: 'FortDox Update',
+    message: process.platform === 'win32' ? releaseNotes : releaseName,
+    detail:
+      'A new version has been downloaded. Restart the application to apply the updates.'
+  };
+
+  dialog.showMessageBox(dialogOps, response => {
+    if (response === 0) {
+      autoUpdater.quitAndInstall();
+    }
+    updateInfo.updating = false;
+  });
 });

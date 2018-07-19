@@ -44,6 +44,8 @@ const navigation = (state = initialState, action) => {
       return state.set('currentView', fromJS('VERIFY_USER_VIEW'));
     case 'RECEIVE_PRIVATE_KEY_ERROR':
       return state.set('currentView', fromJS('INVITE_VIEW'));
+    case 'WRONG_VERSION':
+      return initialState;
     default:
       return state;
   }

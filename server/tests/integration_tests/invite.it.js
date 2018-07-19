@@ -1,4 +1,8 @@
-const request = require('request-promise');
+const config = require('app/config');
+let request = require('request-promise').defaults({
+  headers: { 'x-fortdox-version': config.clientVersion }
+});
+
 const uuidv4 = require('uuid/v4');
 const fs = require('fs-extra');
 const expect = require('@edgeguideab/expect');

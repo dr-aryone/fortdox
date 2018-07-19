@@ -22,7 +22,17 @@ const querystring = window.require('querystring');
 let queryParameters = querystring.parse(url.parse(window.location.href).query);
 let loginActions = require('./actions/login');
 
-request.bind(`${config.server}/*`, sessionQueryMiddleWare);
+request.bind(`${config.server}/*`, middlewareChain);
+
+function middlewareChain(data) {
+  return sessionQueryMiddleWare(versionMiddleware(data));
+}
+
+function versionMiddleware({ url, options }) {
+  options.headers = options.headers || {};
+  options.headers['x-fortdox-version'] = `${config.clientVersion}`;
+  return { url, options };
+}
 
 function sessionQueryMiddleWare({ url, options }) {
   options.headers = options.headers || {};
@@ -35,6 +45,15 @@ function sessionQueryMiddleWare({ url, options }) {
 }
 
 request.bindResponseMiddleware(oReq => {
+  if (oReq.status === 400) {
+    const version = oReq.getResponseHeader('x-fortdox-required-version');
+    if (version) {
+      store.dispatch({ type: 'WRONG_VERSION' });
+      ipcRenderer.send('outdated-client');
+      return;
+    }
+  }
+
   if (oReq.status === 401) {
     let message;
     try {

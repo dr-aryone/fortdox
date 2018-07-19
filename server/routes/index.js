@@ -8,6 +8,7 @@ const tags = require('./tags');
 const users = require('./users');
 const devices = require('./devices');
 const { restrict } = require('app/sessions');
+const update = require('app/update');
 
 router.use('/login', login);
 router.use('/devices', devices);
@@ -16,5 +17,6 @@ router.use('/invite', invite);
 router.use('/document', restrict, document);
 router.use('/tags', restrict, tags);
 router.use('/users', restrict, users);
+router.use('/update', update);
 
 module.exports = router;

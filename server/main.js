@@ -29,6 +29,7 @@ const allowCrossDomain = function(req, res, next) {
     req.get('Access-Control-Request-Headers')
   );
   res.header('Vary', 'Origin,Access-Control-Request-Headers');
+  res.header('Access-Control-Expose-Headers', 'x-fortdox-required-version');
 
   if (req.method.toUpperCase() === 'OPTIONS') {
     res.statusCode = 204;
@@ -39,7 +40,9 @@ const allowCrossDomain = function(req, res, next) {
   }
 };
 
+const { checkVersion } = require('./versionMiddleware');
 app.use(allowCrossDomain);
+app.use(checkVersion);
 
 app.use(bodyParser.json({ limit: '100mb' }));
 app.use(
