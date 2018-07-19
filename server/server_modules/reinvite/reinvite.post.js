@@ -52,6 +52,8 @@ async function reinvite(req, res) {
       .end();
   }
 
+  logger.info('reinvite', `${sender.email} reinvites ${email}`);
+
   user.uuid = uuidv1();
   await db.User.update({ uuid: user.uuid }, { where: { id: user.id } });
 
