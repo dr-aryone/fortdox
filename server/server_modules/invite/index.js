@@ -53,7 +53,6 @@ async function user(req, res) {
     return res.status(500).send({ error: 'Internatl Server Error' });
   }
 
-  //below this line it is all the same as in reinvite...
   try {
     let {
       newEncryptedMasterPassword,
