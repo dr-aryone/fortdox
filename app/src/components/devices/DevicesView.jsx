@@ -280,12 +280,14 @@ module.exports = class DevicesView extends React.Component {
             </span>
           )}
           <span className='icon'>
-            <i
-              className='material-icons'
-              onClick={() => this.openDialog(device.get('id'))}
-            >
-              clear
-            </i>
+            {device.get('id') === deviceId ? null : (
+              <i
+                className='material-icons'
+                onClick={() => this.openDialog(device.get('id'))}
+              >
+                clear
+              </i>
+            )}
           </span>
         </div>
       );
