@@ -221,7 +221,7 @@ async function reInviteUser(user, credentials) {
     let response = await request('http://localhost:8000/reinvite', {
       method: 'POST',
       body: {
-        reinvite_email: user.email
+        reinviteEmail: user.email
       },
       auth: {
         bearer: credentials.token
