@@ -322,6 +322,30 @@ app.on('window-all-closed', () => {
   app.quit();
 });
 
+ipcMain.on('outdated-client', () => {
+  updateDialog();
+});
+
+function updateDialog() {
+  if (updateInfo.updating) {
+    return;
+  }
+
+  const dialogOps = {
+    type: 'question',
+    buttons: ['Update', 'Cancel'],
+    defaultId: 0,
+    title: 'Outdated version',
+    message: 'You use an old version, do you want to update now?'
+  };
+
+  dialog.showMessageBox(win, dialogOps, response => {
+    if (response === 0) {
+      autoUpdater.checkForUpdates();
+    }
+  });
+}
+
 const updateFeed = `${config.server}/update/${config.clientVersion}`;
 autoUpdater.setFeedURL(updateFeed);
 
@@ -347,7 +371,7 @@ let updateInfo = {
   },
 
   get updating() {
-    return this.updating;
+    return this.updatingInternal;
   },
   set updating(change) {
     this.updatingInternal = change;

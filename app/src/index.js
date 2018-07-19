@@ -17,7 +17,7 @@ let middlewares = Redux.compose(
 );
 const store = Redux.createStore(reducer, {}, middlewares);
 const ipcRenderer = window.require('electron').ipcRenderer;
-const { autoUpdater } = window.require('electron').remote.require('electron');
+//const { autoUpdater } = window.require('electron').remote.require('electron');
 const url = window.require('url');
 const querystring = window.require('querystring');
 let queryParameters = querystring.parse(url.parse(window.location.href).query);
@@ -50,7 +50,7 @@ request.bindResponseMiddleware(oReq => {
     const version = oReq.getResponseHeader('x-fortdox-required-version');
     if (version) {
       store.dispatch({ type: 'WRONG_VERSION' });
-      autoUpdater.checkForUpdates();
+      ipcRenderer.send('outdated-client');
       return;
     }
   }
