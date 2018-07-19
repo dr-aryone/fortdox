@@ -254,7 +254,9 @@ module.exports = class DevicesView extends React.Component {
       let deviceComponent = (
         <div className='device' key={index}>
           <span className='id'>{device.get('id')}</span>
-          {this.state.deviceId === device.get('id') ? (
+          {!device.get('activated') ? (
+            <span className='name pending'>(pending)</span>
+          ) : this.state.deviceId === device.get('id') ? (
             <span className='name'>
               <input
                 autoFocus
@@ -279,13 +281,16 @@ module.exports = class DevicesView extends React.Component {
               <i className='material-icons'>create</i>
             </span>
           )}
+
           <span className='icon'>
-            <i
-              className='material-icons'
-              onClick={() => this.openDialog(device.get('id'))}
-            >
-              clear
-            </i>
+            {device.get('id') === deviceId ? null : (
+              <i
+                className='material-icons'
+                onClick={() => this.openDialog(device.get('id'))}
+              >
+                clear
+              </i>
+            )}
           </span>
         </div>
       );
