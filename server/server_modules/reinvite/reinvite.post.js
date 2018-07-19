@@ -20,7 +20,7 @@ async function reinvite(req, res) {
 
   const expectations = expect(
     {
-      reinvite_email: 'string'
+      reinviteEmail: 'string'
     },
     req.body
   );
@@ -33,7 +33,9 @@ async function reinvite(req, res) {
       })
       .end();
   }
-  const email = req.body.reinvite_email;
+
+  const email = req.body.reinviteEmail;
+
   if (sender.email === email) {
     logger.log('silly', 'User tried to self-invite');
     return res.status(500).send();
