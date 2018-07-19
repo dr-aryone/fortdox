@@ -1,14 +1,14 @@
-const requestor = require('@edgeguideab/client-request');
-const electron = window.require('electron');
-const aes = electron.remote.require('./aes.js');
-const config = require('config.json');
-const {
+import {
   addKey,
   readKey,
   readStorage,
   writeStorage,
   writeDeviceIdToStorage
-} = require('actions/utilities/storage');
+} from 'actions/utilities/storage';
+const requestor = require('@edgeguideab/client-request');
+const electron = window.require('electron');
+const aes = electron.remote.require('./aes.js');
+const config = require('config.json');
 
 export default { login, loginAs, directLogin };
 
@@ -98,6 +98,7 @@ export function login() {
         payload: 'Unable to login.'
       });
     }
+
     let privateKey;
     let deviceId = storage[email][organization].deviceId;
     try {
