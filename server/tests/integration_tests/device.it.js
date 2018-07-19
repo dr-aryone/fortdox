@@ -1,4 +1,10 @@
-const request = require('request-promise');
+const config = require('app/config');
+let request = require('request-promise');
+
+request = request.defaults({
+  headers: { 'x-fortdox-version': config.clientVersion }
+});
+
 const fs = require('fs-extra');
 const expect = require('@edgeguideab/expect');
 const { login } = require('./login.it.js');

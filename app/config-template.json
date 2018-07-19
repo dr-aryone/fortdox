@@ -3,5 +3,7 @@
   "productName": "FortDox",
   "server": "https://fortdox.edgeguide.se",
   "logo": "/resources/logo.png",
-  "applicationPath": "/Applications/FortDox.app"
+  "codeSplitter": "@@",
+  "applicationPath": "/Applications/FortDox.app",
+  "clientVersion":"{a version number}"
 }
