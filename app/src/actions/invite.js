@@ -88,6 +88,11 @@ export const receivePrivateKey = () => {
     dispatch({
       type: 'RECEIVE_PRIVATE_KEY_START'
     });
+
+    if (window.localStorage.getItem('activeUser')) {
+      window.localStorage.removeItem('activeUser');
+    }
+
     let state = getState();
     let uuid = state.verifyUser.getIn(['fields', 'uuid', 'value']);
     let temporaryPassword = state.verifyUser.getIn([

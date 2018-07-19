@@ -222,6 +222,10 @@ export const verifyActivationCode = () => {
       type: 'VERIFY_ACTIVATION_CODE_START'
     });
 
+    if (window.localStorage.getItem('activeUser')) {
+      window.localStorage.removeItem('activeUser');
+    }
+
     let state = getState();
     let activationCode = state.register.getIn(['activationCode', 'value']);
     if (activationCode === '') {
