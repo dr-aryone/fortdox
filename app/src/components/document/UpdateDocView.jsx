@@ -13,15 +13,17 @@ class UpdateDocView extends React.Component {
     this.hasBeenEdited = this.hasBeenEdited.bind(this);
     this.state = {
       showDeleteDialog: false,
-      showEditDialog: false
+      showEditDialog: false,
+      nextView: null
     };
   }
 
-  componentWillReceiveProps({ checkFields } = this.props) {
+  componentWillReceiveProps({ checkFields, nextViewAfterCheck } = this.props) {
     if (checkFields) {
       if (this.hasBeenEdited(this.props.docFields)) {
         return this.setState({
-          showEditDialog: true
+          showEditDialog: true,
+          nextView: nextViewAfterCheck
         });
       }
 
@@ -127,7 +129,8 @@ class UpdateDocView extends React.Component {
 
   closeEditDialog() {
     return this.setState({
-      showEditDialog: false
+      showEditDialog: false,
+      nextView: null
     });
   }
 
@@ -192,13 +195,23 @@ class UpdateDocView extends React.Component {
           <p>Do you want to save your changes?</p>
           <div className='buttons'>
             <button
-              onClick={() => this.props.hasChecked('SEARCH_VIEW')}
+              onClick={() =>
+                this.props.hasChecked(
+                  this.state.nextView ? this.state.nextView : 'SEARCH_VIEW'
+                )
+              }
               className='first-button'
               type='button'
             >
               {'Don\'t save'}
             </button>
-            <button onClick={this.closeEditDialog} type='button'>
+            <button
+              onClick={() => {
+                this.closeEditDialog();
+                this.props.onUnCheckField();
+              }}
+              type='button'
+            >
               Cancel
             </button>
             <button

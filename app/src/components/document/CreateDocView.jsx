@@ -10,15 +10,17 @@ class CreateDocView extends Component {
     this.closeEditDialog = this.closeEditDialog.bind(this);
     this.hasBeenEdited = this.hasBeenEdited.bind(this);
     this.state = {
-      showEditDialog: false
+      showEditDialog: false,
+      nextView: null
     };
   }
 
-  componentWillReceiveProps({ checkFields } = this.props) {
+  componentWillReceiveProps({ checkFields, nextViewAfterCheck } = this.props) {
     if (checkFields) {
       if (this.hasBeenEdited(this.props.docFields)) {
         return this.setState({
-          showEditDialog: true
+          showEditDialog: true,
+          nextView: nextViewAfterCheck
         });
       }
 
@@ -34,7 +36,8 @@ class CreateDocView extends Component {
 
   closeEditDialog() {
     return this.setState({
-      showEditDialog: false
+      showEditDialog: false,
+      nextView: null
     });
   }
 
@@ -96,7 +99,8 @@ class CreateDocView extends Component {
       isLoading,
       similarDocuments,
       onCloseSimilarDocuments,
-      onSimilarDocumentClick
+      onSimilarDocumentClick,
+      onUnCheckField
     } = this.props;
 
     let editedDialog = (
@@ -112,20 +116,28 @@ class CreateDocView extends Component {
           <div className='buttons'>
             <button
               className='first-button'
-              onClick={() => {
-                this.props.hasChecked('SEARCH_VIEW');
-              }}
+              onClick={() =>
+                this.props.hasChecked(
+                  this.state.nextView ? this.state.nextView : 'SEARCH_VIEW'
+                )
+              }
               type='button'
             >
               {'Don\'t Save'}
             </button>
-            <button onClick={this.closeEditDialog} type='button'>
+            <button
+              onClick={() => {
+                onUnCheckField();
+                this.closeEditDialog();
+              }}
+              type='button'
+            >
               Cancel
             </button>
             <button
               onClick={e => {
-                this.closeEditDialog();
                 onCreate(e);
+                this.closeEditDialog();
               }}
               type='button'
             >

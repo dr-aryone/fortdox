@@ -10,7 +10,8 @@ export default {
   previewDocument,
   deleteDocument,
   openDocument,
-  hasChecked
+  hasChecked,
+  unCheck
 };
 
 export function createDocument() {
@@ -18,6 +19,7 @@ export function createDocument() {
     dispatch({
       type: 'CREATE_DOCUMENT_START'
     });
+
     let state = getState();
     let docFields = state.createDocument.get('docFields');
     let { titleError, emptyFieldIDs, emptyFieldError } = checkEmptyDocFields(
@@ -356,5 +358,14 @@ export function hasChecked(nextView) {
     dispatch(
       changeView(nextView ? nextView : state[view].get('nextViewAfterCheck'))
     );
+  };
+}
+
+export function unCheck() {
+  return async (dispatch, getState) => {
+    const state = getState();
+    const currentView = state.navigation.get('currentView');
+    const { prefix } = getPrefix(currentView);
+    dispatch({ type: `${prefix}_UNCHECK_FIELD` });
   };
 }

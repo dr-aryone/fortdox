@@ -14,12 +14,16 @@ const mapStateToProps = state => {
     isLoading: state.updateDocument.get('isLoading'),
     similarDocuments: state.updateDocument.get('similarDocuments'),
     elementToHide: state.updateDocument.get('elementToHide'),
-    checkFields: state.updateDocument.get('checkFields')
+    checkFields: state.updateDocument.get('checkFields'),
+    nextViewAfterCheck: state.updateDocument.get('nextViewAfterCheck')
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
+    onUnCheckField: () => {
+      dispatch(documentActions.unCheck());
+    },
     hasChecked: nextView => {
       dispatch(documentActions.hasChecked(nextView));
     },

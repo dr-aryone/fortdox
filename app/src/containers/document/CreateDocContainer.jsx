@@ -16,12 +16,16 @@ const mapStateToProps = state => {
     isLoading: state.createDocument.get('isLoading'),
     similarDocuments: state.updateDocument.get('similarDocuments'),
     elementToHide: state.createDocument.get('elementToHide'),
-    checkFields: state.createDocument.get('checkFields')
+    checkFields: state.createDocument.get('checkFields'),
+    nextViewAfterCheck: state.createDocument.get('nextViewAfterCheck')
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
+    onUnCheckField: () => {
+      dispatch(documentActions.unCheck());
+    },
     hasChecked: nextView => {
       dispatch(documentActions.hasChecked(nextView));
     },
