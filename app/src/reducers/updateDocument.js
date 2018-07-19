@@ -238,10 +238,12 @@ const form = (state = initialState, action) => {
       return state.set('elementToHide', action.payload);
     case 'UPDATE_DOC_CHECK_FIELDS':
       return state
-        .set('checkFields', true)
-        .set('nextViewAfterCheck', action.paylaod);
+        .set('nextViewAfterCheck', action.payload)
+        .set('checkFields', true);
     case 'UPDATE_DOC_FIELDS_CHECKED':
       return state.set('fieldsChecked', true);
+    case 'UPDATE_DOC_UNCHECK_FIELD':
+      return state.set('checkFields', false);
     case 'LOGOUT':
     case 'SESSION_EXPIRED':
       return initialState;

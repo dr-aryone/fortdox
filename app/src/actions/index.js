@@ -54,6 +54,8 @@ const changeView = nextView => {
       currentView === 'CREATE_DOC_VIEW' ||
       currentView === 'UPDATE_DOC_VIEW'
     ) {
+      if (nextView === 'CREATE_DOC_VIEW' && currentView === 'CREATE_DOC_VIEW')
+        return;
       const { view, prefix } = getPrefix(currentView);
       if (!state[view].get('fieldsChecked')) {
         return dispatch({

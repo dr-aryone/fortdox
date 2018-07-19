@@ -208,10 +208,12 @@ const form = (state = initialState, action) => {
       return state.set('elementToHide', action.payload);
     case 'CREATE_DOC_CHECK_FIELDS':
       return state
-        .set('checkFields', true)
-        .set('nextViewAfterCheck', action.paylaod);
+        .set('nextViewAfterCheck', action.payload)
+        .set('checkFields', true);
     case 'CREATE_DOC_FIELDS_CHECKED':
       return state.set('fieldsChecked', true);
+    case 'CREATE_DOC_UNCHECK_FIELD':
+      return state.set('checkFields', false);
     default:
       return state;
   }
