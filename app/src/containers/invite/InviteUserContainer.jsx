@@ -19,9 +19,9 @@ const mapDispatchToProps = dispatch => {
     onChange: event => {
       dispatch(action.inputChange(event.target.name, event.target.value));
     },
-    onSend: async event => {
+    onInvite: async (event, email) => {
       event.preventDefault();
-      await dispatch(inviteUser());
+      await dispatch(inviteUser(email));
       dispatch(list());
     },
     onDeleteUser: async email => {

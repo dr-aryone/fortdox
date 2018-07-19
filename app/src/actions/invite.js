@@ -12,7 +12,7 @@ const checkEmptyFields = require('actions/utilities/checkEmptyFields');
 const deviceIdentifier = '@';
 const { hostname } = require('actions/utilities/hostname');
 
-export const inviteUser = () => {
+export const inviteUser = existingUser => {
   return async (dispatch, getState) => {
     dispatch({
       type: 'INVITE_USER_START'
@@ -21,7 +21,7 @@ export const inviteUser = () => {
     let state = getState();
     let fields = state.invite.get('fields');
     let emptyFields = checkEmptyFields(fields);
-    if (emptyFields.count() > 0) {
+    if (emptyFields.count() > 0 && !existingUser) {
       let errorField = {};
       errorField[emptyFields.get(0)[0]] = {
         error: 'Please enter an email'
@@ -32,31 +32,34 @@ export const inviteUser = () => {
       });
     }
 
-    let newUserEmail = fields.getIn(['email', 'value']);
+    let newUserEmail = existingUser
+      ? existingUser
+      : fields.getIn(['email', 'value']);
     let email = state.user.get('email');
+
     try {
-      await requestor.post(`${config.server}/invite`, {
-        body: {
-          email,
-          newUserEmail
-        }
-      });
+      if (existingUser) {
+        await requestor.post(`${config.server}/reinvite`, {
+          body: {
+            reinviteEmail: newUserEmail
+          }
+        });
+      } else {
+        await requestor.post(`${config.server}/invite`, {
+          body: {
+            newUserEmail
+          }
+        });
+      }
     } catch (error) {
       console.error(error);
       switch (error.status) {
         case 400:
-          if (error.body === 'mail')
-            return dispatch({
-              type: 'INVITE_USER_ERROR',
-              payload:
-                'Invitation could not be sent. Please check the email address.'
-            });
-          if (error.body === 'header')
-            return dispatch({
-              type: 'INVITE_USER_ERROR',
-              payload: 'Bad request. Please try again.'
-            });
-          break;
+          return dispatch({
+            type: 'INVITE_USER_ERROR',
+            payload:
+              'Invitation could not be sent. Please check the email address.'
+          });
         case 409:
           return dispatch({
             type: 'INVITE_USER_ERROR',

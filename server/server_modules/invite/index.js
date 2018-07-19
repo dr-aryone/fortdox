@@ -4,11 +4,7 @@ const {
   decryptPrivateKey
 } = require('app/encryption/authentication/privateKeyEncryption');
 
-const {
-  tempEncryptPrivatekey,
-  createNewMasterPassword
-} = require('app/encryption/keys/cryptMasterPassword');
-const mailer = require('app/mailer');
+const { createPasswords, createDevice, mailAndLog } = require('./utilities');
 const uuidv1 = require('uuid/v1');
 const logger = require('app/logger');
 
@@ -57,64 +53,30 @@ async function user(req, res) {
     return res.status(500).send({ error: 'Internatl Server Error' });
   }
 
-  let { keypair, newEncryptedMasterPassword } = await createNewMasterPassword(
-    privateKey,
-    encryptedMasterPassword
-  );
-
-  let tempPassword, encryptedPrivateKey;
   try {
-    ({ tempPassword, encryptedPrivateKey } = await tempEncryptPrivatekey(
-      keypair.privateKey
-    ));
+    let {
+      newEncryptedMasterPassword,
+      encryptedPrivateKey,
+      tempPassword
+    } = await createPasswords(privateKey, encryptedMasterPassword);
+
+    await createDevice(
+      newUser,
+      newEncryptedMasterPassword,
+      encryptedPrivateKey
+    );
+    await mailAndLog(newUser, sender, tempPassword);
+
+    return res
+      .send({
+        uuid: uuid,
+        tempPassword: tempPassword.toString('base64')
+      })
+      .end();
   } catch (error) {
     console.error(error);
-    return res.status(500).send({ error: 'Nah, we cant do that today..' });
   }
-
-  try {
-    devices.createDevice(newUser.id, newEncryptedMasterPassword);
-    await users.TempKeys.store(uuid, encryptedPrivateKey);
-    logger.log(
-      'info',
-      `User ${newUser.email} was created and given the UUID ${uuid}`
-    );
-  } catch (error) {
-    return res.status(error).send();
-  }
-
-  let mail = mailer.newUserRegistration({
-    to: newUserEmail,
-    organization: sender.Organization.name,
-    from: sender.email,
-    uuid,
-    tempPassword: tempPassword.toString('base64')
-  });
-
-  logger.log(
-    'silly',
-    'Invite mail code:\n',
-    uuid,
-    '\npwd\n',
-    tempPassword.toString('base64')
-  );
-  try {
-    mailer.send(mail);
-    logger.log(
-      'info',
-      `User ${req.body.email} invited ${newUserEmail} to join ${
-        sender.Organization.name
-      }`
-    );
-  } catch (error) {
-    console.error(error);
-    return res.status(400).send('mail');
-  }
-
-  res.send({
-    uuid: uuid,
-    tempPassword: tempPassword.toString('base64')
-  });
+  res.status(500).send();
 }
 
 async function verify(req, res) {
