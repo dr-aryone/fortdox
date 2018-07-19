@@ -18,6 +18,7 @@ const mapDispatchToProps = dispatch => {
   return {
     getQRCode: () => {
       dispatch(action.getQRCode());
+      dispatch(action.getDevices());
     },
     onRefresh: () => {
       dispatch(action.getDevices());
@@ -27,6 +28,7 @@ const mapDispatchToProps = dispatch => {
     },
     inviteDevice: () => {
       dispatch(action.inviteDevice());
+      dispatch(action.getDevices());
     },
     onDeleteDevice: async deviceId => {
       await dispatch(action.deleteDevice(deviceId));

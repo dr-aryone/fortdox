@@ -15,6 +15,10 @@
       margin: 0;
     }
 
+    &.pending {
+      color: lighten($charcoal, 30%);
+    }
+
     &.id {
       width: 50%;
     }

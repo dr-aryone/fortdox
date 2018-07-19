@@ -636,6 +636,8 @@ label {
     padding: 0.7em 1.3em; }
     .device span input {
       margin: 0; }
+    .device span.pending {
+      color: #898989; }
     .device span.id {
       width: 50%; }
     .device span.name {
