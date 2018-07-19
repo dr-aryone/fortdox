@@ -8,7 +8,7 @@ const fs = require('fs-extra');
 const expect = require('@edgeguideab/expect');
 const { login } = require('./login.it.js');
 
-const steps = 4;
+const steps = 8;
 let success = 0;
 const testName = 'Invite Flow Test';
 
@@ -60,6 +60,38 @@ async function test() {
   newUser.uuid = inviteCode.uuid;
 
   let confirm;
+  try {
+    confirm = await confirmUser(newUser);
+    success++;
+  } catch (error) {
+    throw error;
+  }
+
+  newUser.email = confirm.email;
+
+  try {
+    await login(newUser);
+    success++;
+  } catch (error) {
+    throw error;
+  }
+
+  //Testing reinvite flow down here..
+  try {
+    inviteCode = await reInviteUser(newUser, credentials);
+    success++;
+  } catch (error) {
+    throw error;
+  }
+
+  try {
+    newUser = await verifyUser(inviteCode, credentials);
+    success++;
+  } catch (error) {
+    throw error;
+  }
+  newUser.uuid = inviteCode.uuid;
+
   try {
     confirm = await confirmUser(newUser);
     success++;
@@ -177,6 +209,42 @@ async function confirmUser(newUser) {
   } catch (error) {
     throw {
       message: `/verify 
+              :- Failed with statuscode ${error.statusCode}
+              :- error message: ${error.message}`,
+      orginalError: error
+    };
+  }
+}
+
+async function reInviteUser(user, credentials) {
+  try {
+    let response = await request('http://localhost:8000/reinvite', {
+      method: 'POST',
+      body: {
+        reinviteEmail: user.email
+      },
+      auth: {
+        bearer: credentials.token
+      },
+      json: true
+    });
+
+    const expectations = expect(
+      { uuid: 'string', tempPassword: 'string' },
+      response
+    );
+
+    if (!expectations.wereMet()) {
+      throw {
+        message: `/reinvite did not return expected fields..
+              Extra info ${expectations.errors().toString()}`
+      };
+    }
+
+    return response;
+  } catch (error) {
+    throw {
+      message: `/reinvite 
               :- Failed with statuscode ${error.statusCode}
               :- error message: ${error.message}`,
       orginalError: error
