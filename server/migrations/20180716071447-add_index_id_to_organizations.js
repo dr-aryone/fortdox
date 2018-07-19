@@ -9,6 +9,8 @@ module.exports = {
   },
 
   down: function(queryInterface, Sequelize) {
-    return queryInterface.removeColumn('Organizations', 'indexName');
+    return queryInterface.sequelize.query(
+      'ALTER TABLE Organizations DROP COLUMN indexName'
+    );
   }
 };
