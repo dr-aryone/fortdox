@@ -102,6 +102,11 @@ async function needsMasterPassword(req, res, next) {
     return res.status(500).send({ error: 'Internal Server Error' });
   }
 
+  if (!user) {
+    logger.info('auth', 'No user with email {userEmail}');
+    return res.status(401).send({ error: 'Unauthorized' });
+  }
+
   let device;
   try {
     device = await db.Devices.findOne({
@@ -115,8 +120,8 @@ async function needsMasterPassword(req, res, next) {
     return res.status(500).send({ error: 'Internal Server Error' });
   }
 
-  if (device === null || user === null) {
-    logger.info('auth', 'no device or user');
+  if (!device) {
+    logger.info('auth', `No device with id ${deviceId} and user id ${user.id}`);
     return res.status(401).send({ error: 'Unauthorized.' });
   }
 
