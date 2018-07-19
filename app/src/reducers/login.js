@@ -20,16 +20,17 @@ const login = (state = initialState, action) => {
         organization: fromJS(action.payload.organization)
       });
     case 'WRONG_VERSION':
-      return initialState.merge({
-        warning: 'You have the wrong version of FortDox. Please update.'
-      });
+      return initialState.set('warning', action.payload);
     case 'SESSION_EXPIRED':
-      return state.set('warning', 'Session expired, please login again');
+      return initialState.set('warning', action.payload);
+    case 'UNAUTHORIZED':
+      return initialState.set('error', action.payload);
     case 'VERIFY_LOGIN_CREDS_START':
       return state
         .set('isLoading', true)
         .set('warning', null)
         .set('error', null);
+    case 'FORCE_BACK':
     case 'CHANGE_VIEW':
     case 'DIRECT_LOGIN_SUCCESS':
     case 'VERIFY_LOGIN_CREDS_SUCCESS':

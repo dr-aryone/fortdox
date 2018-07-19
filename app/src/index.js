@@ -1,4 +1,5 @@
 import AppContainer from './containers/AppContainer';
+import { logout } from './actions';
 const React = require('react');
 const config = require('config.json');
 const request = require('@edgeguideab/client-request');
@@ -48,7 +49,10 @@ request.bindResponseMiddleware(oReq => {
   if (oReq.status === 400) {
     const version = oReq.getResponseHeader('x-fortdox-required-version');
     if (version) {
-      store.dispatch({ type: 'WRONG_VERSION' });
+      store.dispatch({
+        type: 'WRONG_VERSION',
+        payload: 'You have the wrong version of FortDox. Please update.'
+      });
       ipcRenderer.send('outdated-client');
       return;
     }
@@ -68,12 +72,19 @@ request.bindResponseMiddleware(oReq => {
       let organization = state.user.get('organization');
       localStorage.removeItem('activeUser');
       store.dispatch({
-        type: 'SESSION_EXPIRED'
+        type: 'SESSION_EXPIRED',
+        payload: 'Session expired, please log in again.'
       });
       if (email && organization) {
         store.dispatch(loginActions.loginAs(email, organization));
       }
     }
+
+    store.dispatch(logout());
+    store.dispatch({
+      type: 'UNAUTHORIZED',
+      payload: 'You have been logged out. Please log in agin.'
+    });
   }
 });
 
