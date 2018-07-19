@@ -80,7 +80,7 @@ function createBrowserWindow() {
         console.log(`Added Extension:  ${name}`);
       })
       .catch(err => {
-        console.log('An error occurred: ', err);
+        console.error('An error occurred: ', err);
       });
   }
   openWindow = true;
