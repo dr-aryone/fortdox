@@ -276,6 +276,7 @@ async function listDevices(req, res) {
   const result = {
     devices: devices.map(device => {
       return {
+        activated: device.activated,
         name: device.deviceName,
         id: device.deviceId
       };
