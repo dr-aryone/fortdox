@@ -130,7 +130,7 @@ async function needsMasterPassword(req, res, next) {
   next();
 }
 
-function restrict(req, res, next) {
+async function restrict(req, res, next) {
   let authorization = req.headers.authorization;
   if (!authorization) {
     logger.info('auth', 'No Header');
@@ -143,9 +143,12 @@ function restrict(req, res, next) {
 
   if (!encodedToken) {
     logger.info('auth', 'No token');
-    return res.status(401).send({
-      error: 'Unauthorized.'
-    });
+    return res
+      .status(401)
+      .send({
+        error: 'Unauthorized.'
+      })
+      .end();
   }
 
   let decodedToken;
@@ -158,6 +161,24 @@ function restrict(req, res, next) {
     return res.status(401).send({
       error: 'Session Expired.'
     });
+  }
+  try {
+    let device = await db.Devices.findOne({
+      where: {
+        deviceId: decodedToken.deviceId
+      }
+    });
+    if (!device) {
+      throw Error('Could not find device that matches this users deviceId');
+    }
+  } catch (error) {
+    console.error(error);
+    return res
+      .status(401)
+      .send({
+        error: 'Unauthorized.'
+      })
+      .end();
   }
 
   decodedToken.privateKey = Buffer.from(decodedToken.privateKey, 'base64');

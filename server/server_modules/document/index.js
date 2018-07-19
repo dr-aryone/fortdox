@@ -75,6 +75,7 @@ async function get(req, res) {
 
   doc._source.encrypted_texts = doc._source.encrypted_texts || [];
   doc._source.attachments = doc._source.attachments || [];
+  doc._source.tags = doc._source.tags || [];
   try {
     doc._source.encrypted_texts = await decryptDocuments(
       doc._source.encrypted_texts,
