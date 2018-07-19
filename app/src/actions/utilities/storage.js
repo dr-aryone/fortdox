@@ -1,11 +1,11 @@
+const config = require('config.json');
 const { spawn } = window.require('child_process');
 const keyChainPath = '/usr/bin/security';
-const fortdoxKey = 'fortdox';
 
 const writeDeviceIdToStorage = (deviceId, organization, email) => {
   let fortdoxInfo = readStorage();
   fortdoxInfo[email][organization].deviceId = deviceId;
-  window.localStorage.setItem(fortdoxKey, JSON.stringify(fortdoxInfo));
+  window.localStorage.setItem(config.name, JSON.stringify(fortdoxInfo));
 };
 
 const writeStorage = (salt, organization, email, deviceId) => {
@@ -16,14 +16,14 @@ const writeStorage = (salt, organization, email, deviceId) => {
       deviceId
     }
   };
-  window.localStorage.setItem(fortdoxKey, JSON.stringify(fortdoxInfo));
+  window.localStorage.setItem(config.name, JSON.stringify(fortdoxInfo));
 };
 const readStorage = () => {
   let storage;
-  storage = window.localStorage.getItem(fortdoxKey);
+  storage = window.localStorage.getItem(config.name);
   if (!storage) {
-    window.localStorage.setItem(fortdoxKey, JSON.stringify({}));
-    storage = window.localStorage.getItem(fortdoxKey);
+    window.localStorage.setItem(config.name, JSON.stringify({}));
+    storage = window.localStorage.getItem(config.name);
   }
   return JSON.parse(storage);
 };
@@ -35,7 +35,7 @@ const addKey = (privateKey, email, organization) =>
       '-a',
       `${email}?${organization}`,
       '-s',
-      'fortdox',
+      `${config.name}`,
       '-w',
       privateKey
       //'-T',
@@ -55,7 +55,7 @@ const readKey = (email, organization) =>
       '-a',
       `${email}?${organization}`,
       '-s',
-      'fortdox',
+      `${config.name}`,
       '-g'
     ])
       .on('error', e => reject(e))
@@ -65,10 +65,26 @@ const readKey = (email, organization) =>
       });
   });
 
+const deleteKey = (email, organization) => {
+  new Promise((resolve, reject) => {
+    spawn(keyChainPath, [
+      'delete-generic-password',
+      '-a',
+      `${email}?${organization}`,
+      '-s',
+      `${config.name}`
+    ])
+      .on('error', e => reject(e))
+      .on('close', code => {
+        Number(code) === 0 ? resolve() : reject(code);
+      });
+  });
+};
 module.exports = {
   writeStorage,
   writeDeviceIdToStorage,
   readStorage,
   addKey,
-  readKey
+  readKey,
+  deleteKey
 };
