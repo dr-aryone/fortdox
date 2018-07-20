@@ -75,13 +75,14 @@ async function deleteDevice(req, res) {
   res.send();
 }
 
+//TODO: Move this to User.js?
 async function findDeviceFromUserUUID(uuid) {
   let user = await db.User.findOne({
     where: {
       uuid: uuid
     }
   });
-
+  if (!user) throw new Error(`${uuid} does not match any user.`);
   return await db.Devices.findOne({ where: { userid: user.id } });
 }
 
@@ -186,6 +187,7 @@ async function verify(req, res) {
     newDevice = await db.Devices.findOne({
       where: { deviceId: uuid }
     });
+    if (!newDevice) throw new Error(`No device with uuid: ${uuid}`);
   } catch (error) {
     console.error('Trying verify deviceid with invitation code', error);
     return res.status(error).send();
