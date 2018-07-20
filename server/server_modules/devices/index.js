@@ -215,18 +215,32 @@ async function confirm(req, res) {
   const deviceId = req.body.deviceId;
   const privateKey = Buffer.from(req.body.privateKey, 'base64');
 
-  const deviceJoinUser = await db.Devices.findOne({
-    where: { deviceId: deviceId },
-    include: [{ model: db.User }]
-  });
-  const device = await db.Devices.findOne({
-    where: { deviceId: deviceId, userid: deviceJoinUser.User.id }
-  });
+  let deviceJoinUser;
+  let device;
+  let org;
+  try {
+    deviceJoinUser = await db.Devices.findOne({
+      where: { deviceId: deviceId },
+      include: [{ model: db.User }]
+    });
+    if (!deviceJoinUser) throw new Error('Could not find such devices');
+    device = await db.Devices.findOne({
+      where: { deviceId: deviceId, userid: deviceJoinUser.User.id }
+    });
+    if (!device) throw new Error('Could not find device for that user');
 
-  const org = await db.Organization.findOne({
-    where: { id: deviceJoinUser.User.organizationId }
-  });
-
+    org = await db.Organization.findOne({
+      where: { id: deviceJoinUser.User.organizationId }
+    });
+    if (!org)
+      throw new Error('Could not find the organization that user belongs to');
+  } catch (error) {
+    console.error(error);
+    return res
+      .status(500)
+      .send()
+      .end();
+  }
   const encryptedMasterPassword = device.password;
   decryptMasterPassword(privateKey, encryptedMasterPassword);
 
