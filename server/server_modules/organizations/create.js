@@ -2,23 +2,17 @@ const db = require('app/models');
 
 module.exports = organization => {
   return new Promise(async (resolve, reject) => {
-    let org;
     try {
-      org = await db.Organization.findOne({where: {name: organization}});
+      let [org, created] = await db.Organization.findOrCreate({
+        where: { name: organization }
+      });
+      if (!created) {
+        return reject(409);
+      }
+      return resolve(org);
     } catch (error) {
       console.error(error);
-      return reject(500);
     }
-    if (org) {
-      return reject(409);
-    }
-    let newOrganization;
-    try {
-      newOrganization = await db.Organization.create({name: organization});
-      return resolve(newOrganization);
-    } catch (error) {
-      console.error(error);
-      return reject(500);
-    }
+    return reject(500);
   });
 };
