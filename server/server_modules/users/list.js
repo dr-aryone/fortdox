@@ -41,7 +41,7 @@ async function listOrganizationMembers(req, res) {
       const pending = tempKeys.find(k => k.uuid === user.uuid);
       return {
         email: user.email,
-        pending: !!pending
+        pending: !!pending //This is not a typo, it is a type conversion
       };
     })
   );
