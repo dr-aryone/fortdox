@@ -8,6 +8,8 @@ const {
   decryptMasterPassword
 } = require('app/encryption/keys/cryptMasterPassword');
 
+const userUtil = require('app/users/User');
+
 module.exports = {
   login,
   restrict,
@@ -92,19 +94,20 @@ async function needsMasterPassword(req, res, next) {
 
   let user;
   try {
-    user = await db.User.findOne({
-      where: {
-        email: userEmail
-      }
-    });
+    user = await userUtil.getUser(userEmail);
   } catch (error) {
     console.error(error);
-    return res.status(500).send({ error: 'Internal Server Error' });
-  }
-
-  if (!user) {
-    logger.info('auth', 'No user with email {userEmail}');
-    return res.status(401).send({ error: 'Unauthorized' });
+    if (error === 404) {
+      logger.info('auth', 'No user with email {userEmail}');
+      return res
+        .status(401)
+        .send({ error: 'Unauthorized' })
+        .end();
+    }
+    return res
+      .status(500)
+      .send({ error: 'Internal Server Error' })
+      .end();
   }
 
   let device;
@@ -115,14 +118,17 @@ async function needsMasterPassword(req, res, next) {
         deviceId: deviceId
       }
     });
+
+    if (!device) {
+      logger.info(
+        'auth',
+        `No device with id ${deviceId} and user id ${user.id}`
+      );
+      return res.status(401).send({ error: 'Unauthorized.' });
+    }
   } catch (error) {
     console.error(error);
     return res.status(500).send({ error: 'Internal Server Error' });
-  }
-
-  if (!device) {
-    logger.info('auth', `No device with id ${deviceId} and user id ${user.id}`);
-    return res.status(401).send({ error: 'Unauthorized.' });
   }
 
   req.session.userid = user.id;
