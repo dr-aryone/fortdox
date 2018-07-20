@@ -7,6 +7,7 @@ const {
 const logger = require('app/logger');
 const mailer = require('app/mailer');
 const users = require('app/users');
+const userUtil = require('app/users/User');
 const {
   decryptPrivateKey
 } = require('app/encryption/authentication/privateKeyEncryption');
@@ -28,11 +29,8 @@ async function updateName(req, res) {
   let deviceName = req.body.deviceName;
 
   try {
-    let user = await db.User.findOne({
-      where: {
-        email: req.session.email
-      }
-    });
+    let user = await userUtil.getUser(req.session.email);
+
     await db.Devices.update(
       { deviceName: deviceName },
       {
@@ -52,13 +50,9 @@ async function updateName(req, res) {
 async function deleteDevice(req, res) {
   logger.info('device', 'delete device');
   const deviceIdToDelete = req.params.deviceId;
-  let user = await db.User.findOne({
-    where: {
-      email: req.session.email
-    }
-  });
 
   try {
+    let user = await userUtil.getUser(req.session.email);
     await db.Devices.destroy({
       where: {
         userid: user.id,
