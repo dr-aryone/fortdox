@@ -109,6 +109,11 @@ const verifyNewUser = (deviceId, deviceName, uuid, privateKey) => {
           deviceId: deviceId
         }
       });
+
+      if (!device) {
+        return reject(404);
+      }
+
       encryptedMasterPassword = device.password;
     } catch (error) {
       console.error(error);
