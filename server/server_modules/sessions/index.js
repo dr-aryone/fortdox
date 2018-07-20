@@ -44,17 +44,17 @@ async function login(req, res) {
     deviceOfUser = await db.Devices.findOne({
       where: deviceIdWhereQuery
     });
+
+    if (!deviceOfUser) {
+      logger.log(
+        'silly',
+        '/login: No existing device with id' + req.body.deviceId
+      );
+      return res.status(404).send();
+    }
   } catch (error) {
     console.log(error);
     return res.status(500).send();
-  }
-
-  if (!deviceOfUser) {
-    logger.log(
-      'silly',
-      '/login: No existing device with id' + req.body.deviceId
-    );
-    return res.status(404).send();
   }
 
   let privateKey = Buffer.from(req.body.privateKey, 'base64');
