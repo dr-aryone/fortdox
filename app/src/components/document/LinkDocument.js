@@ -7,14 +7,19 @@ class LinkDocument extends Component {
     super(props);
     this.state = {
       search: '',
-      results: []
+      results: [],
+      maxHits: 5
     };
   }
 
   editSearch = e => {
     console.log(e.target.value);
     this.setState({ search: e.target.value });
-    this.searchForDocuments(e.target.value);
+    if (e.target.value === '') {
+      e.target.placeholder = 'Enter a search query';
+    } else {
+      this.searchForDocuments(e.target.value);
+    }
   };
 
   searchForDocuments = async query => {
@@ -24,7 +29,7 @@ class LinkDocument extends Component {
         `${config.server}/document/?searchString=${query}`
       );
     } catch (error) {
-      console.log(error);
+      console.error(error);
       return;
     }
     this.parseResult(result.body.searchResult);
@@ -37,9 +42,8 @@ class LinkDocument extends Component {
         id: doc._id
       };
     });
-    console.log(parsed);
     this.setState({
-      results: parsed
+      results: parsed.slice(0, this.state.maxHits - 1)
     });
   };
 
