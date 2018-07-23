@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import DocumentForm from './form/DocumentForm';
+import LinkDocument from './LinkDocument';
 const LoaderOverlay = require('components/general/LoaderOverlay');
 const ErrorBox = require('components/general/ErrorBox');
 const Modal = require('components/general/Modal');
@@ -160,6 +161,7 @@ class CreateDocView extends Component {
             </button>
             Create Document
           </h1>
+          <LinkDocument />
           <DocumentForm
             titleAutofocus
             onUpdateId={onUpdateId}
