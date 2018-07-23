@@ -47,10 +47,10 @@ class LinkDocument extends Component {
     });
   };
 
-  onClickLinkDocument = (e, id) => {
+  onClickLinkDocument = (e, name, id) => {
     console.log('You clicked on document with id', id);
     if (this.props.linkOnClick) {
-      this.props.linkOnClick(id);
+      this.props.linkOnClick(name, id);
     }
   };
 
@@ -63,7 +63,7 @@ class LinkDocument extends Component {
               <p>{doc.name}</p>
               <button
                 onClick={e => {
-                  this.onClickLinkDocument(e, doc.id);
+                  this.onClickLinkDocument(e, doc.name, doc.id);
                 }}
               >
                 Create Link
