@@ -1,6 +1,7 @@
 module.exports = {
   privateKeyParser,
-  copyParser
+  copyParser,
+  linkParser
 };
 
 function privateKeyParser(state, startLine, endLine) {
@@ -28,17 +29,17 @@ function privateKeyParser(state, startLine, endLine) {
   let content = state.getLines(startLine, currentLineIndex);
   let title = '';
 
-  if (startMatch[1]) { //The key was declared with a title (title-----BEGIN RSA PRIVATE KEY-----)
+  if (startMatch[1]) {
+    //The key was declared with a title (title-----BEGIN RSA PRIVATE KEY-----)
     title = startMatch[1];
     content = content.substring(title.length);
   }
-
 
   state.tokens.push({
     type: 'privatekey',
     content: content,
     title,
-    level: state.level,
+    level: state.level
   });
 
   state.line = currentLineIndex;
@@ -47,7 +48,7 @@ function privateKeyParser(state, startLine, endLine) {
 }
 
 function copyParser(state, silent) {
-  const {src: currentLine} = state;
+  const { src: currentLine } = state;
   const regexp = /@(copy|password)@(.*?)@(copy|password)@/g;
   let match = regexp.exec(currentLine.substring(state.pos));
   if (!match || match.index !== 0) return false;
@@ -57,6 +58,26 @@ function copyParser(state, silent) {
     state.push({
       type: 'copy',
       content: content,
+      level: state.level,
+      title: match[1]
+    });
+  }
+
+  return true;
+}
+
+function linkParser(state, silent) {
+  const { src: currentLine } = state;
+  const regexp = /@(link)@(.*?)@(link)@/g;
+  let match = regexp.exec(currentLine.substring(state.pos));
+  if (!match || match.index !== 0) return false;
+  let content = match[2];
+  state.pos += match[0].length;
+  if (!silent) {
+    state.push({
+      type: 'link',
+      name: content.split(':')[0],
+      id: content.split(':')[1],
       level: state.level,
       title: match[1]
     });
