@@ -77,6 +77,10 @@ class CreateDocView extends Component {
     });
   }
 
+  appendToDocFields = (name, id) => {
+    console.log('Here I am!', name, id);
+  };
+
   render() {
     let {
       onUpdateId,
@@ -161,7 +165,11 @@ class CreateDocView extends Component {
             </button>
             Create Document
           </h1>
-          <LinkDocument />
+          <LinkDocument
+            linkOnClick={(name, id) => {
+              this.appendToDocFields(name, id);
+            }}
+          />
           <DocumentForm
             titleAutofocus
             onUpdateId={onUpdateId}
