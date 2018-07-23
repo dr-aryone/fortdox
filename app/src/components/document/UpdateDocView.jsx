@@ -1,4 +1,5 @@
 import DocumentForm from './form/DocumentForm';
+import LinkDocument from './LinkDocument';
 const React = require('react');
 const LoaderOverlay = require('components/general/LoaderOverlay');
 const ErrorBox = require('components/general/ErrorBox');
@@ -243,6 +244,7 @@ class UpdateDocView extends React.Component {
             </button>
             Update Document
           </h1>
+          <LinkDocument />
           <DocumentForm
             onUpdateId={onUpdateId}
             docFields={docFields}
