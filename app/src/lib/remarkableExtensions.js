@@ -47,41 +47,52 @@ function privateKeyParser(state, startLine, endLine) {
   return true;
 }
 
-function copyParser(state, silent) {
-  const { src: currentLine } = state;
-  const regexp = /@(copy|password)@(.*?)@(copy|password)@/g;
+function checkMatching(regexp, state) {
+  let { src: currentLine } = state;
   let match = regexp.exec(currentLine.substring(state.pos));
   if (!match || match.index !== 0) return false;
-  let content = match[2];
-  state.pos += match[0].length;
-  if (!silent) {
-    state.push({
-      type: 'copy',
-      content: content,
-      level: state.level,
-      title: match[1]
-    });
-  }
+  return { title: match[1], content: match[2], length: match[0].length };
+}
+
+function matchingParser(regexp, state) {
+  const res = checkMatching(regexp, state);
+  if (!res) return false;
+  state.pos += res.length;
+  return res;
+}
+
+function copyParser(state, silent) {
+  if (silent) return false;
+
+  const regexp = /@(copy|password)@(.*?)@(copy|password)@/g;
+
+  const result = matchingParser(regexp, state);
+  if (!result) return false;
+
+  state.push({
+    type: 'copy',
+    content: result.content,
+    level: state.level,
+    title: result.title
+  });
 
   return true;
 }
 
 function linkParser(state, silent) {
-  const { src: currentLine } = state;
+  if (silent) return false;
   const regexp = /@(link)@(.*?)@(link)@/g;
-  let match = regexp.exec(currentLine.substring(state.pos));
-  if (!match || match.index !== 0) return false;
-  let content = match[2];
-  state.pos += match[0].length;
-  if (!silent) {
-    state.push({
-      type: 'link',
-      name: content.split(':')[0],
-      id: content.split(':')[1],
-      level: state.level,
-      title: match[1]
-    });
-  }
+
+  const result = matchingParser(regexp, state);
+  if (!result) return false;
+
+  state.push({
+    type: 'link',
+    name: result.content.split(':')[0],
+    id: result.content.split(':')[1],
+    level: state.level,
+    title: result.title
+  });
 
   return true;
 }
