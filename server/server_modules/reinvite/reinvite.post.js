@@ -26,6 +26,7 @@ async function reinvite(req, res) {
   );
 
   if (!expectations.wereMet()) {
+    logger.error('/reinvite', 'Client sent request that was invalid');
     return res
       .status(400)
       .send({
@@ -37,7 +38,7 @@ async function reinvite(req, res) {
   const email = req.body.reinviteEmail;
 
   if (sender.email === email) {
-    logger.log('silly', 'User tried to self-invite');
+    logger.warn('/reinvite', 'User tried to self-invite');
     return res.status(500).send();
   }
   let user;
@@ -47,14 +48,18 @@ async function reinvite(req, res) {
     await clearTempkeys(user);
     await deleteDevices(user);
   } catch (error) {
-    logger.info('reinvite', error);
+    logger.error(
+      '/reinvite',
+      'Could not find user, clear tempkeys or delete devices',
+      error
+    );
     return res
       .status(500)
       .send()
       .end();
   }
 
-  logger.info('reinvite', `${sender.email} reinvites ${email}`);
+  logger.info('/reinvite', `${sender.email} tries to reinvite ${email}`);
 
   user.uuid = uuidv1();
   await db.User.update({ uuid: user.uuid }, { where: { id: user.id } });
@@ -76,7 +81,7 @@ async function reinvite(req, res) {
       })
       .end();
   } catch (error) {
-    console.error(error);
+    logger.error('/reinvite', error);
   }
   res.status(500).send();
 }
