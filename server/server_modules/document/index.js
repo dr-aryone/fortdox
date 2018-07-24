@@ -26,6 +26,14 @@ async function getAttachment(req, res) {
   let attachmentIndex = req.params.attachmentIndex;
   let organizationIndex = req.session.organizationIndex;
 
+  logger.info(
+    '/document/id/attachment/attachmentIndex',
+    'Get attachment for',
+    id,
+    ' attachment index',
+    attachmentIndex
+  );
+
   let attachment;
 
   try {
@@ -35,7 +43,7 @@ async function getAttachment(req, res) {
       organizationIndex
     });
   } catch (error) {
-    logger.error(error);
+    logger.error('/document/id/attachment/attachmentIndex', error);
     return res.status(500).send();
   }
 
@@ -56,7 +64,10 @@ async function get(req, res) {
     }
   );
 
+  logger.info('/document/id', 'Getting document', id);
+
   if (!expectations.wereMet()) {
+    logger.error('/document/id', 'Client did not send expected body');
     return res.status(400).send(expectations.errors());
   }
 
@@ -67,7 +78,7 @@ async function get(req, res) {
       documentId: id
     });
   } catch (error) {
-    logger.error(error);
+    logger.error('/document/id', error);
     return res.status(500).send();
   }
 
@@ -83,9 +94,10 @@ async function get(req, res) {
       encryptedMasterPassword
     );
   } catch (error) {
-    logger.log(
-      'error',
-      `Decrypt error, could not decrypt with privatekey from user ${email}`
+    logger.error(
+      '/document/id',
+      `Decrypt error, could not decrypt with privatekey from user ${email}`,
+      error
     );
     return res.status(500).send({ msg: 'Internal Server Error' });
   }
@@ -94,7 +106,11 @@ async function get(req, res) {
   try {
     logentries = await changelog.get(doc._id);
   } catch (error) {
-    logger.log('error', `Cannot get logentries for documentid ${doc._id}`);
+    logger.error(
+      '/document/id',
+      `Cannot get logentries for documentid ${doc._id}`,
+      error
+    );
   }
 
   let response = {
@@ -122,8 +138,15 @@ async function checkTitle(req, res) {
   );
 
   if (!expectations.wereMet()) {
+    logger.error('/document/check/title', 'Client did not send expected body');
     return res.status(400).send(expectations.errors());
   }
+
+  logger.info(
+    '/document/check/title',
+    'Checking title of document',
+    searchString
+  );
 
   let response;
   try {
@@ -132,7 +155,7 @@ async function checkTitle(req, res) {
       searchString: searchString
     });
   } catch (error) {
-    logger.error(error);
+    logger.error('/document/check/title', error);
     return res.status(500).send({
       msg: 'internalServerError'
     });
@@ -146,6 +169,9 @@ async function search(req, res) {
   let results = req.query.results;
   let index = req.query.index;
   let response;
+
+  logger.info('/document', 'Search for document, query:', searchString);
+
   try {
     response = await es.paginationSearch(
       {
@@ -156,8 +182,8 @@ async function search(req, res) {
       results
     );
   } catch (error) {
-    logger.log(
-      'error',
+    logger.error(
+      '/document',
       `ElaticSearch error, probably malformed search query or server is down. \n ${error}`
     );
     return res.status(500).send();
@@ -175,10 +201,19 @@ async function create(req, res) {
   let encryptedMasterPassword = req.session.mp;
 
   let fields = checkEmptyFields(req.body);
-  if (!fields.valid)
+  if (!fields.valid) {
+    logger.warn('/document POST', 'Client sent document with invalid fields');
     return res
       .status(400)
       .send({ emptyFields: fields.emptyFields, reason: fields.reason });
+  }
+
+  logger.info(
+    '/document POST',
+    'Creating a new document with title',
+    req.body.title
+  );
+
   let encryptedTexts;
   try {
     encryptedTexts = await encryptDocument(
@@ -187,7 +222,7 @@ async function create(req, res) {
       encryptedMasterPassword
     );
   } catch (error) {
-    console.error(error);
+    logger.error('/document POST', 'Could not encrypt document', error);
     return res.status(500).send();
   }
 
@@ -198,31 +233,38 @@ async function create(req, res) {
     tags: req.body.tags,
     attachments: req.body.attachments
   };
+
   let response;
+
   try {
     response = await es.addToIndex({ query, organizationIndex });
     res.send(response);
-    logger.log(
-      'info',
+    logger.info(
+      '/document POST',
       `User ${req.session.email} created a document with title ${
         req.body.title
       } and id ${response._id}`
     );
   } catch (error) {
-    logger.log('error', `Could not add document to index ${req.body.index}`);
+    logger.error(
+      '/document POST',
+      `Could not add document to index ${req.body.index}`,
+      error
+    );
     return res.status(500).send(error);
   }
 
   try {
     await changelog.addLogEntry(response._id, req.session.email);
-    logger.log(
-      'info',
+    logger.info(
+      '/document POST',
       `Changelog entry for document ${req.body.title} with id ${response._id}`
     );
   } catch (error) {
-    logger.log(
-      'error',
-      `Could not add changelog entry to for document ${response._id}`
+    logger.error(
+      '/document POST',
+      `Could not add changelog entry to for document ${response._id}`,
+      error
     );
     return res.status(500).send(error);
   }
@@ -235,10 +277,17 @@ async function update(req, res) {
 
   let encryptedMasterPassword = req.session.mp;
   let fields = checkEmptyFields(req.body);
-  if (!fields.valid)
+  if (!fields.valid) {
+    logger.error(
+      '/document/id PATCH',
+      'Client sent update document with invalid fields'
+    );
     return res
       .status(400)
       .send({ emptyFields: fields.emptyFields, reason: fields.reason });
+  }
+
+  logger.info('/document/id PATCH', 'Updating document', req.body.title);
 
   let encryptedTexts;
   try {
@@ -248,7 +297,7 @@ async function update(req, res) {
       encryptedMasterPassword
     );
   } catch (error) {
-    console.error(error);
+    logger.error('/document/id PATCH', 'Could not encrypt document', error);
     return res.status(500).send();
   }
 
@@ -266,23 +315,31 @@ async function update(req, res) {
   let response;
   try {
     response = await es.update({ query, organizationIndex });
-    logger.log('info', `User ${email} updated document ${req.body.id}`);
+    logger.info(
+      '/document/id PATCH',
+      `User ${email} updated document ${req.body.id}`
+    );
   } catch (error) {
-    logger.log('error', `Cannot update document ${req.body.id}`);
+    logger.error(
+      '/document/id PATCH',
+      `Cannot update document ${req.body.id}`,
+      error
+    );
     return res.status(500).send({ msg: 'Internal Server Error' });
   }
 
   try {
     await changelog.addLogEntry(req.params.id, email);
     res.send(response);
-    logger.log(
-      'info',
+    logger.info(
+      '/document/id PATCH',
       `Added changelog entry for ${email}'s update of document ${req.params.id}`
     );
   } catch (error) {
-    logger.log(
-      'error',
-      `Could not add log entry for update on document ${req.params.id}`
+    logger.error(
+      '/document/id PATCH',
+      `Could not add log entry for update on document ${req.params.id}`,
+      error
     );
     return res.status(500).send({ msg: 'Internal Server Error' });
   }
@@ -294,20 +351,29 @@ async function deleteDocument(req, res) {
   try {
     decryptMasterPassword(req.session.privateKey, encryptedMasterPassword);
     logger.log(
-      'silly',
+      'verbose',
+      '/document/id DELETE',
       `Successfully authenticated user ${
         req.session.email
       } for deleting document ${req.params.id}`
     );
   } catch (error) {
-    logger.log(
-      'error',
+    logger.error(
+      '/document/id DELETE',
       `User ${req.session.email} tried to delete ${
         req.params.id
       } without proper authentication`
     );
     res.status(409).send();
   }
+
+  logger.info(
+    '/document/id DELETE',
+    'User',
+    req.sesion.email,
+    'deletes document',
+    req.params.id
+  );
 
   let query = {
     index: req.session.organizationIndex,
@@ -324,25 +390,27 @@ async function deleteDocument(req, res) {
     query
   );
   if (!expectations.wereMet()) {
+    logger.error('/document/id DELETE', 'Client sent request that was invalid');
     res.status(400).send(expectations.errors());
   } else {
     try {
       response = await es.deleteDocument(query);
       res.send(response);
-      logger.log(
-        'info',
+      logger.info(
+        '/document/id DELETE',
         `User ${req.session.email} deleted document ${req.params.id}`
       );
     } catch (error) {
-      logger.log('error', 'Cannot delete document!');
+      logger.error('/document/id DELETE', 'Cannot delete document!', error);
       return res.status(500).send();
     }
     try {
       await changelog.remove(req.params.id);
     } catch (error) {
-      logger.log(
-        'error',
-        `Could not remove log entries for document ${req.params.id}`
+      logger.error(
+        '/document/id DELETE',
+        `Could not remove log entries for document ${req.params.id}`,
+        error
       );
     }
     return res.send(response);
