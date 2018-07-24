@@ -23,10 +23,15 @@ module.exports = {
 };
 
 async function updateName(req, res) {
-  logger.info('device', 'update name');
   let deviceIdToUpdate = req.body.deviceId;
   let deviceName = req.body.deviceName;
-
+  logger.info(
+    '/devices update name',
+    'update name of',
+    deviceIdToUpdate,
+    'to',
+    deviceName
+  );
   try {
     let user = await db.User.findOne({
       where: {
@@ -43,15 +48,16 @@ async function updateName(req, res) {
       }
     );
   } catch (error) {
-    console.error(error);
+    logger.error('/devices update name', error);
     res.status(500).send({ error: 'Could not update name of device' });
   }
   res.status(200).send();
 }
 
 async function deleteDevice(req, res) {
-  logger.info('device', 'delete device');
   const deviceIdToDelete = req.params.deviceId;
+  logger.info('/devices delete', 'Try to delete device:', deviceIdToDelete);
+
   let user = await db.User.findOne({
     where: {
       email: req.session.email
@@ -72,7 +78,7 @@ async function deleteDevice(req, res) {
       }
     });
   } catch (error) {
-    console.log(error);
+    logger.error('/devices delete', error);
     return res.status(500).send({
       error: 'Could not delete device'
     });
@@ -100,8 +106,9 @@ async function createDevice(forUserId, password, name = 'master-device') {
 }
 
 async function add(req, res) {
-  logger.info('device', 'add');
   let userid = req.session.userid;
+  logger.info('/devices add', 'Add new device for', userid);
+
   let privatekey = req.session.privateKey;
   let encryptedMasterPassword = req.session.mp;
   let { keypair, newEncryptedMasterPassword } = await createNewMasterPassword(
@@ -115,7 +122,7 @@ async function add(req, res) {
       keypair.privateKey
     ));
   } catch (error) {
-    console.error(error);
+    logger.error('/devices add', error);
     return res.status(500).send({ error: 'Nah, we cant do that today..' });
   }
 
@@ -126,14 +133,13 @@ async function add(req, res) {
       privateKey: encryptedPrivateKey
     });
   } catch (error) {
-    console.error('silly', 'Could not create tempkeys');
-    console.error(error);
+    logger.error('/devices add', 'Could not create tempkeys', error);
   }
 
   const inviteCode = '@' + newDevice.deviceId;
   tempPassword = tempPassword.toString('base64');
 
-  console.log('device', 'Invitecode', inviteCode, '\npwd', tempPassword);
+  logger.info('/devices add', 'Invitecode', inviteCode, '\npwd', tempPassword);
   res.send({
     uuid: inviteCode,
     tempPassword: tempPassword
@@ -147,12 +153,11 @@ async function add(req, res) {
     });
 
     mailer.send(mail);
-    console.log('Mail away!');
+    logger.log('verbose', '/devices add', 'Sent mail to', req.body.email);
   }
 }
 
 async function verify(req, res) {
-  logger.info('device', 'verify');
   if (
     req.body.uuid === undefined ||
     req.body.uuid == null ||
@@ -164,6 +169,7 @@ async function verify(req, res) {
 
   const inviteCode = req.body.uuid;
   const uuid = inviteCode.slice(1);
+  logger.info('/devices/verify', 'Try to verify device', uuid);
 
   let tempPassword = req.body.temporaryPassword;
   tempPassword = Buffer.from(decodeURIComponent(tempPassword), 'base64');
@@ -179,10 +185,10 @@ async function verify(req, res) {
       encryptedPrivateKey
     )).toString('base64');
   } catch (error) {
-    logger.log(
-      'error',
-      error,
-      'Could not find encryptedPrivatekey in TempKeys'
+    logger.error(
+      '/devices/verify',
+      'Could not find encryptedPrivatekey in TempKeys',
+      error
     );
     return res.status(error).send();
   }
@@ -193,7 +199,11 @@ async function verify(req, res) {
       where: { deviceId: uuid }
     });
   } catch (error) {
-    console.error('Trying verify deviceid with invitation code', error);
+    logger.error(
+      '/devices/verify',
+      'Trying verify deviceid with invitation code',
+      error
+    );
     return res.status(error).send();
   }
 
@@ -204,7 +214,6 @@ async function verify(req, res) {
 }
 
 async function confirm(req, res) {
-  logger.info('device', 'confirm');
   if (
     req.body.uuid === undefined ||
     req.body.uuid == null ||
@@ -217,6 +226,8 @@ async function confirm(req, res) {
   }
 
   const deviceId = req.body.deviceId;
+  logger.info('/devices/confirm', 'Trying to confirm device', deviceId);
+
   const privateKey = Buffer.from(req.body.privateKey, 'base64');
 
   const deviceJoinUser = await db.Devices.findOne({
@@ -241,7 +252,7 @@ async function confirm(req, res) {
       }
     });
   } catch (error) {
-    console.error(error);
+    logger.error('/devices/confirm', error);
     return res.status(500).send({
       error: 'Something wentr terribly wrong, we are working hard to fix it'
     });
@@ -264,6 +275,7 @@ async function confirm(req, res) {
 }
 
 async function listDevices(req, res) {
+  logger.info('/devices list', 'List devices of user', req.session.email);
   let devices = await db.Devices.findAll({
     include: [
       {
