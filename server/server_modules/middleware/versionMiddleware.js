@@ -22,6 +22,7 @@ const checkVersion = function(req, res, next) {
 
   const version = req.get('x-fortdox-version');
   if (correctVersion(version)) {
+    logger.log('verbose', 'Client\'s version is okay');
     next();
   } else {
     logger.info('version', 'Client with outdated version');
