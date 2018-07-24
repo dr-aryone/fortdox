@@ -3,31 +3,35 @@ module.exports = client => {
     return new Promise(async (resolve, reject) => {
       let from = query.index > 0 ? query.index * limit - limit : 0;
       let response;
+
+      const searchQuery =
+        query.searchString === ''
+          ? { match_all: {} }
+          : {
+            bool: {
+              should: [
+                //should is treaded as an OR operator, i.e results from both queries will be used.
+                {
+                  multi_match: {
+                    query: `${query.searchString.toLowerCase()}`,
+                    fields: ['title', 'tags', 'texts.text'],
+                    fuzziness: 2
+                  }
+                },
+                {
+                  query_string: {
+                    query: `${query.searchString.toLowerCase()}*`
+                  }
+                }
+              ]
+            }
+          };
+
       try {
         response = await client.search({
           index: query.organizationIndex,
           body: {
-            query: {
-              bool: {
-                should: [
-                  {
-                    query_string: {
-                      query: `*${query.searchString}*~`
-                    }
-                  },
-                  {
-                    regexp: {
-                      _all: '.*' + query.searchString + '.*'
-                    }
-                  },
-                  {
-                    fuzzy: {
-                      _all: query.searchString
-                    }
-                  }
-                ]
-              }
-            },
+            query: searchQuery,
             highlight: {
               pre_tags: ['%%#%%'],
               post_tags: ['%%#%%'],
@@ -38,10 +42,10 @@ module.exports = client => {
                 }
               },
               require_field_match: false
-            },
-            from: from,
-            size: limit
+            }
           },
+          from: from,
+          size: limit,
           _sourceExclude: ['attachments', 'encrypted_texts']
         });
         return resolve(response);
@@ -50,11 +54,6 @@ module.exports = client => {
         return reject(error);
       }
     });
-  };
-
-  const paginationSearchAll = query => {
-    query.index = '_all';
-    return paginationSearch(query);
   };
 
   const searchForDuplicates = ({ organization, searchString }) => {
@@ -100,7 +99,6 @@ module.exports = client => {
 
   return {
     paginationSearch,
-    paginationSearchAll,
     searchForDuplicates
   };
 };
