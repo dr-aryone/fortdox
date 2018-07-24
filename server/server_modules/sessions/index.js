@@ -20,7 +20,7 @@ async function login(req, res) {
   try {
     user = await users.getUser(req.body.email);
   } catch (error) {
-    logger.log('silly', '/login: No existing user ' + req.body.email);
+    logger.warn('/login', 'No existing user ' + req.body.email);
     return res.status(error).send();
   }
 
@@ -29,13 +29,17 @@ async function login(req, res) {
   const requestDeviceId = req.body.deviceId;
   let deviceIdWhereQuery = {};
   let deviceIdMigration = false;
-  console.log('Device id is', req.body.deviceId);
+  logger.log('verbose', '/login', 'Device id is', req.body.deviceId);
   if (requestDeviceId === undefined && user.uuid == null) {
-    console.log('migration', 'Client without device uuid, will send it back.');
+    logger.log(
+      'verbose',
+      '/login',
+      'Migration:- Client without device uuid, will send it back.'
+    );
     deviceIdMigration = true;
     deviceIdWhereQuery = { userid: user.id };
   } else {
-    console.log('migration', 'Client with device uuid');
+    logger.log('verbose', '/login', 'Migration:- Client with device uuid');
     deviceIdWhereQuery = { deviceId: requestDeviceId };
   }
 
@@ -45,15 +49,12 @@ async function login(req, res) {
       where: deviceIdWhereQuery
     });
   } catch (error) {
-    console.log(error);
+    logger.error('/login', 'Could not query db for device', error);
     return res.status(500).send();
   }
 
   if (!deviceOfUser) {
-    logger.log(
-      'silly',
-      '/login: No existing device with id' + req.body.deviceId
-    );
+    logger.warn('/login', 'No existing device with id' + req.body.deviceId);
     return res.status(404).send();
   }
 
@@ -63,8 +64,11 @@ async function login(req, res) {
   try {
     await decryptMasterPassword(privateKey, user.password);
   } catch (error) {
-    logger.error(error);
-    logger.error(`Failed to decrypt master password for user ${user.email}`);
+    logger.error(
+      '/login',
+      `Failed to decrypt master password for user ${user.email}`,
+      error
+    );
     return res.status(401).send({
       msg: statusMsg.user[401]
     });
@@ -83,7 +87,7 @@ async function login(req, res) {
     token,
     deviceId: deviceIdMigration ? deviceOfUser.deviceId : undefined
   });
-  logger.log('info', `User ${req.body.email} has logged in!`);
+  logger.info('/login', `User ${req.body.email} has logged in!`);
 }
 
 async function needsMasterPassword(req, res, next) {
@@ -98,12 +102,12 @@ async function needsMasterPassword(req, res, next) {
       }
     });
   } catch (error) {
-    console.error(error);
+    logger.error('auth/needsMasterPassword', error);
     return res.status(500).send({ error: 'Internal Server Error' });
   }
 
   if (!user) {
-    logger.info('auth', 'No user with email {userEmail}');
+    logger.warn('auth/needsMasterPassword', 'No user with email {userEmail}');
     return res.status(401).send({ error: 'Unauthorized' });
   }
 
@@ -116,12 +120,12 @@ async function needsMasterPassword(req, res, next) {
       }
     });
   } catch (error) {
-    console.error(error);
+    logger.error('auth/needsMasterPassword', error);
     return res.status(500).send({ error: 'Internal Server Error' });
   }
 
   if (!device) {
-    logger.info('auth', `No device with id ${deviceId} and user id ${user.id}`);
+    logger.warn('auth', `No device with id ${deviceId} and user id ${user.id}`);
     return res.status(401).send({ error: 'Unauthorized.' });
   }
 
@@ -133,7 +137,7 @@ async function needsMasterPassword(req, res, next) {
 async function restrict(req, res, next) {
   let authorization = req.headers.authorization;
   if (!authorization) {
-    logger.info('auth', 'No Header');
+    logger.warn('auth/restrict', 'No Header');
     return res.status(401).send({
       error: 'Unauthorized.'
     });
@@ -142,7 +146,7 @@ async function restrict(req, res, next) {
   let encodedToken = authorization.split('Bearer ')[1];
 
   if (!encodedToken) {
-    logger.info('auth', 'No token');
+    logger.warn('auth/restrict', 'No token');
     return res
       .status(401)
       .send({
@@ -156,8 +160,7 @@ async function restrict(req, res, next) {
   try {
     decodedToken = decryptSession(encodedToken);
   } catch (error) {
-    logger.info('auth', 'Invalid session');
-    logger.error(error);
+    logger.warn('auth/restrict', 'Invalid session', error);
     return res.status(401).send({
       error: 'Session Expired.'
     });
@@ -172,7 +175,7 @@ async function restrict(req, res, next) {
       throw Error('Could not find device that matches this users deviceId');
     }
   } catch (error) {
-    console.error(error);
+    logger.error('auth/restrict', 'Could not query DB for device', error);
     return res
       .status(401)
       .send({
@@ -185,7 +188,7 @@ async function restrict(req, res, next) {
   req.session = decodedToken;
 
   if (isObjEmpty(decodedToken)) {
-    logger.info('auth', 'Invalid session', decodedToken);
+    logger.warn('auth/restric', 'Parts of token is empty', decodedToken);
     return res.status(401).send({
       error: 'Session invalid'
     });
@@ -195,6 +198,7 @@ async function restrict(req, res, next) {
 }
 
 function check(req, res) {
+  logger.info('/login/check', `${req.session.user} has valid token`);
   res.send({
     organization: req.session.organization,
     email: req.session.email
