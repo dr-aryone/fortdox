@@ -17,6 +17,7 @@ const job = new CronJob('*/30 * * * *', async () => {
     await cleanup();
   } catch (error) {
     console.error(error);
+    logger.error(error);
   }
 });
 job.start();
@@ -29,10 +30,12 @@ app.use(bodyParser.json({ limit: '100mb' }));
 app.use('/', routes);
 
 app.get('/activation-redirect', (req, res) => {
+  logger.info('Organization', 'acitivation redirect');
   res.sendFile(__dirname + '/redirect.html');
 });
 
 app.get('/invite-redirect', (req, res) => {
+  logger.info('Invite', 'activation redirect');
   res.sendFile(__dirname + '/invite-redirect.html');
 });
 
