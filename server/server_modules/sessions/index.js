@@ -198,7 +198,7 @@ async function restrict(req, res, next) {
 }
 
 function check(req, res) {
-  logger.info('/login/check', `${req.session.user} has valid token`);
+  logger.info('/login/check', `${req.session.email} has valid token`);
   res.send({
     organization: req.session.organization,
     email: req.session.email
