@@ -21,15 +21,18 @@ async function user(req, res) {
   let newUserEmail = req.body.newUserEmail;
   let encryptedMasterPassword = req.session.mp;
   let sender;
+
+  logger.info('/invite', 'User:', email, 'invited', newUserEmail);
+
   try {
     sender = await users.getUser(email);
   } catch (error) {
-    logger.log('silly', `Could not find sender ${email} @ /invite`);
+    logger.warn('/invite', `Could not find sender ${email}`);
     return res.status(409).send();
   }
 
   if (sender.email === newUserEmail) {
-    logger.log('silly', 'User tried to self-invite');
+    logger.warn('/invite', 'User tried to self-invite', email);
     return res.status(500).send();
   }
 
@@ -43,8 +46,8 @@ async function user(req, res) {
   try {
     newUser = await users.createUser(newUser);
   } catch (error) {
-    logger.log(
-      'silly',
+    logger.error(
+      '/invite',
       'Could not create user',
       newUser.email,
       'because of',
@@ -74,7 +77,7 @@ async function user(req, res) {
       })
       .end();
   } catch (error) {
-    console.error(error);
+    logger.error('/invite', error);
   }
   res.status(500).send();
 }
@@ -87,6 +90,9 @@ async function verify(req, res) {
   );
   let encryptedPrivateKey;
   let privateKey;
+
+  logger.info('/invite/verify', 'Verifying invitecode', uuid);
+
   try {
     encryptedPrivateKey = new Buffer(
       await users.getEncryptedPrivateKey(uuid),
@@ -104,13 +110,14 @@ async function verify(req, res) {
     });
 
     logger.log(
-      'silly',
+      'verbose',
+      '/invite/verify',
       `Keypair generated and private key was sent to user with UUID ${uuid}`
     );
 
     return;
   } catch (error) {
-    logger.log('error', `Could not find user with UUID ${uuid}`);
+    logger.error('/invite/verify', `Could not find user with UUID ${uuid}`);
     return res.status(500).send();
   }
 }
@@ -119,10 +126,12 @@ async function confirm(req, res) {
   let uuid = req.body.uuid;
   const deviceId = req.body.deviceId;
 
+  logger.info('/invite/confirm', 'Confirming invite', uuid, deviceId);
+
   if (!req.body.privateKey) {
-    logger.log(
-      'silly',
-      `Missing private key for ${uuid} when confirming uuid @ /invite/confirm`
+    logger.warn(
+      '/invite/verify',
+      `Missing private key for ${uuid} when confirming uuid`
     );
     return res.status(400).send();
   }
@@ -140,15 +149,12 @@ async function confirm(req, res) {
     );
     await users.TempKeys.remove(uuid);
     res.send(metadata);
-    logger.log(
-      'info',
+    logger.info(
+      '/invite/confirm',
       `User ${metadata.email} was added to ${metadata.organization}`
     );
   } catch (error) {
-    logger.log(
-      'error',
-      `Cannot verify User with uuid ${uuid} @ /invite/confirm`
-    );
+    logger.error('/invite/confirm', `Cannot verify User with uuid ${uuid}`);
     return res.status(500).send();
   }
 }
