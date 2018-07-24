@@ -15,10 +15,10 @@ router.use('/login', login);
 router.use('/devices', devices);
 router.use('/register', register);
 router.use('/invite', invite);
+router.use('/reinvite', restrict, reinvite);
 router.use('/document', restrict, document);
 router.use('/tags', restrict, tags);
 router.use('/users', restrict, users);
 router.use('/update', update);
-router.use('/reinvite', restrict, reinvite);
 
 module.exports = router;
