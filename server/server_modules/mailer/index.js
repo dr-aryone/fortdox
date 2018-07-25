@@ -1,6 +1,7 @@
 'use strict';
 const config = require('../config.json');
 const nodemailer = require('nodemailer');
+const logger = require('app/logger');
 const {
   firstTimeRegistration,
   newDeviceRegistration,
@@ -11,9 +12,9 @@ let transporter = nodemailer.createTransport(config.mailer);
 
 transporter.verify(function(error) {
   if (error) {
-    console.log(error);
+    logger.error('Mailer', error);
   } else {
-    console.log('Mailer is ready');
+    logger.log('verbose', 'Mailer is ready');
   }
 });
 
