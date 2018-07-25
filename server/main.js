@@ -4,13 +4,23 @@ const cleanup = require('app/database_cleanup/cleanup');
 const CronJob = require('cron').CronJob;
 const logger = require('app/logger');
 const routes = require('./routes');
-const PORT = 8000;
-const devMode = process.argv[2] === '--dev';
-
 const { checkVersion } = require('app/middleware/versionMiddleware');
 const timer = require('app/middleware/timerMiddleware');
 const bodyParser = require('body-parser');
 const allowCrossDomain = require('app/middleware/corsMiddleware');
+const PORT = 8000;
+const flags = require('flags');
+
+flags.defineBoolean('dev', false);
+flags.defineBoolean('verbose', false);
+flags.parse();
+
+const devMode = flags.get('dev');
+const verboseMode = flags.get('verbose');
+
+if (verboseMode || devMode) {
+  logger.transports.console.level = 'verbose';
+}
 
 const job = new CronJob('*/30 * * * *', async () => {
   try {
@@ -41,7 +51,7 @@ app.get('/invite-redirect', (req, res) => {
 
 app.listen(PORT, () => {
   if (devMode) {
-    logger.info('Dev mode is enabled');
+    logger.info('Dev mode is enabled', 'For testing..');
   }
   logger.info(`Server started listening on port ${PORT}`);
 });
