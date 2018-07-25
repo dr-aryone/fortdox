@@ -1,4 +1,5 @@
 const db = require('app/models');
+const logger = require('app/logger');
 
 const get = documentId => {
   return new Promise(async (resolve, reject) => {
@@ -12,7 +13,7 @@ const get = documentId => {
       });
       return resolve(logentries);
     } catch (error) {
-      console.log(error);
+      logger.error(error);
       return reject(500);
     }
   });
@@ -28,7 +29,7 @@ const getLatestEntries = () => {
         raw: true
       });
     } catch (error) {
-      console.log(error);
+      logger.error(error);
       return reject(500);
     }
     return resolve(entries);
@@ -44,7 +45,7 @@ const addLogEntry = (documentId, user) => {
       });
       return resolve(200);
     } catch (error) {
-      console.log(error);
+      logger.error(error);
       return reject(500);
     }
   });
@@ -60,7 +61,7 @@ const remove = documentId => {
       });
       return resolve(200);
     } catch (error) {
-      console.log(error);
+      logger.error(error);
       return reject(500);
     }
   });
