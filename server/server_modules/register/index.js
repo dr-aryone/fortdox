@@ -19,6 +19,7 @@ module.exports = {
 };
 
 async function organization(req, res) {
+  logger.info('/register', 'Registering new organization');
   let uuid = uuidv1();
   let newUser = {
     email: req.body.email,
@@ -31,14 +32,17 @@ async function organization(req, res) {
   try {
     await orgs.getName(req.body.organization);
   } catch (error) {
-    logger.log('silly', `Organization ${req.body.organization} already exists`);
+    logger.warn(
+      '/register',
+      `Organization ${req.body.organization} already exists`
+    );
     return res.status(error).send('organization');
   }
   try {
     await users.createUser(newUser);
-    logger.log('silly', `User ${req.body.email} was created!`);
+    logger.info('/register', `User ${req.body.email} was created!`);
   } catch (error) {
-    logger.log('silly', `User ${req.body.email} already exists`);
+    logger.warn('/register', `User ${req.body.email} already exists`);
     return res.status(error).send('user');
   }
   try {
@@ -48,8 +52,8 @@ async function organization(req, res) {
       organizationId
     });
   } catch (error) {
-    logger.log(
-      'error',
+    logger.error(
+      '/register',
       `Could not set Organization ID (${organizationId}) for ${email}`
     );
     return res.status(error).send('organization');
@@ -60,19 +64,20 @@ async function organization(req, res) {
     uuid: newUser.uuid
   });
 
-  logger.log('silly', 'Register mail code:\n', newUser.uuid);
+  logger.log('verbose', '/register', 'Register mail code:\n', newUser.uuid);
 
   try {
     mailer.send(mail);
     logger.log(
-      'silly',
+      'verbose',
+      '/register',
       `User ${req.body.email} sent an activation mail for organization ${
         req.body.organization
       }`
     );
   } catch (error) {
-    logger.log(
-      'silly',
+    logger.error(
+      '/register',
       `Could not send email to ${
         newUser.email
       } probably because email does not exist`
@@ -86,16 +91,20 @@ async function confirm(req, res) {
   let email = req.body.email;
   let deviceId = req.body.deviceId;
   if (!req.body.privateKey) {
-    logger.log('silly', `Missing private key for ${email} @ /register/confirm`);
+    logger.warn(
+      '/register/confirm',
+      `Missing private key for ${email} @ /register/confirm`
+    );
     return res.status(400).send();
   }
   let privateKey = Buffer.from(req.body.privateKey, 'base64');
+  logger.info('/register/confirm', 'Trying to confirm registration of org');
 
   try {
     await users.verifyUser(email, privateKey, deviceId);
   } catch (error) {
-    logger.log(
-      'error',
+    logger.error(
+      '/register/confirm',
       `Could not verify user ${email}, possibly malformed/incorrect private key or mysql server is down`
     );
     return res.status(500).send();
@@ -104,8 +113,8 @@ async function confirm(req, res) {
   try {
     organizationName = await users.getOrganizationName(email);
   } catch (error) {
-    logger.log(
-      'silly',
+    logger.error(
+      '/register/confirm',
       `Could not connect user ${email} with an organization. Probable cause could be mysql server is down.`
     );
     res.status(404).send();
@@ -132,13 +141,13 @@ async function confirm(req, res) {
       organizationName,
       email: user.email
     });
-    logger.log(
-      'info',
+    logger.info(
+      '/register/confirm',
       `User ${user.email} successfully created organization ${organizationName}`
     );
   } catch (error) {
-    logger.log(
-      'error',
+    logger.error(
+      '/register/confirm',
       `Check ElasticSearch and MSQL server connections. Failing that check if ${organizationName} already exists`
     );
     res.status(500).send();
@@ -151,19 +160,24 @@ async function verify(req, res) {
   try {
     user = await users.verifyUUID(req.body.activationCode);
   } catch (error) {
-    console.log(error);
     logger.warn(
+      '/register/verify',
       `Could not verify User with UUID ${
         req.body.activationCode
-      }. Probably because user does not exist or server is down.`
+      }. Probably because user does not exist`,
+      error
     );
     return res.status(error).send();
   }
   try {
-    logger.silly(`Generating keypair for new user ${user.email}`);
+    logger.log(
+      'verbose',
+      '/register/verify',
+      `Generating keypair for new user ${user.email}`
+    );
     keypair = await keygen.genKeyPair();
   } catch (error) {
-    logger.error(error);
+    logger.error('/register/verify', error);
   }
   let masterPassword = keygen.genRandomPassword();
   let encryptedMasterPassword = encryptMasterPassword(
@@ -179,12 +193,12 @@ async function verify(req, res) {
       deviceId: device.deviceId
     });
   } catch (error) {
-    console.error(error);
-    logger.log(
-      'error',
+    logger.error(
+      '/register/verify',
       `Could not set encrypted master password for ${
         user.email
-      }. Check MYSQL connection, or if ${user.email} does not exist`
+      }. Check MYSQL connection, or if ${user.email} does not exist`,
+      error
     );
     res.status(500).send();
   }
