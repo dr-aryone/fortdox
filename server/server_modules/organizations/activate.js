@@ -10,12 +10,13 @@ module.exports = (organization, indexName) => {
           activated: false
         }
       });
+
+      if (!org) {
+        return reject(409);
+      }
     } catch (error) {
       console.error(error);
       return reject(500);
-    }
-    if (!org) {
-      return reject(409);
     }
 
     try {

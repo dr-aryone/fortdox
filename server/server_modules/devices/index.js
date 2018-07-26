@@ -7,6 +7,7 @@ const {
 const logger = require('app/logger');
 const mailer = require('app/mailer');
 const users = require('app/users');
+const userUtil = require('app/users/User');
 const {
   decryptPrivateKey
 } = require('app/encryption/authentication/privateKeyEncryption');
@@ -33,11 +34,8 @@ async function updateName(req, res) {
     deviceName
   );
   try {
-    let user = await db.User.findOne({
-      where: {
-        email: req.session.email
-      }
-    });
+    let user = await userUtil.getUser(req.session.email);
+
     await db.Devices.update(
       { deviceName: deviceName },
       {
@@ -58,13 +56,8 @@ async function deleteDevice(req, res) {
   const deviceIdToDelete = req.params.deviceId;
   logger.info('/devices delete', 'Try to delete device:', deviceIdToDelete);
 
-  let user = await db.User.findOne({
-    where: {
-      email: req.session.email
-    }
-  });
-
   try {
+    let user = await userUtil.getUser(req.session.email);
     await db.Devices.destroy({
       where: {
         userid: user.id,
@@ -87,13 +80,14 @@ async function deleteDevice(req, res) {
   res.send();
 }
 
+//TODO: Move this to User.js?
 async function findDeviceFromUserUUID(uuid) {
   let user = await db.User.findOne({
     where: {
       uuid: uuid
     }
   });
-
+  if (!user) throw new Error(`${uuid} does not match any user.`);
   return await db.Devices.findOne({ where: { userid: user.id } });
 }
 
@@ -198,6 +192,7 @@ async function verify(req, res) {
     newDevice = await db.Devices.findOne({
       where: { deviceId: uuid }
     });
+    if (!newDevice) throw new Error(`No device with uuid: ${uuid}`);
   } catch (error) {
     logger.error(
       '/devices/verify',
@@ -230,18 +225,32 @@ async function confirm(req, res) {
 
   const privateKey = Buffer.from(req.body.privateKey, 'base64');
 
-  const deviceJoinUser = await db.Devices.findOne({
-    where: { deviceId: deviceId },
-    include: [{ model: db.User }]
-  });
-  const device = await db.Devices.findOne({
-    where: { deviceId: deviceId, userid: deviceJoinUser.User.id }
-  });
+  let deviceJoinUser;
+  let device;
+  let org;
+  try {
+    deviceJoinUser = await db.Devices.findOne({
+      where: { deviceId: deviceId },
+      include: [{ model: db.User }]
+    });
+    if (!deviceJoinUser) throw new Error('Could not find such devices');
+    device = await db.Devices.findOne({
+      where: { deviceId: deviceId, userid: deviceJoinUser.User.id }
+    });
+    if (!device) throw new Error('Could not find device for that user');
 
-  const org = await db.Organization.findOne({
-    where: { id: deviceJoinUser.User.organizationId }
-  });
-
+    org = await db.Organization.findOne({
+      where: { id: deviceJoinUser.User.organizationId }
+    });
+    if (!org)
+      throw new Error('Could not find the organization that user belongs to');
+  } catch (error) {
+    console.error(error);
+    return res
+      .status(500)
+      .send()
+      .end();
+  }
   const encryptedMasterPassword = device.password;
   decryptMasterPassword(privateKey, encryptedMasterPassword);
 
