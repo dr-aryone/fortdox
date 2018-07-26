@@ -7,6 +7,7 @@ module.exports = {
 
 async function listOrganizationMembers(req, res) {
   const organizationId = req.session.organizationId;
+  logger.info('/users', 'Listing members of organization', organizationId);
   let organization, tempKeys;
   try {
     [organization, tempKeys] = await Promise.all([
@@ -27,11 +28,12 @@ async function listOrganizationMembers(req, res) {
       })
     ]);
   } catch (error) {
-    logger.error(error);
+    logger.error('/users', error);
     res.status(500).send();
     return;
   }
   if (!organization) {
+    logger.warn('/users', 'Could not find organization', organizationId);
     res.status(404).send('noSuchOrganization');
     return;
   }
