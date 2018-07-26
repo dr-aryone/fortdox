@@ -8,6 +8,8 @@ const {
   decryptMasterPassword
 } = require('app/encryption/keys/cryptMasterPassword');
 
+const userUtil = require('app/users/User');
+
 module.exports = {
   login,
   restrict,
@@ -48,14 +50,14 @@ async function login(req, res) {
     deviceOfUser = await db.Devices.findOne({
       where: deviceIdWhereQuery
     });
+
+    if (!deviceOfUser) {
+      logger.warn('/login', 'No existing device with id' + req.body.deviceId);
+      return res.status(404).send();
+    }
   } catch (error) {
     logger.error('/login', 'Could not query db for device', error);
     return res.status(500).send();
-  }
-
-  if (!deviceOfUser) {
-    logger.warn('/login', 'No existing device with id' + req.body.deviceId);
-    return res.status(404).send();
   }
 
   let privateKey = Buffer.from(req.body.privateKey, 'base64');
@@ -96,19 +98,21 @@ async function needsMasterPassword(req, res, next) {
 
   let user;
   try {
-    user = await db.User.findOne({
-      where: {
-        email: userEmail
-      }
-    });
+    user = await userUtil.getUser(userEmail);
   } catch (error) {
+    console.error(error);
+    if (error === 404) {
+      logger.warn('auth/needsMasterPassword', 'No user with email {userEmail}');
+      return res
+        .status(401)
+        .send({ error: 'Unauthorized' })
+        .end();
+    }
     logger.error('auth/needsMasterPassword', error);
-    return res.status(500).send({ error: 'Internal Server Error' });
-  }
-
-  if (!user) {
-    logger.warn('auth/needsMasterPassword', 'No user with email {userEmail}');
-    return res.status(401).send({ error: 'Unauthorized' });
+    return res
+      .status(500)
+      .send({ error: 'Internal Server Error' })
+      .end();
   }
 
   let device;
@@ -119,14 +123,17 @@ async function needsMasterPassword(req, res, next) {
         deviceId: deviceId
       }
     });
+
+    if (!device) {
+      logger.warn(
+        'auth',
+        `No device with id ${deviceId} and user id ${user.id}`
+      );
+      return res.status(401).send({ error: 'Unauthorized.' });
+    }
   } catch (error) {
     logger.error('auth/needsMasterPassword', error);
     return res.status(500).send({ error: 'Internal Server Error' });
-  }
-
-  if (!device) {
-    logger.warn('auth', `No device with id ${deviceId} and user id ${user.id}`);
-    return res.status(401).send({ error: 'Unauthorized.' });
   }
 
   req.session.userid = user.id;

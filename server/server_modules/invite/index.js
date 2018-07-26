@@ -104,6 +104,7 @@ async function verify(req, res) {
     )).toString('base64');
 
     let device = await devices.findDeviceFromUserUUID(uuid);
+
     res.send({
       privateKey,
       deviceId: device.deviceId
@@ -117,8 +118,11 @@ async function verify(req, res) {
 
     return;
   } catch (error) {
-    logger.error('/invite/verify', `Could not find user with UUID ${uuid}`);
-    return res.status(500).send();
+    logger.log('error', `Could not find user with UUID ${uuid}`);
+    return res
+      .status(500)
+      .send()
+      .end();
   }
 }
 

@@ -30,15 +30,6 @@ async function organization(req, res) {
   let organizationId;
   let email = req.body.email;
   try {
-    await orgs.getName(req.body.organization);
-  } catch (error) {
-    logger.warn(
-      '/register',
-      `Organization ${req.body.organization} already exists`
-    );
-    return res.status(error).send('organization');
-  }
-  try {
     await users.createUser(newUser);
     logger.info('/register', `User ${req.body.email} was created!`);
   } catch (error) {
