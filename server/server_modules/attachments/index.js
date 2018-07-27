@@ -4,6 +4,6 @@ const getAttachment = require('./attachment.get');
 const uploadAttachment = require('./attachment.post');
 
 router.get('/:attachmentIndex', getAttachment);
-router.post('/', uploadAttachment);
+//router.post('/', upload.array('attachments[]'), uploadAttachment);
 
 module.exports = router;

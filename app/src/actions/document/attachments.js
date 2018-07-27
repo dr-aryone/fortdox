@@ -25,12 +25,14 @@ export const addAttachment = files => {
         });
         continue;
       }
+
       try {
         let data = await attachmentUtils.readSource(file);
         dispatch({
           type: `${prefix}_ADD_ATTACHMENT`,
           fileType: file.type,
           name: file.name,
+          actualFile: file,
           file: data.toString('base64')
         });
       } catch (error) {
@@ -80,7 +82,7 @@ export const previewAttachment = (attachmentData, attachmentIndex) => {
       try {
         response = await requestor.get(
           `${
-          config.server
+            config.server
           }/document/${currentDocumentId}/attachment/${attachmentIndex}`
         );
       } catch (error) {
@@ -175,7 +177,7 @@ export const downloadAttachment = (attachmentData, attachmentIndex) => {
       try {
         response = await requestor.get(
           `${
-          config.server
+            config.server
           }/document/${currentDocument}/attachment/${attachmentIndex}`,
           {
             onDataReceived: ({ loaded, total }) => {

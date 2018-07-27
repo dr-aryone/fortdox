@@ -21,7 +21,7 @@ class Attachments extends React.Component {
   }
 
   openModal(attachment, index, onPreviewAttachment) {
-    let type = attachment.get('type');
+    let type = attachment.type;
     switch (type) {
       case 'image/jpeg':
       case 'image/png':
@@ -95,7 +95,7 @@ class Attachments extends React.Component {
 
     let attachmentList = [];
     attachments.forEach((attachment, index) => {
-      let name = attachment.get('name');
+      let name = attachment.name;
       name = name.replace(
         /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}-/,
         ''

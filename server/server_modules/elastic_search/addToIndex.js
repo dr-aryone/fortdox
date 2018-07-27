@@ -5,11 +5,11 @@ module.exports = client => {
     return new Promise(async (resolve, reject) => {
       let response;
       let attachments = query.attachments || [];
-      attachments = attachments.map(attachment => ({
-        name: `${uuid()}-${attachment.name}`,
-        file_type: attachment.file_type,
-        file: attachment.file
-      }));
+      // attachments = attachments.map(attachment => ({
+      //   name: `${uuid()}-${attachment.name}`,
+      //   file_type: attachment.file_type,
+      //   file: attachment.file
+      // }));
 
       try {
         response = await client.index({
@@ -20,7 +20,7 @@ module.exports = client => {
             encrypted_texts: query.encryptedTexts,
             texts: query.texts,
             tags: query.tags,
-            attachments: attachments
+            files: attachments
           },
           refresh: true
         });
