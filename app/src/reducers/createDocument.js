@@ -159,13 +159,12 @@ const form = (state = initialState, action) => {
       return state
         .setIn(
           ['docFields', 'attachments'],
-          state.getIn(['docFields', 'attachments']).push(
-            fromJS({
-              name: fromJS(action.name),
-              type: fromJS(action.fileType),
-              file: fromJS(action.file)
-            })
-          )
+          state.getIn(['docFields', 'attachments']).push({
+            name: action.name,
+            type: action.fileType,
+            file: action.file,
+            actualFile: action.actualFile
+          })
         )
         .set('checkFields', false);
     case 'CREATE_DOC_REMOVE_ATTACHMENT':

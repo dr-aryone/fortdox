@@ -51,24 +51,48 @@ export function createDocument() {
         id: field.get('id')
       });
     });
+
     docFields.getIn(['attachments']).forEach(attachment => {
       attachments.push({
-        name: attachment.get('name'),
-        file: attachment.get('file'),
-        file_type: attachment.get('type')
+        name: attachment.name,
+        file: attachment.file,
+        file_type: attachment.type
       });
     });
 
+    //Upload the files
+    let form = new FormData();
+    docFields.getIn(['attachments']).forEach(a => {
+      form.append('attachments[]', a.actualFile);
+    });
+
+    // Display the key/value pairs
+    for (let pair of form.entries()) {
+      console.log(pair[0] + ', ' + pair[1].name);
+    }
+
+    // try {
+    //   const response = await requestor.post(
+    //     `${config.server}/document/attachment`,
+    //     {
+    //       body: form
+    //     }
+    //   );
+    //   console.log('File ids:', response);
+    // } catch (error) {
+    //   console.error(error);
+    // }
+
+    //create document.. lol
+    form.set('title', title);
+
+    form.set('encryptedTexts', JSON.stringify(encryptedTexts));
+    form.set('texts', JSON.stringify(texts));
+    form.set('tags', tags);
     let response;
     try {
       response = await requestor.post(`${config.server}/document`, {
-        body: {
-          title,
-          encryptedTexts,
-          texts,
-          tags,
-          attachments
-        }
+        body: form
       });
     } catch (error) {
       console.error(error);

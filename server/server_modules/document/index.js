@@ -10,6 +10,7 @@ const {
 } = require('app/encryption/keys/cryptMasterPassword');
 const expect = require('@edgeguideab/expect');
 const logger = require('app/logger');
+const uuidv4 = require('uuid/v4');
 
 module.exports = {
   search,
@@ -166,9 +167,13 @@ async function search(req, res) {
 }
 
 async function create(req, res) {
+  req.body.encryptedTexts = JSON.parse(req.body.encryptedTexts);
+  req.body.texts = JSON.parse(req.body.texts);
+
   let privateKey = req.session.privateKey;
   let organizationIndex = req.session.organizationIndex;
   let encryptedMasterPassword = req.session.mp;
+  logger.log('verbose', 'Files:', req.body);
 
   let fields = checkEmptyFields(req.body);
   if (!fields.valid) {
@@ -196,12 +201,26 @@ async function create(req, res) {
     return res.status(500).send();
   }
 
+  logger.log('verbose', 'Files:', req.body);
+  logger.log('verbose', 'Files:', req.files);
+  //attachments
+
+  const files = Array.from(req.files).map(file => {
+    return {
+      id: `@${uuidv4()}`,
+      name: file.originalname,
+      path: file.path,
+      type: file.mimetype
+    };
+  });
+  console.log(files);
+
   let query = {
     title: req.body.title,
     encryptedTexts: encryptedTexts,
     texts: req.body.texts,
     tags: req.body.tags,
-    attachments: req.body.attachments
+    attachments: files
   };
 
   let response;
