@@ -62,7 +62,7 @@ export function createDocument() {
 
     //Upload the files
     let form = new FormData();
-    docFields.getIn(['attachments']).forEach(a => {
+    docFields.getIn(['files']).forEach(a => {
       form.append('attachments[]', a.actualFile);
     });
 
@@ -309,13 +309,16 @@ export function openDocument(id, skipTimeout, showPreview) {
       doc._source.tags.forEach(entry => {
         tags.push(entry);
       });
+
       doc._source.attachments.forEach(attachment => {
         attachments.push({
           name: attachment.name,
+          id: attachment.id,
           file: attachment.file,
-          type: attachment.file_type
+          type: attachment.type
         });
       });
+
       dispatch({
         type: 'OPEN_DOCUMENT_DONE',
         documentToUpdate: doc,

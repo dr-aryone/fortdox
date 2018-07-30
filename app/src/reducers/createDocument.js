@@ -26,6 +26,7 @@ let initialState = fromJS({
       old: []
     },
     attachments: [],
+    files: [],
     preview: {
       name: null,
       data: null,
@@ -157,19 +158,22 @@ const form = (state = initialState, action) => {
         .set('checkFields', false);
     case 'CREATE_DOC_ADD_ATTACHMENT':
       return state
-        .setIn(
-          ['docFields', 'attachments'],
-          state.getIn(['docFields', 'attachments']).push({
-            name: action.name,
-            type: action.fileType,
-            file: action.file,
-            actualFile: action.actualFile
-          })
+        .updateIn(['docFields', 'attachments'], arr =>
+          arr.push(
+            fromJS({
+              name: action.name,
+              type: action.fileType,
+              file: action.file
+            })
+          )
+        )
+        .updateIn(['docFields', 'files'], arr =>
+          arr.push({ actualFile: action.actualFile })
         )
         .set('checkFields', false);
     case 'CREATE_DOC_REMOVE_ATTACHMENT':
       return state
-        .setIn(['docFields', 'attachments'], fromJS(action.payload))
+        .setIn(['docFields', 'attachments'], action.payload)
         .set('checkFields', false);
     case 'CREATE_DOC_PREVIEW_ATTACHMENT_START':
       return state.set('isLoading', true);
