@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { DragSource, DropTarget } from 'react-dnd';
 import flow from 'lodash/flow';
 import Modal from 'components/general/Modal';
+import { Editor } from '@tinymce/tinymce-react';
 
 const Type = {
   TEXT: 'text'
@@ -78,9 +79,9 @@ class TextArea extends Component {
       connectDropTarget
     } = this.props;
 
-    const style = {
-      minHeight: `${field.get('value').split('\n').length}em`
-    };
+    // const style = {
+    //   minHeight: `${field.get('value').split('\n').length}em`
+    // };
 
     const opacity = field.get('id') === elementToHide ? 0 : 1;
 
@@ -133,11 +134,22 @@ class TextArea extends Component {
               </i>
             </label>
             <div className='textarea'>
-              <textarea
+              {/* <textarea
                 name={field.get('id')}
                 onChange={event => onChange(event, type)}
                 value={field.get('value')}
                 style={style}
+              /> */}
+              <Editor
+                initialValue='<p>This is the initial content of the editor</p>'
+                init={{
+                  plugins: 'link image code lists',
+                  toolbar:
+                    'bold italic underline | code blockquote | bullist numlist | link image',
+                  branding: false,
+                  menubar: false
+                }}
+                onChange={this.handleEditorChange}
               />
             </div>
             <div className={`arrow-box ${field.get('error') ? 'show' : ''}`}>

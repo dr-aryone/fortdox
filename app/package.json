@@ -34,6 +34,7 @@
     "@edgeguideab/client-request": "^1.4.8",
     "@edgeguideab/password-check": "^1.2.6",
     "@edgeguideab/requestor": "^1.1.8",
+    "@tinymce/tinymce-react": "^2.2.5",
     "clipboard-js": "^0.3.6",
     "electron-log": "^2.2.14",
     "electron-updater": "^2.19.1",
