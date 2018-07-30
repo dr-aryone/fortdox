@@ -205,21 +205,23 @@ async function create(req, res) {
   logger.log('verbose', 'Files:', req.files);
   //attachments
 
-  const files = Array.from(req.files).map(file => {
-    return {
-      id: `@${uuidv4()}`,
-      name: file.originalname,
-      path: file.path,
-      type: file.mimetype
-    };
-  });
-  console.log(files);
+  let files = {};
+  if (req.files) {
+    files = Array.from(req.files).map(file => {
+      return {
+        id: `@${uuidv4()}`,
+        name: file.originalname,
+        path: file.path,
+        type: file.mimetype
+      };
+    });
+  }
 
   let query = {
     title: req.body.title,
     encryptedTexts: encryptedTexts,
     texts: req.body.texts,
-    tags: req.body.tags,
+    tags: req.body.tags.split(','),
     attachments: files
   };
 
