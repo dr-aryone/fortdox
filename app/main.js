@@ -346,8 +346,8 @@ function updateDialog() {
   });
 }
 
-const updateFeed = `${config.server}/update/${config.clientVersion}`;
-autoUpdater.setFeedURL(updateFeed);
+//const updateFeed = `${config.server}/update/${config.clientVersion}`;
+//autoUpdater.setFeedURL(updateFeed);
 
 //autoUpdater events
 autoUpdater.on('error', error => {
@@ -356,7 +356,7 @@ autoUpdater.on('error', error => {
     type: 'error',
     buttons: ['Ok'],
     title: 'FortDox Update',
-    message: `Error updating application 
+    message: `Error updating application
     ${'' + error}
   `
   };
