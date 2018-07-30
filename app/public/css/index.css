@@ -303,6 +303,32 @@ label {
     margin: 0px;
     padding: 0px; }
 
+.mce-toolbar-grp button {
+  box-shadow: none;
+  color: #3c3c3c; }
+
+.mce-toolbar-grp button:hover {
+  background-color: #3c3c3c;
+  color: white; }
+  .mce-toolbar-grp button:hover .mce-ico {
+    color: white; }
+
+.mce-toolbar-grp button:active {
+  background-color: #3c3c3c; }
+
+.mce-toolbar-grp .mce-btn {
+  border: 0; }
+
+.mce-tinymce {
+  border: 1px solid #f5f3f3 !important;
+  box-shadow: none !important; }
+
+.mce-panel {
+  border: 1px solid #f5f3f3 !important; }
+
+.mce-top-part::before {
+  box-shadow: none !important; }
+
 .download-manager {
   width: 280px;
   height: 100%;

@@ -1,0 +1,36 @@
+.mce-toolbar-grp {
+  button {
+    box-shadow: none;
+    color: $charcoal;
+  }
+
+  button:hover {
+    background-color: $charcoal;
+    color: white;
+
+    .mce-ico {
+      color: white;
+    }
+  }
+
+  button:active {
+    background-color: $charcoal;
+  }
+
+  .mce-btn {
+    border: 0;
+  }
+}
+
+.mce-tinymce {
+  border: 1px solid $grey !important;
+  box-shadow: none !important;
+}
+
+.mce-panel {
+  border: 1px solid $grey !important;
+}
+
+.mce-top-part::before {
+  box-shadow: none !important;
+}
