@@ -329,6 +329,9 @@ label {
 .mce-top-part::before {
   box-shadow: none !important; }
 
+.mce-notification-inner {
+  display: none !important; }
+
 .download-manager {
   width: 280px;
   height: 100%;

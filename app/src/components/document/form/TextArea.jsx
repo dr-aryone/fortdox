@@ -3,7 +3,19 @@ import { DragSource, DropTarget } from 'react-dnd';
 import flow from 'lodash/flow';
 import Modal from 'components/general/Modal';
 import { Editor } from '@tinymce/tinymce-react';
+import TurndownService from 'turndown';
+var turndownService = new TurndownService();
+// Import plugins from turndown-plugin-gfm
+var turndownPluginGfm = require('turndown-plugin-gfm');
+var gfm = turndownPluginGfm.gfm;
+var tables = turndownPluginGfm.tables;
+var strikethrough = turndownPluginGfm.strikethrough;
 
+// Use the gfm plugin
+turndownService.use(gfm);
+
+// Use the table and strikethrough plugins only
+turndownService.use([tables, strikethrough]);
 const Type = {
   TEXT: 'text'
 };
@@ -66,6 +78,11 @@ class TextArea extends Component {
     this.setState({
       showDeleteDialog: false
     });
+  }
+
+  handleEditorChange(e) {
+    console.log(this.state.activeEditor.getContent());
+    console.log(turndownService.turndown(this.state.activeEditor.getContent()));
   }
 
   render() {
@@ -134,18 +151,47 @@ class TextArea extends Component {
               </i>
             </label>
             <div className='textarea'>
-              {/* <textarea
-                name={field.get('id')}
-                onChange={event => onChange(event, type)}
-                value={field.get('value')}
-                style={style}
-              /> */}
               <Editor
-                initialValue='**tst**'
+                initialValue=''
                 init={{
-                  plugins: 'link image code lists textpattern',
+                  setup: editor => {
+                    this.setState({ activeEditor: editor });
+                    editor.addButton('markdownCode', {
+                      icon: 'code',
+                      onclick: function() {
+                        editor.execCommand(
+                          'mceToggleFormat',
+                          false,
+                          'codeMark'
+                        );
+                      },
+                      onpostrender: function() {
+                        var btn = this;
+                        editor.on('init', function() {
+                          editor.formatter.formatChanged('codeMark', function(
+                            state
+                          ) {
+                            btn.active(state);
+                          });
+                        });
+                      }
+                    });
+                  },
+                  style_formats: [
+                    { title: 'Heading 1', block: 'h1' },
+                    { title: 'Heading 2', block: 'h2' },
+                    { title: 'Heading 3', block: 'h3' },
+                    { title: 'Heading 4', block: 'h4' },
+                    { title: 'Heading 5', block: 'h5' }
+                  ],
+                  formats: {
+                    codeMark: { inline: 'code' },
+                    blockquote: { block: 'blockquote' },
+                    underline: { block: 'u' }
+                  },
+                  plugins: 'link image lists textpattern table',
                   toolbar:
-                    'bold italic underline | code blockquote | bullist numlist | link image',
+                    'styleselect | bold italic underline | markdownCode blockquote | bullist numlist | link image table',
                   branding: false,
                   menubar: false,
                   textpattern_patterns: [
@@ -160,9 +206,12 @@ class TextArea extends Component {
                     { start: '1. ', cmd: 'InsertOrderedList' },
                     { start: '* ', cmd: 'InsertUnorderedList' },
                     { start: '- ', cmd: 'InsertUnorderedList' }
-                  ]
+                  ],
+                  target_list: false,
+                  link_title: false,
+                  entity_encoding: 'raw'
                 }}
-                onChange={this.handleEditorChange}
+                onChange={e => this.handleEditorChange(e)}
               />
             </div>
             <div className={`arrow-box ${field.get('error') ? 'show' : ''}`}>
