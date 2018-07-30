@@ -20,7 +20,7 @@ module.exports = client => {
             encrypted_texts: query.encryptedTexts,
             texts: query.texts,
             tags: query.tags,
-            files: attachments
+            attachments: attachments
           },
           refresh: true
         });

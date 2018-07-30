@@ -1,5 +1,6 @@
 const logger = require('app/logger');
 const es = require('app/elastic_search');
+const fs = require('fs');
 
 async function getAttachment(req, res) {
   let id = req.params.id;
@@ -14,12 +15,13 @@ async function getAttachment(req, res) {
     attachmentIndex
   );
 
+  let isNewAttachment = attachmentIndex.charAt(0) === '@';
+
   let attachment;
 
   try {
     attachment = await es.getAttachment({
       documentId: id,
-      attachmentIndex,
       organizationIndex
     });
   } catch (error) {
@@ -27,7 +29,35 @@ async function getAttachment(req, res) {
     return res.status(500).send();
   }
 
-  res.send(attachment);
+  if (isNewAttachment) {
+    attachment.forEach(a => {
+      if (a.id === attachmentIndex) {
+        attachment = a;
+        return;
+      }
+    });
+
+    logger.verbose(
+      '/document/id/attachment/attachmentIndex',
+      'New type of file',
+      attachment
+    );
+    //read file and send it down..
+    fs.readFile(attachment.path, (err, data) => {
+      if (err) {
+        return res.status(500).send();
+      }
+      return res.send(Buffer.from(data).toString('base64'));
+    });
+  } else {
+    attachment = attachment[attachmentIndex];
+    logger.verbose(
+      '/document/id/attachment/attachmentIndex',
+      'Old type of file'
+    );
+
+    return res.send(attachment.file);
+  }
 }
 
 module.exports = getAttachment;

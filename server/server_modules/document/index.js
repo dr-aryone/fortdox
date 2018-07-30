@@ -250,7 +250,7 @@ async function create(req, res) {
       '/document POST',
       `Changelog entry for document ${req.body.title} with id ${response._id}`
     );
-    res.send(response);
+    res.send({ _id: response._id });
   } catch (error) {
     logger.error(
       '/document POST',
