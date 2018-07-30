@@ -141,13 +141,26 @@ class TextArea extends Component {
                 style={style}
               /> */}
               <Editor
-                initialValue='<p>This is the initial content of the editor</p>'
+                initialValue='**tst**'
                 init={{
-                  plugins: 'link image code lists',
+                  plugins: 'link image code lists textpattern',
                   toolbar:
                     'bold italic underline | code blockquote | bullist numlist | link image',
                   branding: false,
-                  menubar: false
+                  menubar: false,
+                  textpattern_patterns: [
+                    { start: '*', end: '*', format: 'italic' },
+                    { start: '**', end: '**', format: 'bold' },
+                    { start: '#', format: 'h1' },
+                    { start: '##', format: 'h2' },
+                    { start: '###', format: 'h3' },
+                    { start: '####', format: 'h4' },
+                    { start: '#####', format: 'h5' },
+                    { start: '######', format: 'h6' },
+                    { start: '1. ', cmd: 'InsertOrderedList' },
+                    { start: '* ', cmd: 'InsertUnorderedList' },
+                    { start: '- ', cmd: 'InsertUnorderedList' }
+                  ]
                 }}
                 onChange={this.handleEditorChange}
               />
