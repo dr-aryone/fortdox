@@ -329,6 +329,14 @@ async function update(req, res) {
       '/document/id PATCH',
       `User ${email} updated document ${req.body.id}`
     );
+
+    await removeFiles(response.removed);
+    response.removed = null;
+    await changelog.addLogEntry(req.params.id, email);
+    logger.info(
+      '/document/id PATCH',
+      `Added changelog entry for ${email}'s update of document ${req.params.id}`
+    );
   } catch (error) {
     logger.error(
       '/document/id PATCH',
@@ -337,39 +345,7 @@ async function update(req, res) {
     );
     return res.status(500).send({ msg: 'Internal Server Error' });
   }
-
-  try {
-    response.removed.forEach(async file => {
-      await removeFile(file.path);
-      logger.verbose(
-        '/document/id PATCH',
-        `Removed file ${file.name} : ${file.id}`
-      );
-    });
-  } catch (error) {
-    logger.error(
-      '/document/id PATCH',
-      'Could not remove file from filesystem',
-      error
-    );
-    return res.status(500).send({ msg: 'Internal Server Error' });
-  }
-
-  try {
-    await changelog.addLogEntry(req.params.id, email);
-    logger.info(
-      '/document/id PATCH',
-      `Added changelog entry for ${email}'s update of document ${req.params.id}`
-    );
-    res.send(response);
-  } catch (error) {
-    logger.error(
-      '/document/id PATCH',
-      `Could not add log entry for update on document ${req.params.id}`,
-      error
-    );
-    return res.status(500).send({ msg: 'Internal Server Error' });
-  }
+  return res.send(response);
 }
 
 async function removeFiles(files) {
