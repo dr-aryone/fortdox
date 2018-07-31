@@ -71,9 +71,9 @@ class TextArea extends Component {
   render() {
     const {
       field,
-      // type,
       elementToHide,
       // onChange,
+      onRichTextChange,
       onRemoveField,
       connectDragSource,
       connectDropTarget
@@ -134,7 +134,12 @@ class TextArea extends Component {
               </i>
             </label>
             <div className='textarea'>
-              <RichText text={field.get('value')} />
+              <RichText
+                onRichTextChange={onRichTextChange}
+                text={field.get('value')}
+                id={field.get('id')}
+                type={field.get('encrypted') ? 'encryptedText' : 'text'}
+              />
             </div>
             <div className={`arrow-box ${field.get('error') ? 'show' : ''}`}>
               <span className='material-icons'>error_outline</span>

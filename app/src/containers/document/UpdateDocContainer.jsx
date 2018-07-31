@@ -41,6 +41,9 @@ const mapDispatchToProps = dispatch => {
         fieldActions.docInputChange(event.target.name, event.target.value, type)
       );
     },
+    onRichTextChange: (id, text, type) => {
+      dispatch(fieldActions.docInputChange(id, text, type));
+    },
     onTitleChange: event => {
       dispatch(fieldActions.docTitleChange(event.target.value));
     },

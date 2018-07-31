@@ -81,18 +81,16 @@ class RichText extends Component {
     });
   }
 
-  handleEditorChange() {
-    console.log(this.state.activeEditor.getContent());
-    console.log(turndownService.turndown(this.state.activeEditor.getContent()));
+  handleEditorChange(id, type) {
+    const text = turndownService.turndown(this.state.activeEditor.getContent());
+    this.props.onRichTextChange(id, text, type);
   }
 
   render() {
+    const { text, id, type } = this.props;
     return (
       <Editor
-        initialValue={md.render(`\`\`\`javascript
-var s = "JavaScript syntax highlighting";
-alert(s);
-\`\`\``)}
+        initialValue={md.render(text)}
         init={{
           setup: this.setup,
           style_formats,
@@ -105,7 +103,7 @@ alert(s);
           link_title: false,
           entity_encoding: 'raw'
         }}
-        onChange={e => this.handleEditorChange(e)}
+        onKeyUp={() => this.handleEditorChange(id, type)}
       />
     );
   }

@@ -14,6 +14,7 @@ class TextAreaContainer extends Component {
       docFields,
       onRemoveField,
       onChange,
+      onRichTextChange,
       onUpdateId,
       onDrop,
       onHideElement,
@@ -29,9 +30,9 @@ class TextAreaContainer extends Component {
       .map((field, index) => (
         <TextArea
           field={field}
-          type={field.get('encrypted') ? 'encryptedText' : 'text'}
           key={index}
           onChange={onChange}
+          onRichTextChange={onRichTextChange}
           onRemoveField={onRemoveField}
           onUpdateId={onUpdateId}
           onDrop={onDrop}

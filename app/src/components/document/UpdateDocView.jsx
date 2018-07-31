@@ -142,6 +142,7 @@ class UpdateDocView extends React.Component {
       onAddTag,
       onRemoveTag,
       onChange,
+      onRichTextChange,
       onSuggestTags,
       onUpdate,
       onDelete,
@@ -251,6 +252,7 @@ class UpdateDocView extends React.Component {
             onCloseSimilarDocuments={onCloseSimilarDocuments}
             onSimilarDocumentClick={onSimilarDocumentClick}
             onChange={onChange}
+            onRichTextChange={onRichTextChange}
             onTitleChange={onTitleChange}
             onAddTag={onAddTag}
             onRemoveTag={onRemoveTag}
