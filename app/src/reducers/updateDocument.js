@@ -20,6 +20,7 @@ let initialState = fromJS({
       old: []
     },
     attachments: [],
+    files: [],
     preview: {
       name: null,
       data: null,
@@ -49,6 +50,7 @@ const form = (state = initialState, action) => {
             .getIn(['docFields', 'tags'])
             .set('list', fromJS(action.tags)),
           attachments: fromJS(action.attachments),
+          files: action.files,
           changelog: fromJS(action.changelog),
           nextID: fromJS(action.nextID)
         }),
@@ -175,15 +177,17 @@ const form = (state = initialState, action) => {
         .set('checkFields', false);
     case 'UPDATE_DOC_ADD_ATTACHMENT':
       return state
-        .setIn(
-          ['docFields', 'attachments'],
-          state.getIn(['docFields', 'attachments']).push(
+        .updateIn(['docFields', 'attachments'], attachments =>
+          attachments.push(
             fromJS({
-              name: fromJS(action.name),
-              type: fromJS(action.fileType),
-              file: fromJS(action.file)
+              name: action.name,
+              type: action.fileType,
+              file: action.file
             })
           )
+        )
+        .updateIn(['docFields', 'files'], files =>
+          files.push({ actualFile: action.actualFile })
         )
         .set('checkFields', false);
     case 'UPDATE_DOC_REMOVE_ATTACHMENT':

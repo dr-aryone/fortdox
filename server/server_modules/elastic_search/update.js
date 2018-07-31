@@ -11,6 +11,16 @@ module.exports = client => {
           type: 'fortdox_document',
           id: query.id
         });
+        console.log(current);
+        console.log(query);
+        //TODO:break this out and add test
+        const toRemove = current._source.attachments.filter(a => {
+          const found = query.attachments.find(qa => qa.id === a.id);
+          if (!found) {
+            return a;
+          }
+        });
+        console.log('TO REMOVE', toRemove);
 
         query.attachments = query.attachments.filter(attachment => {
           if (attachment.file) {
@@ -21,8 +31,12 @@ module.exports = client => {
             current._source.attachments.find(a => a.name === attachment.name) ||
             {};
           attachment.file = storedAttachment.file;
+          attachment.path = storedAttachment.path;
+
           return attachment;
         });
+
+        query.attachments = query.attachments.concat(query.files);
 
         response = await client.update({
           index: organizationIndex,
@@ -39,6 +53,7 @@ module.exports = client => {
             }
           }
         });
+        response.removed = toRemove;
         return resolve(response);
       } catch (error) {
         console.error(error);
