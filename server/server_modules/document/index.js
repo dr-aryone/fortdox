@@ -322,8 +322,6 @@ async function update(req, res) {
     files
   };
 
-  //DELETE removed attachments
-
   let response;
   try {
     response = await es.update({ query, organizationIndex });
@@ -374,6 +372,20 @@ async function update(req, res) {
   }
 }
 
+async function removeFiles(files) {
+  try {
+    await files.forEach(async file => {
+      await removeFile(file.path);
+      logger.verbose(
+        '/document/id PATCH',
+        `Removed file ${file.name} : ${file.id}`
+      );
+    });
+  } catch (error) {
+    throw error;
+  }
+}
+
 function removeFile(path) {
   return new Promise((resolve, reject) => {
     fs.unlink(path, error => {
@@ -408,20 +420,22 @@ async function deleteDocument(req, res) {
   logger.info(
     '/document/id DELETE',
     'User',
-    req.sesion.email,
+    req.session.email,
     'deletes document',
     req.params.id
   );
 
   let query = {
-    index: req.session.organizationIndex,
+    organizationIndex: req.session.organizationIndex,
     id: req.params.id,
     type: req.query.type
   };
 
+  logger.verbose('DELETE DOCUMENT', query);
+
   let expectations = expect(
     {
-      index: 'string',
+      organizationIndex: 'string',
       type: 'string',
       id: 'string'
     },
@@ -432,24 +446,24 @@ async function deleteDocument(req, res) {
     res.status(400).send(expectations.errors());
   } else {
     try {
+      let attachments = await es.getAttachment({
+        organizationIndex: query.organizationIndex,
+        documentId: query.id
+      });
+
+      attachments = attachments.filter(a => a.path !== undefined);
+      logger.verbose('DELETE ATTACHMENTS', attachments);
       response = await es.deleteDocument(query);
-      res.send(response);
       logger.info(
         '/document/id DELETE',
         `User ${req.session.email} deleted document ${req.params.id}`
       );
+
+      await removeFiles(attachments);
+      await changelog.remove(req.params.id);
     } catch (error) {
       logger.error('/document/id DELETE', 'Cannot delete document!', error);
       return res.status(500).send();
-    }
-    try {
-      await changelog.remove(req.params.id);
-    } catch (error) {
-      logger.error(
-        '/document/id DELETE',
-        `Could not remove log entries for document ${req.params.id}`,
-        error
-      );
     }
     return res.send(response);
   }
