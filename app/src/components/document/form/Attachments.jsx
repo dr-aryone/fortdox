@@ -104,7 +104,7 @@ class Attachments extends React.Component {
       let removeButton = onRemoveAttachment ? (
         <button
           className='material-icons round small'
-          onClick={() => onRemoveAttachment(id)}
+          onClick={() => onRemoveAttachment(id, index)}
           type='button'
         >
           clear
