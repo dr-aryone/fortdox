@@ -36,6 +36,7 @@ export const addAttachment = files => {
           file: data.toString('base64')
         });
       } catch (error) {
+        console.log(error);
         dispatch({
           type: `${prefix}_ADD_ATTACHMENT_ERROR`,
           payload: {
@@ -47,12 +48,13 @@ export const addAttachment = files => {
   };
 };
 
-export const removeAttachment = id => {
+export const removeAttachment = (id, index) => {
   return async (dispatch, getState) => {
     let state = getState();
     let { view, prefix } = getPrefix(state.navigation.get('currentView'));
     let attachments = state[view].getIn(['docFields', 'attachments']);
-    attachments = attachments.splice(id, 1);
+    attachments = attachments.splice(index, 1);
+    debugger;
     return dispatch({
       type: `${prefix}_REMOVE_ATTACHMENT`,
       payload: attachments
@@ -79,6 +81,7 @@ export const previewAttachment = (attachmentData, attachmentIndex) => {
         '_id'
       ]);
       let response;
+      console.log('Attachment Index', attachmentIndex);
       try {
         response = await requestor.get(
           `${
