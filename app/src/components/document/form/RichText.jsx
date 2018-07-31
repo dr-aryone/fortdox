@@ -2,7 +2,11 @@ import React, { Component } from 'react';
 import { Editor } from '@tinymce/tinymce-react';
 import TurndownService from 'turndown';
 var turndownPluginGfm = require('turndown-plugin-gfm');
-var turndownService = new TurndownService();
+var turndownService = new TurndownService({
+  emDelimiter: '*',
+  headingStyle: 'atx',
+  codeBlockStyle: 'fenced'
+});
 var gfm = turndownPluginGfm.gfm;
 var tables = turndownPluginGfm.tables;
 var strikethrough = turndownPluginGfm.strikethrough;
@@ -13,11 +17,12 @@ turndownService.use(gfm);
 turndownService.use([tables, strikethrough]);
 turndownService.addRule('table', {
   filter: function(node) {
-    return (
-      node.firstChild.nodeName === 'TBODY' &&
-      node.nodeName === 'TABLE' &&
-      node.firstChild.firstChild.firstChild.nodeName === 'TD'
-    );
+    if (node.nodeName === 'TABLE')
+      return (
+        node.firstChild.nodeName === 'TBODY' &&
+        node.nodeName === 'TABLE' &&
+        node.firstChild.firstChild.firstChild.nodeName === 'TD'
+      );
   },
   replacement: function(content) {
     let divider = '';
@@ -33,15 +38,14 @@ turndownService.addRule('table', {
   }
 });
 
-const plugins = 'link image lists textpattern table';
+const plugins = 'link image lists table';
 
 const toolbar =
-  'styleselect | bold italic underline | markdownCode blockquote | bullist numlist | link image table';
+  'styleselect | bold italic | markdownCode blockquote | bullist numlist | link image table';
 
 const formats = {
   codeMark: { inline: 'code' },
-  blockquote: { block: 'blockquote' },
-  underline: { block: 'u' }
+  blockquote: { block: 'blockquote' }
 };
 
 const style_formats = [
@@ -50,20 +54,6 @@ const style_formats = [
   { title: 'Heading 3', block: 'h3' },
   { title: 'Heading 4', block: 'h4' },
   { title: 'Heading 5', block: 'h5' }
-];
-
-const textpattern_patterns = [
-  { start: '*', end: '*', format: 'italic' },
-  { start: '**', end: '**', format: 'bold' },
-  { start: '#', format: 'h1' },
-  { start: '##', format: 'h2' },
-  { start: '###', format: 'h3' },
-  { start: '####', format: 'h4' },
-  { start: '#####', format: 'h5' },
-  { start: '######', format: 'h6' },
-  { start: '1. ', cmd: 'InsertOrderedList' },
-  { start: '* ', cmd: 'InsertUnorderedList' },
-  { start: '- ', cmd: 'InsertUnorderedList' }
 ];
 
 class RichText extends Component {
@@ -99,14 +89,14 @@ class RichText extends Component {
   render() {
     return (
       <Editor
-        initialValue={md.render(`| bajs | bajs | bajs |
-| --- | --- | --- |
-| bajs | bajs | bajs |`)}
+        initialValue={md.render(`\`\`\`javascript
+var s = "JavaScript syntax highlighting";
+alert(s);
+\`\`\``)}
         init={{
           setup: this.setup,
           style_formats,
           formats,
-          textpattern_patterns,
           plugins,
           toolbar,
           branding: false,
