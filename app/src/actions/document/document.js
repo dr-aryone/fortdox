@@ -71,19 +71,6 @@ export function createDocument() {
       console.log(pair[0] + ', ' + pair[1].name);
     }
 
-    // try {
-    //   const response = await requestor.post(
-    //     `${config.server}/document/attachment`,
-    //     {
-    //       body: form
-    //     }
-    //   );
-    //   console.log('File ids:', response);
-    // } catch (error) {
-    //   console.error(error);
-    // }
-
-    //create document.. lol
     form.set('title', title);
 
     form.set('encryptedTexts', JSON.stringify(encryptedTexts));

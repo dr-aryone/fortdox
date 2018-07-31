@@ -5,11 +5,6 @@ module.exports = client => {
     return new Promise(async (resolve, reject) => {
       let response;
       let attachments = query.attachments || [];
-      // attachments = attachments.map(attachment => ({
-      //   name: `${uuid()}-${attachment.name}`,
-      //   file_type: attachment.file_type,
-      //   file: attachment.file
-      // }));
 
       try {
         response = await client.index({
