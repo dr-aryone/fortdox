@@ -102,7 +102,7 @@ h3 {
   border-bottom-color: #fe4a49;
   border-width: 10px; }
 
-.box, .doc-mode .modal-inner, .main-panel, .search-item, .misc .created, .misc .edited, .misc .input-field, .misc .attachments, .preview, .preview .private-key, .list-inner {
+.box, .doc-mode .modal-inner, .main-panel, .search-item, .misc .created, .misc .edited, .misc .input-field, .misc .attachments, .preview, .list-inner {
   padding: 15px;
   margin-bottom: 20px;
   box-shadow: 0 2px 2px rgba(0, 0, 0, 0.15), 0 0 2px rgba(0, 0, 0, 0.11);
@@ -118,7 +118,7 @@ h3 {
     margin: 0px; }
   .box .hide, .doc-mode .modal-inner .hide, .main-panel .hide, .search-item .hide, .misc .created .hide, .misc .edited .hide, .misc .input-field .hide, .misc .attachments .hide, .preview .hide, .list-inner .hide {
     display: none; }
-  .box.invisible, .doc-mode .invisible.modal-inner, .invisible.main-panel, .invisible.search-item, .misc .invisible.created, .misc .invisible.edited, .misc .invisible.input-field, .misc .invisible.attachments, .invisible.preview, .preview .invisible.private-key, .invisible.list-inner {
+  .box.invisible, .doc-mode .invisible.modal-inner, .invisible.main-panel, .invisible.search-item, .misc .invisible.created, .misc .invisible.edited, .misc .invisible.input-field, .misc .invisible.attachments, .invisible.preview, .invisible.list-inner {
     visibility: hidden; }
 
 button {
@@ -1177,20 +1177,6 @@ label {
     .preview .title button {
       align-self: flex-start;
       margin-left: 1.67em; }
-  .preview .private-key {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    max-width: 270px;
-    margin: 10px auto 30px auto; }
-    .preview .private-key h4 {
-      color: #118ab2;
-      display: flex;
-      align-items: center; }
-      .preview .private-key h4 i {
-        color: #0cce6b;
-        margin-left: 5px;
-        font-size: 16px; }
   .preview .texts {
     padding: 1em;
     padding-bottom: 1px;
