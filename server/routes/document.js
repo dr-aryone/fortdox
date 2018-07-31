@@ -17,7 +17,12 @@ router.post(
 );
 router.get('/:id', needsMasterPassword, document.get);
 router.delete('/:id', needsMasterPassword, document.delete);
-router.patch('/:id', needsMasterPassword, document.update);
+router.patch(
+  '/:id',
+  needsMasterPassword,
+  upload.array('attachments[]'),
+  document.update
+);
 router.get('/check/title', document.checkTitle);
 
 //Attachment routes

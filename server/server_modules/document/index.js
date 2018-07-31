@@ -1,4 +1,5 @@
 const changelog = require('app/changelog');
+const fs = require('fs');
 const es = require('app/elastic_search');
 const checkEmptyFields = require('app/utilities/checkEmptyFields');
 const {
@@ -57,6 +58,7 @@ async function get(req, res) {
 
   doc._source.encrypted_texts = doc._source.encrypted_texts || [];
   doc._source.attachments = doc._source.attachments || [];
+
   doc._source.tags = doc._source.tags || [];
   try {
     doc._source.encrypted_texts = await decryptDocuments(
@@ -159,7 +161,6 @@ async function search(req, res) {
     );
     return res.status(500).send();
   }
-
   res.send({
     searchResult: response.hits.hits,
     totalHits: response.hits.total
@@ -204,7 +205,6 @@ async function create(req, res) {
   logger.log('verbose', 'Files:', req.body);
   logger.log('verbose', 'Files:', req.files);
   //attachments
-
   let files = {};
   if (req.files) {
     files = Array.from(req.files).map(file => {
@@ -212,7 +212,7 @@ async function create(req, res) {
         id: `@${uuidv4()}`,
         name: file.originalname,
         path: file.path,
-        type: file.mimetype
+        file_type: file.mimetype
       };
     });
   }
@@ -250,6 +250,7 @@ async function create(req, res) {
       '/document POST',
       `Changelog entry for document ${req.body.title} with id ${response._id}`
     );
+    logger.info('response', response);
     res.send({ _id: response._id });
   } catch (error) {
     logger.error(
@@ -262,6 +263,10 @@ async function create(req, res) {
 }
 
 async function update(req, res) {
+  req.body.encryptedTexts = JSON.parse(req.body.encryptedTexts);
+  req.body.texts = JSON.parse(req.body.texts);
+  req.body.attachments = JSON.parse(req.body.attachments);
+
   let email = req.session.email;
   let privateKey = req.session.privateKey;
   let organizationIndex = req.session.organizationIndex;
@@ -292,6 +297,19 @@ async function update(req, res) {
     return res.status(500).send();
   }
 
+  logger.log('verbose', 'Files:', req.files);
+  let files = {};
+  if (req.files) {
+    files = Array.from(req.files).map(file => {
+      return {
+        id: `@${uuidv4()}`,
+        name: file.originalname,
+        path: file.path,
+        file_type: file.mimetype //TODO: change to file_type, because why make breaking changes..
+      };
+    });
+  }
+
   let query = {
     type: req.body.type,
     id: req.params.id,
@@ -299,9 +317,12 @@ async function update(req, res) {
     title: req.body.title,
     encryptedTexts: encryptedTexts,
     texts: req.body.texts,
-    tags: req.body.tags,
-    attachments: req.body.attachments
+    tags: req.body.tags.split(','),
+    attachments: req.body.attachments,
+    files
   };
+
+  //DELETE removed attachments
 
   let response;
   try {
@@ -314,6 +335,23 @@ async function update(req, res) {
     logger.error(
       '/document/id PATCH',
       `Cannot update document ${req.body.id}`,
+      error
+    );
+    return res.status(500).send({ msg: 'Internal Server Error' });
+  }
+
+  try {
+    response.removed.forEach(async file => {
+      await removeFile(file.path);
+      logger.verbose(
+        '/document/id PATCH',
+        `Removed file ${file.name} : ${file.id}`
+      );
+    });
+  } catch (error) {
+    logger.error(
+      '/document/id PATCH',
+      'Could not remove file from filesystem',
       error
     );
     return res.status(500).send({ msg: 'Internal Server Error' });
@@ -334,6 +372,15 @@ async function update(req, res) {
     );
     return res.status(500).send({ msg: 'Internal Server Error' });
   }
+}
+
+function removeFile(path) {
+  return new Promise((resolve, reject) => {
+    fs.unlink(path, error => {
+      if (error) reject(error);
+      resolve();
+    });
+  });
 }
 
 async function deleteDocument(req, res) {
