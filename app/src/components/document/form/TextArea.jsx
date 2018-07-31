@@ -86,10 +86,6 @@ class TextArea extends Component {
       connectDropTarget
     } = this.props;
 
-    const style = {
-      minHeight: `${field.get('value').split('\n').length}em`
-    };
-
     const textArea = (
       <textarea
         name={field.get('id')}
@@ -97,7 +93,6 @@ class TextArea extends Component {
           onChange(event, field.get('encrypted') ? 'encryptedText' : 'text')
         }
         value={field.get('value')}
-        style={style}
       />
     );
 

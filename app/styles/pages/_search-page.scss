@@ -270,27 +270,6 @@ $search-padding: 30px;
     }
   }
 
-  .private-key {
-    @extend .box;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    max-width: 270px;
-    margin: 10px auto 30px auto;
-
-    h4 {
-      color: $primary-color;
-      display: flex;
-      align-items: center;
-
-      i {
-        color: $green;
-        margin-left: 5px;
-        font-size: 16px;
-      }
-    }
-  }
-
   .texts {
     padding: 1em;
     padding-bottom: 1px;

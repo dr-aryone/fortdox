@@ -9,12 +9,21 @@ var turndownService = new TurndownService({
 });
 var gfm = turndownPluginGfm.gfm;
 var tables = turndownPluginGfm.tables;
-var strikethrough = turndownPluginGfm.strikethrough;
 var Remarkable = require('remarkable');
+const {
+  privateKeyParser,
+  copyParser,
+  privateKeyRenderer,
+  copyRenderer
+} = require('lib/remarkableExtensions');
 var md = new Remarkable();
+md.block.ruler.before('code', 'privatekey', privateKeyParser);
+md.inline.ruler.push('copy', copyParser);
+md.renderer.rules.privatekey = privateKeyRenderer;
+md.renderer.rules.copy = copyRenderer;
 
 turndownService.use(gfm);
-turndownService.use([tables, strikethrough]);
+turndownService.use([tables]);
 turndownService.addRule('table', {
   filter: function(node) {
     if (node.nodeName === 'TABLE')
@@ -38,14 +47,43 @@ turndownService.addRule('table', {
   }
 });
 
+turndownService.addRule('privateKey', {
+  filter: function(node) {
+    return node.nodeName === 'DIV' && node.className === 'private-key';
+  },
+  replacement: function(content) {
+    debugger;
+    return content;
+  }
+});
+
+turndownService.addRule('copy', {
+  filter: function(node) {
+    return node.nodeName === 'DIV' && node.className === 'copy';
+  },
+  replacement: function(content) {
+    return `@password@${content}@password@`;
+  }
+});
+
 const plugins = 'link image lists table';
 
 const toolbar =
-  'styleselect | bold italic | markdownCode blockquote | bullist numlist | link image table';
+  'styleselect | bold italic | markdownCode blockquote | bullist numlist | link image table | privateKey copyPass';
 
 const formats = {
   codeMark: { inline: 'code' },
-  blockquote: { block: 'blockquote' }
+  blockquote: { block: 'blockquote' },
+  privateKey: {
+    block: 'div',
+    classes: 'private-key',
+    styles: { color: '#ff0000' }
+  },
+  copy: {
+    block: 'div',
+    classes: 'copy',
+    styles: { color: '#0000ff' }
+  }
 };
 
 const style_formats = [
@@ -78,6 +116,34 @@ class RichText extends Component {
         var btn = this;
         editor.on('init', function() {
           editor.formatter.formatChanged('codeMark', function(state) {
+            btn.active(state);
+          });
+        });
+      }
+    });
+    editor.addButton('privateKey', {
+      icon: 'lock',
+      onclick: function() {
+        editor.execCommand('mceToggleFormat', false, 'privateKey');
+      },
+      onpostrender: function() {
+        var btn = this;
+        editor.on('init', function() {
+          editor.formatter.formatChanged('privateKey', function(state) {
+            btn.active(state);
+          });
+        });
+      }
+    });
+    editor.addButton('copyPass', {
+      icon: 'copy',
+      onclick: function() {
+        editor.execCommand('mceToggleFormat', false, 'copy');
+      },
+      onpostrender: function() {
+        var btn = this;
+        editor.on('init', function() {
+          editor.formatter.formatChanged('copy', function(state) {
             btn.active(state);
           });
         });

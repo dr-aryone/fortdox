@@ -1,6 +1,8 @@
 module.exports = {
   privateKeyParser,
-  copyParser
+  copyParser,
+  privateKeyRenderer,
+  copyRenderer
 };
 
 function privateKeyParser(state, startLine, endLine) {
@@ -28,17 +30,17 @@ function privateKeyParser(state, startLine, endLine) {
   let content = state.getLines(startLine, currentLineIndex);
   let title = '';
 
-  if (startMatch[1]) { //The key was declared with a title (title-----BEGIN RSA PRIVATE KEY-----)
+  if (startMatch[1]) {
+    //The key was declared with a title (title-----BEGIN RSA PRIVATE KEY-----)
     title = startMatch[1];
     content = content.substring(title.length);
   }
-
 
   state.tokens.push({
     type: 'privatekey',
     content: content,
     title,
-    level: state.level,
+    level: state.level
   });
 
   state.line = currentLineIndex;
@@ -47,7 +49,7 @@ function privateKeyParser(state, startLine, endLine) {
 }
 
 function copyParser(state, silent) {
-  const {src: currentLine} = state;
+  const { src: currentLine } = state;
   const regexp = /@(copy|password)@(.*?)@(copy|password)@/g;
   let match = regexp.exec(currentLine.substring(state.pos));
   if (!match || match.index !== 0) return false;
@@ -63,4 +65,14 @@ function copyParser(state, silent) {
   }
 
   return true;
+}
+
+function privateKeyRenderer(tokens, idx, options) {
+  debugger;
+}
+
+function copyRenderer(tokens) {
+  return `<div className='copy' style='color: rgb(0, 0, 255);'>${
+    tokens[0].content
+  }</div>`;
 }
