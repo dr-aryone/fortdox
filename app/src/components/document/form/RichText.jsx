@@ -56,6 +56,10 @@ const style_formats = [
   { title: 'Heading 5', block: 'h5' }
 ];
 
+const table_default_styles = { 'border-collapsed': 'none', width: '100%' };
+
+const table_default_attributes = { border: 0 };
+
 class RichText extends Component {
   constructor(props) {
     super(props);
@@ -97,6 +101,8 @@ class RichText extends Component {
           formats,
           plugins,
           toolbar,
+          table_default_styles,
+          table_default_attributes,
           branding: false,
           menubar: false,
           target_list: false,

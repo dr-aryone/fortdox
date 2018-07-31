@@ -332,6 +332,9 @@ label {
 .mce-notification-inner {
   display: none !important; }
 
+.mce-container {
+  box-sizing: border-box !important; }
+
 .download-manager {
   width: 280px;
   height: 100%;
@@ -714,6 +717,21 @@ label {
   .input-field .textarea {
     padding: 15px;
     padding-bottom: 10px; }
+  .input-field .toggle-editor {
+    display: flex;
+    justify-content: flex-end; }
+    .input-field .toggle-editor button {
+      background-color: white;
+      color: #3c3c3c;
+      box-shadow: none;
+      border: 1px solid #f5f3f3;
+      border-top: none; }
+    .input-field .toggle-editor button:hover {
+      background-color: #f5f3f3;
+      color: white; }
+    .input-field .toggle-editor button:disabled {
+      background-color: #f5f3f3;
+      color: white; }
   .input-field.warning div.arrow_box {
     display: flex; }
   .input-field.warning input {

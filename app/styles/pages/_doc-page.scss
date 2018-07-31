@@ -14,6 +14,29 @@
     padding-bottom: 10px;
   }
 
+  .toggle-editor {
+    display: flex;
+    justify-content: flex-end;
+
+    button {
+      background-color: white;
+      color: $charcoal;
+      box-shadow: none;
+      border: 1px solid $grey;
+      border-top: none;
+    }
+
+    button:hover {
+      background-color: $grey;
+      color: white;
+    }
+
+    button:disabled {
+      background-color: $grey;
+      color: white;
+    }
+  }
+
   &.warning div.arrow_box {
     display: flex;
   }
