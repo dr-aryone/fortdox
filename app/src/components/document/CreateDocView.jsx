@@ -87,6 +87,7 @@ class CreateDocView extends Component {
       onAddTag,
       onRemoveTag,
       onChange,
+      onRichTextChange,
       onTitleChange,
       onSuggestTags,
       onCreate,
@@ -169,6 +170,7 @@ class CreateDocView extends Component {
             onCloseSimilarDocuments={onCloseSimilarDocuments}
             onSimilarDocumentClick={onSimilarDocumentClick}
             onChange={onChange}
+            onRichTextChange={onRichTextChange}
             onTitleChange={onTitleChange}
             onAddTag={onAddTag}
             onRemoveTag={onRemoveTag}

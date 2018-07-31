@@ -17,6 +17,7 @@ const DocumentForm = ({
   elementToHide,
   changelog,
   onChange,
+  onRichTextChange,
   onTitleChange,
   onSuggestTags,
   onAddTag,
@@ -60,6 +61,7 @@ const DocumentForm = ({
             docFields={docFields}
             onRemoveField={onRemoveField}
             onChange={onChange}
+            onRichTextChange={onRichTextChange}
             onUpdateId={onUpdateId}
             onDrop={onDrop}
             onHideElement={onHideElement}
