@@ -11,6 +11,27 @@ var md = new Remarkable();
 
 turndownService.use(gfm);
 turndownService.use([tables, strikethrough]);
+turndownService.addRule('table', {
+  filter: function(node) {
+    return (
+      node.firstChild.nodeName === 'TBODY' &&
+      node.nodeName === 'TABLE' &&
+      node.firstChild.firstChild.firstChild.nodeName === 'TD'
+    );
+  },
+  replacement: function(content) {
+    let divider = '';
+    let table = content.split('\n');
+    if (table[0] === '') table.shift();
+    let [head, ...tail] = table;
+    let header = head.split('|');
+    for (let i = 0; i < header.length - 2; i++) {
+      divider += '| --- ';
+    }
+    divider += '|';
+    return head + '\n' + divider + '\n' + tail;
+  }
+});
 
 const plugins = 'link image lists textpattern table';
 
@@ -48,6 +69,26 @@ const textpattern_patterns = [
 class RichText extends Component {
   constructor(props) {
     super(props);
+
+    this.setup = this.setup.bind(this);
+  }
+
+  setup(editor) {
+    this.setState({ activeEditor: editor });
+    editor.addButton('markdownCode', {
+      icon: 'code',
+      onclick: function() {
+        editor.execCommand('mceToggleFormat', false, 'codeMark');
+      },
+      onpostrender: function() {
+        var btn = this;
+        editor.on('init', function() {
+          editor.formatter.formatChanged('codeMark', function(state) {
+            btn.active(state);
+          });
+        });
+      }
+    });
   }
 
   handleEditorChange() {
@@ -58,25 +99,11 @@ class RichText extends Component {
   render() {
     return (
       <Editor
-        initialValue={md.render('# Remarkable rulezz!')}
+        initialValue={md.render(`| bajs | bajs | bajs |
+| --- | --- | --- |
+| bajs | bajs | bajs |`)}
         init={{
-          setup: editor => {
-            this.setState({ activeEditor: editor });
-            editor.addButton('markdownCode', {
-              icon: 'code',
-              onclick: function() {
-                editor.execCommand('mceToggleFormat', false, 'codeMark');
-              },
-              onpostrender: function() {
-                var btn = this;
-                editor.on('init', function() {
-                  editor.formatter.formatChanged('codeMark', function(state) {
-                    btn.active(state);
-                  });
-                });
-              }
-            });
-          },
+          setup: this.setup,
           style_formats,
           formats,
           textpattern_patterns,
