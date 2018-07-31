@@ -9,6 +9,7 @@ const uuid = require('uuid');
 const { shell } = window.require('electron');
 
 const FILE_MAX_SIZE = 30 * 1000 * 1000;
+const FILE_MAX_SIZE_HUMAN = FILE_MAX_SIZE / 1000000;
 
 export const addAttachment = files => {
   return async (dispatch, getState) => {
@@ -19,7 +20,8 @@ export const addAttachment = files => {
         dispatch({
           type: `${prefix}_ADD_ATTACHMENT_ERROR`,
           payload: {
-            error: 'attachmentTooLarge',
+            error: `The maximum file size of attachments is ${FILE_MAX_SIZE_HUMAN} MB.
+            ${file.name} is to large.`,
             file
           }
         });

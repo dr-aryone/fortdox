@@ -175,6 +175,10 @@ const form = (state = initialState, action) => {
         .setIn(['docFields', 'encryptedTexts'], fromJS(action.encryptedTexts))
         .setIn(['docFields', 'texts'], fromJS(action.texts))
         .set('checkFields', false);
+    case 'UPDATE_DOC_ADD_ATTACHMENT_ERROR':
+      return state.merge({
+        error: action.payload.error
+      });
     case 'UPDATE_DOC_ADD_ATTACHMENT':
       return state
         .updateIn(['docFields', 'attachments'], attachments =>
