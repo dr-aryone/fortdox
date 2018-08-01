@@ -221,6 +221,13 @@ The following flags can be used on the testrunner script:
 The testrunner can be run via `npm run integrationtest [-- [--register,--clean]]`.
 
 
+## Attachments and how the server handles them
+In previous versions of FortDox all attachments where simply sent as base64 encoded strings and stored in elasticsearch.
+This had its shortcommings and now we send files as multi part http request instead and by the magic of [multer](https://github.com/expressjs/multer) we stream them down to files on the file system. All uploaded files get a unique file name from multer and is placed in the folder assigned to the value `uploadPath` in `config.json`.
+Metadata about the files is still stored in elasticsearch and instead of the actual file, we store the path to the file instead.
+
+Probably, it already exists attachments conforming to the old way in elasticsearch. Thus, both the client and the server tries to handle this gracefully, but as consider this a warning that things migth break. If that happens, the _solution_ is to reupload the files.
+
 ## Debugging client app
 
 Debugging is done on the client through the Developer Tools (`cmd + alt + I` on Mac) in the Electron window. Simply insert a debugger statement `debugger;` to trigger the developer mode. React and Redux developer tools should be visible as tabs if they are correctly installed.
