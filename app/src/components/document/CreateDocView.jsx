@@ -189,7 +189,11 @@ class CreateDocView extends Component {
               <button onClick={() => this.checkEdits(docFields)} type='button'>
                 Cancel
               </button>
-              <button onClick={onCreate} type='submit'>
+              <button
+                onClick={onCreate}
+                type='submit'
+                disabled={!this.hasBeenEdited(docFields)}
+              >
                 Create
               </button>
             </div>

@@ -1,6 +1,4 @@
-module.exports = { table };
-
-const table = {
+const tableRule = {
   filter: function(node) {
     if (node.nodeName === 'TABLE')
       return (
@@ -22,3 +20,25 @@ const table = {
     return head + '\n' + divider + '\n' + tail;
   }
 };
+
+const privateKeyRule = {
+  filter: function(node) {
+    return (
+      node.nodeName === 'DIV' && node.className === 'rich-text-private-key'
+    );
+  },
+  replacement: function(content) {
+    return content;
+  }
+};
+
+const copyRule = {
+  filter: function(node) {
+    return node.nodeName === 'DIV' && node.className === 'rich-text-copy';
+  },
+  replacement: function(content) {
+    return `@password@${content}@password@`;
+  }
+};
+
+export { tableRule, copyRule, privateKeyRule };

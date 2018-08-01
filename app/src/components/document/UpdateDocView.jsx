@@ -14,11 +14,14 @@ class UpdateDocView extends React.Component {
     this.state = {
       showDeleteDialog: false,
       showEditDialog: false,
-      nextView: null
+      nextView: null,
+      hasBeenEdited: false
     };
   }
 
-  componentWillReceiveProps({ checkFields, nextViewAfterCheck } = this.props) {
+  componentWillReceiveProps(
+    { checkFields, nextViewAfterCheck, docFields } = this.props
+  ) {
     if (checkFields) {
       if (this.hasBeenEdited(this.props.docFields)) {
         return this.setState({
@@ -27,8 +30,14 @@ class UpdateDocView extends React.Component {
         });
       }
 
+
       return this.props.hasChecked();
     }
+    
+    if (docFields && this.props.oldDocFields)
+    return this.setState({
+      hasBeenEdited: this.hasBeenEdited(docFields)
+    });
   }
 
   componentWillMount() {
@@ -50,6 +59,7 @@ class UpdateDocView extends React.Component {
   }
 
   hasBeenEdited(docFields) {
+    console.log('checkFields');
     const title = docFields.getIn(['title', 'value']);
     const encryptedTexts = docFields.get('encryptedTexts');
     const texts = docFields.get('texts');
@@ -283,7 +293,11 @@ class UpdateDocView extends React.Component {
                 >
                   Cancel
                 </button>
-                <button onClick={onUpdate} type='submit'>
+                <button
+                  onClick={onUpdate}
+                  type='submit'
+                  disabled={!this.state.hasBeenEdited}
+                >
                   Update
                 </button>
               </div>

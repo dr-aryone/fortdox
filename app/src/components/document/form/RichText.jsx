@@ -1,85 +1,49 @@
 import React, { Component } from 'react';
 import { Editor } from '@tinymce/tinymce-react';
 import TurndownService from 'turndown';
-var turndownPluginGfm = require('turndown-plugin-gfm');
-var turndownService = new TurndownService({
+import { tableRule, privateKeyRule, copyRule } from 'lib/turndownExtensions';
+const turndownPluginGfm = require('turndown-plugin-gfm');
+const turndownService = new TurndownService({
   emDelimiter: '*',
   headingStyle: 'atx',
   codeBlockStyle: 'fenced'
 });
-var gfm = turndownPluginGfm.gfm;
-var tables = turndownPluginGfm.tables;
-var Remarkable = require('remarkable');
+const gfm = turndownPluginGfm.gfm;
+const tables = turndownPluginGfm.tables;
+turndownService.use(gfm);
+turndownService.use([tables]);
+turndownService.addRule('table', tableRule);
+turndownService.addRule('privateKey', privateKeyRule);
+turndownService.addRule('copy', copyRule);
+
+const Remarkable = require('remarkable');
 const {
   privateKeyParser,
   copyParser,
   privateKeyRenderer,
   copyRenderer
 } = require('lib/remarkableExtensions');
-var md = new Remarkable();
+const md = new Remarkable();
 md.block.ruler.before('code', 'privatekey', privateKeyParser);
 md.inline.ruler.push('copy', copyParser);
 md.renderer.rules.privatekey = privateKeyRenderer;
 md.renderer.rules.copy = copyRenderer;
 
-turndownService.use(gfm);
-turndownService.use([tables]);
-turndownService.addRule('table', {
-  filter: function(node) {
-    if (node.nodeName === 'TABLE')
-      return (
-        node.firstChild.nodeName === 'TBODY' &&
-        node.nodeName === 'TABLE' &&
-        node.firstChild.firstChild.firstChild.nodeName === 'TD'
-      );
-  },
-  replacement: function(content) {
-    let divider = '';
-    let table = content.split('\n');
-    if (table[0] === '') table.shift();
-    let [head, ...tail] = table;
-    let header = head.split('|');
-    for (let i = 0; i < header.length - 2; i++) {
-      divider += '| --- ';
-    }
-    divider += '|';
-    return head + '\n' + divider + '\n' + tail;
-  }
-});
-
-turndownService.addRule('privateKey', {
-  filter: function(node) {
-    return node.nodeName === 'DIV' && node.className === 'private-key';
-  },
-  replacement: function(content) {
-    return content;
-  }
-});
-
-turndownService.addRule('copy', {
-  filter: function(node) {
-    return node.nodeName === 'DIV' && node.className === 'copy';
-  },
-  replacement: function(content) {
-    return `@password@${content}@password@`;
-  }
-});
-
-const plugins = 'link image lists table';
+const plugins = 'link lists table';
 
 const toolbar =
-  'styleselect | bold italic | markdownCode blockquote | bullist numlist | link image table | privateKey copyPass';
+  'styleselect | bold italic | markdownCode blockquote | bullist numlist | link table | privateKey copyPass';
 
 const formats = {
   codeMark: { inline: 'code' },
   blockquote: { block: 'blockquote' },
   privateKey: {
     block: 'div',
-    classes: 'private-key'
+    classes: 'rich-text-private-key'
   },
   copy: {
     block: 'div',
-    classes: 'copy'
+    classes: 'rich-text-copy'
   }
 };
 
@@ -104,6 +68,7 @@ class RichText extends Component {
 
   setup(editor) {
     this.setState({ activeEditor: editor });
+
     editor.addButton('markdownCode', {
       icon: 'code',
       onclick: function() {
@@ -170,7 +135,8 @@ class RichText extends Component {
           menubar: false,
           target_list: false,
           link_title: false,
-          entity_encoding: 'raw'
+          entity_encoding: 'raw',
+          content_css: '/css/index.css'
         }}
         onKeyUp={() => this.handleEditorChange(id, type)}
       />
