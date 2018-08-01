@@ -52,7 +52,6 @@ turndownService.addRule('privateKey', {
     return node.nodeName === 'DIV' && node.className === 'private-key';
   },
   replacement: function(content) {
-    debugger;
     return content;
   }
 });
@@ -76,13 +75,11 @@ const formats = {
   blockquote: { block: 'blockquote' },
   privateKey: {
     block: 'div',
-    classes: 'private-key',
-    styles: { color: '#ff0000' }
+    classes: 'private-key'
   },
   copy: {
     block: 'div',
-    classes: 'copy',
-    styles: { color: '#0000ff' }
+    classes: 'copy'
   }
 };
 
