@@ -1,7 +1,8 @@
 const { fromJS, List, Map } = require('immutable');
 
 const initialState = fromJS({
-  downloads: []
+  downloads: [],
+  show: false
 });
 
 const download = (state = initialState, action) => {
@@ -9,19 +10,24 @@ const download = (state = initialState, action) => {
     case 'LOGOUT':
     case 'SESSION_EXPIRED':
       return initialState;
+    case 'ATTACHMENT_DOWNLOAD_CLOSE_PANE': {
+      return state.set('show', false);
+    }
     case 'ATTACHMENT_DOWNLOAD_STARTED': {
-      return state.update('downloads', list =>
-        list.push(
-          Map({
-            id: action.payload.id,
-            name: action.payload.name,
-            path: action.payload.path,
-            downloadListIndex: action.payload.downloadListIndex,
-            downloading: true,
-            progress: 0
-          })
+      return state
+        .update('downloads', list =>
+          list.push(
+            Map({
+              id: action.payload.id,
+              name: action.payload.name,
+              path: action.payload.path,
+              downloadListIndex: action.payload.downloadListIndex,
+              downloading: true,
+              progress: 0
+            })
+          )
         )
-      );
+        .set('show', true);
     }
     case 'ATTACHMENT_DOWNLOAD_PROGRESS': {
       let downloadListIndex = state

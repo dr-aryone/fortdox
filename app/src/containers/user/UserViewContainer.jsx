@@ -6,7 +6,8 @@ const attachmentActions = require('actions/document/attachments');
 const mapStateToProps = state => {
   return {
     currentView: state.navigation.get('currentView'),
-    downloads: state.download.get('downloads')
+    downloads: state.download.get('downloads'),
+    show: state.download.get('show')
   };
 };
 
@@ -23,6 +24,9 @@ const mapDispatchToProps = dispatch => {
     },
     onClearAllDownloads: () => {
       dispatch(attachmentActions.clearAllDownloads());
+    },
+    onCloseDownloadPane: () => {
+      dispatch(attachmentActions.closeDownloadPane());
     }
   };
 };
