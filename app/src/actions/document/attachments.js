@@ -56,10 +56,7 @@ export const removeAttachment = (index, name) => {
     let files = state[view].getIn(['docFields', 'files']);
 
     attachments = attachments.splice(index, 1);
-    console.log('Before', files.toString());
     files = files.filter(f => f.actualFile.name !== name);
-    console.log('After', files.toString());
-    debugger;
     return dispatch({
       type: `${prefix}_REMOVE_ATTACHMENT`,
       payload: {
@@ -89,7 +86,6 @@ export const previewAttachment = (attachmentData, attachmentIndex) => {
         '_id'
       ]);
       let response;
-      console.log('Attachment Index', attachmentIndex);
       try {
         response = await requestor.get(
           `${
