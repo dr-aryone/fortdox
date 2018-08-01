@@ -50,16 +50,24 @@ export const addAttachment = files => {
   };
 };
 
-export const removeAttachment = (id, index) => {
+export const removeAttachment = (index, name) => {
   return async (dispatch, getState) => {
     let state = getState();
     let { view, prefix } = getPrefix(state.navigation.get('currentView'));
     let attachments = state[view].getIn(['docFields', 'attachments']);
+    let files = state[view].getIn(['docFields', 'files']);
+
     attachments = attachments.splice(index, 1);
+    console.log('Before', files.toString());
+    files = files.filter(f => f.actualFile.name !== name);
+    console.log('After', files.toString());
     debugger;
     return dispatch({
       type: `${prefix}_REMOVE_ATTACHMENT`,
-      payload: attachments
+      payload: {
+        attachments,
+        files
+      }
     });
   };
 };

@@ -197,7 +197,8 @@ const form = (state = initialState, action) => {
         .set('checkFields', false);
     case 'UPDATE_DOC_REMOVE_ATTACHMENT':
       return state
-        .setIn(['docFields', 'attachments'], fromJS(action.payload))
+        .setIn(['docFields', 'attachments'], action.payload.attachments)
+        .setIn(['docFields', 'files'], action.payload.files)
         .set('checkFields', false);
     case 'UPDATE_DOC_PREVIEW_ATTACHMENT_START':
       return state.set('isLoading', true);
