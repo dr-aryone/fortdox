@@ -72,8 +72,8 @@ const mapDispatchToProps = dispatch => {
     onAddAttachment: event => {
       dispatch(attachmentActions.addAttachment(event.target.files));
     },
-    onRemoveAttachment: (index, id) => {
-      dispatch(attachmentActions.removeAttachment(index, id));
+    onRemoveAttachment: (index, name) => {
+      dispatch(attachmentActions.removeAttachment(index, name));
     },
     onPreviewAttachment: (attachment, attachmentIndex) => {
       dispatch(
