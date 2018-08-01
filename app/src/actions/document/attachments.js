@@ -29,16 +29,14 @@ export const addAttachment = files => {
       }
 
       try {
-        let data = await attachmentUtils.readSource(file);
         dispatch({
           type: `${prefix}_ADD_ATTACHMENT`,
           fileType: file.type,
           name: file.name,
-          actualFile: file,
-          file: data.toString('base64')
+          actualFile: file
         });
       } catch (error) {
-        console.log(error);
+        console.error(error);
         dispatch({
           type: `${prefix}_ADD_ATTACHMENT_ERROR`,
           payload: {
