@@ -1,5 +1,6 @@
 const uuid = require('uuid');
 const logger = require('app/logger');
+const findRemovedAttachments = require('./updateUtil');
 
 module.exports = client => {
   const update = ({ query, organizationIndex }) => {
@@ -16,13 +17,11 @@ module.exports = client => {
           qa => qa.id !== undefined
         );
 
-        //TODO:break this out and add test
-        const toRemove = newTypeofAttachments.filter(a => {
-          const found = query.attachments.find(qa => qa.id === a.id);
-          if (!found) {
-            return a;
-          }
-        });
+        const toRemove = findRemovedAttachments(
+          newTypeofAttachments,
+          query.attachments
+        );
+
         logger.info(
           'ES UPDATE',
           `Number of attachment files to remove ${toRemove.length}`
