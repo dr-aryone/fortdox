@@ -151,6 +151,9 @@ export function updateDocument() {
       });
     });
     newDoc.getIn(['attachments']).forEach(attachment => {
+      if (attachment.get('new')) {
+        return;
+      }
       attachments.push({
         name: attachment.get('name'),
         id: attachment.get('id'),
@@ -158,7 +161,6 @@ export function updateDocument() {
       });
     });
 
-    attachments = attachments.filter(a => a.id !== undefined);
     let oldDoc = state.updateDocument.get('documentToUpdate');
 
     //Upload the files

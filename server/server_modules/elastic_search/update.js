@@ -1,4 +1,5 @@
 const uuid = require('uuid');
+const logger = require('app/logger');
 
 module.exports = client => {
   const update = ({ query, organizationIndex }) => {
@@ -11,17 +12,26 @@ module.exports = client => {
           type: 'fortdox_document',
           id: query.id
         });
-        console.log(current);
-        console.log(query);
+        //logger.info('ES UPDATE', current);
+        //logger.info('ES UPDATE', query);
+
+        //break out only new types of attachments from the query..
+        const newTypeofAttachments = current._source.attachments.filter(
+          qa => qa.id !== undefined
+        );
+
         //TODO:break this out and add test
-        const toRemove = current._source.attachments.filter(a => {
+        const toRemove = newTypeofAttachments.filter(a => {
           const found = query.attachments.find(qa => qa.id === a.id);
           if (!found) {
             return a;
           }
         });
-        console.log('TO REMOVE', toRemove);
-
+        //logger.info('ES UPDATE', 'TO REMOVE', toRemove);
+        logger.info(
+          'ES UPDATE',
+          `Number of attachment files to remove ${toRemove.length}`
+        );
         query.attachments = query.attachments.filter(attachment => {
           if (attachment.file) {
             attachment.name = `${uuid()}-${attachment.name}`;

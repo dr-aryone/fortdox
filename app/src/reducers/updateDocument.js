@@ -186,7 +186,8 @@ const form = (state = initialState, action) => {
             fromJS({
               name: action.name,
               type: action.fileType,
-              file: action.file
+              file: action.file,
+              new: true
             })
           )
         )
