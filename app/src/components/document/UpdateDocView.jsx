@@ -58,7 +58,6 @@ class UpdateDocView extends React.Component {
   }
 
   hasBeenEdited(docFields) {
-    console.log('checkFields');
     const title = docFields.getIn(['title', 'value']);
     const encryptedTexts = docFields.get('encryptedTexts');
     const texts = docFields.get('texts');
