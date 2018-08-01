@@ -2,10 +2,10 @@ const document = require('app/document');
 const express = require('express');
 const { needsMasterPassword } = require('app/sessions');
 const router = express.Router();
-
+const config = require('app/config.json');
 const multer = require('multer');
 const upload = multer({
-  dest: '/Users/david/Developer/fortdox/server/uploads'
+  dest: config.uploadPath
 });
 
 router.get('/', document.search);
