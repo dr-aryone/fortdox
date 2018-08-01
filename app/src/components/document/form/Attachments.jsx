@@ -96,7 +96,11 @@ class Attachments extends React.Component {
     let attachmentList = [];
     attachments.forEach((attachment, index) => {
       let name = attachment.get('name');
-      const id = attachment.get('id');
+      let id = index;
+      if (attachment.get('id')) {
+        id =
+          attachment.get('id').charAt(0) === '@' ? attachment.get('id') : index;
+      }
       name = name.replace(
         /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}-/,
         ''
