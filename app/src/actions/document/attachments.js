@@ -126,6 +126,11 @@ export const clearDownload = id => {
   };
 };
 
+export const closeDownloadPane = () => {
+  return {
+    type: 'ATTACHMENT_DOWNLOAD_CLOSE_PANE'
+  };
+};
 export const clearAllDownloads = () => {
   return {
     type: 'ATTACHMENT_DOWNLOAD_CLEAR_ALL'
@@ -289,5 +294,6 @@ export default {
   downloadAttachment,
   clearDownload,
   clearAllDownloads,
+  closeDownloadPane,
   showInDirectory
 };
