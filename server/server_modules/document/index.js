@@ -297,7 +297,7 @@ async function update(req, res) {
     return res.status(500).send();
   }
 
-  logger.log('verbose', 'Files:', req.files);
+  logger.log('verbose', 'Files:', req.files.length);
   let files = {};
   if (req.files) {
     files = Array.from(req.files).map(file => {
@@ -309,7 +309,10 @@ async function update(req, res) {
       };
     });
   }
-
+  logger.info(
+    '/docuemnt id PATCH',
+    `There are ${req.body.attachments.length} attachments in this document`
+  );
   let query = {
     type: req.body.type,
     id: req.params.id,
@@ -321,16 +324,17 @@ async function update(req, res) {
     attachments: req.body.attachments,
     files
   };
-
+  //logger.log('verbose', 'Incoming query to es', query);
   let response;
   try {
     response = await es.update({ query, organizationIndex });
     logger.info(
       '/document/id PATCH',
-      `User ${email} updated document ${req.body.id}`
+      `User ${email} updated document ${query.id}`
     );
-
-    await removeFiles(response.removed);
+    //logger.log('verbose', 'To Remove', response.removed);
+    const filesToRemove = response.removed.filter(a => a.path != undefined);
+    await removeFiles(filesToRemove);
     response.removed = null;
     await changelog.addLogEntry(req.params.id, email);
     logger.info(
@@ -340,7 +344,7 @@ async function update(req, res) {
   } catch (error) {
     logger.error(
       '/document/id PATCH',
-      `Cannot update document ${req.body.id}`,
+      `Cannot update document ${query.id}`,
       error
     );
     return res.status(500).send({ msg: 'Internal Server Error' });
