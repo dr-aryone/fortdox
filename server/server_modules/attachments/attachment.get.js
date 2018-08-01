@@ -42,7 +42,6 @@ async function getAttachment(req, res) {
       'New type of file',
       attachment
     );
-    //read file and send it down..
     fs.readFile(attachment.path, (err, data) => {
       if (err) {
         return res.status(500).send();

@@ -12,10 +12,6 @@ module.exports = client => {
           type: 'fortdox_document',
           id: query.id
         });
-        //logger.info('ES UPDATE', current);
-        //logger.info('ES UPDATE', query);
-
-        //break out only new types of attachments from the query..
         const newTypeofAttachments = current._source.attachments.filter(
           qa => qa.id !== undefined
         );
@@ -27,7 +23,6 @@ module.exports = client => {
             return a;
           }
         });
-        //logger.info('ES UPDATE', 'TO REMOVE', toRemove);
         logger.info(
           'ES UPDATE',
           `Number of attachment files to remove ${toRemove.length}`

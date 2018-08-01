@@ -174,7 +174,6 @@ async function create(req, res) {
   let privateKey = req.session.privateKey;
   let organizationIndex = req.session.organizationIndex;
   let encryptedMasterPassword = req.session.mp;
-  logger.log('verbose', 'Files:', req.body);
 
   let fields = checkEmptyFields(req.body);
   if (!fields.valid) {
@@ -202,11 +201,12 @@ async function create(req, res) {
     return res.status(500).send();
   }
 
-  logger.log('verbose', 'Files:', req.body);
-  logger.log('verbose', 'Files:', req.files);
-  //attachments
   let files = {};
   if (req.files) {
+    logger.info(
+      '/document/id POST',
+      `Received ${req.files.length} attachments`
+    );
     files = Array.from(req.files).map(file => {
       return {
         id: `@${uuidv4()}`,
@@ -297,15 +297,18 @@ async function update(req, res) {
     return res.status(500).send();
   }
 
-  logger.log('verbose', 'Files:', req.files.length);
   let files = {};
   if (req.files) {
+    logger.info(
+      '/document/id PATCH',
+      `Received ${req.files.length} attachments`
+    );
     files = Array.from(req.files).map(file => {
       return {
         id: `@${uuidv4()}`,
         name: file.originalname,
         path: file.path,
-        file_type: file.mimetype //TODO: change to file_type, because why make breaking changes..
+        file_type: file.mimetype
       };
     });
   }
@@ -324,7 +327,6 @@ async function update(req, res) {
     attachments: req.body.attachments,
     files
   };
-  //logger.log('verbose', 'Incoming query to es', query);
   let response;
   try {
     response = await es.update({ query, organizationIndex });
@@ -332,7 +334,6 @@ async function update(req, res) {
       '/document/id PATCH',
       `User ${email} updated document ${query.id}`
     );
-    //logger.log('verbose', 'To Remove', response.removed);
     const filesToRemove = response.removed.filter(a => a.path != undefined);
     await removeFiles(filesToRemove);
     response.removed = null;
