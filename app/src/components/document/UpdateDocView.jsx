@@ -30,14 +30,13 @@ class UpdateDocView extends React.Component {
         });
       }
 
-
       return this.props.hasChecked();
     }
-    
+
     if (docFields && this.props.oldDocFields)
-    return this.setState({
-      hasBeenEdited: this.hasBeenEdited(docFields)
-    });
+      return this.setState({
+        hasBeenEdited: this.hasBeenEdited(docFields)
+      });
   }
 
   componentWillMount() {
