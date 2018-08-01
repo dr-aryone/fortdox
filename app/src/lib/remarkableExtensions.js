@@ -67,12 +67,12 @@ function copyParser(state, silent) {
   return true;
 }
 
-function privateKeyRenderer(tokens, idx, options) {
-  debugger;
+function privateKeyRenderer(tokens) {
+  return `<div className'private-key'>${tokens[0].title}${
+    tokens[0].content
+  }</div>`;
 }
 
 function copyRenderer(tokens) {
-  return `<div className='copy' style='color: rgb(0, 0, 255);'>${
-    tokens[0].content
-  }</div>`;
+  return `<div className='copy'>${tokens[0].content}</div>`;
 }
