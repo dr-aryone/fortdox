@@ -42,3 +42,20 @@
 .mce-container {
   box-sizing: border-box !important;
 }
+
+#tinymce {
+  background-color: white;
+  margin: 0px 1em;
+
+  .rich-text-private-key {
+    padding: 10px;
+    margin: 10px;
+    background-color: $grey;
+  }
+
+  .rich-text-copy {
+    border: 1px dashed $charcoal;
+    margin: 1em 5em;
+    padding: 1em;
+  }
+}

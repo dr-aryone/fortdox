@@ -68,11 +68,11 @@ function copyParser(state, silent) {
 }
 
 function privateKeyRenderer(tokens) {
-  return `<div className'private-key'>${tokens[0].title}${
+  return `<div class'rich-text-private-key'>${tokens[0].title}${
     tokens[0].content
   }</div>`;
 }
 
 function copyRenderer(tokens) {
-  return `<div className='copy'>${tokens[0].content}</div>`;
+  return `<div class='rich-text-copy'>${tokens[0].content}</div>`;
 }
