@@ -1,6 +1,5 @@
 const logger = require('app/logger');
 const es = require('app/elastic_search');
-const fs = require('fs');
 
 async function getAttachment(req, res) {
   let id = req.params.id;
@@ -42,11 +41,14 @@ async function getAttachment(req, res) {
       'New type of file',
       attachment
     );
-    fs.readFile(attachment.path, (err, data) => {
-      if (err) {
+    res.sendFile(attachment.path, {}, error => {
+      if (error) {
+        logger.error(
+          '/document/id/attachment/attachmentIndex',
+          `Could not send file at path ${attachment.path}`
+        );
         return res.status(500).send();
       }
-      return res.send(Buffer.from(data).toString('base64'));
     });
   } else {
     attachment = attachment[attachmentIndex];
