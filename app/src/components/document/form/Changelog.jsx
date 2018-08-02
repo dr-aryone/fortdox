@@ -58,7 +58,6 @@ class Changelog extends React.Component {
           {formatDate(changelog.getIn([0, 'createdAt']))} by{' '}
           {changelog.getIn([0, 'user'])}
         </div>
-
         <label>
           <h3>Last edited</h3>
         </label>
