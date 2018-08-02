@@ -15,7 +15,8 @@ const mapStateToProps = state => {
     similarDocuments: state.updateDocument.get('similarDocuments'),
     elementToHide: state.updateDocument.get('elementToHide'),
     checkFields: state.updateDocument.get('checkFields'),
-    nextViewAfterCheck: state.updateDocument.get('nextViewAfterCheck')
+    nextViewAfterCheck: state.updateDocument.get('nextViewAfterCheck'),
+    showVersionPanel: state.updateDocument.get('showVersionPanel')
   };
 };
 
