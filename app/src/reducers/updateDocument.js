@@ -255,6 +255,8 @@ const form = (state = initialState, action) => {
       return state.set('fieldsChecked', true);
     case 'UPDATE_DOC_UNCHECK_FIELD':
       return state.set('checkFields', false);
+    case 'TOGGLE_VERSION_HISTORY':
+      return state.set('showVersionPanel', action.payload);
     case 'LOGOUT':
     case 'SESSION_EXPIRED':
       return initialState;

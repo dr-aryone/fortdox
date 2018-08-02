@@ -87,7 +87,10 @@ const DocumentForm = ({
           onDownloadAttachment={onDownloadAttachment}
         />
         {changelog ? (
-          <Changelog changelog={docFields.get('changelog')} />
+          <Changelog
+            changelog={docFields.get('changelog')}
+            onToggleVersonPanel={this.props.onToggleVersonPanel}
+          />
         ) : null}
       </div>
     </form>
