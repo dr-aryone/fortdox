@@ -8,30 +8,52 @@
   padding: initial;
   transition: all 0.4s ease-in-out;
   transform: translateX(0);
-
+  
   &.hide {
     transform: translateX(100%);
   }
-
+  
   h2 {
     padding: 10px;
     background: $grey;
     margin: 0;
   }
-
+  
   ul {
     padding: 0;
     margin: 0;
   }
-
-  span.clear-all {
-    position: absolute;
-    top: 12px;
-    right: 10px;
-    color: darken($grey, 25%);
-    cursor: pointer;
+  
+  .dm-controls {
+    .delimiter {
+      width: 1px;
+      display: inline-block;
+      margin: 0 5px;
+      background: #ded7d7;
+      height: 15px;
+      vertical-align: middle;
+      position: absolute;
+      top: 12px;
+      right: 45px;
+    }
+    .close {
+      position: absolute;
+      top: 12px;
+      right: 10px;
+      color: darken($grey, 25%);
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .clear-all {
+      position: absolute;
+      top: 12px;
+      right: 60px;
+      color: darken($grey, 25%);
+      cursor: pointer;
+    }
   }
-
+  
+  
   li {
     padding: 0 40px 0 10px;
     height: 65px;
@@ -39,25 +61,25 @@
     flex-direction: column;
     justify-content: space-around;
     position: relative;
-
+    
     &:hover {
       background: lighten($grey, 2%);
     }
   }
-
+  
   .status {
     span.complete {
       color: $green;
     }
-
+    
     span.error {
       color: $red;
     }
-
+    
     span.downloading {
       color: $primary-color;
     }
-
+    
     .delimiter {
       width: 1px;
       display: inline-block;
@@ -67,16 +89,16 @@
       vertical-align: middle;
     }
   }
-
+  
   .attachment-link {
     cursor: pointer;
     color: darken($grey, 20%);
-
+    
     &:hover {
       color: darken($grey, 30%);
     }
   }
-
+  
   .attachment-name {
     font-size: 14px;
     overflow: hidden;
@@ -84,13 +106,13 @@
     text-overflow: ellipsis;
     padding-right: 1px;
   }
-
+  
   button.small {
     position: absolute;
     right: 6px;
     background: darken($grey, 10%);
   }
-
+  
   .progress-bar {
     height: 5px;
     position: relative;
@@ -103,7 +125,7 @@
       position: absolute;
       background: $green;
       transition: width 0.2s ease-out;
-
+      
       &.error {
         background: $red;
       }

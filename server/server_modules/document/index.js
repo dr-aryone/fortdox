@@ -1,4 +1,5 @@
 const changelog = require('app/changelog');
+const fs = require('fs');
 const es = require('app/elastic_search');
 const checkEmptyFields = require('app/utilities/checkEmptyFields');
 const {
@@ -10,6 +11,7 @@ const {
 } = require('app/encryption/keys/cryptMasterPassword');
 const expect = require('@edgeguideab/expect');
 const logger = require('app/logger');
+const uuidv4 = require('uuid/v4');
 
 module.exports = {
   search,
@@ -17,38 +19,8 @@ module.exports = {
   update,
   delete: deleteDocument,
   checkTitle,
-  get,
-  getAttachment
+  get
 };
-
-async function getAttachment(req, res) {
-  let id = req.params.id;
-  let attachmentIndex = req.params.attachmentIndex;
-  let organizationIndex = req.session.organizationIndex;
-
-  logger.info(
-    '/document/id/attachment/attachmentIndex',
-    'Get attachment for',
-    id,
-    ' attachment index',
-    attachmentIndex
-  );
-
-  let attachment;
-
-  try {
-    attachment = await es.getAttachment({
-      documentId: id,
-      attachmentIndex,
-      organizationIndex
-    });
-  } catch (error) {
-    logger.error('/document/id/attachment/attachmentIndex', error);
-    return res.status(500).send();
-  }
-
-  res.send(attachment);
-}
 
 async function get(req, res) {
   let organizationIndex = req.session.organizationIndex;
@@ -86,6 +58,7 @@ async function get(req, res) {
 
   doc._source.encrypted_texts = doc._source.encrypted_texts || [];
   doc._source.attachments = doc._source.attachments || [];
+
   doc._source.tags = doc._source.tags || [];
   try {
     doc._source.encrypted_texts = await decryptDocuments(
@@ -188,7 +161,6 @@ async function search(req, res) {
     );
     return res.status(500).send();
   }
-
   res.send({
     searchResult: response.hits.hits,
     totalHits: response.hits.total
@@ -196,6 +168,9 @@ async function search(req, res) {
 }
 
 async function create(req, res) {
+  req.body.encryptedTexts = JSON.parse(req.body.encryptedTexts);
+  req.body.texts = JSON.parse(req.body.texts);
+
   let privateKey = req.session.privateKey;
   let organizationIndex = req.session.organizationIndex;
   let encryptedMasterPassword = req.session.mp;
@@ -226,12 +201,28 @@ async function create(req, res) {
     return res.status(500).send();
   }
 
+  let files = {};
+  if (req.files) {
+    logger.info(
+      '/document/id POST',
+      `Received ${req.files.length} attachments`
+    );
+    files = Array.from(req.files).map(file => {
+      return {
+        id: `@${uuidv4()}`,
+        name: file.originalname,
+        path: file.path,
+        file_type: file.mimetype
+      };
+    });
+  }
+
   let query = {
     title: req.body.title,
     encryptedTexts: encryptedTexts,
     texts: req.body.texts,
-    tags: req.body.tags,
-    attachments: req.body.attachments
+    tags: req.body.tags.split(',').filter(t => t !== ''),
+    attachments: files
   };
 
   let response;
@@ -259,7 +250,8 @@ async function create(req, res) {
       '/document POST',
       `Changelog entry for document ${req.body.title} with id ${response._id}`
     );
-    res.send(response);
+    logger.info('response', response);
+    res.send({ _id: response._id });
   } catch (error) {
     logger.error(
       '/document POST',
@@ -271,6 +263,10 @@ async function create(req, res) {
 }
 
 async function update(req, res) {
+  req.body.encryptedTexts = JSON.parse(req.body.encryptedTexts);
+  req.body.texts = JSON.parse(req.body.texts);
+  req.body.attachments = JSON.parse(req.body.attachments);
+
   let email = req.session.email;
   let privateKey = req.session.privateKey;
   let organizationIndex = req.session.organizationIndex;
@@ -301,6 +297,25 @@ async function update(req, res) {
     return res.status(500).send();
   }
 
+  let files = {};
+  if (req.files) {
+    logger.info(
+      '/document/id PATCH',
+      `Received ${req.files.length} attachments`
+    );
+    files = Array.from(req.files).map(file => {
+      return {
+        id: `@${uuidv4()}`,
+        name: file.originalname,
+        path: file.path,
+        file_type: file.mimetype
+      };
+    });
+  }
+  logger.info(
+    '/docuemnt id PATCH',
+    `There are ${req.body.attachments.length} attachments in this document`
+  );
   let query = {
     type: req.body.type,
     id: req.params.id,
@@ -308,41 +323,57 @@ async function update(req, res) {
     title: req.body.title,
     encryptedTexts: encryptedTexts,
     texts: req.body.texts,
-    tags: req.body.tags,
-    attachments: req.body.attachments
+    tags: req.body.tags.split(',').filter(t => t !== ''),
+    attachments: req.body.attachments,
+    files
   };
-
   let response;
   try {
     response = await es.update({ query, organizationIndex });
     logger.info(
       '/document/id PATCH',
-      `User ${email} updated document ${req.body.id}`
+      `User ${email} updated document ${query.id}`
     );
-  } catch (error) {
-    logger.error(
-      '/document/id PATCH',
-      `Cannot update document ${req.body.id}`,
-      error
-    );
-    return res.status(500).send({ msg: 'Internal Server Error' });
-  }
-
-  try {
+    const filesToRemove = response.removed.filter(a => a.path != undefined);
+    await removeFiles(filesToRemove);
+    response.removed = null;
     await changelog.addLogEntry(req.params.id, email);
     logger.info(
       '/document/id PATCH',
       `Added changelog entry for ${email}'s update of document ${req.params.id}`
     );
-    res.send(response);
   } catch (error) {
     logger.error(
       '/document/id PATCH',
-      `Could not add log entry for update on document ${req.params.id}`,
+      `Cannot update document ${query.id}`,
       error
     );
     return res.status(500).send({ msg: 'Internal Server Error' });
   }
+  return res.send(response);
+}
+
+async function removeFiles(files) {
+  try {
+    await files.forEach(async file => {
+      await removeFile(file.path);
+      logger.verbose(
+        '/document/id PATCH',
+        `Removed file ${file.name} : ${file.id}`
+      );
+    });
+  } catch (error) {
+    throw error;
+  }
+}
+
+function removeFile(path) {
+  return new Promise((resolve, reject) => {
+    fs.unlink(path, error => {
+      if (error) reject(error);
+      resolve();
+    });
+  });
 }
 
 async function deleteDocument(req, res) {
@@ -370,20 +401,22 @@ async function deleteDocument(req, res) {
   logger.info(
     '/document/id DELETE',
     'User',
-    req.sesion.email,
+    req.session.email,
     'deletes document',
     req.params.id
   );
 
   let query = {
-    index: req.session.organizationIndex,
+    organizationIndex: req.session.organizationIndex,
     id: req.params.id,
     type: req.query.type
   };
 
+  logger.verbose('DELETE DOCUMENT', query);
+
   let expectations = expect(
     {
-      index: 'string',
+      organizationIndex: 'string',
       type: 'string',
       id: 'string'
     },
@@ -394,24 +427,24 @@ async function deleteDocument(req, res) {
     res.status(400).send(expectations.errors());
   } else {
     try {
+      let attachments = await es.getAttachment({
+        organizationIndex: query.organizationIndex,
+        documentId: query.id
+      });
+
+      attachments = attachments.filter(a => a.path !== undefined);
+      logger.verbose('DELETE ATTACHMENTS', attachments);
       response = await es.deleteDocument(query);
-      res.send(response);
       logger.info(
         '/document/id DELETE',
         `User ${req.session.email} deleted document ${req.params.id}`
       );
+
+      await removeFiles(attachments);
+      await changelog.remove(req.params.id);
     } catch (error) {
       logger.error('/document/id DELETE', 'Cannot delete document!', error);
       return res.status(500).send();
-    }
-    try {
-      await changelog.remove(req.params.id);
-    } catch (error) {
-      logger.error(
-        '/document/id DELETE',
-        `Could not remove log entries for document ${req.params.id}`,
-        error
-      );
     }
     return res.send(response);
   }

@@ -48,6 +48,7 @@ module.exports = client => {
           size: limit,
           _sourceExclude: ['attachments', 'encrypted_texts']
         });
+
         return resolve(response);
       } catch (error) {
         console.error(error);

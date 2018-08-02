@@ -322,10 +322,27 @@ label {
   .download-manager ul {
     padding: 0;
     margin: 0; }
-  .download-manager span.clear-all {
+  .download-manager .dm-controls .delimiter {
+    width: 1px;
+    display: inline-block;
+    margin: 0 5px;
+    background: #ded7d7;
+    height: 15px;
+    vertical-align: middle;
+    position: absolute;
+    top: 12px;
+    right: 45px; }
+  .download-manager .dm-controls .close {
     position: absolute;
     top: 12px;
     right: 10px;
+    color: #bbadad;
+    font-weight: bold;
+    cursor: pointer; }
+  .download-manager .dm-controls .clear-all {
+    position: absolute;
+    top: 12px;
+    right: 60px;
     color: #bbadad;
     cursor: pointer; }
   .download-manager li {

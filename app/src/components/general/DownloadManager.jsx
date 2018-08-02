@@ -10,8 +10,19 @@ const Download = ({
   error,
   id
 }) => {
-  let openLink = <span key='2' className='attachment-link' onClick={() => onOpen(path)}>Show in directory</span>;
-  let clearButton = <button className='round small flat material-icons' onClick={() => onClear(id)}>clear</button>;
+  let openLink = (
+    <span key='2' className='attachment-link' onClick={() => onOpen(path)}>
+      Show in directory
+    </span>
+  );
+  let clearButton = (
+    <button
+      className='round small flat material-icons'
+      onClick={() => onClear(id)}
+    >
+      clear
+    </button>
+  );
   let status = downloading ? 'Downloading' : 'Complete';
   if (error) {
     status = 'Error';
@@ -20,13 +31,13 @@ const Download = ({
     <li>
       <div className='attachment-name'>{name}</div>
       <div className='progress-bar'>
-        <div className='bar' style={{width: `${progress}%`}} />
+        <div className='bar' style={{ width: `${progress}%` }} />
       </div>
       <div className='status'>
-        <span className={status.toLowerCase()}>
-          {status}
-        </span>
-        {!downloading && progress === 100 ? [<span key='1' className='delimiter' />, openLink] : null}
+        <span className={status.toLowerCase()}>{status}</span>
+        {!downloading && progress === 100
+          ? [<span key='1' className='delimiter' />, openLink]
+          : null}
       </div>
       {!downloading ? clearButton : null}
     </li>
@@ -35,12 +46,12 @@ const Download = ({
 
 const DownloadManager = ({
   downloads,
+  show,
   onOpenAttachment,
   onClearDownload,
-  onClearAll
+  onClearAll,
+  onClose
 }) => {
-  let show = downloads.size !== 0;
-
   downloads = downloads.map(download => (
     <Download
       key={download.get('id')}
@@ -57,10 +68,17 @@ const DownloadManager = ({
   return (
     <div className={`download-manager box ${show ? 'show' : 'hide'}`}>
       <h2>Downloads</h2>
-      <span className='clear-all' onClick={onClearAll}>Clear all</span>
-      <ul>
-        {downloads}
-      </ul>
+      <div className='dm-controls'>
+        <span className='clear-all' onClick={onClearAll}>
+          Clear all
+        </span>
+        <span key='1' className='delimiter' />
+
+        <span className='close' onClick={onClose}>
+          Close
+        </span>
+      </div>
+      <ul>{downloads}</ul>
     </div>
   );
 };

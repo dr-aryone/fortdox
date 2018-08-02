@@ -12,9 +12,11 @@ const UserView = ({
   currentView,
   splashScreen,
   downloads,
+  show,
   onOpenAttachment,
   onClearDownload,
-  onClearAllDownloads
+  onClearAllDownloads,
+  onCloseDownloadPane
 }) => {
   let page;
   switch (currentView) {
@@ -50,10 +52,12 @@ const UserView = ({
       <HeaderContainer />
       {page}
       <DownloadManager
+        show={show}
         downloads={downloads}
         onOpenAttachment={onOpenAttachment}
         onClearDownload={onClearDownload}
         onClearAll={onClearAllDownloads}
+        onClose={onCloseDownloadPane}
       />
     </div>
   );
