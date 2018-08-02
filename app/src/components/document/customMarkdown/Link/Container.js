@@ -2,7 +2,7 @@ import Link from './Link';
 import { previewDocument } from 'actions/document/document';
 import { connect } from 'react-redux';
 
-const mapStateToProps = state => {
+const mapStateToProps = () => {
   return {};
 };
 
