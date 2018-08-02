@@ -1,7 +1,12 @@
-const {connect} = require('react-redux');
-const PreviewDoc = require('components/document/PreviewDoc');
-const {tagSearch} = require('actions/search');
-const {showSearchField, search, searchFieldChange} = require('actions/document/search');
+import PreviewDoc from 'components/document/PreviewDoc';
+import { previewDocument } from 'actions/document/document';
+const { connect } = require('react-redux');
+const { tagSearch } = require('actions/search');
+const {
+  showSearchField,
+  search,
+  searchFieldChange
+} = require('actions/document/search');
 const action = require('actions');
 const attachmentActions = require('actions/document/attachments');
 
@@ -23,10 +28,14 @@ const mapDispatchToProps = dispatch => {
       dispatch(tagSearch(tag));
     },
     onPreviewAttachment: (attachment, attachmentIndex) => {
-      dispatch(attachmentActions.previewAttachment(attachment, attachmentIndex));
+      dispatch(
+        attachmentActions.previewAttachment(attachment, attachmentIndex)
+      );
     },
     onDownloadAttachment: (attachment, attachmentIndex) => {
-      dispatch(attachmentActions.downloadAttachment(attachment, attachmentIndex));
+      dispatch(
+        attachmentActions.downloadAttachment(attachment, attachmentIndex)
+      );
     },
     onShowSearchField: () => {
       dispatch(showSearchField());
@@ -34,8 +43,11 @@ const mapDispatchToProps = dispatch => {
     onSearch: () => {
       dispatch(search());
     },
-    onSearchFieldChange: (event) => {
+    onSearchFieldChange: event => {
       dispatch(searchFieldChange(event.target.value));
+    },
+    onClickDocumentLink: id => {
+      dispatch(previewDocument(id, true));
     }
   };
 };
@@ -45,4 +57,4 @@ const PreviewDocContainer = connect(
   mapDispatchToProps
 )(PreviewDoc);
 
-module.exports = PreviewDocContainer;
+export default PreviewDocContainer;

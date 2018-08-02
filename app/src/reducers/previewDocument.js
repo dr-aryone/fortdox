@@ -47,6 +47,7 @@ const preview = (state = initialState, action) => {
         docFields: fromJS(action.docFields),
         isLoading: false,
         showPreview: true,
+        error: null,
         searchField: {
           show: false
         }
