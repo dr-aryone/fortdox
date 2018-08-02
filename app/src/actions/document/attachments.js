@@ -9,6 +9,7 @@ const uuid = require('uuid');
 const { shell } = window.require('electron');
 
 const FILE_MAX_SIZE = 30 * 1000 * 1000;
+const FILE_MAX_SIZE_HUMAN = FILE_MAX_SIZE / 1000000;
 
 export const addAttachment = files => {
   return async (dispatch, getState) => {
@@ -19,21 +20,23 @@ export const addAttachment = files => {
         dispatch({
           type: `${prefix}_ADD_ATTACHMENT_ERROR`,
           payload: {
-            error: 'attachmentTooLarge',
+            error: `The maximum file size of attachments is ${FILE_MAX_SIZE_HUMAN} MB.
+            ${file.name} is to large.`,
             file
           }
         });
         continue;
       }
+
       try {
-        let data = await attachmentUtils.readSource(file);
         dispatch({
           type: `${prefix}_ADD_ATTACHMENT`,
           fileType: file.type,
           name: file.name,
-          file: data.toString('base64')
+          actualFile: file
         });
       } catch (error) {
+        console.error(error);
         dispatch({
           type: `${prefix}_ADD_ATTACHMENT_ERROR`,
           payload: {
@@ -45,15 +48,21 @@ export const addAttachment = files => {
   };
 };
 
-export const removeAttachment = id => {
+export const removeAttachment = (index, name) => {
   return async (dispatch, getState) => {
     let state = getState();
     let { view, prefix } = getPrefix(state.navigation.get('currentView'));
     let attachments = state[view].getIn(['docFields', 'attachments']);
-    attachments = attachments.splice(id, 1);
+    let files = state[view].getIn(['docFields', 'files']);
+
+    attachments = attachments.splice(index, 1);
+    files = files.filter(f => f.actualFile.name !== name);
     return dispatch({
       type: `${prefix}_REMOVE_ATTACHMENT`,
-      payload: attachments
+      payload: {
+        attachments,
+        files
+      }
     });
   };
 };
@@ -77,11 +86,15 @@ export const previewAttachment = (attachmentData, attachmentIndex) => {
         '_id'
       ]);
       let response;
+      const responseType =
+        typeof attachmentIndex === 'string' ? 'arraybuffer' : undefined;
+
       try {
         response = await requestor.get(
           `${
-          config.server
-          }/document/${currentDocumentId}/attachment/${attachmentIndex}`
+            config.server
+          }/document/${currentDocumentId}/attachment/${attachmentIndex}`,
+          { responseType: responseType }
         );
       } catch (error) {
         return dispatch({
@@ -91,7 +104,10 @@ export const previewAttachment = (attachmentData, attachmentIndex) => {
           }
         });
       }
-      data = response.body;
+      data =
+        typeof attachmentIndex === 'string'
+          ? window.Buffer.from(response.body).toString('base64')
+          : response.body;
       name = attachmentData
         .get('name')
         .replace(
@@ -119,6 +135,11 @@ export const clearDownload = id => {
   };
 };
 
+export const closeDownloadPane = () => {
+  return {
+    type: 'ATTACHMENT_DOWNLOAD_CLOSE_PANE'
+  };
+};
 export const clearAllDownloads = () => {
   return {
     type: 'ATTACHMENT_DOWNLOAD_CLEAR_ALL'
@@ -173,9 +194,11 @@ export const downloadAttachment = (attachmentData, attachmentIndex) => {
         }
       });
       try {
+        const responseType =
+          typeof attachmentIndex === 'string' ? 'arraybuffer' : undefined;
         response = await requestor.get(
           `${
-          config.server
+            config.server
           }/document/${currentDocument}/attachment/${attachmentIndex}`,
           {
             onDataReceived: ({ loaded, total }) => {
@@ -189,7 +212,8 @@ export const downloadAttachment = (attachmentData, attachmentIndex) => {
                   progress
                 }
               });
-            }
+            },
+            responseType: responseType
           }
         );
       } catch (error) {
@@ -203,7 +227,10 @@ export const downloadAttachment = (attachmentData, attachmentIndex) => {
           }
         });
       }
-      data = window.Buffer.from(response.body, 'base64');
+      data =
+        typeof attachmentIndex === 'string'
+          ? Buffer.from(response.body)
+          : Buffer.from(response.body, 'base64');
       name = attachmentData
         .get('name')
         .replace(
@@ -282,5 +309,6 @@ export default {
   downloadAttachment,
   clearDownload,
   clearAllDownloads,
+  closeDownloadPane,
   showInDirectory
 };

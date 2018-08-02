@@ -96,6 +96,11 @@ class Attachments extends React.Component {
     let attachmentList = [];
     attachments.forEach((attachment, index) => {
       let name = attachment.get('name');
+      let id = index;
+      if (attachment.get('id')) {
+        id =
+          attachment.get('id').charAt(0) === '@' ? attachment.get('id') : index;
+      }
       name = name.replace(
         /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}-/,
         ''
@@ -103,7 +108,7 @@ class Attachments extends React.Component {
       let removeButton = onRemoveAttachment ? (
         <button
           className='material-icons round small'
-          onClick={() => onRemoveAttachment(index)}
+          onClick={() => onRemoveAttachment(index, name)}
           type='button'
         >
           clear
@@ -113,9 +118,7 @@ class Attachments extends React.Component {
         <div key={index}>
           <span
             className='name'
-            onClick={() =>
-              this.openModal(attachment, index, onPreviewAttachment)
-            }
+            onClick={() => this.openModal(attachment, id, onPreviewAttachment)}
           >
             {name}
           </span>
@@ -123,7 +126,7 @@ class Attachments extends React.Component {
             <span>
               <i
                 className='material-icons download'
-                onClick={() => this.downloadHandler(attachment, index)}
+                onClick={() => this.downloadHandler(attachment, id)}
               >
                 file_download
               </i>

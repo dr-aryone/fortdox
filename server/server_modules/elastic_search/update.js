@@ -1,4 +1,6 @@
 const uuid = require('uuid');
+const logger = require('app/logger');
+const findRemovedAttachments = require('./updateUtil');
 
 module.exports = client => {
   const update = ({ query, organizationIndex }) => {
@@ -11,7 +13,19 @@ module.exports = client => {
           type: 'fortdox_document',
           id: query.id
         });
+        const newTypeofAttachments = current._source.attachments.filter(
+          qa => qa.id !== undefined
+        );
 
+        const toRemove = findRemovedAttachments(
+          newTypeofAttachments,
+          query.attachments
+        );
+
+        logger.info(
+          'ES UPDATE',
+          `Number of attachment files to remove ${toRemove.length}`
+        );
         query.attachments = query.attachments.filter(attachment => {
           if (attachment.file) {
             attachment.name = `${uuid()}-${attachment.name}`;
@@ -21,8 +35,12 @@ module.exports = client => {
             current._source.attachments.find(a => a.name === attachment.name) ||
             {};
           attachment.file = storedAttachment.file;
+          attachment.path = storedAttachment.path;
+
           return attachment;
         });
+
+        query.attachments = query.attachments.concat(query.files);
 
         response = await client.update({
           index: organizationIndex,
@@ -39,6 +57,7 @@ module.exports = client => {
             }
           }
         });
+        response.removed = toRemove;
         return resolve(response);
       } catch (error) {
         console.error(error);

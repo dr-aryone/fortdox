@@ -7,7 +7,7 @@ module.exports = client => {
           index: organizationIndex,
           type: 'fortdox_document',
           id: documentId,
-          _sourceExclude: 'attachments.file'
+          _sourceExclude: ['attachments.file', 'attachments.path']
         });
         return resolve(response);
       } catch (error) {

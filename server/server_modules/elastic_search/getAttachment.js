@@ -1,9 +1,5 @@
 module.exports = client => {
-  const getAttachment = ({
-    organizationIndex,
-    documentId,
-    attachmentIndex
-  }) => {
+  const getAttachment = ({ organizationIndex, documentId }) => {
     return new Promise(async (resolve, reject) => {
       let response;
       try {
@@ -13,7 +9,7 @@ module.exports = client => {
           id: documentId,
           _sourceExclude: ['texts', 'title', 'encrypted_texts']
         });
-        return resolve(response._source.attachments[attachmentIndex].file);
+        return resolve(response._source.attachments);
       } catch (error) {
         console.error(error);
         return reject(error);

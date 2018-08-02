@@ -50,8 +50,9 @@ async function test() {
 async function createDocument(credentials) {
   const document = {
     title: 'Dummy title',
-    encryptedTexts: [{ text: 'Dummy' }],
-    texts: [{ text: 'Dummy' }]
+    encryptedTexts: JSON.stringify([{ text: 'Dummy' }]),
+    texts: JSON.stringify([{ text: 'Dummy' }]),
+    tags: 'a,b,c,'
   };
 
   try {
@@ -63,25 +64,16 @@ async function createDocument(credentials) {
       body: document,
       json: true
     });
-
     const expectations = expect(
       {
-        _index: 'string',
-        _type: 'string',
-        _id: 'string',
-        _version: 'number',
-        result: 'string',
-        forced_refresh: 'boolean',
-        _shards: 'object',
-        _seq_no: 'number',
-        _primary_term: 'number'
+        _id: 'string'
       },
       response
     );
 
     if (!expectations.wereMet()) {
       throw {
-        message: `/invite/verify did not return expected fields..
+        message: `/document create did not return expected fields..
                   Extra info ${expectations.errors().toString()}`
       };
     }

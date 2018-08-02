@@ -51,24 +51,29 @@ export function createDocument() {
         id: field.get('id')
       });
     });
+
     docFields.getIn(['attachments']).forEach(attachment => {
       attachments.push({
-        name: attachment.get('name'),
-        file: attachment.get('file'),
-        file_type: attachment.get('type')
+        name: attachment.name,
+        file: attachment.file,
+        file_type: attachment.type
       });
     });
 
+    let form = new FormData();
+    docFields.getIn(['files']).forEach(a => {
+      form.append('attachments[]', a.actualFile);
+    });
+
+    form.set('title', title);
+
+    form.set('encryptedTexts', JSON.stringify(encryptedTexts));
+    form.set('texts', JSON.stringify(texts));
+    form.set('tags', tags);
     let response;
     try {
       response = await requestor.post(`${config.server}/document`, {
-        body: {
-          title,
-          encryptedTexts,
-          texts,
-          tags,
-          attachments
-        }
+        body: form
       });
     } catch (error) {
       console.error(error);
@@ -140,24 +145,32 @@ export function updateDocument() {
       });
     });
     newDoc.getIn(['attachments']).forEach(attachment => {
+      if (attachment.get('new')) {
+        return;
+      }
       attachments.push({
         name: attachment.get('name'),
-        file: attachment.get('file'),
+        id: attachment.get('id'),
         file_type: attachment.get('type')
       });
     });
+
     let oldDoc = state.updateDocument.get('documentToUpdate');
+
+    let form = new FormData();
+    newDoc.getIn(['files']).forEach(a => {
+      form.append('attachments[]', a.actualFile);
+    });
+
+    form.set('title', title);
+    form.set('encryptedTexts', JSON.stringify(encryptedTexts));
+    form.set('texts', JSON.stringify(texts));
+    form.set('tags', tags);
+    form.set('attachments', JSON.stringify(attachments));
 
     try {
       await requestor.patch(`${config.server}/document/${oldDoc.get('_id')}`, {
-        body: {
-          type: oldDoc.get('_type'),
-          title,
-          encryptedTexts,
-          texts,
-          tags,
-          attachments
-        }
+        body: form
       });
     } catch (error) {
       console.error(error);
@@ -182,6 +195,7 @@ export function updateDocument() {
       openDocument(oldDoc.get('_id'), true, () => {
         let state = getState();
         let docFields = state.updateDocument.get('docFields');
+
         return dispatch({
           type: 'UPDATE_DOCUMENT_SUCCESS',
           payload: 'Document has been updated!',
@@ -259,6 +273,7 @@ export function openDocument(id, skipTimeout, showPreview) {
       let texts = [];
       let tags = [];
       let attachments = [];
+      let files = [];
       let nextID = 0;
       doc._source.encrypted_texts.forEach(entry => {
         encryptedTexts.push(
@@ -285,13 +300,16 @@ export function openDocument(id, skipTimeout, showPreview) {
       doc._source.tags.forEach(entry => {
         tags.push(entry);
       });
+
       doc._source.attachments.forEach(attachment => {
         attachments.push({
           name: attachment.name,
+          id: attachment.id,
           file: attachment.file,
           type: attachment.file_type
         });
       });
+
       dispatch({
         type: 'OPEN_DOCUMENT_DONE',
         documentToUpdate: doc,
@@ -300,6 +318,7 @@ export function openDocument(id, skipTimeout, showPreview) {
         texts,
         tags,
         attachments,
+        files,
         changelog: doc.logentries,
         nextID: nextID + 1
       });

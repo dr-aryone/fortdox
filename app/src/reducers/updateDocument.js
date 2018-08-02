@@ -20,6 +20,7 @@ let initialState = fromJS({
       old: []
     },
     attachments: [],
+    files: [],
     preview: {
       name: null,
       data: null,
@@ -49,6 +50,7 @@ const form = (state = initialState, action) => {
             .getIn(['docFields', 'tags'])
             .set('list', fromJS(action.tags)),
           attachments: fromJS(action.attachments),
+          files: action.files,
           changelog: fromJS(action.changelog),
           nextID: fromJS(action.nextID)
         }),
@@ -173,22 +175,30 @@ const form = (state = initialState, action) => {
         .setIn(['docFields', 'encryptedTexts'], fromJS(action.encryptedTexts))
         .setIn(['docFields', 'texts'], fromJS(action.texts))
         .set('checkFields', false);
+    case 'UPDATE_DOC_ADD_ATTACHMENT_ERROR':
+      return state.merge({
+        error: action.payload.error
+      });
     case 'UPDATE_DOC_ADD_ATTACHMENT':
       return state
-        .setIn(
-          ['docFields', 'attachments'],
-          state.getIn(['docFields', 'attachments']).push(
+        .updateIn(['docFields', 'attachments'], attachments =>
+          attachments.push(
             fromJS({
-              name: fromJS(action.name),
-              type: fromJS(action.fileType),
-              file: fromJS(action.file)
+              name: action.name,
+              type: action.fileType,
+              file: action.file,
+              new: true
             })
           )
+        )
+        .updateIn(['docFields', 'files'], files =>
+          files.push({ actualFile: action.actualFile })
         )
         .set('checkFields', false);
     case 'UPDATE_DOC_REMOVE_ATTACHMENT':
       return state
-        .setIn(['docFields', 'attachments'], fromJS(action.payload))
+        .setIn(['docFields', 'attachments'], action.payload.attachments)
+        .setIn(['docFields', 'files'], action.payload.files)
         .set('checkFields', false);
     case 'UPDATE_DOC_PREVIEW_ATTACHMENT_START':
       return state.set('isLoading', true);
