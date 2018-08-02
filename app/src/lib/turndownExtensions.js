@@ -41,4 +41,13 @@ const copyRule = {
   }
 };
 
-export { tableRule, copyRule, privateKeyRule };
+const documentLinkRule = {
+  filter: function(node) {
+    return node.nodeName === 'SPAN' && node.className === 'document-link';
+  },
+  replacement: function(content, node) {
+    return `@link@${content}::${node.dataset.id}@link@`;
+  }
+};
+
+export { tableRule, copyRule, privateKeyRule, documentLinkRule };

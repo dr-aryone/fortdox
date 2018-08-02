@@ -138,7 +138,7 @@ export const docInputChange = (inputId, inputValue, type) => {
         fields = state[view].getIn(['docFields', 'encryptedTexts']);
         updatedFields = fields.map(text => {
           return text.get('id') === parseInt(inputId, 10)
-            ? text.set('value', inputValue)
+            ? text.set('value', inputValue).set('error', null)
             : text;
         });
         return dispatch({
@@ -149,7 +149,7 @@ export const docInputChange = (inputId, inputValue, type) => {
         fields = state[view].getIn(['docFields', 'texts']);
         updatedFields = fields.map(text => {
           return text.get('id') === parseInt(inputId, 10)
-            ? text.set('value', inputValue)
+            ? text.set('value', inputValue).set('error', null)
             : text;
         });
         return dispatch({
