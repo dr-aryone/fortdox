@@ -60,16 +60,10 @@ export function createDocument() {
       });
     });
 
-    //Upload the files
     let form = new FormData();
     docFields.getIn(['files']).forEach(a => {
       form.append('attachments[]', a.actualFile);
     });
-
-    // Display the key/value pairs
-    for (let pair of form.entries()) {
-      console.log(pair[0] + ', ' + pair[1].name);
-    }
 
     form.set('title', title);
 
@@ -163,15 +157,10 @@ export function updateDocument() {
 
     let oldDoc = state.updateDocument.get('documentToUpdate');
 
-    //Upload the files
     let form = new FormData();
     newDoc.getIn(['files']).forEach(a => {
       form.append('attachments[]', a.actualFile);
     });
-    // Display the key/value pairs
-    for (let pair of form.entries()) {
-      console.log(pair[0] + ', ' + pair[1].name);
-    }
 
     form.set('title', title);
     form.set('encryptedTexts', JSON.stringify(encryptedTexts));
