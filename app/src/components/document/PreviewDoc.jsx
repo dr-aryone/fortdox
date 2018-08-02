@@ -1,11 +1,16 @@
-const React = require('react');
+import { DocumentLinkContainer as Link } from './customMarkdown/Link/Container';
+import React from 'react';
 const LoaderOverlay = require('components/general/LoaderOverlay');
 const ErrorBox = require('components/general/ErrorBox');
 const Tags = require('./form/Tags');
 const Attachments = require('./form/Attachments');
 const Remarkable = require('remarkable');
 const RemarkableReactRenderer = require('remarkable-react').default;
-const { privateKeyParser, copyParser } = require('lib/remarkableExtensions');
+const {
+  privateKeyParser,
+  copyParser,
+  linkParser
+} = require('lib/remarkableExtensions');
 const PrivateKey = require('./customMarkdown/PrivateKey');
 const Copy = require('./customMarkdown/Copy');
 const SearchField = require('./components/SearchField');
@@ -18,19 +23,22 @@ let markdown = new Remarkable({
 
 markdown.block.ruler.before('code', 'privatekey', privateKeyParser);
 markdown.inline.ruler.push('copy', copyParser);
+markdown.inline.ruler.push('link', linkParser);
 
 markdown.renderer = new RemarkableReactRenderer({
   components: {
     privatekey: PrivateKey,
-    copy: Copy
+    copy: Copy,
+    link: Link
   },
   tokens: {
     privatekey: 'privatekey',
-    copy: 'copy'
+    copy: 'copy',
+    link: 'link'
   }
 });
 
-class PreviewDoc extends React.Component {
+export class PreviewDoc extends React.Component {
   constructor() {
     super();
     this.handleKeyDown = this.handleKeyDown.bind(this);
@@ -172,4 +180,4 @@ class PreviewDoc extends React.Component {
   }
 }
 
-module.exports = PreviewDoc;
+export default PreviewDoc;
