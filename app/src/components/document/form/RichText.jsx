@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { Editor } from '@tinymce/tinymce-react';
+import LinkDocument from './LinkDocument';
+import Modal from 'components/general/Modal';
 import TurndownService from 'turndown';
 import { tableRule, privateKeyRule, copyRule } from 'lib/turndownExtensions';
 const turndownPluginGfm = require('turndown-plugin-gfm');
@@ -32,7 +34,7 @@ md.renderer.rules.copy = copyRenderer;
 const plugins = 'link lists table';
 
 const toolbar =
-  'styleselect | bold italic | markdownCode blockquote | bullist numlist | link table | privateKey copyPass';
+  'styleselect | bold italic | markdownCode blockquote | bullist numlist | link table | privateKey copyPass linkDocument';
 
 const formats = {
   codeMark: { inline: 'code' },
@@ -62,13 +64,16 @@ const table_default_attributes = { border: 0 };
 class RichText extends Component {
   constructor(props) {
     super(props);
-
     this.setup = this.setup.bind(this);
+    this.onLinkButtonClick = this.onLinkButtonClick.bind(this);
+    this.closeLinkDocumentModal = this.closeLinkDocumentModal.bind(this);
+    this.state = {
+      showLinkDocumentModal: false
+    };
   }
 
   setup(editor) {
     this.setState({ activeEditor: editor });
-
     editor.addButton('markdownCode', {
       icon: 'code',
       onclick: function() {
@@ -111,6 +116,22 @@ class RichText extends Component {
         });
       }
     });
+    editor.addButton('linkDocument', {
+      icon: 'link',
+      onclick: this.onLinkButtonClick
+    });
+  }
+
+  onLinkButtonClick() {
+    this.setState({
+      showLinkDocumentModal: true
+    });
+  }
+
+  closeLinkDocumentModal() {
+    this.setState({
+      showLinkDocumentModal: false
+    });
   }
 
   handleEditorChange(id, type) {
@@ -118,28 +139,53 @@ class RichText extends Component {
     this.props.onRichTextChange(id, text, type);
   }
 
+  appendToDocFields(name, id) {
+    this.state.activeEditor.insertContent(`${name} ${id}`);
+    this.setState({
+      showLinkDocumentModal: false
+    });
+  }
+
   render() {
     const { text, id, type } = this.props;
+
+    const linkDocumentModal = (
+      <Modal
+        show={this.state.showLinkDocumentModal}
+        onClose={this.closeLinkDocumentModal}
+      >
+        <LinkDocument
+          linkOnClick={(name, id) => {
+            this.appendToDocFields(name, id);
+          }}
+          onClose={this.closeLinkDocumentModal}
+        />
+      </Modal>
+    );
+
     return (
-      <Editor
-        initialValue={md.render(text)}
-        init={{
-          setup: this.setup,
-          style_formats,
-          formats,
-          plugins,
-          toolbar,
-          table_default_styles,
-          table_default_attributes,
-          branding: false,
-          menubar: false,
-          target_list: false,
-          link_title: false,
-          entity_encoding: 'raw',
-          content_css: '/css/index.css'
-        }}
-        onKeyUp={() => this.handleEditorChange(id, type)}
-      />
+      <div>
+        {this.state.showLinkDocumentModal && linkDocumentModal}
+        <Editor
+          initialValue={md.render(text)}
+          init={{
+            setup: this.setup,
+            style_formats,
+            formats,
+            plugins,
+            toolbar,
+            table_default_styles,
+            table_default_attributes,
+            branding: false,
+            menubar: false,
+            target_list: false,
+            link_title: false,
+            entity_encoding: 'raw',
+            content_css: '/css/index.css'
+          }}
+          onKeyUp={() => this.handleEditorChange(id, type)}
+        />
+      </div>
     );
   }
 }

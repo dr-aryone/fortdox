@@ -102,7 +102,7 @@ h3 {
   border-bottom-color: #fe4a49;
   border-width: 10px; }
 
-.box, .doc-mode .modal-inner, .main-panel, .search-item, .misc .created, .misc .edited, .misc .input-field, .misc .attachments, .preview, .preview .title .private-key, .list-inner {
+.box, .link-document, .doc-mode .modal-inner, .main-panel, .search-item, .misc .created, .misc .edited, .misc .input-field, .misc .attachments, .preview, .preview .title .private-key, .list-inner {
   padding: 15px;
   margin-bottom: 20px;
   box-shadow: 0 2px 2px rgba(0, 0, 0, 0.15), 0 0 2px rgba(0, 0, 0, 0.11);
@@ -110,15 +110,15 @@ h3 {
   border-radius: 1px;
   box-sizing: border-box;
   word-break: break-word; }
-  .box .title, .doc-mode .modal-inner .title, .main-panel .title, .search-item .title, .misc .created .title, .misc .edited .title, .misc .input-field .title, .misc .attachments .title, .preview .title, .preview .title .private-key .title, .list-inner .title {
+  .box .title, .link-document .title, .doc-mode .modal-inner .title, .main-panel .title, .search-item .title, .misc .created .title, .misc .edited .title, .misc .input-field .title, .misc .attachments .title, .preview .title, .preview .title .private-key .title, .list-inner .title {
     background-color: #f5f3f3;
     padding: 15px; }
-  .box .text, .doc-mode .modal-inner .text, .main-panel .text, .search-item .text, .misc .created .text, .misc .edited .text, .misc .input-field .text, .misc .attachments .text, .preview .text, .preview .title .private-key .text, .list-inner .text {
+  .box .text, .link-document .text, .doc-mode .modal-inner .text, .main-panel .text, .search-item .text, .misc .created .text, .misc .edited .text, .misc .input-field .text, .misc .attachments .text, .preview .text, .preview .title .private-key .text, .list-inner .text {
     padding: 15px;
     margin: 0px; }
-  .box .hide, .doc-mode .modal-inner .hide, .main-panel .hide, .search-item .hide, .misc .created .hide, .misc .edited .hide, .misc .input-field .hide, .misc .attachments .hide, .preview .hide, .preview .title .private-key .hide, .list-inner .hide {
+  .box .hide, .link-document .hide, .doc-mode .modal-inner .hide, .main-panel .hide, .search-item .hide, .misc .created .hide, .misc .edited .hide, .misc .input-field .hide, .misc .attachments .hide, .preview .hide, .preview .title .private-key .hide, .list-inner .hide {
     display: none; }
-  .box.invisible, .doc-mode .invisible.modal-inner, .invisible.main-panel, .invisible.search-item, .misc .invisible.created, .misc .invisible.edited, .misc .invisible.input-field, .misc .invisible.attachments, .invisible.preview, .preview .title .invisible.private-key, .invisible.list-inner {
+  .box.invisible, .invisible.link-document, .doc-mode .invisible.modal-inner, .invisible.main-panel, .invisible.search-item, .misc .invisible.created, .misc .invisible.edited, .misc .invisible.input-field, .misc .invisible.attachments, .invisible.preview, .preview .title .invisible.private-key, .invisible.list-inner {
     visibility: hidden; }
 
 button {
@@ -234,6 +234,30 @@ textarea {
 
 label {
   color: black; }
+
+.link-document {
+  min-height: 40vh;
+  min-width: 30vh;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column; }
+  .link-document .input {
+    width: 100%;
+    margin: 0;
+    padding: 5px 0px;
+    margin-bottom: 10px; }
+  .link-document .document-item {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 10px 0px;
+    border-bottom: 1px solid #f5f3f3;
+    align-items: center; }
+  .link-document .document-title {
+    text-shadow: none;
+    color: #3c3c3c;
+    padding: 0;
+    margin: 0; }
 
 .loader {
   position: fixed;
