@@ -22,6 +22,9 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
+    onToggleVersonPanel: toggle => {
+      dispatch(documentActions.toggleVersionPanel(toggle));
+    },
     onUnCheckField: () => {
       dispatch(documentActions.unCheck());
     },

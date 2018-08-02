@@ -388,3 +388,14 @@ export function unCheck() {
     dispatch({ type: `${prefix}_UNCHECK_FIELD` });
   };
 }
+
+export function toggleVersionPanel(toggle) {
+  return async (dispatch, getState) => {
+    const state = getState();
+    const showVersionPanel = state.updateDocument.get('showVersionPanel');
+    dispatch({
+      type: 'OPEN_VERSION_HISTORY',
+      payload: toggle ? toggle : !showVersionPanel
+    });
+  };
+}
