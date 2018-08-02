@@ -221,7 +221,7 @@ async function create(req, res) {
     title: req.body.title,
     encryptedTexts: encryptedTexts,
     texts: req.body.texts,
-    tags: req.body.tags.split(','),
+    tags: req.body.tags.split(',').filter(t => t !== ''),
     attachments: files
   };
 
@@ -323,7 +323,7 @@ async function update(req, res) {
     title: req.body.title,
     encryptedTexts: encryptedTexts,
     texts: req.body.texts,
-    tags: req.body.tags.split(','),
+    tags: req.body.tags.split(',').filter(t => t !== ''),
     attachments: req.body.attachments,
     files
   };
