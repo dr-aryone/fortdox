@@ -1,11 +1,11 @@
 import { HITS_PER_PAGE } from 'actions/search';
+import PreviewDocContainer from 'containers/document/PreviewDocContainer';
 const React = require('react');
 const SearchItem = require('./SearchItem');
 const Searchbar = require('./Searchbar');
 const LoaderOverlay = require('../../components/general/LoaderOverlay');
 const ErrorBox = require('../../components/general/ErrorBox');
 const MessageBox = require('components/general/MessageBox');
-const PreviewDocContainer = require('containers/document/PreviewDocContainer');
 
 const SearchView = ({
   currentIndex,

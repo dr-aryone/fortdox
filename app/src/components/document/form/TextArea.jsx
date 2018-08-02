@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { DragSource, DropTarget } from 'react-dnd';
 import flow from 'lodash/flow';
 import Modal from 'components/general/Modal';
+import RichText from './RichText';
 
 const Type = {
   TEXT: 'text'
@@ -48,7 +49,8 @@ class TextArea extends Component {
     super(props);
     this.closeDeleteDialog = this.closeDeleteDialog.bind(this);
     this.state = {
-      showDeleteDialog: false
+      showDeleteDialog: false,
+      showRaw: false
     };
   }
 
@@ -67,20 +69,41 @@ class TextArea extends Component {
     });
   }
 
+  toggleEditor() {
+    this.setState({
+      showRaw: !this.state.showRaw
+    });
+  }
+
   render() {
     const {
       field,
-      type,
       elementToHide,
       onChange,
+      onRichTextChange,
       onRemoveField,
       connectDragSource,
       connectDropTarget
     } = this.props;
 
-    const style = {
-      minHeight: `${field.get('value').split('\n').length}em`
-    };
+    const textArea = (
+      <textarea
+        name={field.get('id')}
+        onChange={event =>
+          onChange(event, field.get('encrypted') ? 'encryptedText' : 'text')
+        }
+        value={field.get('value')}
+      />
+    );
+
+    const richText = (
+      <RichText
+        onRichTextChange={onRichTextChange}
+        text={field.get('value')}
+        id={field.get('id')}
+        type={field.get('encrypted') ? 'encryptedText' : 'text'}
+      />
+    );
 
     const opacity = field.get('id') === elementToHide ? 0 : 1;
 
@@ -133,12 +156,23 @@ class TextArea extends Component {
               </i>
             </label>
             <div className='textarea'>
-              <textarea
-                name={field.get('id')}
-                onChange={event => onChange(event, type)}
-                value={field.get('value')}
-                style={style}
-              />
+              {this.state.showRaw ? textArea : richText}
+              <div className='toggle-editor'>
+                <button
+                  onClick={() => this.toggleEditor()}
+                  type='button'
+                  disabled={!this.state.showRaw}
+                >
+                  Rich Text
+                </button>
+                <button
+                  onClick={() => this.toggleEditor()}
+                  type='button'
+                  disabled={this.state.showRaw}
+                >
+                  Raw
+                </button>
+              </div>
             </div>
             <div className={`arrow-box ${field.get('error') ? 'show' : ''}`}>
               <span className='material-icons'>error_outline</span>

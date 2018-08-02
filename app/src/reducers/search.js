@@ -29,7 +29,8 @@ const search = (state = initialState, action) => {
     case 'OPEN_DOCUMENT_FAILED':
       return state
         .set('isLoading', false)
-        .set('error', 'Unable to open document');
+        .set('error', 'Unable to open document')
+        .set('message', null);
     case 'SEARCH_SUCCESS':
     case 'TAG_SEARCH_SUCCESS':
       return state.merge({
