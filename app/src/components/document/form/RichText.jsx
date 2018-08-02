@@ -3,7 +3,12 @@ import { Editor } from '@tinymce/tinymce-react';
 import LinkDocument from './LinkDocument';
 import Modal from 'components/general/Modal';
 import TurndownService from 'turndown';
-import { tableRule, privateKeyRule, copyRule } from 'lib/turndownExtensions';
+import {
+  tableRule,
+  privateKeyRule,
+  copyRule,
+  documentLinkRule
+} from 'lib/turndownExtensions';
 const turndownPluginGfm = require('turndown-plugin-gfm');
 const turndownService = new TurndownService({
   emDelimiter: '*',
@@ -17,19 +22,24 @@ turndownService.use([tables]);
 turndownService.addRule('table', tableRule);
 turndownService.addRule('privateKey', privateKeyRule);
 turndownService.addRule('copy', copyRule);
+turndownService.addRule('documentLink', documentLinkRule);
 
 const Remarkable = require('remarkable');
 const {
   privateKeyParser,
   copyParser,
+  documentLinkParser,
   privateKeyRenderer,
-  copyRenderer
+  copyRenderer,
+  documentLinkRenderer
 } = require('lib/remarkableExtensions');
 const md = new Remarkable();
 md.block.ruler.before('code', 'privatekey', privateKeyParser);
 md.inline.ruler.push('copy', copyParser);
+md.inline.ruler.push('documentLink', documentLinkParser);
 md.renderer.rules.privatekey = privateKeyRenderer;
 md.renderer.rules.copy = copyRenderer;
+md.renderer.rules.documentLink = documentLinkRenderer;
 
 const plugins = 'link lists table';
 
@@ -134,21 +144,23 @@ class RichText extends Component {
     });
   }
 
-  handleEditorChange(id, type) {
+  handleEditorChange() {
+    const { id, type } = this.props;
     const text = turndownService.turndown(this.state.activeEditor.getContent());
     this.props.onRichTextChange(id, text, type);
   }
 
   appendToDocFields(name, id) {
-    this.state.activeEditor.insertContent(`${name} ${id}`);
+    this.state.activeEditor.insertContent(
+      `<span class='document-link' data-id='${id}'>${name}</span>`
+    );
+    this.handleEditorChange();
     this.setState({
       showLinkDocumentModal: false
     });
   }
 
   render() {
-    const { text, id, type } = this.props;
-
     const linkDocumentModal = (
       <Modal
         show={this.state.showLinkDocumentModal}
@@ -167,7 +179,7 @@ class RichText extends Component {
       <div>
         {this.state.showLinkDocumentModal && linkDocumentModal}
         <Editor
-          initialValue={md.render(text)}
+          initialValue={md.render(this.props.text)}
           init={{
             setup: this.setup,
             style_formats,
@@ -183,7 +195,7 @@ class RichText extends Component {
             entity_encoding: 'raw',
             content_css: '/css/index.css'
           }}
-          onKeyUp={() => this.handleEditorChange(id, type)}
+          onKeyUp={() => this.handleEditorChange()}
         />
       </div>
     );

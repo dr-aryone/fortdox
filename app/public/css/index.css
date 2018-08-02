@@ -375,6 +375,9 @@ label {
     border: 1px dashed #3c3c3c;
     margin: 1em 5em;
     padding: 1em; }
+  #tinymce .document-link {
+    color: blue;
+    text-decoration: underline; }
 
 .download-manager {
   width: 280px;

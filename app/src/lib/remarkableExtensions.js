@@ -1,9 +1,10 @@
 module.exports = {
   privateKeyParser,
   copyParser,
+  documentLinkParser,
   privateKeyRenderer,
   copyRenderer,
-  linkParser
+  documentLinkRenderer
 };
 
 function privateKeyParser(state, startLine, endLine) {
@@ -81,7 +82,7 @@ function copyParser(state, silent) {
   return true;
 }
 
-function linkParser(state, silent) {
+function documentLinkParser(state, silent) {
   if (silent) return false;
   const regexp = /@(link)@(.*?)@(link)@/g;
 
@@ -89,7 +90,7 @@ function linkParser(state, silent) {
   if (!result) return false;
 
   state.push({
-    type: 'link',
+    type: 'documentLink',
     name: result.content.split('::')[0],
     id: result.content.split('::')[1],
     level: state.level,
@@ -107,4 +108,10 @@ function privateKeyRenderer(tokens) {
 
 function copyRenderer(tokens) {
   return `<div class='rich-text-copy'>${tokens[0].content}</div>`;
+}
+
+function documentLinkRenderer(tokens) {
+  return `<span class='document-link' data-id='${tokens[0].id}'>${
+    tokens[0].name
+  }</span>`;
 }

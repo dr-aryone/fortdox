@@ -48,7 +48,6 @@ class LinkDocument extends Component {
   }
 
   onClickLinkDocument(e, name, id) {
-    console.log('You clicked on document with id', id);
     if (this.props.linkOnClick) {
       this.props.linkOnClick(name, id);
     }

@@ -9,7 +9,7 @@ const RemarkableReactRenderer = require('remarkable-react').default;
 const {
   privateKeyParser,
   copyParser,
-  linkParser
+  documentLinkParser
 } = require('lib/remarkableExtensions');
 const PrivateKey = require('./customMarkdown/PrivateKey');
 const Copy = require('./customMarkdown/Copy');
@@ -23,18 +23,18 @@ let markdown = new Remarkable({
 
 markdown.block.ruler.before('code', 'privatekey', privateKeyParser);
 markdown.inline.ruler.push('copy', copyParser);
-markdown.inline.ruler.push('link', linkParser);
+markdown.inline.ruler.push('documentLink', documentLinkParser);
 
 markdown.renderer = new RemarkableReactRenderer({
   components: {
     privatekey: PrivateKey,
     copy: Copy,
-    link: Link
+    documentLink: Link
   },
   tokens: {
     privatekey: 'privatekey',
     copy: 'copy',
-    link: 'link'
+    documentLink: 'documentLink'
   }
 });
 
