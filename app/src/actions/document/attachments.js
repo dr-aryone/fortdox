@@ -86,11 +86,15 @@ export const previewAttachment = (attachmentData, attachmentIndex) => {
         '_id'
       ]);
       let response;
+      const responseType =
+        typeof attachmentIndex === 'string' ? 'arraybuffer' : undefined;
+
       try {
         response = await requestor.get(
           `${
             config.server
-          }/document/${currentDocumentId}/attachment/${attachmentIndex}`
+          }/document/${currentDocumentId}/attachment/${attachmentIndex}`,
+          { responseType: responseType }
         );
       } catch (error) {
         return dispatch({
@@ -100,7 +104,10 @@ export const previewAttachment = (attachmentData, attachmentIndex) => {
           }
         });
       }
-      data = response.body;
+      data =
+        typeof attachmentIndex === 'string'
+          ? window.Buffer.from(response.body).toString('base64')
+          : response.body;
       name = attachmentData
         .get('name')
         .replace(
@@ -187,6 +194,8 @@ export const downloadAttachment = (attachmentData, attachmentIndex) => {
         }
       });
       try {
+        const responseType =
+          typeof attachmentIndex === 'string' ? 'arraybuffer' : undefined;
         response = await requestor.get(
           `${
             config.server
@@ -203,7 +212,8 @@ export const downloadAttachment = (attachmentData, attachmentIndex) => {
                   progress
                 }
               });
-            }
+            },
+            responseType: responseType
           }
         );
       } catch (error) {
@@ -217,7 +227,10 @@ export const downloadAttachment = (attachmentData, attachmentIndex) => {
           }
         });
       }
-      data = window.Buffer.from(response.body, 'base64');
+      data =
+        typeof attachmentIndex === 'string'
+          ? Buffer.from(response.body)
+          : Buffer.from(response.body, 'base64');
       name = attachmentData
         .get('name')
         .replace(
