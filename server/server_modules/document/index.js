@@ -58,14 +58,28 @@ async function get(req, res) {
 
   doc._source.encrypted_texts = doc._source.encrypted_texts || [];
   doc._source.attachments = doc._source.attachments || [];
-
   doc._source.tags = doc._source.tags || [];
+
   try {
     doc._source.encrypted_texts = await decryptDocuments(
       doc._source.encrypted_texts,
       privateKey,
       encryptedMasterPassword
     );
+
+    let versions = [];
+    for (let index in doc._source.versions) {
+      let v = doc._source.versions[index];
+      if (v.encrypted_texts) {
+        v.encrypted_texts = await decryptDocuments(
+          v.encrypted_texts,
+          privateKey,
+          encryptedMasterPassword
+        );
+      }
+      versions.push(v);
+    }
+    doc._source.versions = versions;
   } catch (error) {
     logger.error(
       '/document/id',
@@ -75,20 +89,8 @@ async function get(req, res) {
     return res.status(500).send({ msg: 'Internal Server Error' });
   }
 
-  let logentries;
-  try {
-    logentries = await changelog.get(doc._id); //TODO: Remove this, this is not needed anymore..
-  } catch (error) {
-    logger.error(
-      '/document/id',
-      `Cannot get logentries for documentid ${doc._id}`,
-      error
-    );
-  }
-
   let response = {
-    ...doc,
-    logentries
+    ...doc
   };
 
   res.send(response);
