@@ -129,7 +129,8 @@ async function add(req, res) {
       privateKey: encryptedPrivateKey
     });
   } catch (error) {
-    if (error.original.sqlState === '45000') {
+
+    if (error.original && error.original.sqlState === '45000') {
       logger.warn(
         `${req.session.email} tried to exceed the device limit of ${
           config.deviceLimit

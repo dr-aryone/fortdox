@@ -7,7 +7,9 @@ let initialState = fromJS({
   QRCode: null,
   deviceId: '',
   devices: [],
-  refresh: false
+  refresh: false,
+  warning: null,
+  maximumReached: false
 });
 
 const devices = (state = initialState, action) => {
@@ -17,7 +19,7 @@ const devices = (state = initialState, action) => {
     case 'INVITE_DEVICE_START':
     case 'DELETE_DEVICE_START':
     case 'UPDATE_DEVICE_NAME_START':
-      return state.set('isLoading', true).set('error', '');
+      return state.set('isLoading', true);
     case 'GET_QR_CODE_ERROR':
     case 'GET_DEVICES_ERROR':
     case 'INVITE_DEVICE_ERROR':
@@ -36,6 +38,8 @@ const devices = (state = initialState, action) => {
       return state.set('isLoading', false).merge({
         deviceId: fromJS(action.payload.deviceId),
         devices: fromJS(action.payload.devices),
+        warning: fromJS(action.payload.warningText),
+        maximumReached: fromJS(action.payload.maximumReached),
         refresh: false
       });
     case 'UPDATE_DEVICE_NAME_SUCCESS':

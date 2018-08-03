@@ -10,14 +10,16 @@ const mapStateToProps = state => {
     QRCode: state.devices.get('QRCode'),
     deviceId: state.devices.get('deviceId'),
     devices: state.devices.get('devices'),
-    refresh: state.devices.get('refresh')
+    refresh: state.devices.get('refresh'),
+    warning: state.devices.get('warning'),
+    maximumReached: state.devices.get('maximumReached')
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    getQRCode: () => {
-      dispatch(action.getQRCode());
+    getQRCode: async () => {
+      await dispatch(action.getQRCode());
       dispatch(action.getDevices());
     },
     onRefresh: () => {
@@ -26,8 +28,8 @@ const mapDispatchToProps = dispatch => {
     onMount: () => {
       dispatch(action.getDevices());
     },
-    inviteDevice: () => {
-      dispatch(action.inviteDevice());
+    inviteDevice: async () => {
+      await dispatch(action.inviteDevice());
       dispatch(action.getDevices());
     },
     onDeleteDevice: async deviceId => {
