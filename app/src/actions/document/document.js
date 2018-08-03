@@ -320,7 +320,7 @@ export function openDocument(id, skipTimeout, showPreview) {
         tags,
         attachments,
         files,
-        changelog: doc.logentries,
+        versions: doc._source.versions,
         nextID: nextID + 1
       });
       if (showPreview) showPreview();
