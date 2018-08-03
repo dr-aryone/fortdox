@@ -197,12 +197,14 @@ This is manged in the `Procfile`
 ## Tests
 
 ### Unit tests
+
 Unit testing is handel using [jest](https://jestjs.io/).
 
 Create a test file that has `test.js` file ending. Add a test.
 Simply run `npm test` to let jest do its magic.
 
 ### Integration testing
+
 To test complex flow like register,invite, new device, etc, we use the following system:  
 All integration tests should be placed under the folder `tests/integraiton_test` and have a the file ending `it.js` to not interfere with jest.
 
@@ -210,23 +212,25 @@ To add a new test, the best way is to use one of the exisiting ones as your temp
 The main idea is to have an exported function named `run` that contain summary of test result and one async function namend `test`
 that contain all the testing logic
 
-
 When you are done, it should be added to `testrunner.it.js`, in the appropirate order you wish to run the tests.  
 For example, the registration tests has to be run at least once before the other tests to generat the needed credentials.
 
-The following flags can be used on the testrunner script:  
-* --register: Run dev_cleanup.it.js and start the testing flow from registraion.
-* --clean: Run dev_cleanup.it.js them exit
+The following flags can be used on the testrunner script:
+
+- --register: Run dev_cleanup.it.js and start the testing flow from registraion.
+- --clean: Run dev_cleanup.it.js them exit
 
 The testrunner can be run via `npm run integrationtest [-- [--register,--clean]]`.
 
-
 ## Attachments and how the server handles them
+
 In previous versions of FortDox all attachments where simply sent as base64 encoded strings and stored in elasticsearch.
-This had its shortcommings and now we send files as multi part http request instead and by the magic of [multer](https://github.com/expressjs/multer) we stream them down to files on the file system. All uploaded files get a unique file name from multer and is placed in the folder assigned to the value `uploadPath` in `config.json`.
+This had its shortcomings and now we send files as multi part http request instead and by the magic of [multer](https://github.com/expressjs/multer) we stream them down to files on the file system. All uploaded files get a unique file name from multer and is placed in the folder assigned to the value `uploadPath` in `config.json`.
 Metadata about the files is still stored in elasticsearch and instead of the actual file, we store the path to the file instead.
 
-Probably, it already exists attachments conforming to the old way in elasticsearch. Thus, both the client and the server tries to handle this gracefully, but as consider this a warning that things migth break. If that happens, the _solution_ is to reupload the files.
+Probably, it already exists attachments conforming to the old way in elasticsearch. Thus, both the client and the server tries to handle this gracefully, but as consider this a warning that things might break. If that happens, the _solution_ is to reupload the files.
+
+_Note:_ The filepath of the folder "uploads" should be an absolute path to the directory.
 
 ## Debugging client app
 
