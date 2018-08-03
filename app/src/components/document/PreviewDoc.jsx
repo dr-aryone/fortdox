@@ -74,8 +74,10 @@ export class PreviewDoc extends React.Component {
     ) : null;
 
     let metaData = '';
-    if (docFields.get('changelog')) {
-      let changelog = docFields.get('changelog');
+    if (docFields.get('versions')) {
+      let versions = docFields.get('versions');
+      let created = versions.get(0);
+      let edited = versions.get(versions.size - 1);
       metaData = (
         <div className='misc'>
           <div className='created'>
@@ -83,8 +85,8 @@ export class PreviewDoc extends React.Component {
               <h3>Created</h3>
             </label>
             <div className='text'>
-              {formatDate(changelog.getIn([0, 'createdAt']))} by{' '}
-              {changelog.getIn([0, 'user'])}
+              {`${formatDate(created.get('createdAt'))}} by
+              ${created.get('user')}`}
             </div>
           </div>
           <div className='edited'>
@@ -92,8 +94,9 @@ export class PreviewDoc extends React.Component {
               <h3>Last edited</h3>
             </label>
             <div className='text'>
-              {formatDate(changelog.getIn([changelog.size - 1, 'createdAt']))}{' '}
-              by {changelog.getIn([changelog.size - 1, 'user'])}
+              {`${formatDate(edited.get('createdAt'))} by ${edited.get(
+                'user'
+              )}`}
             </div>
           </div>
         </div>

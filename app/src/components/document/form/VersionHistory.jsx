@@ -7,6 +7,8 @@ class VersionHistory extends Component {
   }
 
   render() {
+    const { versions } = this.props;
+    debugger;
     return (
       <div className='version-history-panel'>
         <div className='version-header'>
