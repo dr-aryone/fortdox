@@ -166,7 +166,16 @@ module.exports = class DevicesView extends React.Component {
   }
 
   render() {
-    const { isLoading, error, message, QRCode, deviceId, devices } = this.props;
+    const {
+      isLoading,
+      error,
+      message,
+      QRCode,
+      deviceId,
+      devices,
+      warning,
+      maximumReached
+    } = this.props;
     const QRCodeDialog = (
       <Modal
         show={this.state.showQRModal}
@@ -310,12 +319,20 @@ module.exports = class DevicesView extends React.Component {
         </div>
       ) : null;
 
+    const warningBox = (
+      <div className='alert alert-warning'>
+        <i className='material-icons'>warning</i>
+        {warning}
+      </div>
+    );
+
     return (
       <div className='container-fluid'>
         <div className='inner-container'>
           <LoaderOverlay display={isLoading} />
           <MessageBox message={message} />
           <ErrorBox errorMsg={error} />
+          {warning && warningBox}
           {modal}
           {QRCodeDialog}
           {deleteDeviceDialog}
@@ -328,7 +345,11 @@ module.exports = class DevicesView extends React.Component {
             {currentDevice}
           </div>
           {displayDevices}
-          <button onClick={() => this.openModal()}>Add device</button>
+          <button onClick={() => this.openModal()} disabled={maximumReached}>
+            {maximumReached
+              ? 'Maximum number of devices reached'
+              : 'Add device'}
+          </button>
         </div>
       </div>
     );
