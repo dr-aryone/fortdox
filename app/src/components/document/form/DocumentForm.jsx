@@ -31,7 +31,8 @@ const DocumentForm = ({
   children: buttons,
   similarDocuments,
   onCloseSimilarDocuments,
-  onSimilarDocumentClick
+  onSimilarDocumentClick,
+  onToggleVersionPanel
 }) => {
   let title = docFields.get('title');
   let tags = docFields.get('tags');
@@ -89,7 +90,7 @@ const DocumentForm = ({
         {changelog ? (
           <Changelog
             changelog={docFields.get('changelog')}
-            onToggleVersonPanel={this.props.onToggleVersonPanel}
+            onToggleVersionPanel={onToggleVersionPanel}
           />
         ) : null}
       </div>
