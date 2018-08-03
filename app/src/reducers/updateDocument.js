@@ -71,6 +71,19 @@ const form = (state = initialState, action) => {
           show: false
         }
       });
+    case 'INSERT_DOCUMENT_VERSION':
+      return state.merge({
+        docFields: state.get('docFields').merge({
+          title: fromJS(action.payload.title),
+          encryptedTexts: fromJS(action.payload.encryptedTexts),
+          texts: fromJS(action.payload.texts),
+          tags: state
+            .getIn(['docFields', 'tags'])
+            .set('list', fromJS(action.payload.tags)),
+          attachments: fromJS(action.payload.attachments),
+          nextID: fromJS(action.payload.nextID)
+        })
+      });
     case 'OPEN_DOCUMENT_ERROR':
       return state.set('isLoading', false).set('error', fromJS(action.payload));
     case 'UPDATE_DOC_INPUT_CHANGE_TITLE':

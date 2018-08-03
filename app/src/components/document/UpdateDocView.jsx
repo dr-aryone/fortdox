@@ -170,7 +170,8 @@ class UpdateDocView extends React.Component {
       onHideElement,
       elementToHide,
       showVersionPanel,
-      onToggleVersionPanel
+      onToggleVersionPanel,
+      onInsertDocumentVersion
     } = this.props;
 
     const deleteDialog = (
@@ -311,6 +312,7 @@ class UpdateDocView extends React.Component {
             <VersionHistory
               versions={docFields.get('versions')}
               onToggleVersionPanel={onToggleVersionPanel}
+              onInsertDocumentVersion={onInsertDocumentVersion}
             />
           )}
         </div>
