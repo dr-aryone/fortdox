@@ -123,13 +123,12 @@ async function add(req, res) {
 
   let newDevice;
   try {
-    await createDevice(userid, newEncryptedMasterPassword);
+    newDevice = await createDevice(userid, newEncryptedMasterPassword);
     await db.TempKeys.create({
       uuid: newDevice.deviceId,
       privateKey: encryptedPrivateKey
     });
   } catch (error) {
-
     if (error.original && error.original.sqlState === '45000') {
       logger.warn(
         `${req.session.email} tried to exceed the device limit of ${
