@@ -64,3 +64,24 @@
     text-decoration: underline;
   }
 }
+
+.link-modal {
+  @extend .box;
+  display: flex;
+  flex-direction: column;
+  width: 30vh;
+
+  span > input {
+    margin: 10px 0 15px 0;
+    width: 100%;
+  }
+
+  .buttons {
+    display: flex;
+    justify-content: flex-end;
+
+    button:first-child {
+      margin-right: 5px;
+    }
+  }
+}
