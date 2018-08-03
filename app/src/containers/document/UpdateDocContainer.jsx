@@ -22,6 +22,9 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
+    onInsertDocumentVersion: version => {
+      dispatch(documentActions.insertDocumentVersion(version));
+    },
     onToggleVersionPanel: toggle => {
       dispatch(documentActions.toggleVersionPanel(toggle));
     },

@@ -12,7 +12,8 @@ export default {
   openDocument,
   hasChecked,
   unCheck,
-  toggleVersionPanel
+  toggleVersionPanel,
+  insertDocumentVersion
 };
 
 export function createDocument() {
@@ -367,7 +368,7 @@ export function checkEmptyDocFields(docFields) {
 }
 
 export function hasChecked(nextView) {
-  return async (dispatch, getState) => {
+  return (dispatch, getState) => {
     const state = getState();
     const currentView = state.navigation.get('currentView');
     const { view, prefix } = getPrefix(currentView);
@@ -382,7 +383,7 @@ export function hasChecked(nextView) {
 }
 
 export function unCheck() {
-  return async (dispatch, getState) => {
+  return (dispatch, getState) => {
     const state = getState();
     const currentView = state.navigation.get('currentView');
     const { prefix } = getPrefix(currentView);
@@ -391,12 +392,74 @@ export function unCheck() {
 }
 
 export function toggleVersionPanel(toggle) {
-  return async (dispatch, getState) => {
+  return (dispatch, getState) => {
     const state = getState();
     const showVersionPanel = state.updateDocument.get('showVersionPanel');
     dispatch({
       type: 'TOGGLE_VERSION_HISTORY',
       payload: toggle ? toggle : !showVersionPanel
+    });
+  };
+}
+
+export function insertDocumentVersion(version) {
+  return dispatch => {
+    let title = {
+      value: version.get('title'),
+      id: 'title',
+      label: 'Title',
+      error: null
+    };
+    let encryptedTexts = [];
+    let texts = [];
+    let tags = [];
+    let attachments = [];
+    let nextID = 0;
+    version.get('encrypted_texts').forEach(entry => {
+      encryptedTexts.push(
+        fromJS({
+          value: entry.get('text'),
+          id: entry.get('id'),
+          label: 'Encrypted Text',
+          error: null
+        })
+      );
+      if (entry.id > nextID) nextID = entry.id;
+    });
+    version.get('texts').forEach(entry => {
+      texts.push(
+        fromJS({
+          value: entry.get('text'),
+          id: entry.get('id'),
+          label: 'Text',
+          error: null
+        })
+      );
+      if (entry.id > nextID) nextID = entry.id;
+    });
+    version.get('tags').forEach(entry => {
+      tags.push(entry);
+    });
+
+    version.get('attachments').forEach(attachment => {
+      attachments.push({
+        name: attachment.name,
+        id: attachment.id,
+        file: attachment.file,
+        type: attachment.file_type
+      });
+    });
+
+    dispatch({
+      type: 'INSERT_DOCUMENT_VERSION',
+      payload: {
+        title,
+        encryptedTexts,
+        texts,
+        attachments,
+        tags,
+        nextID
+      }
     });
   };
 }

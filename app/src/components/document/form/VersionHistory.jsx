@@ -8,14 +8,18 @@ class VersionHistory extends Component {
   }
 
   render() {
-    const { versions, insertDocumentVersion, onToggleVersionPanel } = this.props;
+    const {
+      versions,
+      onInsertDocumentVersion,
+      onToggleVersionPanel
+    } = this.props;
     const versionList = versions.map((version, index) => {
       return (
         <div
           className={`version-item ${!version.get('title') ? 'disabled' : ''}`}
           key={index}
           onClick={() => {
-            if (version.get('title')) insertDocumentVersion(version);
+            if (version.get('title')) onInsertDocumentVersion(version);
           }}
         >
           <h3>{formatDate(version.get('createdAt'))}</h3>
