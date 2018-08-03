@@ -11,7 +11,8 @@ export default {
   deleteDocument,
   openDocument,
   hasChecked,
-  unCheck
+  unCheck,
+  toggleVersionPanel
 };
 
 export function createDocument() {
@@ -394,7 +395,7 @@ export function toggleVersionPanel(toggle) {
     const state = getState();
     const showVersionPanel = state.updateDocument.get('showVersionPanel');
     dispatch({
-      type: 'OPEN_VERSION_HISTORY',
+      type: 'TOGGLE_VERSION_HISTORY',
       payload: toggle ? toggle : !showVersionPanel
     });
   };
