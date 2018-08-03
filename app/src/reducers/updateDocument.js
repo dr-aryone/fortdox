@@ -26,7 +26,7 @@ let initialState = fromJS({
       data: null,
       type: null
     },
-    changelog: null,
+    versions: null,
     nextID: 0
   },
   error: null,
@@ -52,7 +52,7 @@ const form = (state = initialState, action) => {
             .set('list', fromJS(action.tags)),
           attachments: fromJS(action.attachments),
           files: action.files,
-          changelog: fromJS(action.changelog),
+          versions: fromJS(action.versions),
           nextID: fromJS(action.nextID)
         }),
         oldDocFields: state.get('docFields').merge({
@@ -63,7 +63,7 @@ const form = (state = initialState, action) => {
             .getIn(['docFields', 'tags'])
             .set('list', fromJS(action.tags)),
           attachments: fromJS(action.attachments),
-          changelog: fromJS(action.changelog),
+          versions: fromJS(action.versions),
           nextID: fromJS(action.nextID)
         }),
         isLoading: false,
