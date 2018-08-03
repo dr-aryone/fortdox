@@ -77,7 +77,7 @@ async function get(req, res) {
 
   let logentries;
   try {
-    logentries = await changelog.get(doc._id);
+    logentries = await changelog.get(doc._id); //TODO: Remove this, this is not needed anymore..
   } catch (error) {
     logger.error(
       '/document/id',
@@ -344,7 +344,7 @@ async function removeFiles(files) {
       await removeFile(file.path);
       logger.verbose(
         '/document/id PATCH',
-        `Removed file ${file.name} : ${file.id}`
+        `Removed file ${file.name} : ${file.id} : ${file.path}`
       );
     });
   } catch (error) {
@@ -412,25 +412,46 @@ async function deleteDocument(req, res) {
     res.status(400).send(expectations.errors());
   } else {
     try {
-      let attachments = await es.getAttachment({
-        organizationIndex: query.organizationIndex,
-        documentId: query.id
-      });
-
-      attachments = attachments.filter(a => a.path !== undefined);
-      logger.verbose('DELETE ATTACHMENTS', attachments);
+      const attachments = await findAllAttachments(
+        query.id,
+        query.organizationIndex
+      );
       response = await es.deleteDocument(query);
       logger.info(
         '/document/id DELETE',
         `User ${req.session.email} deleted document ${req.params.id}`
       );
-
       await removeFiles(attachments);
-      await changelog.remove(req.params.id);
     } catch (error) {
       logger.error('/document/id DELETE', 'Cannot delete document!', error);
       return res.status(500).send();
     }
     return res.send(response);
+  }
+}
+
+async function findAllAttachments(doc, org) {
+  try {
+    let current = await es.client.get({
+      index: org,
+      type: 'fortdox_document',
+      id: doc
+    });
+
+    current = current._source;
+
+    let paths = new Set();
+    current.versions.forEach(version => {
+      version.attachments.forEach(a => {
+        if (a.path) paths.add(JSON.stringify(a));
+      });
+    });
+    return [...paths].map(p => JSON.parse(p));
+  } catch (error) {
+    logger.error(
+      '/document/id DELETE',
+      'Could not find all attachments corresponding to document',
+      doc
+    );
   }
 }
