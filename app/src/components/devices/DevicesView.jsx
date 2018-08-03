@@ -213,7 +213,7 @@ module.exports = class DevicesView extends React.Component {
         onClose={this.closeDialog}
         showClose={false}
       >
-        <div className='box dialog'>
+        <div className='box dialog danger'>
           <i className='material-icons'>error_outline</i>
           <h2>Warning</h2>
           <p>
@@ -241,7 +241,7 @@ module.exports = class DevicesView extends React.Component {
         onClose={this.closeEditMode}
         showClose={false}
       >
-        <div className='box dialog'>
+        <div className='box dialog danger'>
           <i className='material-icons'>error_outline</i>
           <h2>Unsaved Changes</h2>
           <p>Do you want to save the new device name?</p>

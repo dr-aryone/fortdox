@@ -33,7 +33,9 @@ const devices = (state = initialState, action) => {
     case 'GET_QR_CODE_SUCCESS':
       return state
         .set('isLoading', false)
-        .set('QRCode', fromJS(action.payload));
+        .set('QRCode', fromJS(action.payload))
+        .set('message', null)
+        .set('error', null);
     case 'GET_DEVICES_SUCCESS':
       return state.set('isLoading', false).merge({
         deviceId: fromJS(action.payload.deviceId),
