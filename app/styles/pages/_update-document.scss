@@ -19,6 +19,14 @@
   .version-header {
     background-color: $grey;
     padding: 8px 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .close:hover {
+      cursor: pointer;
+      text-decoration: underline;
+    }
   }
 
   .version-item {
@@ -27,7 +35,9 @@
     cursor: pointer;
 
     &.disabled {
-      cursor: none;
+      cursor: default;
+      background-color: $grey;
+      border-bottom: 1px solid white;
     }
   }
 }
