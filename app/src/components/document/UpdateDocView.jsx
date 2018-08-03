@@ -170,7 +170,7 @@ class UpdateDocView extends React.Component {
       onHideElement,
       elementToHide,
       showVersionPanel,
-      onToggleVersonPanel
+      onToggleVersionPanel
     } = this.props;
 
     const deleteDialog = (
@@ -281,7 +281,7 @@ class UpdateDocView extends React.Component {
               onDrop={onDrop}
               onHideElement={onHideElement}
               elementToHide={elementToHide}
-              onToggleVersonPanel={onToggleVersonPanel}
+              onToggleVersionPanel={onToggleVersionPanel}
             >
               <div className='doc-buttons update'>
                 <button

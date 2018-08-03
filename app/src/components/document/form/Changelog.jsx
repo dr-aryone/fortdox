@@ -10,7 +10,7 @@ class Changelog extends React.Component {
   }
 
   render() {
-    const { changelog = Map(), onToggleVersonPanel } = this.props;
+    const { changelog = Map(), onToggleVersionPanel } = this.props;
 
     return (
       <div className='meta-data'>
@@ -24,7 +24,7 @@ class Changelog extends React.Component {
         <label>
           <h3>Last edited</h3>
         </label>
-        <div className='text edit' onClick={onToggleVersonPanel}>
+        <div className='text edit' onClick={onToggleVersionPanel}>
           {formatDate(changelog.getIn([changelog.size - 1, 'createdAt']))} by{' '}
           {changelog.getIn([changelog.size - 1, 'user'])}
         </div>
