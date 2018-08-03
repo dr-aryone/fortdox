@@ -308,7 +308,10 @@ class UpdateDocView extends React.Component {
             </DocumentForm>
           </div>
           {showVersionPanel && (
-            <VersionHistory versions={docFields.get('versions')} />
+            <VersionHistory
+              versions={docFields.get('versions')}
+              onToggleVersionPanel={onToggleVersionPanel}
+            />
           )}
         </div>
       </div>

@@ -24,7 +24,7 @@ class MetaData extends React.Component {
         <label>
           <h3>Last edited</h3>
         </label>
-        <div className='text edit' onClick={() => onToggleVersionPanel()}>
+        <div className='text edit' onClick={() => onToggleVersionPanel(true)}>
           {`${formatDate(edited.get('createdAt'))} by ${edited.get('user')}`}
         </div>
       </div>
