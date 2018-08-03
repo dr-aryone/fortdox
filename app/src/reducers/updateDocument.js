@@ -33,7 +33,7 @@ let initialState = fromJS({
   isLoading: false,
   similarDocuments: [],
   elementToHide: null,
-  showVersionPanel: true
+  showVersionPanel: false
 });
 
 const form = (state = initialState, action) => {
