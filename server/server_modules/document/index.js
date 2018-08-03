@@ -228,7 +228,11 @@ async function create(req, res) {
   let response;
 
   try {
-    response = await es.addToIndex({ query, organizationIndex });
+    response = await es.addToIndex({
+      query,
+      organizationIndex,
+      user: req.session.email
+    });
     logger.info(
       '/document POST',
       `User ${req.session.email} created a document with title ${
@@ -244,22 +248,7 @@ async function create(req, res) {
     return res.status(500).send(error);
   }
 
-  try {
-    await changelog.addLogEntry(response._id, req.session.email);
-    logger.info(
-      '/document POST',
-      `Changelog entry for document ${req.body.title} with id ${response._id}`
-    );
-    logger.info('response', response);
-    res.send({ _id: response._id });
-  } catch (error) {
-    logger.error(
-      '/document POST',
-      `Could not add changelog entry to for document ${response._id}`,
-      error
-    );
-    return res.status(500).send(error);
-  }
+  res.send({ _id: response._id });
 }
 
 async function update(req, res) {
