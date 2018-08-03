@@ -261,7 +261,7 @@ class UpdateDocView extends React.Component {
             <DocumentForm
               onUpdateId={onUpdateId}
               docFields={docFields}
-              changelog={docFields.get('changelog')}
+              versions={docFields.get('versions')}
               similarDocuments={similarDocuments}
               onCloseSimilarDocuments={onCloseSimilarDocuments}
               onSimilarDocumentClick={onSimilarDocumentClick}
@@ -307,7 +307,9 @@ class UpdateDocView extends React.Component {
               </div>
             </DocumentForm>
           </div>
-          {showVersionPanel && <VersionHistory />}
+          {showVersionPanel && (
+            <VersionHistory versions={docFields.get('versions')} />
+          )}
         </div>
       </div>
     );

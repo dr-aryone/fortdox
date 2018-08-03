@@ -5,7 +5,7 @@ const Tags = require('./Tags');
 const BottomPanel = require('./BottomPanel');
 const Attachments = require('./Attachments');
 const SimilarDocumentsList = require('./SimilarDocumentsList');
-const Changelog = require('./Changelog');
+const MetaData = require('./MetaData');
 
 const DocumentForm = ({
   titleAutofocus,
@@ -15,7 +15,7 @@ const DocumentForm = ({
   onDrop,
   onHideElement,
   elementToHide,
-  changelog,
+  versions,
   onChange,
   onRichTextChange,
   onTitleChange,
@@ -87,9 +87,9 @@ const DocumentForm = ({
           onPreviewAttachment={onPreviewAttachment}
           onDownloadAttachment={onDownloadAttachment}
         />
-        {changelog ? (
-          <Changelog
-            changelog={docFields.get('changelog')}
+        {versions ? (
+          <MetaData
+            versions={versions}
             onToggleVersionPanel={onToggleVersionPanel}
           />
         ) : null}
