@@ -318,18 +318,14 @@ async function update(req, res) {
   };
   let response;
   try {
-    response = await es.update({ query, organizationIndex });
+    response = await es.update({
+      query,
+      organizationIndex,
+      user: req.session.email
+    });
     logger.info(
       '/document/id PATCH',
       `User ${email} updated document ${query.id}`
-    );
-    const filesToRemove = response.removed.filter(a => a.path != undefined);
-    await removeFiles(filesToRemove);
-    response.removed = null;
-    await changelog.addLogEntry(req.params.id, email);
-    logger.info(
-      '/document/id PATCH',
-      `Added changelog entry for ${email}'s update of document ${req.params.id}`
     );
   } catch (error) {
     logger.error(
