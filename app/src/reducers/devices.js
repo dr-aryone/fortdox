@@ -27,7 +27,7 @@ const devices = (state = initialState, action) => {
     case 'UPDATE_DEVICE_NAME_ERROR':
       return state.merge({
         error: fromJS(action.payload),
-        message: '',
+        message: null,
         isLoading: false
       });
     case 'GET_QR_CODE_SUCCESS':
@@ -49,7 +49,9 @@ const devices = (state = initialState, action) => {
     case 'INVITE_DEVICE_SUCCESS':
       return state
         .set('isLoading', false)
-        .set('message', fromJS(action.payload));
+        .set('message', fromJS(action.payload))
+        .set('error', null)
+        .set('warning', null);
     case 'CHANGE_VIEW':
       if (action.payload === 'DEVICES_VIEW') {
         return state.set('refresh', true);
