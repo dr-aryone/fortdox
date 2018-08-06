@@ -1,0 +1,17 @@
+const INVITE_USER = 0x4;
+const REMOVE_USER = 0x3;
+const REMOVE_DOCUMENT = 0x2;
+const GRANT_PERMISSION = 0x1;
+const BASE = 0x0;
+const MAX_RANGE = 0xff;
+const MIN_RANGE = BASE;
+
+module.exports = {
+  INVITE_USER,
+  REMOVE_USER,
+  REMOVE_DOCUMENT,
+  GRANT_PERMISSION,
+  BASE,
+  MAX_RANGE,
+  MIN_RANGE
+};
