@@ -12,7 +12,53 @@ module.exports = client => {
           id: query.id
         });
 
-        query.attachments = query.attachments.filter(attachment => {
+        const versions = current._source.versions;
+        const currentAttachments = current._source.attachments;
+
+        //First check all attachments that are equal and give them
+        const unchangedAttachments = query.attachments.filter(qa => {
+          const found = currentAttachments.find(ca => ca.id === qa.id);
+          if (found) {
+            return found;
+          }
+        });
+        console.log();
+
+        //check fi there is any old type of attachments
+        let oldType = query.attachments.filter(oldAttachment => {
+          if (!oldAttachment.id) {
+            return oldAttachment;
+          }
+        });
+
+        //check if we have any attachments that is not in the current one...
+        //i.e this should only happen if someone restored an older version.
+        const attachmentDiff = query.attachments.filter(a => {
+          const found = current._source.attachments.find(ca => ca.id === a.id);
+          if (!found) {
+            return a;
+          }
+        });
+        console.log('Attachment diff', attachmentDiff);
+
+        //collect all attachments in all versions..
+        let allAttachments = [];
+        versions.forEach(v => {
+          allAttachments = allAttachments.concat(v.attachments);
+        });
+        //Unique
+        allAttachments = allAttachments.filter(
+          (e, i) => allAttachments.findIndex(a => a['id'] === e['id']) === i
+        );
+
+        let restoredAttachments = allAttachments.filter(aa => {
+          if (attachmentDiff.find(ad => ad.id === aa.id)) {
+            return aa;
+          }
+        });
+        console.log('Restored attachments', restoredAttachments);
+
+        oldType = oldType.filter(attachment => {
           if (attachment.file) {
             attachment.name = `${uuid()}-${attachment.name}`;
             return attachment;
@@ -21,12 +67,16 @@ module.exports = client => {
             current._source.attachments.find(a => a.name === attachment.name) ||
             {};
           attachment.file = storedAttachment.file;
-          attachment.path = storedAttachment.path;
-
           return attachment;
         });
+        console.log('Old type of attachments', oldType);
 
-        query.attachments = query.attachments.concat(query.files);
+        const attachments = unchangedAttachments
+          .concat(restoredAttachments)
+          .concat(query.files)
+          .concat(oldType);
+
+        console.log('All attachments', attachments);
 
         let doc = {
           title: query.title,
