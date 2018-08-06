@@ -130,7 +130,7 @@ module.exports = class UserList extends React.Component {
           </p>
           <p>All devices connected to the user will be deleted.</p>
           <div className='buttons'>
-            <button onClick={this.closeReinviteDialog} type='button'>
+            <button onClick={e => this.closeReinviteDialog(e)} type='button'>
               Cancel
             </button>
             <button onClick={e => this.onReinvite(e)} type='button'>
