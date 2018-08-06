@@ -11,6 +11,7 @@ const userUtil = require('app/users/User');
 const {
   decryptPrivateKey
 } = require('app/encryption/authentication/privateKeyEncryption');
+const config = require('app/config.json');
 
 module.exports = {
   add,
@@ -120,14 +121,25 @@ async function add(req, res) {
     return res.status(500).send({ error: 'Nah, we cant do that today..' });
   }
 
-  const newDevice = await createDevice(userid, newEncryptedMasterPassword);
+  let newDevice;
   try {
+    newDevice = await createDevice(userid, newEncryptedMasterPassword);
     await db.TempKeys.create({
       uuid: newDevice.deviceId,
       privateKey: encryptedPrivateKey
     });
   } catch (error) {
+    if (error.original && error.original.sqlState === '45000') {
+      logger.warn(
+        `${req.session.email} tried to exceed the device limit of ${
+          config.deviceLimit
+        }`
+      );
+      return res.status(403).send();
+    }
+
     logger.error('/devices add', 'Could not create tempkeys', error);
+    return res.status(500).send();
   }
 
   const inviteCode = '@' + newDevice.deviceId;
@@ -304,5 +316,6 @@ async function listDevices(req, res) {
     })
   };
 
+  result.limit = config.deviceLimit;
   res.send(result);
 }

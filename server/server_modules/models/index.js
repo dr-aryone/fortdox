@@ -4,6 +4,7 @@ var path = require('path');
 var Sequelize = require('sequelize');
 var basename = path.basename(module.filename);
 var sqlConfig = require('../config.json').sqlConfig;
+const deviceLimit = require('app/utilities/deviceLimit');
 var db = {};
 var sequelize = new Sequelize(
   sqlConfig.database,
@@ -37,6 +38,9 @@ Object.keys(db).forEach(function(modelName) {
     db[modelName].associate(db);
   }
 });
+
+deviceLimit.createTrigger(sequelize);
+
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 module.exports = db;
