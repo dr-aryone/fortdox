@@ -140,7 +140,7 @@ const form = (state = initialState, action) => {
     case 'UPDATE_DOC_GET_OLD_TAGS_SUCCESS':
       return state.setIn(['docFields', 'tags', 'old'], fromJS(action.payload));
     case 'UPDATE_DOCUMENT_START':
-      return state.set('isLoading', true);
+      return state.set('isLoading', true).set('showVersionPanel', false);
     case 'UPDATE_DOCUMENT_FAIL': {
       let encryptedTexts = state.getIn(['docFields', 'encryptedTexts']);
       encryptedTexts.forEach((entry, index) => {
