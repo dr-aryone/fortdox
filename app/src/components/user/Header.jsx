@@ -33,12 +33,13 @@ class Header extends React.Component {
       return this.setState({
         hasBeenClicked: false
       });
-    if (!this.state.show) {
-      window.addEventListener('click', this.onClose, true);
-    }
-    if (button && logout) {
-      return logout();
-    }
+
+    if (!this.state.show) window.addEventListener('click', this.onClose, true);
+
+    if (button && logout) return logout();
+
+    if (button !== 'TOGGLE-NAV') return this.props.changeView(button);
+
     return this.setState({ show: !this.state.show });
   }
 
@@ -94,6 +95,14 @@ class Header extends React.Component {
                 className={`dropdown-wrapper ${this.state.show ? 'show' : ''}`}
               >
                 <ul className={`dropdown ${this.state.show ? 'show' : ''}`}>
+                  <li
+                    onClick={event =>
+                      this.clickHandler(event, 'ACCESS_VIEW', null)
+                    }
+                  >
+                    <i className='material-icons'>supervisor_account</i> Access
+                    Management
+                  </li>
                   <li
                     onClick={event =>
                       this.clickHandler(event, 'LOGOUT', logout)
