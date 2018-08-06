@@ -19,6 +19,11 @@ module.exports = function(sequelize, DataTypes) {
       uuid: {
         type: DataTypes.UUID,
         unique: true
+      },
+      permission: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        defaultValue: 0
       }
     },
     {
