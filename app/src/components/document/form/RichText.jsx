@@ -41,7 +41,7 @@ md.renderer.rules.privatekey = privateKeyRenderer;
 md.renderer.rules.copy = copyRenderer;
 md.renderer.rules.documentLink = documentLinkRenderer;
 
-const plugins = 'link lists table';
+const plugins = 'lists table';
 
 const toolbar =
   'styleselect | bold italic | markdownCode blockquote | bullist numlist | link table | privateKey copyPass linkDocument';
@@ -75,10 +75,16 @@ class RichText extends Component {
   constructor(props) {
     super(props);
     this.setup = this.setup.bind(this);
+    this.onLinkDocumentButtonClick = this.onLinkDocumentButtonClick.bind(this);
+    this.onCloseLinkDocumentModal = this.onCloseLinkDocumentModal.bind(this);
     this.onLinkButtonClick = this.onLinkButtonClick.bind(this);
-    this.closeLinkDocumentModal = this.closeLinkDocumentModal.bind(this);
+    this.onCloseLinkModal = this.onCloseLinkModal.bind(this);
+
     this.state = {
-      showLinkDocumentModal: false
+      showLinkDocumentModal: false,
+      showLinkModal: false,
+      url: '',
+      urlText: ''
     };
   }
 
@@ -128,19 +134,42 @@ class RichText extends Component {
     });
     editor.addButton('linkDocument', {
       icon: 'link',
+      onclick: this.onLinkDocumentButtonClick
+    });
+
+    editor.addButton('link', {
+      icon: 'link',
       onclick: this.onLinkButtonClick
     });
   }
 
-  onLinkButtonClick() {
+  onLinkDocumentButtonClick() {
     this.setState({
       showLinkDocumentModal: true
     });
   }
 
-  closeLinkDocumentModal() {
+  onLinkButtonClick() {
+    this.setState({
+      showLinkModal: true
+    });
+  }
+
+  onCloseLinkDocumentModal() {
     this.setState({
       showLinkDocumentModal: false
+    });
+  }
+
+  onCloseLinkModal() {
+    this.setState({
+      showLinkModal: false
+    });
+  }
+
+  onLinkModalChange(e) {
+    this.setState({
+      [e.target.name]: e.target.value
     });
   }
 
@@ -150,7 +179,7 @@ class RichText extends Component {
     this.props.onRichTextChange(id, text, type);
   }
 
-  appendToDocFields(name, id) {
+  appendDocumentLink(name, id) {
     this.state.activeEditor.insertContent(
       `<span class='document-link' data-id='${id}'>${name}</span>`
     );
@@ -160,24 +189,69 @@ class RichText extends Component {
     });
   }
 
+  appendLink() {
+    let url = this.state.url;
+    let urlText = this.state.urlText;
+    this.state.activeEditor.insertContent(`<a href='${url}'>${urlText}</a>`);
+    this.handleEditorChange();
+    this.setState({
+      showLinkModal: false,
+      url: '',
+      urlText: ''
+    });
+  }
+
   render() {
     const linkDocumentModal = (
       <Modal
         show={this.state.showLinkDocumentModal}
-        onClose={this.closeLinkDocumentModal}
+        onClose={this.onCloseLinkDocumentModal}
       >
         <LinkDocument
           linkOnClick={(name, id) => {
-            this.appendToDocFields(name, id);
+            this.appendDocumentLink(name, id);
           }}
-          onClose={this.closeLinkDocumentModal}
+          onClose={this.onCloseLinkDocumentModal}
         />
+      </Modal>
+    );
+
+    const linkModal = (
+      <Modal show={this.state.showLinkModal} onClose={this.onCloseLinkModal}>
+        <div className='link-modal'>
+          <h2>Insert Link</h2>
+          <span>
+            <b>URL:</b>
+            <input
+              name='url'
+              onChange={e => this.onLinkModalChange(e)}
+              value={this.state.url}
+            />
+          </span>
+          <span>
+            <b>Text to display:</b>
+            <input
+              name='urlText'
+              onChange={e => this.onLinkModalChange(e)}
+              value={this.state.urlText}
+            />
+          </span>
+          <div className='buttons'>
+            <button type='button' onClick={this.onCloseLinkModal}>
+              Cancel
+            </button>
+            <button type='button' onClick={() => this.appendLink()}>
+              Insert
+            </button>
+          </div>
+        </div>
       </Modal>
     );
 
     return (
       <div>
         {this.state.showLinkDocumentModal && linkDocumentModal}
+        {this.state.showLinkModal && linkModal}
         <Editor
           initialValue={md.render(this.props.text)}
           init={{
