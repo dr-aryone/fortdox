@@ -247,9 +247,9 @@ class UpdateDocView extends React.Component {
         {deleteDialog}
         {editedDialog}
         <div
-          className={`update-view inner-container ${isLoading ? 'hide' : ''} ${
-            showVersionPanel ? 'show-version-panel' : ''
-          } `}
+          className={`update-view inner-container ${
+            isLoading ? 'hide' : ''
+          } document-panel ${showVersionPanel ? 'small' : 'full'} `}
         >
           <div className={`${showVersionPanel ? 'document-container' : ''}`}>
             <ErrorBox errorMsg={error} />
@@ -312,6 +312,7 @@ class UpdateDocView extends React.Component {
           </div>
           {showVersionPanel && (
             <VersionHistory
+              showVersionPanel={showVersionPanel}
               versions={docFields.get('versions')}
               onToggleVersionPanel={onToggleVersionPanel}
               onInsertDocumentVersion={onInsertDocumentVersion}
