@@ -62,6 +62,8 @@ const search = (state = initialState, action) => {
     case 'LOGOUT':
     case 'VERIFY_LOGIN_CREDS_SUCCESS':
       return initialState;
+    case 'PREVIEW_DOC_PREVIEW_ATTACHMENT_FAIL':
+      return state.set('message', null);
     default:
       return state;
   }
