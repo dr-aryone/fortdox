@@ -4,7 +4,7 @@ const es = require('app/elastic_search');
 const THIRTY_MINUTES = 1800000;
 
 module.exports = async () => {
-  logger.silly('Running cleanup');
+  logger.info('Running cleanup');
   const currentTime = new Date();
   const birthTimeToDelete = new Date(currentTime - THIRTY_MINUTES);
   let inactiveOrganizations;
@@ -87,13 +87,9 @@ module.exports = async () => {
     throw 500;
   }
 
-  const inactiveDevices = await db.Devices.findAll({
+  db.Devices.destroy({
     where: {
       activated: false
     }
-  });
-
-  inactiveDevices.map(async inactiveDevice => {
-    await inactiveDevice.destroy();
   });
 };
