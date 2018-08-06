@@ -16,13 +16,15 @@ module.exports = client => {
         const currentAttachments = current._source.attachments;
 
         //First check all attachments that are equal and give them
-        const unchangedAttachments = query.attachments.filter(qa => {
+        const unchangedAttachments = [];
+        query.attachments.forEach(qa => {
           const found = currentAttachments.find(ca => ca.id === qa.id);
           if (found) {
-            return found;
+            unchangedAttachments.push(found);
           }
         });
-        console.log();
+
+        console.log('UnchangedAttachments', unchangedAttachments);
 
         //check fi there is any old type of attachments
         let oldType = query.attachments.filter(oldAttachment => {
@@ -34,7 +36,7 @@ module.exports = client => {
         //check if we have any attachments that is not in the current one...
         //i.e this should only happen if someone restored an older version.
         const attachmentDiff = query.attachments.filter(a => {
-          const found = current._source.attachments.find(ca => ca.id === a.id);
+          const found = currentAttachments.find(ca => ca.id === a.id);
           if (!found) {
             return a;
           }
@@ -71,19 +73,19 @@ module.exports = client => {
         });
         console.log('Old type of attachments', oldType);
 
-        const attachments = unchangedAttachments
+        const updatedAttachments = unchangedAttachments
           .concat(restoredAttachments)
           .concat(query.files)
           .concat(oldType);
 
-        console.log('All attachments', attachments);
+        console.log('All attachments', updatedAttachments);
 
         let doc = {
           title: query.title,
           encrypted_texts: query.encryptedTexts,
           texts: query.texts,
           tags: query.tags,
-          attachments: query.attachments
+          attachments: updatedAttachments
         };
 
         let newVersion = Object.assign(
