@@ -1289,11 +1289,16 @@ label {
   .preview .arrow-box {
     margin-bottom: 5px; }
 
-.show-version-panel {
+.document-panel.small {
   display: flex;
   margin-left: 5%;
   width: 95%;
-  justify-content: space-between; }
+  justify-content: space-between;
+  transition: width 0.5s 0.2s, margin 0.2s; }
+
+.document-panel.full {
+  width: 66.66667%;
+  transition: margin 0.2s; }
 
 .document-container {
   flex-grow: 5; }
@@ -1304,6 +1309,11 @@ label {
   background-color: white;
   overflow-y: scroll;
   box-shadow: 0 2px 2px rgba(0, 0, 0, 0.15), 0 0 2px rgba(0, 0, 0, 0.11); }
+  .version-history-panel.show {
+    opacity: 1;
+    transition: opacity 0.2s 1s; }
+  .version-history-panel.hide {
+    opacity: 0; }
   .version-history-panel .version-header {
     background-color: #f5f3f3;
     padding: 8px 15px;

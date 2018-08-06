@@ -20,26 +20,32 @@ class VersionHistory extends Component {
   }
 
   render() {
-    const { versions, onToggleVersionPanel } = this.props;
-    const versionsReversed = versions.reverse();
-    const versionList = versionsReversed.map((version, index) => {
-      return (
-        <div
-          className={`version-item ${!version.get('title') ? 'disabled' : ''} ${
-            this.state.currentVersion === index ? 'selected' : ''
-          }`}
-          key={index}
-          onClick={() => this.onVersionItemClick(version, index)}
-        >
-          <h3>{formatDate(version.get('createdAt'))}</h3>
-          <p>{index === 0 ? 'Current version' : null}</p>
-          <p>{version.get('user')}</p>
-        </div>
-      );
-    });
-
+    const { versions, onToggleVersionPanel, showVersionPanel } = this.props;
+    let versionList;
+    if (versions) {
+      const versionsReversed = versions.reverse();
+      versionList = versionsReversed.map((version, index) => {
+        return (
+          <div
+            className={`version-item ${
+              !version.get('title') ? 'disabled' : ''
+            } ${this.state.currentVersion === index ? 'selected' : ''}`}
+            key={index}
+            onClick={() => this.onVersionItemClick(version, index)}
+          >
+            <h3>{formatDate(version.get('createdAt'))}</h3>
+            <p>{index === 0 ? 'Current version' : null}</p>
+            <p>{version.get('user')}</p>
+          </div>
+        );
+      });
+    }
     return (
-      <div className='version-history-panel'>
+      <div
+        className={`version-history-panel ${
+          showVersionPanel ? 'show' : 'hide'
+        }`}
+      >
         <div className='version-header'>
           <h2>Version History</h2>
           <span className='close' onClick={() => onToggleVersionPanel(false)}>
