@@ -1,4 +1,5 @@
 const uuid = require('uuid');
+const logger = require('app/logger');
 
 module.exports = client => {
   const update = ({ query, organizationIndex, user }) => {
@@ -24,7 +25,7 @@ module.exports = client => {
           }
         });
 
-        console.log('UnchangedAttachments', unchangedAttachments);
+        logger.verbose('UnchangedAttachments', unchangedAttachments);
 
         //check fi there is any old type of attachments
         let oldType = query.attachments.filter(oldAttachment => {
@@ -41,7 +42,7 @@ module.exports = client => {
             return a;
           }
         });
-        console.log('Attachment diff', attachmentDiff);
+        logger.verbose('Attachment diff', attachmentDiff);
 
         //collect all attachments in all versions..
         let allAttachments = [];
@@ -58,7 +59,7 @@ module.exports = client => {
             return aa;
           }
         });
-        console.log('Restored attachments', restoredAttachments);
+        logger.verbose('Restored attachments', restoredAttachments);
 
         oldType = oldType.filter(attachment => {
           if (attachment.file) {
@@ -71,14 +72,14 @@ module.exports = client => {
           attachment.file = storedAttachment.file;
           return attachment;
         });
-        console.log('Old type of attachments', oldType);
+        logger.verbose('Old type of attachments', oldType);
 
         const updatedAttachments = unchangedAttachments
           .concat(restoredAttachments)
           .concat(query.files)
           .concat(oldType);
 
-        console.log('All attachments', updatedAttachments);
+        logger.verbose('All attachments', updatedAttachments);
 
         let doc = {
           title: query.title,
