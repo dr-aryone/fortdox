@@ -106,7 +106,7 @@ class UpdateDocView extends React.Component {
     if (tags.size === oldTags.size) {
       if (
         tags.find((tag, index) => {
-          return tag === oldTags.get(index);
+          return tag !== oldTags.get(index);
         })
       )
         return true;
@@ -247,9 +247,9 @@ class UpdateDocView extends React.Component {
         {deleteDialog}
         {editedDialog}
         <div
-          className={`update-view inner-container ${
-            isLoading ? 'hide' : ''
-          } document-panel ${showVersionPanel ? 'small' : 'full'} `}
+          className={`update-view inner-container document-panel ${
+            showVersionPanel ? 'small' : 'full'
+          } `}
         >
           <div className={`${showVersionPanel ? 'document-container' : ''}`}>
             <ErrorBox errorMsg={error} />
