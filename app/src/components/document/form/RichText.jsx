@@ -179,7 +179,7 @@ class RichText extends Component {
       <div>
         {this.state.showLinkDocumentModal && linkDocumentModal}
         <Editor
-          initialValue={md.render(this.props.text)}
+          value={md.render(this.props.text)}
           init={{
             setup: this.setup,
             style_formats,

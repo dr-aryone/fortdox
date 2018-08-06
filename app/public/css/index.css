@@ -1321,6 +1321,9 @@ label {
       cursor: default;
       background-color: #f5f3f3;
       border-bottom: 1px solid white; }
+    .version-history-panel .version-item.selected {
+      background-color: #118ab2;
+      color: white; }
 
 .list {
   display: flex;
