@@ -424,7 +424,7 @@ export function insertDocumentVersion(version) {
           error: null
         })
       );
-      if (entry.id > nextID) nextID = entry.id;
+      if (entry.get('id') > nextID) nextID = entry.get('id');
     });
     version.get('texts').forEach(entry => {
       texts.push(
@@ -435,7 +435,7 @@ export function insertDocumentVersion(version) {
           error: null
         })
       );
-      if (entry.id > nextID) nextID = entry.id;
+      if (entry.get('id') > nextID) nextID = entry.get('id');
     });
     version.get('tags').forEach(entry => {
       tags.push(entry);
@@ -458,7 +458,7 @@ export function insertDocumentVersion(version) {
         texts,
         attachments,
         tags,
-        nextID
+        nextID: nextID + 1
       }
     });
   };
