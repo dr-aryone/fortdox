@@ -3,6 +3,7 @@
   "server": "https://fortdox.edgeguide.se",
   "cors":"http://localhost:5000",
   "uploadPath":"/tmp/",
+  "deviceLimit":3,
   "sqlConfig": {
     "username": "{you username}",
     "password": "{your password}",

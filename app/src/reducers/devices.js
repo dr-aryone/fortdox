@@ -7,7 +7,9 @@ let initialState = fromJS({
   QRCode: null,
   deviceId: '',
   devices: [],
-  refresh: false
+  refresh: false,
+  warning: null,
+  maximumReached: false
 });
 
 const devices = (state = initialState, action) => {
@@ -17,7 +19,7 @@ const devices = (state = initialState, action) => {
     case 'INVITE_DEVICE_START':
     case 'DELETE_DEVICE_START':
     case 'UPDATE_DEVICE_NAME_START':
-      return state.set('isLoading', true).set('error', '');
+      return state.set('isLoading', true);
     case 'GET_QR_CODE_ERROR':
     case 'GET_DEVICES_ERROR':
     case 'INVITE_DEVICE_ERROR':
@@ -25,17 +27,21 @@ const devices = (state = initialState, action) => {
     case 'UPDATE_DEVICE_NAME_ERROR':
       return state.merge({
         error: fromJS(action.payload),
-        message: '',
+        message: null,
         isLoading: false
       });
     case 'GET_QR_CODE_SUCCESS':
       return state
         .set('isLoading', false)
-        .set('QRCode', fromJS(action.payload));
+        .set('QRCode', fromJS(action.payload))
+        .set('message', null)
+        .set('error', null);
     case 'GET_DEVICES_SUCCESS':
       return state.set('isLoading', false).merge({
         deviceId: fromJS(action.payload.deviceId),
         devices: fromJS(action.payload.devices),
+        warning: fromJS(action.payload.warningText),
+        maximumReached: fromJS(action.payload.maximumReached),
         refresh: false
       });
     case 'UPDATE_DEVICE_NAME_SUCCESS':
@@ -43,7 +49,9 @@ const devices = (state = initialState, action) => {
     case 'INVITE_DEVICE_SUCCESS':
       return state
         .set('isLoading', false)
-        .set('message', fromJS(action.payload));
+        .set('message', fromJS(action.payload))
+        .set('error', null)
+        .set('warning', null);
     case 'CHANGE_VIEW':
       if (action.payload === 'DEVICES_VIEW') {
         return state.set('refresh', true);
