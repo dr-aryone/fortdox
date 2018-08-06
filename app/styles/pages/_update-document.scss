@@ -39,5 +39,10 @@
       background-color: $grey;
       border-bottom: 1px solid white;
     }
+
+    &.selected {
+      background-color: $primary-color;
+      color: white;
+    }
   }
 }

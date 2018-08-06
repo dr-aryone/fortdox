@@ -443,10 +443,10 @@ export function insertDocumentVersion(version) {
 
     version.get('attachments').forEach(attachment => {
       attachments.push({
-        name: attachment.name,
-        id: attachment.id,
-        file: attachment.file,
-        type: attachment.file_type
+        name: attachment.get('name'),
+        id: attachment.get('id'),
+        file: attachment.get('file'),
+        type: attachment.get('file_type')
       });
     });
 

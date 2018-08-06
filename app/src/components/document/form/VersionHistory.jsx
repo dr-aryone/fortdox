@@ -4,26 +4,35 @@ const { formatDate } = require('components/general/formatDate');
 class VersionHistory extends Component {
   constructor(props) {
     super(props);
-    this.props = props;
+
+    this.state = {
+      currentVersion: 0
+    };
+  }
+
+  onVersionItemClick(version, index) {
+    if (version.get('title')) {
+      this.props.onInsertDocumentVersion(version);
+      this.setState({
+        currentVersion: index
+      });
+    }
   }
 
   render() {
-    const {
-      versions,
-      onInsertDocumentVersion,
-      onToggleVersionPanel
-    } = this.props;
-    const versionList = versions.map((version, index) => {
+    const { versions, onToggleVersionPanel } = this.props;
+    const versionsReversed = versions.reverse();
+    const versionList = versionsReversed.map((version, index) => {
       return (
         <div
-          className={`version-item ${!version.get('title') ? 'disabled' : ''}`}
+          className={`version-item ${!version.get('title') ? 'disabled' : ''} ${
+            this.state.currentVersion === index ? 'selected' : ''
+          }`}
           key={index}
-          onClick={() => {
-            if (version.get('title')) onInsertDocumentVersion(version);
-          }}
+          onClick={() => this.onVersionItemClick(version, index)}
         >
           <h3>{formatDate(version.get('createdAt'))}</h3>
-          <p>{index === versions.size - 1 ? 'Current' : null}</p>
+          <p>{index === 0 ? 'Current version' : null}</p>
           <p>{version.get('user')}</p>
         </div>
       );
@@ -37,7 +46,7 @@ class VersionHistory extends Component {
             Close
           </span>
         </div>
-        <div className='version-list'>{versionList.reverse()}</div>
+        <div className='version-list'>{versionList}</div>
       </div>
     );
   }

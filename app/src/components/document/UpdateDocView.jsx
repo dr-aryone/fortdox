@@ -292,19 +292,21 @@ class UpdateDocView extends React.Component {
                 >
                   Delete
                 </button>
-                <button
-                  type='button'
-                  onClick={() => this.checkEdits(docFields)}
-                >
-                  Back
-                </button>
-                <button
-                  onClick={onUpdate}
-                  type='submit'
-                  disabled={!this.state.hasBeenEdited}
-                >
-                  Update
-                </button>
+                <span>
+                  <button
+                    type='button'
+                    onClick={() => this.checkEdits(docFields)}
+                  >
+                    Back
+                  </button>
+                  <button
+                    onClick={onUpdate}
+                    type='submit'
+                    disabled={!this.state.hasBeenEdited}
+                  >
+                    Update
+                  </button>
+                </span>
               </div>
             </DocumentForm>
           </div>
