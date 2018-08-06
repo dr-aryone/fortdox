@@ -2,6 +2,7 @@
   &-table {
     @extend .box;
     display: table;
+    width: 100%;
   }
 
   &-header {

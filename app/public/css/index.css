@@ -719,7 +719,8 @@ label {
       color: #041e26; }
 
 .access-table {
-  display: table; }
+  display: table;
+  width: 100%; }
 
 .access-header {
   font-weight: bold;

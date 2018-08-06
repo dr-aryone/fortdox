@@ -21,26 +21,26 @@ class AccessView extends Component {
           <div className='title'>
             <h1>Access Management</h1>
           </div>
-          <div className='access-matrix'>
-            <div className='row matrix-header'>
-              <div className='user'>User/Right</div>
-              <div>Invite User</div>
-              <div>Remove User</div>
-              <div>Delete Document</div>
-              <div>Superuser</div>
+          <div className='access-table'>
+            <div className='access-header'>
+              <div className='access-cell'>User/Permission</div>
+              <div className='access-cell'>Invite User</div>
+              <div className='access-cell'>Remove User</div>
+              <div className='access-cell'>Delete Document</div>
+              <div className='access-cell'>Grant Permission</div>
             </div>
-            <div className='row'>
-              <div>bajs@gmail.com</div>
-              <div>
+            <div className='access-row'>
+              <div className='access-cell'>bajs@gmail.com</div>
+              <div className='access-cell'>
                 <input type='checkbox' />
               </div>
-              <div>
+              <div className='access-cell'>
                 <input type='checkbox' />
               </div>
-              <div>
+              <div className='access-cell'>
                 <input type='checkbox' />
               </div>
-              <div>
+              <div className='access-cell'>
                 <input type='checkbox' />
               </div>
             </div>
