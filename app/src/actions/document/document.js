@@ -1,4 +1,4 @@
-import { getPrefix } from './utilities';
+import { getPrefix, htmlToMarkdown } from './utilities';
 import { changeView } from 'actions';
 const { fromJS } = require('immutable');
 const requestor = require('@edgeguideab/client-request');
@@ -42,14 +42,22 @@ export function createDocument() {
     let tags = docFields.getIn(['tags', 'list']).toJS();
     let attachments = [];
     docFields.getIn(['encryptedTexts']).forEach(field => {
+      const value =
+        field.get('format') === 'html'
+          ? htmlToMarkdown(field.get('value'))
+          : field.get('value');
       encryptedTexts.push({
-        text: field.get('value'),
+        text: value,
         id: field.get('id')
       });
     });
     docFields.getIn(['texts']).forEach(field => {
+      const value =
+        field.get('format') === 'html'
+          ? htmlToMarkdown(field.get('value'))
+          : field.get('value');
       texts.push({
-        text: field.get('value'),
+        text: value,
         id: field.get('id')
       });
     });
@@ -68,10 +76,10 @@ export function createDocument() {
     });
 
     form.set('title', title);
-
     form.set('encryptedTexts', JSON.stringify(encryptedTexts));
     form.set('texts', JSON.stringify(texts));
     form.set('tags', tags);
+
     let response;
     try {
       response = await requestor.post(`${config.server}/document`, {

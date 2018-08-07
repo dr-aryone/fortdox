@@ -91,10 +91,12 @@ const form = (state = initialState, action) => {
         .setIn(['docFields', 'title', 'value'], fromJS(action.payload))
         .setIn(['docFields', 'title', 'error'], null)
         .set('checkFields', false);
+    case 'UPDATE_DOC_CONVERTED_ENCRYPTED_TEXT':
     case 'UPDATE_DOC_INPUT_CHANGE_ENCRYPTED_TEXT':
       return state
         .setIn(['docFields', 'encryptedTexts'], fromJS(action.payload))
         .set('checkFields', false);
+    case 'UPDATE_DOC_CONVERTED_TEXT':
     case 'UPDATE_DOC_INPUT_CHANGE_TEXT':
       return state
         .setIn(['docFields', 'texts'], fromJS(action.payload))

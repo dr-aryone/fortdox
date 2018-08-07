@@ -358,7 +358,7 @@ label {
 .mce-top-part::before {
   box-shadow: none !important; }
 
-.mce-notification-inner {
+.mce-notification {
   display: none !important; }
 
 .mce-container {

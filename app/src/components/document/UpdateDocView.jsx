@@ -151,7 +151,6 @@ class UpdateDocView extends React.Component {
       onAddTag,
       onRemoveTag,
       onChange,
-      onRichTextChange,
       onSuggestTags,
       onUpdate,
       onDelete,
@@ -171,7 +170,8 @@ class UpdateDocView extends React.Component {
       elementToHide,
       showVersionPanel,
       onToggleVersionPanel,
-      onInsertDocumentVersion
+      onInsertDocumentVersion,
+      onConvert
     } = this.props;
 
     const deleteDialog = (
@@ -267,7 +267,6 @@ class UpdateDocView extends React.Component {
               onCloseSimilarDocuments={onCloseSimilarDocuments}
               onSimilarDocumentClick={onSimilarDocumentClick}
               onChange={onChange}
-              onRichTextChange={onRichTextChange}
               onTitleChange={onTitleChange}
               onAddTag={onAddTag}
               onRemoveTag={onRemoveTag}
@@ -283,6 +282,7 @@ class UpdateDocView extends React.Component {
               onHideElement={onHideElement}
               elementToHide={elementToHide}
               onToggleVersionPanel={onToggleVersionPanel}
+              onConvert={onConvert}
             >
               <div className='doc-buttons update'>
                 <button
