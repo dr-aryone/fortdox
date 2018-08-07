@@ -7,6 +7,11 @@ test('User with INVITE_USER permission should be granted access to INVITE_USER f
   expect(access).toBe(true);
 });
 
+test('Need INVITE_USER to be able to invite user', () => {
+  const user = permissions.GRANT_PERMISSION;
+  expect(acu(user).check(permissions.INVITE_USER)).toBe(false);
+});
+
 test('User with GRANT_PERMISSION permission should be granted access to GRANT_PERMISSION feature', () => {
   const user = permissions.GRANT_PERMISSION;
   const access = acu(user).check(permissions.GRANT_PERMISSION);
