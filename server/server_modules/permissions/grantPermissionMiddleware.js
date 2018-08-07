@@ -26,7 +26,7 @@ async function requiresGrantPermission(req, res, next) {
       `User ${user.email}, permission level ${user.permission}`
     );
 
-    if (acu(user.permission, permissions.GRANT_PERMISSION)) {
+    if (acu(user.permission).check(permissions.GRANT_PERMISSION)) {
       logger.info(
         'Permission check: grant permission',
         `User ${email} granted permission to: grant permission features.`
