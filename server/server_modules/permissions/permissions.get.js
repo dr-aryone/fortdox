@@ -2,6 +2,10 @@ const db = require('app/models');
 const logger = require('app/logger');
 
 async function readUsersAndTheirPermissions(req, res) {
+  logger.info(
+    '/permissions/user',
+    `${req.session.email} retrieving users and their permissions `
+  );
   try {
     const rows = await db.User.findAll({
       where: {

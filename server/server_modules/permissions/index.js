@@ -25,5 +25,6 @@ module.exports = {
   BASE,
   MAX_RANGE,
   MIN_RANGE,
-  getPermissionName
+  getPermissionName,
+  names
 };
