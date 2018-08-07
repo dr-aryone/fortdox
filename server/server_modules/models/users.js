@@ -9,7 +9,8 @@ module.exports = function(sequelize, DataTypes) {
         type: DataTypes.INTEGER
       },
       organizationId: {
-        type: DataTypes.INTEGER
+        type: DataTypes.INTEGER,
+        onDelete: 'SET NULL'
       },
       email: {
         unique: true,

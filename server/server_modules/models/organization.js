@@ -24,7 +24,9 @@ module.exports = function(sequelize, DataTypes) {
       },
       owner: {
         allowNull: true,
-        type: DataTypes.INTEGER
+        type: DataTypes.INTEGER,
+        onDelete: 'SET NULL',
+        onUpdate: 'NO ACTION'
       }
     },
     {
