@@ -3,8 +3,11 @@ const logger = require('app/logger');
 
 async function readUsersAndTheirPermissions(req, res) {
   try {
-    //TODO:Only users in this users organisation..
-    const rows = await db.User.findAll({});
+    const rows = await db.User.findAll({
+      where: {
+        organizationId: req.session.organizationId
+      }
+    });
 
     const usersAndPermissions = rows.map(user => {
       return {

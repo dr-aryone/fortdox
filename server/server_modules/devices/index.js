@@ -217,7 +217,7 @@ async function confirm(req, res) {
     req.body.privateKey === undefined ||
     req.body.privateKey === null
   ) {
-    res.status(400).send({ error: 'Malformed request' });
+    return res.status(400).send({ error: 'Malformed request' });
   }
 
   const deviceId = req.body.deviceId;

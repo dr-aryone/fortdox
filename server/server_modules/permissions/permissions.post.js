@@ -22,10 +22,21 @@ async function updateUserPermission(req, res) {
   const userEmail = req.body.email;
 
   try {
-    await db.User.update(
+    const update = await db.User.update(
       { permission: newPermission },
-      { where: { email: userEmail } }
+      {
+        where: { email: userEmail, organizationId: req.session.organizationId }
+      }
     );
+
+    if (!update[0]) {
+      logger.info(
+        '/permissions POST',
+        `Could NOT grant permission ${newPermission} to ${userEmail}`
+      );
+      return res.status(400).send();
+    }
+
     logger.info(
       '/permissions POST',
       `Permission ${newPermission} granted to ${userEmail}`
