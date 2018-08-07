@@ -11,6 +11,7 @@ const mailer = require('app/mailer');
 const uuidv1 = require('uuid/v1');
 const uuidv4 = require('uuid/v4');
 const logger = require('app/logger');
+const permissions = require('app/permissions');
 
 module.exports = {
   organization,
@@ -29,15 +30,27 @@ async function organization(req, res) {
   };
   let organizationId;
   let email = req.body.email;
+  let user;
   try {
-    await users.createUser(newUser);
+    user = await users.createUser(newUser);
+    await user.update({
+      permission:
+        permissions.INVITE_USER |
+        permissions.REMOVE_USER |
+        permissions.DELETE_DOCUMENT |
+        permissions.GRANT_PERMISSION
+    });
+    logger.info(user.id, user.email);
     logger.info('/register', `User ${req.body.email} was created!`);
   } catch (error) {
     logger.warn('/register', `User ${req.body.email} already exists`);
     return res.status(error).send('user');
   }
   try {
-    organizationId = (await orgs.createOrganization(req.body.organization)).id;
+    organizationId = (await orgs.createOrganization(
+      req.body.organization,
+      user.id
+    )).id;
     await users.setOrganizationId({
       email,
       organizationId
