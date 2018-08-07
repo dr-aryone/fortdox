@@ -15,14 +15,18 @@ function permissionInsideRange(user) {
   return false;
 }
 
-function AccessControllUnit(user, permission) {
-  if (typeof user !== 'number') return false;
-  if (!permissionInsideRange(user)) return false;
+function AccessControllUnit(user) {
+  return {
+    check: function(permission) {
+      if (typeof user !== 'number') return false;
+      if (!permissionInsideRange(user)) return false;
 
-  if (hasPermission(user, permission)) {
-    return true;
-  }
-  return false;
+      if (hasPermission(user, permission)) {
+        return true;
+      }
+      return false;
+    }
+  };
 }
 
 module.exports = AccessControllUnit;
