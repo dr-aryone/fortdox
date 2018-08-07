@@ -1,5 +1,5 @@
-const INVITE_USER = 0x4;
-const REMOVE_USER = 0x3;
+const INVITE_USER = 0x8;
+const REMOVE_USER = 0x4;
 const REMOVE_DOCUMENT = 0x2;
 const GRANT_PERMISSION = 0x1;
 const BASE = 0x0;

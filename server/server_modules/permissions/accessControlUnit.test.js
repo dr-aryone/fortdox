@@ -91,3 +91,47 @@ test('Edge case permissions', () => {
   access = acu(user).check(permissions.INVITE_USER);
   expect(access).toBe(false);
 });
+
+test('User without grant permission fails to grant new permissions', () => {
+  let user = permissions.BASE;
+  let access = acu(user).canSet(permissions.INVITE_USER);
+  expect(access).toBe(false);
+
+  user = permissions.INVITE_USER;
+  access = acu(user).canSet(permissions.INVITE_USER);
+  expect(access).toBe(false);
+
+  user = permissions.REMOVE_DOCUMENT;
+  access = acu(user).canSet(permissions.INVITE_USER);
+  expect(access).toBe(false);
+
+  user = permissions.REMOVE_USER;
+  access = acu(user).canSet(permissions.INVITE_USER);
+  expect(access).toBe(false);
+
+  const nonGrantPermissionLevels = [...Array(16).keys()]
+    .slice(4)
+    .filter(v => !(v & (1 === 1)));
+
+  nonGrantPermissionLevels.forEach(i => {
+    access = acu(i).canSet(permissions.INVITE_USER);
+    expect(access).toBe(false);
+  });
+});
+
+test('You cannot grant the permission GRANT PERMISSION', () => {
+  let user = permissions.GRANT_PERMISSION;
+  let newPermission = permissions.GRANT_PERMISSION;
+  expect(acu(user).canSet(newPermission)).toBe(false);
+});
+
+test('You cannot grant permissions outside range', () => {
+  let user = permissions.GRANT_PERMISSION;
+  let newPermission = -1;
+  let access = acu(user).canSet(newPermission);
+  expect(access).toBe(false);
+
+  newPermission = 0xff;
+  access = acu(user).canSet(newPermission);
+  expect(access).toBe(false);
+});
