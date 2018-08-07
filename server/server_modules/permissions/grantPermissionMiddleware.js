@@ -31,6 +31,9 @@ async function requiresGrantPermission(req, res, next) {
         'Permission check: grant permission',
         `User ${email} granted permission to: grant permission features.`
       );
+
+      req.session.permission = user.permission;
+
       next();
     } else {
       logger.warn(

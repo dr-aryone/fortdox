@@ -62,7 +62,7 @@ test('user with negative permission number must not have access to anything', ()
 });
 
 test('user with permission number outside max range must not have access to anything', () => {
-  const user = 0xffff;
+  const user = 16;
   let access = acu(user).check(permissions.INVITE_USER);
   expect(access).toBe(false);
 
@@ -131,7 +131,7 @@ test('You cannot grant permissions outside range', () => {
   let access = acu(user).canSet(newPermission);
   expect(access).toBe(false);
 
-  newPermission = 0xff;
+  newPermission = 16;
   access = acu(user).canSet(newPermission);
   expect(access).toBe(false);
 });

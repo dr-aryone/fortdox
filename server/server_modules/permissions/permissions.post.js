@@ -1,6 +1,7 @@
 const expect = require('@edgeguideab/expect');
 const logger = require('app/logger');
 const db = require('app/models');
+const acu = require('./accessControlUnit');
 
 async function updateUserPermission(req, res) {
   const expectations = expect(
@@ -17,9 +18,18 @@ async function updateUserPermission(req, res) {
       .end();
   }
 
-  //TODO do some permission sanitation...
   const newPermission = req.body.permission;
   const userEmail = req.body.email;
+
+  if (!acu(req.session.permission).canSet(newPermission)) {
+    logger.warn(
+      '/permissions POST',
+      `${
+        req.session.email
+      } tried to grant permission ${newPermission} to ${userEmail}`
+    );
+    return res.status(400).send();
+  }
 
   try {
     const update = await db.User.update(

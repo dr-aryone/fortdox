@@ -1,9 +1,9 @@
-const INVITE_USER = 0x8;
-const REMOVE_USER = 0x4;
-const REMOVE_DOCUMENT = 0x2;
-const GRANT_PERMISSION = 0x1;
-const BASE = 0x0;
-const MAX_RANGE = 0xff;
+const INVITE_USER = 8;
+const REMOVE_USER = 4;
+const REMOVE_DOCUMENT = 2;
+const GRANT_PERMISSION = 1;
+const BASE = 0;
+const MAX_RANGE = 15;
 const MIN_RANGE = BASE;
 
 module.exports = {
