@@ -1,6 +1,6 @@
 const INVITE_USER = 8;
 const REMOVE_USER = 4;
-const REMOVE_DOCUMENT = 2;
+const DELETE_DOCUMENT = 2;
 const GRANT_PERMISSION = 1;
 const BASE = 0;
 const MAX_RANGE = 15;
@@ -20,7 +20,7 @@ const getPermissionName = i => {
 module.exports = {
   INVITE_USER,
   REMOVE_USER,
-  REMOVE_DOCUMENT,
+  DELETE_DOCUMENT,
   GRANT_PERMISSION,
   BASE,
   MAX_RANGE,
