@@ -7,6 +7,7 @@ const multer = require('multer');
 const upload = multer({
   dest: config.uploadPath
 });
+const requireDeleteDocumentPermission = require('app/permissions/deleteDocumentPermissionMiddleware');
 
 router.get('/', document.search);
 router.post(
@@ -16,7 +17,12 @@ router.post(
   document.create
 );
 router.get('/:id', needsMasterPassword, document.get);
-router.delete('/:id', needsMasterPassword, document.delete);
+router.delete(
+  '/:id',
+  needsMasterPassword,
+  requireDeleteDocumentPermission,
+  document.delete
+);
 router.patch(
   '/:id',
   needsMasterPassword,
@@ -28,6 +34,5 @@ router.get('/check/title', document.checkTitle);
 //Attachment routes
 const attachments = require('app/attachments');
 router.use('/:id/attachment', attachments);
-//router.get('/:id/attachment/:attachmentIndex', document.getAttachment);
 
 module.exports = router;
