@@ -1,4 +1,4 @@
-import { getPrefix, htmlToMarkdown } from './utilities';
+import { getPrefix, htmlToMarkdown, markdownToHtml } from './utilities';
 import { changeView } from 'actions';
 const { fromJS } = require('immutable');
 const requestor = require('@edgeguideab/client-request');
@@ -107,12 +107,31 @@ export function createDocument() {
 
     return dispatch(
       openDocument(response.body._id, true, () => {
-        let state = getState();
-        let docFields = state.updateDocument.get('docFields');
+        const state = getState();
+        const docFields = state.updateDocument.get('docFields');
+        const encryptedTexts = docFields
+          .get('encryptedTexts')
+          .map(text =>
+            text
+              .set('value', htmlToMarkdown(text.get('value')))
+              .set('format', 'markdown')
+          );
+        const texts = docFields
+          .get('texts')
+          .map(text =>
+            text
+              .set('value', htmlToMarkdown(text.get('value')))
+              .set('format', 'markdown')
+          );
+
         return dispatch({
           type: 'CREATE_DOCUMENT_SUCCESS',
-          payload: 'Document has been created!',
-          docFields
+          payload: {
+            docFields,
+            encryptedTexts,
+            texts,
+            message: 'Document has been created!'
+          }
         });
       })
     );
@@ -143,14 +162,22 @@ export function updateDocument() {
     let tags = newDoc.getIn(['tags', 'list']).toJS();
     let attachments = [];
     newDoc.getIn(['encryptedTexts']).forEach(field => {
+      const value =
+        field.get('format') === 'html'
+          ? htmlToMarkdown(field.get('value'))
+          : field.get('value');
       encryptedTexts.push({
-        text: field.get('value'),
+        text: value,
         id: field.get('id')
       });
     });
     newDoc.getIn(['texts']).forEach(field => {
+      const value =
+        field.get('format') === 'html'
+          ? htmlToMarkdown(field.get('value'))
+          : field.get('value');
       texts.push({
-        text: field.get('value'),
+        text: value,
         id: field.get('id')
       });
     });
@@ -205,11 +232,28 @@ export function updateDocument() {
       openDocument(oldDoc.get('_id'), true, () => {
         let state = getState();
         let docFields = state.updateDocument.get('docFields');
-
+        const encryptedTexts = docFields
+          .get('encryptedTexts')
+          .map(text =>
+            text
+              .set('value', htmlToMarkdown(text.get('value')))
+              .set('format', 'markdown')
+          );
+        const texts = docFields
+          .get('texts')
+          .map(text =>
+            text
+              .set('value', htmlToMarkdown(text.get('value')))
+              .set('format', 'markdown')
+          );
         return dispatch({
           type: 'UPDATE_DOCUMENT_SUCCESS',
-          payload: 'Document has been updated!',
-          docFields
+          payload: {
+            message: 'Document has been updated!',
+            encryptedTexts,
+            texts,
+            docFields
+          }
         });
       })
     );
@@ -288,10 +332,11 @@ export function openDocument(id, skipTimeout, showPreview) {
       doc._source.encrypted_texts.forEach(entry => {
         encryptedTexts.push(
           fromJS({
-            value: entry.text,
+            value: markdownToHtml(entry.text),
             id: entry.id,
             label: 'Encrypted Text',
-            error: null
+            error: null,
+            format: 'html'
           })
         );
         if (entry.id > nextID) nextID = entry.id;
@@ -299,10 +344,11 @@ export function openDocument(id, skipTimeout, showPreview) {
       doc._source.texts.forEach(entry => {
         texts.push(
           fromJS({
-            value: entry.text,
+            value: markdownToHtml(entry.text),
             id: entry.id,
             label: 'Text',
-            error: null
+            error: null,
+            format: 'html'
           })
         );
         if (entry.id > nextID) nextID = entry.id;
@@ -346,9 +392,27 @@ export function previewDocument(id, skipTimeout) {
       openDocument(id, skipTimeout, () => {
         let state = getState();
         let docFields = state.updateDocument.get('docFields');
+        const encryptedTexts = docFields
+          .get('encryptedTexts')
+          .map(text =>
+            text
+              .set('value', htmlToMarkdown(text.get('value')))
+              .set('format', 'markdown')
+          );
+        const texts = docFields
+          .get('texts')
+          .map(text =>
+            text
+              .set('value', htmlToMarkdown(text.get('value')))
+              .set('format', 'markdown')
+          );
         return dispatch({
           type: 'PREVIEW_DOCUMENT_SUCCESS',
-          docFields
+          payload: {
+            docFields,
+            encryptedTexts,
+            texts
+          }
         });
       })
     );

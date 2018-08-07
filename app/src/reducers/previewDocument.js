@@ -33,25 +33,31 @@ let initialState = fromJS({
 
 const preview = (state = initialState, action) => {
   switch (action.type) {
-    case 'UPDATE_DOCUMENT_SUCCESS':
     case 'CREATE_DOCUMENT_SUCCESS':
-      return state.merge({
-        docFields: fromJS(action.docFields),
-        error: null,
-        showPreview: true
-      });
+    case 'UPDATE_DOCUMENT_SUCCESS':
+      return state
+        .merge({
+          docFields: action.payload.docFields,
+          error: null,
+          showPreview: true
+        })
+        .setIn(['docFields', 'encryptedTexts'], action.payload.encryptedTexts)
+        .setIn(['docFields', 'texts'], action.payload.texts);
     case 'PREVIEW_DOCUMENT_START':
       return state.set('isLoading', true);
     case 'PREVIEW_DOCUMENT_SUCCESS':
-      return state.merge({
-        docFields: fromJS(action.docFields),
-        isLoading: false,
-        showPreview: true,
-        error: null,
-        searchField: {
-          show: false
-        }
-      });
+      return state
+        .merge({
+          docFields: fromJS(action.payload.docFields),
+          isLoading: false,
+          showPreview: true,
+          error: null,
+          searchField: {
+            show: false
+          }
+        })
+        .setIn(['docFields', 'encryptedTexts'], action.payload.encryptedTexts)
+        .setIn(['docFields', 'texts'], action.payload.texts);
     case 'SHOW_SEARCH_FIELD':
       return state.setIn(['searchField', 'show'], true);
     case 'SEARCH_FIELD_CHANGE':

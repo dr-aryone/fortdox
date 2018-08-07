@@ -54,6 +54,7 @@ const search = (state = initialState, action) => {
       });
     case 'UPDATE_DOCUMENT_SUCCESS':
     case 'CREATE_DOCUMENT_SUCCESS':
+      return initialState.set('message', fromJS(action.payload.message));
     case 'DELETE_DOCUMENT_SUCCESS':
       return initialState.set('message', fromJS(action.payload));
     case 'DELETE_DOCUMENT_ERROR':
