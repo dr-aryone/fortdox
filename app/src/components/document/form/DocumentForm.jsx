@@ -32,7 +32,8 @@ const DocumentForm = ({
   similarDocuments,
   onCloseSimilarDocuments,
   onSimilarDocumentClick,
-  onToggleVersionPanel
+  onToggleVersionPanel,
+  onConvert
 }) => {
   let title = docFields.get('title');
   let tags = docFields.get('tags');
@@ -48,7 +49,7 @@ const DocumentForm = ({
               type='text'
               key='title'
               onChange={event => {
-                onChange(event, 'title');
+                onChange(event.target.name, event.target.value, 'title');
                 onTitleChange(event);
               }}
             />
@@ -67,6 +68,7 @@ const DocumentForm = ({
             onDrop={onDrop}
             onHideElement={onHideElement}
             elementToHide={elementToHide}
+            onConvert={onConvert}
           />
           <BottomPanel onAddField={onAddField} />
         </div>
