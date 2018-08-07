@@ -31,7 +31,8 @@ module.exports = function(sequelize, DataTypes) {
     }
   );
   User.associate = models => {
-    User.belongsTo(models.Organization);
+    User.belongsTo(models.Organization, { foreignKey: 'organizationId' });
+
     User.hasMany(models.Devices, { foreignKey: 'userid' });
   };
   return User;

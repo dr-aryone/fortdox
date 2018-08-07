@@ -37,9 +37,6 @@ module.exports = function(sequelize, DataTypes) {
       as: 'users',
       foreignKey: 'organizationId'
     });
-    Organization.hasOne(models.User, {
-      foreignKey: 'id'
-    });
   };
   return Organization;
 };
