@@ -11,7 +11,13 @@ async function userPermissions(req, res) {
       return res.status(500).send();
     }
 
-    return res.send({ permission: user.permission });
+    const isOwner = await db.Organization.findOne({
+      where: { id: req.session.organizationId, owner: user.id }
+    });
+
+    const owner = isOwner ? true : undefined;
+
+    return res.send({ permission: user.permission, owner });
   } catch (error) {
     logger.error('/permissions/me', `Could not query db for user ${email}`);
     return res.status(500).send();
