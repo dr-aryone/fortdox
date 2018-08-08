@@ -40,10 +40,11 @@ class VersionHistory extends Component {
         );
       });
     }
+
     return (
       <div
         className={`version-history-panel ${
-          showVersionPanel ? 'show' : 'hide'
+          showVersionPanel !== undefined ? showVersionPanel ? 'show' : 'hide' : ''
         }`}
       >
         <div className='version-header'>
