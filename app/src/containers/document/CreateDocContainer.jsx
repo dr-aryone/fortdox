@@ -23,6 +23,9 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
+    onConvert: (id, type, format) => {
+      dispatch(fieldActions.convertFormat(id, type, format));
+    },
     onUnCheckField: () => {
       dispatch(documentActions.unCheck());
     },
@@ -38,12 +41,7 @@ const mapDispatchToProps = dispatch => {
     onHideElement: id => {
       dispatch(fieldActions.onHideElement(id));
     },
-    onChange: (event, type) => {
-      dispatch(
-        fieldActions.docInputChange(event.target.name, event.target.value, type)
-      );
-    },
-    onRichTextChange: (id, text, type) => {
+    onChange: (id, text, type) => {
       dispatch(fieldActions.docInputChange(id, text, type));
     },
     onTitleChange: event => {

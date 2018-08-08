@@ -1,6 +1,6 @@
 const { fromJS } = require('immutable');
 const requestor = require('@edgeguideab/client-request');
-const { getPrefix } = require('./utilities');
+const { getPrefix, markdownToHtml, htmlToMarkdown } = require('./utilities');
 const config = require('config.json');
 
 export const addField = field => {
@@ -17,7 +17,8 @@ export const addField = field => {
           value: '',
           label: 'Encrypted Text',
           error: null,
-          id: nextID
+          id: nextID,
+          format: 'html'
         };
         fields = fields.push(fromJS(newField));
         return dispatch({
@@ -31,7 +32,8 @@ export const addField = field => {
           value: '',
           label: 'Text',
           error: null,
-          id: nextID
+          id: nextID,
+          format: 'html'
         };
         fields = fields.push(fromJS(newField));
         return dispatch({
@@ -260,6 +262,46 @@ export const onHideElement = id => {
   };
 };
 
+export function convertFormat(id, type, format) {
+  return (dispatch, getState) => {
+    const state = getState();
+    const currentView = state.navigation.get('currentView');
+    const { view, prefix } = getPrefix(currentView);
+    const field = state[view].getIn(['docFields', type + 's']);
+
+    if (!field)
+      return dispatch({
+        type: `${prefix}_CONVERT_FIELD_ERROR`,
+        payload: 'Unable to change format.'
+      });
+
+    const updatedFields = field.map(text => {
+      if (text.get('id') === id) {
+        const value =
+          format === 'html'
+            ? markdownToHtml(text.get('value'))
+            : htmlToMarkdown(text.get('value'));
+        return text
+          .set('value', value)
+          .set('format', format === 'html' ? 'html' : 'markdown');
+      } else {
+        return text;
+      }
+    });
+
+    if (type === 'text')
+      return dispatch({
+        type: `${prefix}_CONVERTED_TEXT`,
+        payload: updatedFields
+      });
+    else
+      return dispatch({
+        type: `${prefix}_CONVERTED_ENCRYPTED_TEXT`,
+        payload: updatedFields
+      });
+  };
+}
+
 export default {
   addField,
   removeField,
@@ -268,5 +310,6 @@ export default {
   updateFieldPositon,
   clearSimilarDocuments,
   onDrop,
-  onHideElement
+  onHideElement,
+  convertFormat
 };

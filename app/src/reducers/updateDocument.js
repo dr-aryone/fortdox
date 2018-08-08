@@ -26,13 +26,14 @@ let initialState = fromJS({
       data: null,
       type: null
     },
-    changelog: null,
+    versions: null,
     nextID: 0
   },
   error: null,
   isLoading: false,
   similarDocuments: [],
-  elementToHide: null
+  elementToHide: null,
+  showVersionPanel: undefined
 });
 
 const form = (state = initialState, action) => {
@@ -51,7 +52,7 @@ const form = (state = initialState, action) => {
             .set('list', fromJS(action.tags)),
           attachments: fromJS(action.attachments),
           files: action.files,
-          changelog: fromJS(action.changelog),
+          versions: fromJS(action.versions),
           nextID: fromJS(action.nextID)
         }),
         oldDocFields: state.get('docFields').merge({
@@ -62,13 +63,26 @@ const form = (state = initialState, action) => {
             .getIn(['docFields', 'tags'])
             .set('list', fromJS(action.tags)),
           attachments: fromJS(action.attachments),
-          changelog: fromJS(action.changelog),
+          versions: fromJS(action.versions),
           nextID: fromJS(action.nextID)
         }),
         isLoading: false,
         searchField: {
           show: false
         }
+      });
+    case 'INSERT_DOCUMENT_VERSION':
+      return state.merge({
+        docFields: state.get('docFields').merge({
+          title: fromJS(action.payload.title),
+          encryptedTexts: fromJS(action.payload.encryptedTexts),
+          texts: fromJS(action.payload.texts),
+          tags: state
+            .getIn(['docFields', 'tags'])
+            .set('list', fromJS(action.payload.tags)),
+          attachments: fromJS(action.payload.attachments),
+          nextID: fromJS(action.payload.nextID)
+        })
       });
     case 'OPEN_DOCUMENT_ERROR':
       return state.set('isLoading', false).set('error', fromJS(action.payload));
@@ -77,10 +91,12 @@ const form = (state = initialState, action) => {
         .setIn(['docFields', 'title', 'value'], fromJS(action.payload))
         .setIn(['docFields', 'title', 'error'], null)
         .set('checkFields', false);
+    case 'UPDATE_DOC_CONVERTED_ENCRYPTED_TEXT':
     case 'UPDATE_DOC_INPUT_CHANGE_ENCRYPTED_TEXT':
       return state
         .setIn(['docFields', 'encryptedTexts'], fromJS(action.payload))
         .set('checkFields', false);
+    case 'UPDATE_DOC_CONVERTED_TEXT':
     case 'UPDATE_DOC_INPUT_CHANGE_TEXT':
       return state
         .setIn(['docFields', 'texts'], fromJS(action.payload))
@@ -126,7 +142,7 @@ const form = (state = initialState, action) => {
     case 'UPDATE_DOC_GET_OLD_TAGS_SUCCESS':
       return state.setIn(['docFields', 'tags', 'old'], fromJS(action.payload));
     case 'UPDATE_DOCUMENT_START':
-      return state.set('isLoading', true);
+      return state.set('isLoading', true).set('showVersionPanel', false);
     case 'UPDATE_DOCUMENT_FAIL': {
       let encryptedTexts = state.getIn(['docFields', 'encryptedTexts']);
       encryptedTexts.forEach((entry, index) => {
@@ -254,6 +270,8 @@ const form = (state = initialState, action) => {
       return state.set('fieldsChecked', true);
     case 'UPDATE_DOC_UNCHECK_FIELD':
       return state.set('checkFields', false);
+    case 'TOGGLE_VERSION_HISTORY':
+      return state.set('showVersionPanel', action.payload);
     case 'LOGOUT':
     case 'SESSION_EXPIRED':
       return initialState;
