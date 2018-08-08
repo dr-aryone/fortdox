@@ -10,7 +10,7 @@ module.exports = {
 
   down: function(queryInterface, Sequelize) {
     return queryInterface.sequelize.query(
-      'UPDATE organizations SET indexName = \'\''
+      'UPDATE organizations SET indexName = NULL'
     );
   }
 };
