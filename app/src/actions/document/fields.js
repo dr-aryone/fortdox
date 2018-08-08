@@ -279,11 +279,11 @@ export function convertFormat(id, type, format) {
       if (text.get('id') === id) {
         const value =
           format === 'html'
-            ? htmlToMarkdown(text.get('value'))
-            : markdownToHtml(text.get('value'));
+            ? markdownToHtml(text.get('value'))
+            : htmlToMarkdown(text.get('value'));
         return text
           .set('value', value)
-          .set('format', format === 'html' ? 'markdown' : 'html');
+          .set('format', format === 'html' ? 'html' : 'markdown');
       } else {
         return text;
       }

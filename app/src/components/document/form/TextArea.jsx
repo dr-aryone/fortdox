@@ -56,6 +56,12 @@ class TextArea extends Component {
     };
   }
 
+  componentDidUpdate() {
+    if (this.props.field.get('format') !== this.state.format) {
+      this.props.onConvert(this.state.id, this.state.type, this.state.format);
+    }
+  }
+
   onDeleteField(field) {
     if (field.get('value').trim() === '')
       return this.props.onRemoveField(field.get('id'));
@@ -72,7 +78,6 @@ class TextArea extends Component {
   }
 
   toggleEditor() {
-    this.props.onConvert(this.state.id, this.state.type, this.state.format);
     this.setState({
       format: this.state.format === 'html' ? 'markdown' : 'html'
     });

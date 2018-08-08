@@ -141,7 +141,7 @@ class RichText extends Component {
       <div>
         {this.state.showLinkDocumentModal && linkDocumentModal}
         <Editor
-          initialValue={this.props.text}
+          value={this.props.text}
           init={{
             setup: this.setup,
             style_formats,
