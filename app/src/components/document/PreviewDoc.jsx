@@ -85,7 +85,7 @@ export class PreviewDoc extends React.Component {
               <h3>Created</h3>
             </label>
             <div className='text'>
-              {`${formatDate(created.get('createdAt'))}} by
+              {`${formatDate(created.get('createdAt'))} by
               ${created.get('user')}`}
             </div>
           </div>

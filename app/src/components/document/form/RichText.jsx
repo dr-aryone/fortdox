@@ -41,7 +41,6 @@ class RichText extends Component {
     this.onCloseLinkDocumentModal = this.onCloseLinkDocumentModal.bind(this);
     this.onLinkButtonClick = this.onLinkButtonClick.bind(this);
     this.onCloseLinkModal = this.onCloseLinkModal.bind(this);
-    this.closeLinkDocumentModal = this.closeLinkDocumentModal.bind(this);
     this.handleEditorChange = this.handleEditorChange.bind(this);
     this.state = {
       showLinkDocumentModal: false,
