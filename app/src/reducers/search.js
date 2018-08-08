@@ -54,6 +54,7 @@ const search = (state = initialState, action) => {
       });
     case 'UPDATE_DOCUMENT_SUCCESS':
     case 'CREATE_DOCUMENT_SUCCESS':
+      return initialState.set('message', fromJS(action.payload.message));
     case 'DELETE_DOCUMENT_SUCCESS':
       return initialState.set('message', fromJS(action.payload));
     case 'DELETE_DOCUMENT_ERROR':
@@ -62,6 +63,8 @@ const search = (state = initialState, action) => {
     case 'LOGOUT':
     case 'VERIFY_LOGIN_CREDS_SUCCESS':
       return initialState;
+    case 'PREVIEW_DOC_PREVIEW_ATTACHMENT_FAIL':
+      return state.set('message', null);
     default:
       return state;
   }

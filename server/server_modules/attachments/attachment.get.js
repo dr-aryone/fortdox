@@ -41,6 +41,13 @@ async function getAttachment(req, res) {
       'New type of file',
       attachment
     );
+    if (!attachment.path) {
+      logger.error(
+        '/document/id/attachment/attachmentIndex',
+        `Attachment ${attachment.id}, ${attachment.name} is missing path`
+      );
+      return res.status(500).send();
+    }
     res.sendFile(attachment.path, {}, error => {
       if (error) {
         logger.error(

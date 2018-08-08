@@ -87,7 +87,6 @@ class CreateDocView extends Component {
       onAddTag,
       onRemoveTag,
       onChange,
-      onRichTextChange,
       onTitleChange,
       onSuggestTags,
       onCreate,
@@ -101,7 +100,8 @@ class CreateDocView extends Component {
       similarDocuments,
       onCloseSimilarDocuments,
       onSimilarDocumentClick,
-      onUnCheckField
+      onUnCheckField,
+      onConvert
     } = this.props;
 
     let editedDialog = (
@@ -170,7 +170,6 @@ class CreateDocView extends Component {
             onCloseSimilarDocuments={onCloseSimilarDocuments}
             onSimilarDocumentClick={onSimilarDocumentClick}
             onChange={onChange}
-            onRichTextChange={onRichTextChange}
             onTitleChange={onTitleChange}
             onAddTag={onAddTag}
             onRemoveTag={onRemoveTag}
@@ -184,6 +183,7 @@ class CreateDocView extends Component {
             onDownloadAttachment={onDownloadAttachment}
             onDrop={onDrop}
             onHideElement={onHideElement}
+            onConvert={onConvert}
           >
             <div className='doc-buttons'>
               <button onClick={() => this.checkEdits(docFields)} type='button'>

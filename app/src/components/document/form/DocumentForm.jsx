@@ -5,7 +5,7 @@ const Tags = require('./Tags');
 const BottomPanel = require('./BottomPanel');
 const Attachments = require('./Attachments');
 const SimilarDocumentsList = require('./SimilarDocumentsList');
-const Changelog = require('./Changelog');
+const MetaData = require('./MetaData');
 
 const DocumentForm = ({
   titleAutofocus,
@@ -15,7 +15,7 @@ const DocumentForm = ({
   onDrop,
   onHideElement,
   elementToHide,
-  changelog,
+  versions,
   onChange,
   onRichTextChange,
   onTitleChange,
@@ -31,7 +31,9 @@ const DocumentForm = ({
   children: buttons,
   similarDocuments,
   onCloseSimilarDocuments,
-  onSimilarDocumentClick
+  onSimilarDocumentClick,
+  onToggleVersionPanel,
+  onConvert
 }) => {
   let title = docFields.get('title');
   let tags = docFields.get('tags');
@@ -47,7 +49,7 @@ const DocumentForm = ({
               type='text'
               key='title'
               onChange={event => {
-                onChange(event, 'title');
+                onChange(event.target.name, event.target.value, 'title');
                 onTitleChange(event);
               }}
             />
@@ -66,6 +68,7 @@ const DocumentForm = ({
             onDrop={onDrop}
             onHideElement={onHideElement}
             elementToHide={elementToHide}
+            onConvert={onConvert}
           />
           <BottomPanel onAddField={onAddField} />
         </div>
@@ -86,8 +89,11 @@ const DocumentForm = ({
           onPreviewAttachment={onPreviewAttachment}
           onDownloadAttachment={onDownloadAttachment}
         />
-        {changelog ? (
-          <Changelog changelog={docFields.get('changelog')} />
+        {versions ? (
+          <MetaData
+            versions={versions}
+            onToggleVersionPanel={onToggleVersionPanel}
+          />
         ) : null}
       </div>
     </form>

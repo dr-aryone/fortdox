@@ -50,8 +50,16 @@ class TextArea extends Component {
     this.closeDeleteDialog = this.closeDeleteDialog.bind(this);
     this.state = {
       showDeleteDialog: false,
-      showRaw: false
+      format: this.props.field.get('format'),
+      id: this.props.field.get('id'),
+      type: this.props.field.get('encrypted') ? 'encryptedText' : 'text'
     };
+  }
+
+  componentDidUpdate() {
+    if (this.props.field.get('format') !== this.state.format) {
+      this.props.onConvert(this.state.id, this.state.type, this.state.format);
+    }
   }
 
   onDeleteField(field) {
@@ -71,7 +79,7 @@ class TextArea extends Component {
 
   toggleEditor() {
     this.setState({
-      showRaw: !this.state.showRaw
+      format: this.state.format === 'html' ? 'markdown' : 'html'
     });
   }
 
@@ -80,17 +88,17 @@ class TextArea extends Component {
       field,
       elementToHide,
       onChange,
-      onRichTextChange,
       onRemoveField,
       connectDragSource,
       connectDropTarget
     } = this.props;
 
+    const type = field.get('encrypted') ? 'encryptedText' : 'text';
     const textArea = (
       <textarea
         name={field.get('id')}
         onChange={event =>
-          onChange(event, field.get('encrypted') ? 'encryptedText' : 'text')
+          this.props.onChange(event.target.name, event.target.value, type)
         }
         value={field.get('value')}
       />
@@ -98,10 +106,10 @@ class TextArea extends Component {
 
     const richText = (
       <RichText
-        onRichTextChange={onRichTextChange}
-        text={field.get('value')}
         id={field.get('id')}
-        type={field.get('encrypted') ? 'encryptedText' : 'text'}
+        onChange={onChange}
+        text={field.get('value')}
+        type={type}
       />
     );
 
@@ -156,19 +164,19 @@ class TextArea extends Component {
               </i>
             </label>
             <div className='textarea'>
-              {this.state.showRaw ? textArea : richText}
+              {this.state.format === 'html' ? richText : textArea}
               <div className='toggle-editor'>
                 <button
                   onClick={() => this.toggleEditor()}
                   type='button'
-                  disabled={!this.state.showRaw}
+                  disabled={this.state.format === 'html'}
                 >
                   Rich Text
                 </button>
                 <button
                   onClick={() => this.toggleEditor()}
                   type='button'
-                  disabled={this.state.showRaw}
+                  disabled={this.state.format === 'markdown'}
                 >
                   Raw
                 </button>
