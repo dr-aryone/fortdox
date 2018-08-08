@@ -490,10 +490,11 @@ export function insertDocumentVersion(version) {
     version.get('encrypted_texts').forEach(entry => {
       encryptedTexts.push(
         fromJS({
-          value: entry.get('text'),
+          value: markdownToHtml(entry.get('text')),
           id: entry.get('id'),
           label: 'Encrypted Text',
-          error: null
+          error: null,
+          format: 'html'
         })
       );
       if (entry.get('id') > nextID) nextID = entry.get('id');
@@ -501,10 +502,11 @@ export function insertDocumentVersion(version) {
     version.get('texts').forEach(entry => {
       texts.push(
         fromJS({
-          value: entry.get('text'),
+          value: markdownToHtml(entry.get('text')),
           id: entry.get('id'),
           label: 'Text',
-          error: null
+          error: null,
+          format: 'html'
         })
       );
       if (entry.get('id') > nextID) nextID = entry.get('id');
