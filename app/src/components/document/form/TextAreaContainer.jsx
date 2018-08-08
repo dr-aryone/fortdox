@@ -14,11 +14,11 @@ class TextAreaContainer extends Component {
       docFields,
       onRemoveField,
       onChange,
-      onRichTextChange,
       onUpdateId,
       onDrop,
       onHideElement,
-      elementToHide
+      elementToHide,
+      onConvert
     } = this.props;
     let encryptedTextFields = docFields
       .get('encryptedTexts')
@@ -32,12 +32,12 @@ class TextAreaContainer extends Component {
           field={field}
           key={index}
           onChange={onChange}
-          onRichTextChange={onRichTextChange}
           onRemoveField={onRemoveField}
           onUpdateId={onUpdateId}
           onDrop={onDrop}
           onHideElement={onHideElement}
           elementToHide={elementToHide}
+          onConvert={onConvert}
         />
       ));
   }

@@ -1,9 +1,8 @@
 const uuid = require('uuid');
 const logger = require('app/logger');
-const findRemovedAttachments = require('./updateUtil');
 
 module.exports = client => {
-  const update = ({ query, organizationIndex }) => {
+  const update = ({ query, organizationIndex, user }) => {
     return new Promise(async (resolve, reject) => {
       let response;
 
@@ -13,20 +12,56 @@ module.exports = client => {
           type: 'fortdox_document',
           id: query.id
         });
-        const newTypeofAttachments = current._source.attachments.filter(
-          qa => qa.id !== undefined
+
+        const versions = current._source.versions;
+        const currentAttachments = current._source.attachments;
+
+        //First check all attachments that are equal and give them
+        const unchangedAttachments = [];
+        query.attachments.forEach(qa => {
+          const found = currentAttachments.find(ca => ca.id === qa.id);
+          if (found) {
+            unchangedAttachments.push(found);
+          }
+        });
+
+        logger.verbose('UnchangedAttachments', unchangedAttachments);
+
+        //check fi there is any old type of attachments
+        let oldType = query.attachments.filter(oldAttachment => {
+          if (!oldAttachment.id) {
+            return oldAttachment;
+          }
+        });
+
+        //check if we have any attachments that is not in the current one...
+        //i.e this should only happen if someone restored an older version.
+        const attachmentDiff = query.attachments.filter(a => {
+          const found = currentAttachments.find(ca => ca.id === a.id);
+          if (!found) {
+            return a;
+          }
+        });
+        logger.verbose('Attachment diff', attachmentDiff);
+
+        //collect all attachments in all versions..
+        let allAttachments = [];
+        versions.forEach(v => {
+          allAttachments = allAttachments.concat(v.attachments);
+        });
+        //Unique
+        allAttachments = allAttachments.filter(
+          (e, i) => allAttachments.findIndex(a => a['id'] === e['id']) === i
         );
 
-        const toRemove = findRemovedAttachments(
-          newTypeofAttachments,
-          query.attachments
-        );
+        let restoredAttachments = allAttachments.filter(aa => {
+          if (attachmentDiff.find(ad => ad.id === aa.id)) {
+            return aa;
+          }
+        });
+        logger.verbose('Restored attachments', restoredAttachments);
 
-        logger.info(
-          'ES UPDATE',
-          `Number of attachment files to remove ${toRemove.length}`
-        );
-        query.attachments = query.attachments.filter(attachment => {
+        oldType = oldType.filter(attachment => {
           if (attachment.file) {
             attachment.name = `${uuid()}-${attachment.name}`;
             return attachment;
@@ -35,12 +70,30 @@ module.exports = client => {
             current._source.attachments.find(a => a.name === attachment.name) ||
             {};
           attachment.file = storedAttachment.file;
-          attachment.path = storedAttachment.path;
-
           return attachment;
         });
+        logger.verbose('Old type of attachments', oldType);
 
-        query.attachments = query.attachments.concat(query.files);
+        const updatedAttachments = unchangedAttachments
+          .concat(restoredAttachments)
+          .concat(query.files)
+          .concat(oldType);
+
+        logger.verbose('All attachments', updatedAttachments);
+
+        let doc = {
+          title: query.title,
+          encrypted_texts: query.encryptedTexts,
+          texts: query.texts,
+          tags: query.tags,
+          attachments: updatedAttachments
+        };
+
+        let newVersion = Object.assign(
+          { user: user, createdAt: new Date() },
+          doc
+        );
+        doc.versions = current._source.versions.concat(newVersion);
 
         response = await client.update({
           index: organizationIndex,
@@ -48,16 +101,10 @@ module.exports = client => {
           id: query.id,
           refresh: true,
           body: {
-            doc: {
-              title: query.title,
-              encrypted_texts: query.encryptedTexts,
-              texts: query.texts,
-              tags: query.tags,
-              attachments: query.attachments
-            }
+            doc: doc
           }
         });
-        response.removed = toRemove;
+
         return resolve(response);
       } catch (error) {
         console.error(error);

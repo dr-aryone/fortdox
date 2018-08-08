@@ -1,4 +1,6 @@
 import DocumentForm from './form/DocumentForm';
+import VersionHistory from './form/VersionHistory';
+import { markdownToHtml } from 'actions/document/utilities';
 const React = require('react');
 const LoaderOverlay = require('components/general/LoaderOverlay');
 const ErrorBox = require('components/general/ErrorBox');
@@ -75,6 +77,14 @@ class UpdateDocView extends React.Component {
     if (encryptedTexts.size === oldEncryptedTexts.size) {
       if (
         encryptedTexts.find((text, index) => {
+          if (text.get('format') === 'markdown')
+            return (
+              markdownToHtml(text.get('value')).trim() !==
+              oldEncryptedTexts
+                .get(index)
+                .get('value')
+                .trim()
+            );
           return (
             text.get('value').trim() !==
             oldEncryptedTexts
@@ -90,6 +100,14 @@ class UpdateDocView extends React.Component {
     if (texts.size === oldTexts.size) {
       if (
         texts.find((text, index) => {
+          if (text.get('format') === 'markdown')
+            return (
+              markdownToHtml(text.get('value')).trim() !==
+              oldTexts
+                .get(index)
+                .get('value')
+                .trim()
+            );
           return (
             text.get('value').trim() !==
             oldTexts
@@ -105,7 +123,7 @@ class UpdateDocView extends React.Component {
     if (tags.size === oldTags.size) {
       if (
         tags.find((tag, index) => {
-          return tag === oldTags.get(index);
+          return tag !== oldTags.get(index);
         })
       )
         return true;
@@ -150,7 +168,6 @@ class UpdateDocView extends React.Component {
       onAddTag,
       onRemoveTag,
       onChange,
-      onRichTextChange,
       onSuggestTags,
       onUpdate,
       onDelete,
@@ -167,7 +184,11 @@ class UpdateDocView extends React.Component {
       onSimilarDocumentClick,
       onDrop,
       onHideElement,
-      elementToHide
+      elementToHide,
+      showVersionPanel,
+      onToggleVersionPanel,
+      onInsertDocumentVersion,
+      onConvert
     } = this.props;
 
     const deleteDialog = (
@@ -243,64 +264,75 @@ class UpdateDocView extends React.Component {
         {deleteDialog}
         {editedDialog}
         <div
-          className={`update-view inner-container ${isLoading ? 'hide' : ''}`}
+          className={`update-view inner-container document-panel ${
+            showVersionPanel ? 'small' : 'full'
+          } `}
         >
-          <ErrorBox errorMsg={error} />
-          <h1 className='doc-header'>
-            <button type='button' onClick={() => this.checkEdits(docFields)}>
-              Back
-            </button>
-            Update Document
-          </h1>
-          <DocumentForm
-            onUpdateId={onUpdateId}
-            docFields={docFields}
-            changelog={docFields.get('changelog')}
-            similarDocuments={similarDocuments}
-            onCloseSimilarDocuments={onCloseSimilarDocuments}
-            onSimilarDocumentClick={onSimilarDocumentClick}
-            onChange={onChange}
-            onRichTextChange={onRichTextChange}
-            onTitleChange={onTitleChange}
-            onAddTag={onAddTag}
-            onRemoveTag={onRemoveTag}
-            onSuggestTags={onSuggestTags}
-            onSubmit={onUpdate}
-            onAddField={onAddField}
-            onRemoveField={onRemoveField}
-            onAddAttachment={onAddAttachment}
-            onRemoveAttachment={onRemoveAttachment}
-            onPreviewAttachment={onPreviewAttachment}
-            onDownloadAttachment={onDownloadAttachment}
-            onDrop={onDrop}
-            onHideElement={onHideElement}
-            elementToHide={elementToHide}
-          >
-            <div className='doc-buttons update'>
-              <button
-                onClick={this.openDeleteDialog}
-                type='button'
-                className='warning'
-              >
-                Delete
+          <div className={`${showVersionPanel ? 'document-container' : ''}`}>
+            <ErrorBox errorMsg={error} />
+            <h1 className='doc-header'>
+              <button type='button' onClick={() => this.checkEdits(docFields)}>
+                Back
               </button>
-              <div>
+              Update Document
+            </h1>
+            <DocumentForm
+              onUpdateId={onUpdateId}
+              docFields={docFields}
+              versions={docFields.get('versions')}
+              similarDocuments={similarDocuments}
+              onCloseSimilarDocuments={onCloseSimilarDocuments}
+              onSimilarDocumentClick={onSimilarDocumentClick}
+              onChange={onChange}
+              onTitleChange={onTitleChange}
+              onAddTag={onAddTag}
+              onRemoveTag={onRemoveTag}
+              onSuggestTags={onSuggestTags}
+              onSubmit={onUpdate}
+              onAddField={onAddField}
+              onRemoveField={onRemoveField}
+              onAddAttachment={onAddAttachment}
+              onRemoveAttachment={onRemoveAttachment}
+              onPreviewAttachment={onPreviewAttachment}
+              onDownloadAttachment={onDownloadAttachment}
+              onDrop={onDrop}
+              onHideElement={onHideElement}
+              elementToHide={elementToHide}
+              onToggleVersionPanel={onToggleVersionPanel}
+              onConvert={onConvert}
+            >
+              <div className='doc-buttons update'>
                 <button
-                  onClick={() => this.checkEdits(docFields)}
+                  onClick={this.openDeleteDialog}
                   type='button'
+                  className='warning'
                 >
-                  Cancel
+                  Delete
                 </button>
-                <button
-                  onClick={onUpdate}
-                  type='submit'
-                  disabled={!this.state.hasBeenEdited}
-                >
-                  Update
-                </button>
+                <span>
+                  <button
+                    type='button'
+                    onClick={() => this.checkEdits(docFields)}
+                  >
+                    Back
+                  </button>
+                  <button
+                    onClick={onUpdate}
+                    type='submit'
+                    disabled={!this.state.hasBeenEdited}
+                  >
+                    Update
+                  </button>
+                </span>
               </div>
-            </div>
-          </DocumentForm>
+            </DocumentForm>
+          </div>
+          <VersionHistory
+            showVersionPanel={showVersionPanel}
+            versions={docFields.get('versions')}
+            onToggleVersionPanel={onToggleVersionPanel}
+            onInsertDocumentVersion={onInsertDocumentVersion}
+          />
         </div>
       </div>
     );

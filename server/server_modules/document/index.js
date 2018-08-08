@@ -58,14 +58,28 @@ async function get(req, res) {
 
   doc._source.encrypted_texts = doc._source.encrypted_texts || [];
   doc._source.attachments = doc._source.attachments || [];
-
   doc._source.tags = doc._source.tags || [];
+
   try {
     doc._source.encrypted_texts = await decryptDocuments(
       doc._source.encrypted_texts,
       privateKey,
       encryptedMasterPassword
     );
+
+    let versions = [];
+    for (let index in doc._source.versions) {
+      let v = doc._source.versions[index];
+      if (v.encrypted_texts) {
+        v.encrypted_texts = await decryptDocuments(
+          v.encrypted_texts,
+          privateKey,
+          encryptedMasterPassword
+        );
+      }
+      versions.push(v);
+    }
+    doc._source.versions = versions;
   } catch (error) {
     logger.error(
       '/document/id',
@@ -75,20 +89,8 @@ async function get(req, res) {
     return res.status(500).send({ msg: 'Internal Server Error' });
   }
 
-  let logentries;
-  try {
-    logentries = await changelog.get(doc._id);
-  } catch (error) {
-    logger.error(
-      '/document/id',
-      `Cannot get logentries for documentid ${doc._id}`,
-      error
-    );
-  }
-
   let response = {
-    ...doc,
-    logentries
+    ...doc
   };
 
   res.send(response);
@@ -228,7 +230,11 @@ async function create(req, res) {
   let response;
 
   try {
-    response = await es.addToIndex({ query, organizationIndex });
+    response = await es.addToIndex({
+      query,
+      organizationIndex,
+      user: req.session.email
+    });
     logger.info(
       '/document POST',
       `User ${req.session.email} created a document with title ${
@@ -244,22 +250,7 @@ async function create(req, res) {
     return res.status(500).send(error);
   }
 
-  try {
-    await changelog.addLogEntry(response._id, req.session.email);
-    logger.info(
-      '/document POST',
-      `Changelog entry for document ${req.body.title} with id ${response._id}`
-    );
-    logger.info('response', response);
-    res.send({ _id: response._id });
-  } catch (error) {
-    logger.error(
-      '/document POST',
-      `Could not add changelog entry to for document ${response._id}`,
-      error
-    );
-    return res.status(500).send(error);
-  }
+  res.send({ _id: response._id });
 }
 
 async function update(req, res) {
@@ -329,18 +320,14 @@ async function update(req, res) {
   };
   let response;
   try {
-    response = await es.update({ query, organizationIndex });
+    response = await es.update({
+      query,
+      organizationIndex,
+      user: req.session.email
+    });
     logger.info(
       '/document/id PATCH',
       `User ${email} updated document ${query.id}`
-    );
-    const filesToRemove = response.removed.filter(a => a.path != undefined);
-    await removeFiles(filesToRemove);
-    response.removed = null;
-    await changelog.addLogEntry(req.params.id, email);
-    logger.info(
-      '/document/id PATCH',
-      `Added changelog entry for ${email}'s update of document ${req.params.id}`
     );
   } catch (error) {
     logger.error(
@@ -359,7 +346,7 @@ async function removeFiles(files) {
       await removeFile(file.path);
       logger.verbose(
         '/document/id PATCH',
-        `Removed file ${file.name} : ${file.id}`
+        `Removed file ${file.name} : ${file.id} : ${file.path}`
       );
     });
   } catch (error) {
@@ -427,25 +414,46 @@ async function deleteDocument(req, res) {
     res.status(400).send(expectations.errors());
   } else {
     try {
-      let attachments = await es.getAttachment({
-        organizationIndex: query.organizationIndex,
-        documentId: query.id
-      });
-
-      attachments = attachments.filter(a => a.path !== undefined);
-      logger.verbose('DELETE ATTACHMENTS', attachments);
+      const attachments = await findAllAttachments(
+        query.id,
+        query.organizationIndex
+      );
       response = await es.deleteDocument(query);
       logger.info(
         '/document/id DELETE',
         `User ${req.session.email} deleted document ${req.params.id}`
       );
-
       await removeFiles(attachments);
-      await changelog.remove(req.params.id);
     } catch (error) {
       logger.error('/document/id DELETE', 'Cannot delete document!', error);
       return res.status(500).send();
     }
     return res.send(response);
+  }
+}
+
+async function findAllAttachments(doc, org) {
+  try {
+    let current = await es.client.get({
+      index: org,
+      type: 'fortdox_document',
+      id: doc
+    });
+
+    current = current._source;
+
+    let paths = new Set();
+    current.versions.forEach(version => {
+      version.attachments.forEach(a => {
+        if (a.path) paths.add(JSON.stringify(a));
+      });
+    });
+    return [...paths].map(p => JSON.parse(p));
+  } catch (error) {
+    logger.error(
+      '/document/id DELETE',
+      'Could not find all attachments corresponding to document',
+      doc
+    );
   }
 }

@@ -35,11 +35,24 @@ export const getDevices = () => {
       }
     }
 
+    let warningText = null;
+    let maximumReached = false;
+    if (response.body.limit === response.body.devices.length)
+      maximumReached = true;
+    if (response.body.limit < response.body.devices.length) {
+      warningText = `You have reached over the number of maximum devices of ${
+        response.body.limit
+      }.`;
+      maximumReached = true;
+    }
+
     dispatch({
       type: 'GET_DEVICES_SUCCESS',
       payload: {
         deviceId,
-        devices: response.body.devices
+        devices: response.body.devices,
+        warningText,
+        maximumReached
       }
     });
   };
@@ -112,14 +125,14 @@ export const getQRCode = () => {
       switch (error.status) {
         case 400:
           return dispatch({
-            type: 'INVITE_DEVICE_ERROR',
+            type: 'GET_QR_CODE_ERROR',
             payload: 'Bad request. Please try again.'
           });
         case 408:
         case 500:
         default:
           return dispatch({
-            type: 'INVITE_DEVICE_ERROR',
+            type: 'GET_QR_CODE_ERROR',
             payload: 'Unable to connect to server. Please try again later.'
           });
       }

@@ -1,4 +1,4 @@
-import { getPrefix } from './utilities';
+import { getPrefix, htmlToMarkdown, markdownToHtml } from './utilities';
 import { changeView } from 'actions';
 const { fromJS } = require('immutable');
 const requestor = require('@edgeguideab/client-request');
@@ -11,7 +11,9 @@ export default {
   deleteDocument,
   openDocument,
   hasChecked,
-  unCheck
+  unCheck,
+  toggleVersionPanel,
+  insertDocumentVersion
 };
 
 export function createDocument() {
@@ -40,14 +42,22 @@ export function createDocument() {
     let tags = docFields.getIn(['tags', 'list']).toJS();
     let attachments = [];
     docFields.getIn(['encryptedTexts']).forEach(field => {
+      const value =
+        field.get('format') === 'html'
+          ? htmlToMarkdown(field.get('value'))
+          : field.get('value');
       encryptedTexts.push({
-        text: field.get('value'),
+        text: value,
         id: field.get('id')
       });
     });
     docFields.getIn(['texts']).forEach(field => {
+      const value =
+        field.get('format') === 'html'
+          ? htmlToMarkdown(field.get('value'))
+          : field.get('value');
       texts.push({
-        text: field.get('value'),
+        text: value,
         id: field.get('id')
       });
     });
@@ -66,10 +76,10 @@ export function createDocument() {
     });
 
     form.set('title', title);
-
     form.set('encryptedTexts', JSON.stringify(encryptedTexts));
     form.set('texts', JSON.stringify(texts));
     form.set('tags', tags);
+
     let response;
     try {
       response = await requestor.post(`${config.server}/document`, {
@@ -97,12 +107,31 @@ export function createDocument() {
 
     return dispatch(
       openDocument(response.body._id, true, () => {
-        let state = getState();
-        let docFields = state.updateDocument.get('docFields');
+        const state = getState();
+        const docFields = state.updateDocument.get('docFields');
+        const encryptedTexts = docFields
+          .get('encryptedTexts')
+          .map(text =>
+            text
+              .set('value', htmlToMarkdown(text.get('value')))
+              .set('format', 'markdown')
+          );
+        const texts = docFields
+          .get('texts')
+          .map(text =>
+            text
+              .set('value', htmlToMarkdown(text.get('value')))
+              .set('format', 'markdown')
+          );
+
         return dispatch({
           type: 'CREATE_DOCUMENT_SUCCESS',
-          payload: 'Document has been created!',
-          docFields
+          payload: {
+            docFields,
+            encryptedTexts,
+            texts,
+            message: 'Document has been created!'
+          }
         });
       })
     );
@@ -133,14 +162,22 @@ export function updateDocument() {
     let tags = newDoc.getIn(['tags', 'list']).toJS();
     let attachments = [];
     newDoc.getIn(['encryptedTexts']).forEach(field => {
+      const value =
+        field.get('format') === 'html'
+          ? htmlToMarkdown(field.get('value'))
+          : field.get('value');
       encryptedTexts.push({
-        text: field.get('value'),
+        text: value,
         id: field.get('id')
       });
     });
     newDoc.getIn(['texts']).forEach(field => {
+      const value =
+        field.get('format') === 'html'
+          ? htmlToMarkdown(field.get('value'))
+          : field.get('value');
       texts.push({
-        text: field.get('value'),
+        text: value,
         id: field.get('id')
       });
     });
@@ -195,11 +232,28 @@ export function updateDocument() {
       openDocument(oldDoc.get('_id'), true, () => {
         let state = getState();
         let docFields = state.updateDocument.get('docFields');
-
+        const encryptedTexts = docFields
+          .get('encryptedTexts')
+          .map(text =>
+            text
+              .set('value', htmlToMarkdown(text.get('value')))
+              .set('format', 'markdown')
+          );
+        const texts = docFields
+          .get('texts')
+          .map(text =>
+            text
+              .set('value', htmlToMarkdown(text.get('value')))
+              .set('format', 'markdown')
+          );
         return dispatch({
           type: 'UPDATE_DOCUMENT_SUCCESS',
-          payload: 'Document has been updated!',
-          docFields
+          payload: {
+            message: 'Document has been updated!',
+            encryptedTexts,
+            texts,
+            docFields
+          }
         });
       })
     );
@@ -278,10 +332,11 @@ export function openDocument(id, skipTimeout, showPreview) {
       doc._source.encrypted_texts.forEach(entry => {
         encryptedTexts.push(
           fromJS({
-            value: entry.text,
+            value: markdownToHtml(entry.text),
             id: entry.id,
             label: 'Encrypted Text',
-            error: null
+            error: null,
+            format: 'html'
           })
         );
         if (entry.id > nextID) nextID = entry.id;
@@ -289,10 +344,11 @@ export function openDocument(id, skipTimeout, showPreview) {
       doc._source.texts.forEach(entry => {
         texts.push(
           fromJS({
-            value: entry.text,
+            value: markdownToHtml(entry.text),
             id: entry.id,
             label: 'Text',
-            error: null
+            error: null,
+            format: 'html'
           })
         );
         if (entry.id > nextID) nextID = entry.id;
@@ -319,7 +375,7 @@ export function openDocument(id, skipTimeout, showPreview) {
         tags,
         attachments,
         files,
-        changelog: doc.logentries,
+        versions: doc._source.versions,
         nextID: nextID + 1
       });
       if (showPreview) showPreview();
@@ -336,9 +392,27 @@ export function previewDocument(id, skipTimeout) {
       openDocument(id, skipTimeout, () => {
         let state = getState();
         let docFields = state.updateDocument.get('docFields');
+        const encryptedTexts = docFields
+          .get('encryptedTexts')
+          .map(text =>
+            text
+              .set('value', htmlToMarkdown(text.get('value')))
+              .set('format', 'markdown')
+          );
+        const texts = docFields
+          .get('texts')
+          .map(text =>
+            text
+              .set('value', htmlToMarkdown(text.get('value')))
+              .set('format', 'markdown')
+          );
         return dispatch({
           type: 'PREVIEW_DOCUMENT_SUCCESS',
-          docFields
+          payload: {
+            docFields,
+            encryptedTexts,
+            texts
+          }
         });
       })
     );
@@ -366,7 +440,7 @@ export function checkEmptyDocFields(docFields) {
 }
 
 export function hasChecked(nextView) {
-  return async (dispatch, getState) => {
+  return (dispatch, getState) => {
     const state = getState();
     const currentView = state.navigation.get('currentView');
     const { view, prefix } = getPrefix(currentView);
@@ -381,10 +455,85 @@ export function hasChecked(nextView) {
 }
 
 export function unCheck() {
-  return async (dispatch, getState) => {
+  return (dispatch, getState) => {
     const state = getState();
     const currentView = state.navigation.get('currentView');
     const { prefix } = getPrefix(currentView);
     dispatch({ type: `${prefix}_UNCHECK_FIELD` });
+  };
+}
+
+export function toggleVersionPanel(toggle) {
+  return (dispatch, getState) => {
+    const state = getState();
+    const showVersionPanel = state.updateDocument.get('showVersionPanel');
+    dispatch({
+      type: 'TOGGLE_VERSION_HISTORY',
+      payload: toggle !== undefined ? toggle : !showVersionPanel
+    });
+  };
+}
+
+export function insertDocumentVersion(version) {
+  return dispatch => {
+    let title = {
+      value: version.get('title'),
+      id: 'title',
+      label: 'Title',
+      error: null
+    };
+    let encryptedTexts = [];
+    let texts = [];
+    let tags = [];
+    let attachments = [];
+    let nextID = 0;
+    version.get('encrypted_texts').forEach(entry => {
+      encryptedTexts.push(
+        fromJS({
+          value: markdownToHtml(entry.get('text')),
+          id: entry.get('id'),
+          label: 'Encrypted Text',
+          error: null,
+          format: 'html'
+        })
+      );
+      if (entry.get('id') > nextID) nextID = entry.get('id');
+    });
+    version.get('texts').forEach(entry => {
+      texts.push(
+        fromJS({
+          value: markdownToHtml(entry.get('text')),
+          id: entry.get('id'),
+          label: 'Text',
+          error: null,
+          format: 'html'
+        })
+      );
+      if (entry.get('id') > nextID) nextID = entry.get('id');
+    });
+    version.get('tags').forEach(entry => {
+      tags.push(entry);
+    });
+
+    version.get('attachments').forEach(attachment => {
+      attachments.push({
+        name: attachment.get('name'),
+        id: attachment.get('id'),
+        file: attachment.get('file'),
+        type: attachment.get('file_type')
+      });
+    });
+
+    dispatch({
+      type: 'INSERT_DOCUMENT_VERSION',
+      payload: {
+        title,
+        encryptedTexts,
+        texts,
+        attachments,
+        tags,
+        nextID: nextID + 1
+      }
+    });
   };
 }

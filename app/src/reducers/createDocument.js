@@ -13,7 +13,8 @@ let initialState = fromJS({
         value: '',
         label: 'Encrypted Text',
         error: null,
-        id: 0
+        id: 0,
+        format: 'html'
       }
     ],
     texts: [],
@@ -50,12 +51,16 @@ const form = (state = initialState, action) => {
         .setIn(['docFields', 'title', 'value'], fromJS(action.payload))
         .setIn(['docFields', 'title', 'error'], null)
         .set('checkFields', false);
+    case 'CREATE_DOC_CONVERTED_ENCRYPTED_TEXT':
     case 'CREATE_DOC_INPUT_CHANGE_ENCRYPTED_TEXT':
       return state
         .setIn(['docFields', 'encryptedTexts'], fromJS(action.payload))
         .set('checkFields', false);
+    case 'CREATE_DOC_CONVERTED_TEXT':
     case 'CREATE_DOC_INPUT_CHANGE_TEXT':
-      return state.setIn(['docFields', 'texts'], fromJS(action.payload));
+      return state
+        .setIn(['docFields', 'texts'], fromJS(action.payload))
+        .set('checkFields', false);
     case 'CREATE_DOC_INPUT_CHANGE_TAGS':
       return state.setIn(
         ['docFields', 'tags'],

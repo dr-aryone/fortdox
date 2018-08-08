@@ -102,7 +102,7 @@ h3 {
   border-bottom-color: #fe4a49;
   border-width: 10px; }
 
-.box, .link-document, .doc-mode .modal-inner, .access-table, .main-panel, .search-item, .misc .created, .misc .edited, .misc .input-field, .misc .attachments, .preview, .preview .title .private-key, .list-inner {
+.box, .link-document, .doc-mode .modal-inner, .link-modal, .access-table, .main-panel, .search-item, .misc .created, .misc .edited, .misc .input-field, .misc .attachments, .preview, .preview .title .private-key, .list-inner {
   padding: 15px;
   margin-bottom: 20px;
   box-shadow: 0 2px 2px rgba(0, 0, 0, 0.15), 0 0 2px rgba(0, 0, 0, 0.11);
@@ -110,15 +110,15 @@ h3 {
   border-radius: 1px;
   box-sizing: border-box;
   word-break: break-word; }
-  .box .title, .link-document .title, .doc-mode .modal-inner .title, .access-table .title, .main-panel .title, .search-item .title, .misc .created .title, .misc .edited .title, .misc .input-field .title, .misc .attachments .title, .preview .title, .preview .title .private-key .title, .list-inner .title {
+  .box .title, .link-document .title, .doc-mode .modal-inner .title, .link-modal .title, .access-table .title, .main-panel .title, .search-item .title, .misc .created .title, .misc .edited .title, .misc .input-field .title, .misc .attachments .title, .preview .title, .preview .title .private-key .title, .list-inner .title {
     background-color: #f5f3f3;
     padding: 15px; }
-  .box .text, .link-document .text, .doc-mode .modal-inner .text, .access-table .text, .main-panel .text, .search-item .text, .misc .created .text, .misc .edited .text, .misc .input-field .text, .misc .attachments .text, .preview .text, .preview .title .private-key .text, .list-inner .text {
+  .box .text, .link-document .text, .doc-mode .modal-inner .text, .link-modal .text, .access-table .text, .main-panel .text, .search-item .text, .misc .created .text, .misc .edited .text, .misc .input-field .text, .misc .attachments .text, .preview .text, .preview .title .private-key .text, .list-inner .text {
     padding: 15px;
     margin: 0px; }
-  .box .hide, .link-document .hide, .doc-mode .modal-inner .hide, .access-table .hide, .main-panel .hide, .search-item .hide, .misc .created .hide, .misc .edited .hide, .misc .input-field .hide, .misc .attachments .hide, .preview .hide, .preview .title .private-key .hide, .list-inner .hide {
+  .box .hide, .link-document .hide, .doc-mode .modal-inner .hide, .link-modal .hide, .access-table .hide, .main-panel .hide, .search-item .hide, .misc .created .hide, .misc .edited .hide, .misc .input-field .hide, .misc .attachments .hide, .preview .hide, .preview .title .private-key .hide, .list-inner .hide {
     display: none; }
-  .box.invisible, .invisible.link-document, .doc-mode .invisible.modal-inner, .invisible.access-table, .invisible.main-panel, .invisible.search-item, .misc .invisible.created, .misc .invisible.edited, .misc .invisible.input-field, .misc .invisible.attachments, .invisible.preview, .preview .title .invisible.private-key, .invisible.list-inner {
+  .box.invisible, .invisible.link-document, .doc-mode .invisible.modal-inner, .invisible.link-modal, .invisible.access-table, .invisible.main-panel, .invisible.search-item, .misc .invisible.created, .misc .invisible.edited, .misc .invisible.input-field, .misc .invisible.attachments, .invisible.preview, .preview .title .invisible.private-key, .invisible.list-inner {
     visibility: hidden; }
 
 button {
@@ -358,7 +358,7 @@ label {
 .mce-top-part::before {
   box-shadow: none !important; }
 
-.mce-notification-inner {
+.mce-notification {
   display: none !important; }
 
 .mce-container {
@@ -378,6 +378,19 @@ label {
   #tinymce .document-link {
     color: blue;
     text-decoration: underline; }
+
+.link-modal {
+  display: flex;
+  flex-direction: column;
+  width: 30vh; }
+  .link-modal span > input {
+    margin: 10px 0 15px 0;
+    width: 100%; }
+  .link-modal .buttons {
+    display: flex;
+    justify-content: flex-end; }
+    .link-modal .buttons button:first-child {
+      margin-right: 5px; }
 
 .download-manager {
   width: 280px;
@@ -1302,6 +1315,71 @@ label {
     padding-bottom: 1em; }
   .preview .arrow-box {
     margin-bottom: 5px; }
+
+.document-panel.small {
+  display: flex;
+  margin-left: 5%;
+  width: calc(90% - 300px);
+  justify-content: space-between;
+  transition: margin 0.2s, width 0.3s 0.2s; }
+
+.document-panel.full {
+  width: 66.66667%;
+  transition: width 0.3, margin 0.2s 0.3s; }
+
+.document-container {
+  flex-grow: 5; }
+
+@keyframes slide-out {
+  0% {
+    transform: translateX(0);
+    opacity: 1; }
+  100% {
+    transform: translateX(100%);
+    opacity: 0; } }
+
+@keyframes slide-in {
+  0% {
+    transform: translateX(100%);
+    opacity: 0; }
+  100% {
+    transform: translateX(0);
+    opacity: 1; } }
+
+.version-history-panel {
+  position: absolute;
+  right: 0;
+  top: 55px;
+  height: 100%;
+  width: 300px;
+  background-color: white;
+  overflow-y: scroll;
+  transform: translateX(100%);
+  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.15), 0 0 2px rgba(0, 0, 0, 0.11); }
+  .version-history-panel.show {
+    animation: slide-in 0.5s both; }
+  .version-history-panel.hide {
+    animation: slide-out 0.5s forwards; }
+  .version-history-panel .version-header {
+    background-color: #f5f3f3;
+    padding: 8px 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center; }
+    .version-history-panel .version-header .close:hover {
+      cursor: pointer;
+      text-decoration: underline; }
+  .version-history-panel .version-item {
+    padding: 8px 15px;
+    border-bottom: 1px solid #f5f3f3;
+    cursor: pointer; }
+    .version-history-panel .version-item.disabled {
+      cursor: default;
+      background-color: #f5f3f3;
+      border-bottom: 1px solid white; }
+    .version-history-panel .version-item.selected {
+      background-color: #118ab2;
+      color: white; }
 
 .list {
   display: flex;
