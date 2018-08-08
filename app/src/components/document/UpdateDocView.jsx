@@ -1,5 +1,6 @@
 import DocumentForm from './form/DocumentForm';
 import VersionHistory from './form/VersionHistory';
+import { markdownToHtml } from 'actions/document/utilities';
 const React = require('react');
 const LoaderOverlay = require('components/general/LoaderOverlay');
 const ErrorBox = require('components/general/ErrorBox');
@@ -76,6 +77,14 @@ class UpdateDocView extends React.Component {
     if (encryptedTexts.size === oldEncryptedTexts.size) {
       if (
         encryptedTexts.find((text, index) => {
+          if (text.get('format') === 'markdown')
+            return (
+              markdownToHtml(text.get('value')).trim() !==
+              oldEncryptedTexts
+                .get(index)
+                .get('value')
+                .trim()
+            );
           return (
             text.get('value').trim() !==
             oldEncryptedTexts
@@ -91,6 +100,14 @@ class UpdateDocView extends React.Component {
     if (texts.size === oldTexts.size) {
       if (
         texts.find((text, index) => {
+          if (text.get('format') === 'markdown')
+            return (
+              markdownToHtml(text.get('value')).trim() !==
+              oldTexts
+                .get(index)
+                .get('value')
+                .trim()
+            );
           return (
             text.get('value').trim() !==
             oldTexts
