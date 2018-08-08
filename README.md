@@ -222,6 +222,16 @@ The following flags can be used on the testrunner script:
 
 The testrunner can be run via `npm run integrationtest [-- [--register,--clean]]`.
 
+##  Migrations of changelog to versionsystem
+In earlier versions of FortDox there was a changelog system, this has now been replace with versions of documents.
+A migration script is available to use when this update is to be used on a production system.
+Please note that the migraiton script does only work on FortDox systems with one organization.
+To use the script execute the following:
+> node prepVersions.js
+
+pro tip: have your organization index number ready.
+
+
 ## Attachments and how the server handles them
 
 In previous versions of FortDox all attachments where simply sent as base64 encoded strings and stored in elasticsearch.
