@@ -7,10 +7,10 @@ const MAX_RANGE = 15;
 const MIN_RANGE = BASE;
 const names = {
   0: 'BASE',
-  1: 'GRANT_PERMISSION',
-  2: 'REMOVE_DOUCMENT',
-  4: 'REMOVE_USER',
-  8: 'INVITE_USER'
+  1: 'GRANT PERMISSION',
+  2: 'DELETE DOCUMENT',
+  4: 'REMOVE USER',
+  8: 'INVITE USER'
 };
 
 const getPermissionName = i => {
