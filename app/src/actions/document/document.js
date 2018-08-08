@@ -469,7 +469,7 @@ export function toggleVersionPanel(toggle) {
     const showVersionPanel = state.updateDocument.get('showVersionPanel');
     dispatch({
       type: 'TOGGLE_VERSION_HISTORY',
-      payload: toggle ? toggle : !showVersionPanel
+      payload: toggle !== undefined ? toggle : !showVersionPanel
     });
   };
 }
