@@ -62,7 +62,6 @@ module.exports = class UserList extends React.Component {
 
   render() {
     const { users, permissions } = this.props;
-
     const domUsers = users.map(user => (
       <div className={`user ${user.pending ? 'pending' : ''}`} key={user.email}>
         <span className='email'>{user.email}</span>

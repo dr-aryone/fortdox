@@ -100,11 +100,7 @@ export function updatePermission(email, userPermission, permission, toggle) {
             }
           });
         else
-          await requestor.delete(`${config.server}/permissions/admin`, {
-            body: {
-              email
-            }
-          });
+          await requestor.delete(`${config.server}/permissions/admin/${email}`);
       } catch (error) {
         console.error(error);
         return dispatch({

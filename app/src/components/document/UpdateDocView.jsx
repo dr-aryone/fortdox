@@ -303,15 +303,19 @@ class UpdateDocView extends React.Component {
               onConvert={onConvert}
             >
               <div className='doc-buttons update'>
-                {permissions.get('DELETE_DOCUMENT') && (
-                  <button
-                    onClick={this.openDeleteDialog}
-                    type='button'
-                    className='warning'
-                  >
-                    Delete
-                  </button>
-                )}
+                <button
+                  onClick={this.openDeleteDialog}
+                  type='button'
+                  className='warning tooltip'
+                  disabled={!permissions.get('DELETE_DOCUMENT')}
+                >
+                  {!permissions.get('DELETE_DOCUMENT') && (
+                    <span className='tooltiptext'>
+                      You don't have permission to delete document
+                    </span>
+                  )}
+                  Delete
+                </button>
                 <span>
                   <button
                     type='button'
