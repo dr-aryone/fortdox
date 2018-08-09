@@ -1,14 +1,19 @@
 import PermissionsView from 'components/permissions/PermissionsView';
 import {
   getPermissionsList,
-  getUserPermissionsList
+  getUserPermissionsList,
+  updatePermission
 } from 'actions/permissions';
+import { show } from 'actions/toast';
+import React from 'react';
 const { connect } = require('react-redux');
 
 const mapStateToProps = state => {
   return {
     permissionsList: state.permissions.get('list'),
-    userList: state.permissions.get('userList')
+    userList: state.permissions.get('userList'),
+    error: state.permissions.get('error'),
+    message: state.permissions.get('message')
   };
 };
 
@@ -19,6 +24,23 @@ const mapDispatchToProps = dispatch => {
     },
     getPermissionsList: () => {
       dispatch(getPermissionsList());
+    },
+    onUpdatePermission: async (email, permission, toggle) => {
+      await dispatch(updatePermission(email, permission, toggle));
+      dispatch(getUserPermissionsList());
+    },
+    showMessage: message => {
+      dispatch(
+        show({
+          text: [
+            <span key={1}>{message.get('text')} </span>,
+            <span key={2} className='highlight'>
+              {message.get('user')}
+            </span>
+          ],
+          icon: 'check'
+        })
+      );
     }
   };
 };

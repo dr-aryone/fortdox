@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import LoaderOverlay from 'components/general/LoaderOverlay';
-// const ErrorBox = require('components/general/ErrorBox');
+import Toast from 'components/general/Toast';
+import ErrorBox from 'components/general/ErrorBox';
 // const MessageBox = require('components/general/MessageBox');
 // const Modal = require('components/general/Modal');
 
@@ -11,13 +12,26 @@ class PermissionsView extends Component {
     this.props = props;
   }
 
+  componentDidUpdate() {
+    if (this.props.message) this.props.showMessage(this.props.message);
+  }
+
   componentDidMount() {
     this.props.getPermissionsList();
     this.props.getUserList();
   }
 
+  onCheckBoxChange(email, userPermission, permission, e) {
+    this.props.onUpdatePermission(
+      email,
+      userPermission,
+      permission,
+      e.target.checked
+    );
+  }
+
   render() {
-    const { isLoading, permissionsList, userList } = this.props;
+    const { isLoading, permissionsList, userList, error } = this.props;
     const permissions = [];
     permissionsList.forEach(permission => {
       permissions.push(
@@ -27,13 +41,26 @@ class PermissionsView extends Component {
       );
     });
 
+    const permissionsKeys = permissionsList.keySeq();
     let users = [];
     userList.forEach((user, index) => {
       const checkBoxes = [];
       for (let i = 0; i < permissionsList.size; i++) {
+        const permission = parseInt(permissionsKeys.get(i), 10);
         checkBoxes.push(
           <div className='access-cell' key={`${index}-${i}`}>
-            <input type='checkbox' />
+            <input
+              type='checkbox'
+              checked={(user.get('permission') & permission) === permission}
+              onChange={e =>
+                this.onCheckBoxChange(
+                  user.get('email'),
+                  user.get('permission'),
+                  parseInt(permissionsKeys.get(i), 10),
+                  e
+                )
+              }
+            />
           </div>
         );
       }
@@ -49,8 +76,9 @@ class PermissionsView extends Component {
       <div className='container-fluid'>
         <div className='inner-container'>
           <LoaderOverlay display={isLoading} />
-          {/* <MessageBox message={message} />
-          <ErrorBox errorMsg={error} /> */}
+          <Toast />
+          {/* <MessageBox message={message} /> */}
+          <ErrorBox errorMsg={error} />
           <div className='title'>
             <h1>Access Management</h1>
           </div>

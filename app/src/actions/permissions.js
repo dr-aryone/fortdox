@@ -20,7 +20,7 @@ export function getUserPermissions() {
       console.error(error);
       switch (error.status) {
         default:
-          dispatch({
+          return dispatch({
             type: 'GET_USER_PERMISSIONS_ERROR'
           });
       }
@@ -46,7 +46,7 @@ export function getPermissionsList() {
       console.error(error);
       switch (error.status) {
         default:
-          dispatch({
+          return dispatch({
             type: 'GET_PERMISSIONS_LIST_ERROR'
           });
       }
@@ -72,7 +72,7 @@ export function getUserPermissionsList() {
       console.error(error);
       switch (error.status) {
         default:
-          dispatch({
+          return dispatch({
             type: 'GET_USER_PERMISSIONS_LIST_ERROR'
           });
       }
@@ -81,6 +81,43 @@ export function getUserPermissionsList() {
     dispatch({
       type: 'GET_USER_PERMISSIONS_LIST_SUCCESS',
       payload: response.body
+    });
+  };
+}
+
+export function updatePermission(email, userPermission, permission, toggle) {
+  return async dispatch => {
+    dispatch({
+      type: 'UPDATE_PERMISSION_START'
+    });
+
+    let newPermission = toggle
+      ? userPermission & permission
+      : userPermission & ~permission;
+    try {
+      await requestor.post(`${config.server}/permissions/users`, {
+        body: {
+          email,
+          permission: newPermission
+        }
+      });
+    } catch (error) {
+      console.error(error);
+      switch (error.status) {
+        default:
+          return dispatch({
+            type: 'UPDATE_PERMISSION_ERROR',
+            payload: `Unable to update permission for ${email}. Please try again later.`
+          });
+      }
+    }
+
+    dispatch({
+      type: 'UPDATE_PERMISSION_SUCCESS',
+      payload: {
+        text: 'Permissions has been successfully updated for ',
+        user: email
+      }
     });
   };
 }
