@@ -31,7 +31,14 @@ class PermissionsView extends Component {
   }
 
   render() {
-    const { isLoading, permissionsList, userList, error } = this.props;
+    const {
+      isLoading,
+      permissionsList,
+      userList,
+      error,
+      superUser
+    } = this.props;
+
     const permissions = [];
     permissionsList.forEach(permission => {
       permissions.push(
@@ -42,11 +49,14 @@ class PermissionsView extends Component {
     });
 
     const permissionsKeys = permissionsList.keySeq();
-    let users = [];
+    const users = [];
     userList.forEach((user, index) => {
       const checkBoxes = [];
       for (let i = 0; i < permissionsList.size; i++) {
         const permission = parseInt(permissionsKeys.get(i), 10);
+        let isDisabled = false;
+        if (!superUser && permission === 1) isDisabled = true;
+        if (!superUser && (user.get('permission') & 1) === 1) isDisabled = true;
         checkBoxes.push(
           <div className='access-cell' key={`${index}-${i}`}>
             <input
@@ -56,10 +66,11 @@ class PermissionsView extends Component {
                 this.onCheckBoxChange(
                   user.get('email'),
                   user.get('permission'),
-                  parseInt(permissionsKeys.get(i), 10),
+                  permission,
                   e
                 )
               }
+              disabled={isDisabled}
             />
           </div>
         );

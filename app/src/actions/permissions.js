@@ -91,30 +91,36 @@ export function updatePermission(email, userPermission, permission, toggle) {
       type: 'UPDATE_PERMISSION_START'
     });
 
-    let newPermission = toggle
-      ? userPermission | permission
-      : userPermission & ~permission;
-
-    const route =
-      permission === 1
-        ? `${config.server}/permissions/promote`
-        : `${config.server}/permissions/users`;
-
-    try {
-      await requestor.post(route, {
-        body: {
-          email,
-          permission: newPermission
+    if (permission === 1) {
+      try {
+        if (toggle) await requestor.post(`${config.server}/permissions/admin`);
+        else await requestor.delete(`${config.server}/permissions/admin`);
+      } catch (error) {
+        console.error(error);
+        dispatch({
+          type: 'UPDATE_PERMISSION_ERROR',
+          payload: `Unable to update permission for ${email}. Please try again later.`
+        });
+      }
+    } else {
+      try {
+        await requestor.post(`${config.server}/permissions/users`, {
+          body: {
+            email,
+            permission: toggle
+              ? userPermission | permission
+              : userPermission & ~permission
+          }
+        });
+      } catch (error) {
+        console.error(error);
+        switch (error.status) {
+          default:
+            return dispatch({
+              type: 'UPDATE_PERMISSION_ERROR',
+              payload: `Unable to update permission for ${email}. Please try again later.`
+            });
         }
-      });
-    } catch (error) {
-      console.error(error);
-      switch (error.status) {
-        default:
-          return dispatch({
-            type: 'UPDATE_PERMISSION_ERROR',
-            payload: `Unable to update permission for ${email}. Please try again later.`
-          });
       }
     }
 

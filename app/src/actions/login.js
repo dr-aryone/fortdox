@@ -50,13 +50,31 @@ export function directLogin() {
       }
       const permission = response.body.permission;
       const superUser = response.body.owner ? true : false;
+
+      try {
+        response = await requestor.get(`${config.server}/permissions`);
+      } catch (error) {
+        console.error(error);
+        return dispatch({
+          type: 'DIRECT_LOGIN_FAILED'
+        });
+      }
+
+      const permissions = {};
+      const permissionsList = response.body;
+      for (let p in permissionsList) {
+        const key = permissionsList[p].replace(' ', '_');
+        permissions[key] = (permission & parseInt(p, 10)) === parseInt(p, 10);
+      }
+
       return dispatch({
         type: 'DIRECT_LOGIN_SUCCESS',
         payload: {
           email,
           organization,
           permission,
-          superUser
+          superUser,
+          permissions
         }
       });
     } else {
@@ -175,7 +193,7 @@ export function login() {
     }
 
     try {
-      response = await requestor.post(`${config.server}/permissions/me`);
+      response = await requestor.get(`${config.server}/permissions/me`);
     } catch (error) {
       switch (error.status) {
         default:
@@ -188,6 +206,22 @@ export function login() {
 
     const permission = response.body.permission;
     const superUser = response.body.owner ? true : false;
+    try {
+      response = await requestor.get(`${config.server}/permissions`);
+    } catch (error) {
+      console.error(error);
+      return dispatch({
+        type: 'DIRECT_LOGIN_FAILED'
+      });
+    }
+
+    const permissions = {};
+    const permissionsList = response.body;
+    for (let p in permissionsList) {
+      const key = permissionsList[p].replace(' ', '_');
+      permissions[key] = (permission & parseInt(p, 10)) === parseInt(p, 10);
+    }
+
     return dispatch({
       type: 'VERIFY_LOGIN_CREDS_SUCCESS',
       payload: {
