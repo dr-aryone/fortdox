@@ -12,6 +12,7 @@ const verifyUser = require('./verifyUser');
 const download = require('./download');
 const toast = require('./toast');
 const devices = require('./devices');
+const permissions = require('./permissions');
 
 const docApp = combineReducers({
   navigation,
@@ -26,7 +27,8 @@ const docApp = combineReducers({
   verifyUser,
   download,
   toast,
-  devices
+  devices,
+  permissions
 });
 
 module.exports = docApp;

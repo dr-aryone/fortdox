@@ -85,7 +85,7 @@ module.exports = class UserList extends React.Component {
         )}
       </div>
     ));
-
+    debugger;
     const deleteDialog = (
       <Modal
         show={this.state.showDeleteDialog}

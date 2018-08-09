@@ -1,7 +1,7 @@
 const React = require('react');
 const Loader = require('components/general/Loader');
 
-const LoginView = ({display}) => {
+const LoaderOverlay = ({ display }) => {
   //Primary color for loader, if anyone sets it to 'red', I will find you.
   return (
     <div className={`loader ${display ? 'show' : ''}`}>
@@ -12,4 +12,4 @@ const LoginView = ({display}) => {
   );
 };
 
-module.exports = LoginView;
+module.exports = LoaderOverlay;
