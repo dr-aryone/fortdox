@@ -3,7 +3,9 @@ const { fromJS } = require('immutable');
 let initialState = fromJS({
   email: '',
   organization: '',
-  permission: 0
+  permission: 0,
+  superUser: false,
+  permissions: null
 });
 
 const user = (state = initialState, action) => {
@@ -14,7 +16,8 @@ const user = (state = initialState, action) => {
         email: fromJS(action.payload.email),
         organization: fromJS(action.payload.organization),
         permission: fromJS(action.payload.permission),
-        superUser: fromJS(action.payload.superUser)
+        superUser: fromJS(action.payload.superUser),
+        permissions: fromJS(action.payload.permissions)
       });
     case 'LOGOUT':
       localStorage.removeItem(state.get('email'));

@@ -61,7 +61,7 @@ module.exports = class UserList extends React.Component {
   }
 
   render() {
-    const { users } = this.props;
+    const { users, permissions } = this.props;
 
     const domUsers = users.map(user => (
       <div className={`user ${user.pending ? 'pending' : ''}`} key={user.email}>
@@ -103,13 +103,15 @@ module.exports = class UserList extends React.Component {
             <button onClick={this.closeDeleteDialog} type='button'>
               Cancel
             </button>
-            <button
-              onClick={() => this.onDelete()}
-              type='button'
-              className='warning'
-            >
-              Delete
-            </button>
+            {permissions.get('REMOVE_USER') && (
+              <button
+                onClick={() => this.onDelete()}
+                type='button'
+                className='warning'
+              >
+                Delete
+              </button>
+            )}
           </div>
         </div>
       </Modal>

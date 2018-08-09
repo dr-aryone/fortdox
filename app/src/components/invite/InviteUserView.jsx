@@ -12,7 +12,8 @@ const InviteUserView = props => {
     onChange,
     onInvite,
     isLoading,
-    onDeleteUser
+    onDeleteUser,
+    permissions
   } = props;
 
   let concatMessage = [];
@@ -46,27 +47,36 @@ const InviteUserView = props => {
         <MessageBox message={msg} />
         <ErrorBox errorMsg={error} />
         <div className='title'>
-          <h1>Invite User</h1>
+          <h1>Users</h1>
         </div>
-        <div className='box'>
-          <div className='texts'>
-            <p>Invite a new user to the organization.</p>
-            <form onSubmit={onInvite} className='input-bar'>
-              <input
-                name='email'
-                type='text'
-                value={fields.getIn(['email', 'value'])}
-                onChange={onChange}
-                placeholder='Email'
-                className='block'
-                autoFocus
-              />
-              <button onClick={onInvite}>Send</button>
-            </form>
-            {errorMsg}
+        {permissions.get('INVITE_USER') && (
+          <div>
+            <h2>Invite User</h2>
+            <div className='box'>
+              <div className='texts'>
+                <p>Invite a new user to the organization.</p>
+                <form onSubmit={onInvite} className='input-bar'>
+                  <input
+                    name='email'
+                    type='text'
+                    value={fields.getIn(['email', 'value'])}
+                    onChange={onChange}
+                    placeholder='Email'
+                    className='block'
+                    autoFocus
+                  />
+                  <button onClick={onInvite}>Send</button>
+                </form>
+                {errorMsg}
+              </div>
+            </div>
           </div>
-        </div>
-        <UserList onDeleteUser={onDeleteUser} onInvite={onInvite} />
+        )}
+        <UserList
+          onDeleteUser={onDeleteUser}
+          onInvite={onInvite}
+          permissions={permissions}
+        />
       </div>
     </div>
   );

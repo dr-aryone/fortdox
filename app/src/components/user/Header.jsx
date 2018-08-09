@@ -44,7 +44,13 @@ class Header extends React.Component {
   }
 
   render() {
-    let { organization, email, changeView, logout } = this.props;
+    let { organization, email, changeView, logout, permissions } = this.props;
+
+    const accessControl = (
+      <li onClick={event => this.clickHandler(event, 'ACCESS_VIEW', null)}>
+        <i className='material-icons'>supervisor_account</i> Access Management
+      </li>
+    );
 
     return (
       <div className='header'>
@@ -66,7 +72,7 @@ class Header extends React.Component {
               className='material-icons'
               onClick={() => changeView('INVITE_USER_VIEW')}
             >
-              person_add
+              person
             </i>
             <i
               className='material-icons'
@@ -95,14 +101,7 @@ class Header extends React.Component {
                 className={`dropdown-wrapper ${this.state.show ? 'show' : ''}`}
               >
                 <ul className={`dropdown ${this.state.show ? 'show' : ''}`}>
-                  <li
-                    onClick={event =>
-                      this.clickHandler(event, 'ACCESS_VIEW', null)
-                    }
-                  >
-                    <i className='material-icons'>supervisor_account</i> Access
-                    Management
-                  </li>
+                  {permissions.get('ADMIN') && accessControl}
                   <li
                     onClick={event =>
                       this.clickHandler(event, 'LOGOUT', logout)

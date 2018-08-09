@@ -188,7 +188,8 @@ class UpdateDocView extends React.Component {
       showVersionPanel,
       onToggleVersionPanel,
       onInsertDocumentVersion,
-      onConvert
+      onConvert,
+      permissions
     } = this.props;
 
     const deleteDialog = (
@@ -302,13 +303,15 @@ class UpdateDocView extends React.Component {
               onConvert={onConvert}
             >
               <div className='doc-buttons update'>
-                <button
-                  onClick={this.openDeleteDialog}
-                  type='button'
-                  className='warning'
-                >
-                  Delete
-                </button>
+                {permissions.get('DELETE_DOCUMENT') && (
+                  <button
+                    onClick={this.openDeleteDialog}
+                    type='button'
+                    className='warning'
+                  >
+                    Delete
+                  </button>
+                )}
                 <span>
                   <button
                     type='button'

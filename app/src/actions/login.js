@@ -227,6 +227,7 @@ export function login() {
       payload: {
         email: email,
         organization: organization,
+        permissions,
         permission,
         superUser
       }
