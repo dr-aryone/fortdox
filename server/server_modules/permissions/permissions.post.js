@@ -21,7 +21,7 @@ async function updateUserPermission(req, res) {
 
   let newPermission = req.body.permission;
   const userEmail = req.body.email;
-  const permissionManagerPermission = req.session.permission;
+  const adminPermissions = req.session.permission;
 
   let userToUpdate;
   try {
@@ -39,9 +39,15 @@ async function updateUserPermission(req, res) {
     (userToUpdate.permission & permissions.GRANT_PERMISSION) ===
     permissions.GRANT_PERMISSION;
 
-  const newPermissionIncludeGrantPermission =
-    (newPermission & permissions.GRANT_PERMISSION) ===
-    permissions.GRANT_PERMISSION;
+  if (userToUpdateHasGrantPermission) {
+    logger.warn(
+      '/permission/users',
+      `${req.session.email} tried to change permissions on admin ${
+        userToUpdate.email
+      }`
+    );
+    return res.status(400).send();
+  }
 
   if (newPermission === userToUpdate.permission) {
     logger.info(
@@ -56,43 +62,12 @@ async function updateUserPermission(req, res) {
     return res.send();
   }
 
-  if (
-    !userToUpdateHasGrantPermission &&
-    !acu(permissionManagerPermission).canSet(newPermission)
-  ) {
+  if (!acu(adminPermissions).canSet(newPermission)) {
     logger.warn(
       '/permissions POST',
       `${
         req.session.email
-      } tried to grant permission ${newPermission} to ${userEmail}`
-    );
-    return res.status(400).send();
-  }
-
-  if (
-    userToUpdateHasGrantPermission &&
-    !newPermissionIncludeGrantPermission &&
-    !acu(permissionManagerPermission).canSet(newPermission)
-  ) {
-    logger.warn(
-      '/permissions POST',
-      `${
-        req.session.email
-      } tried to grant permission ${newPermission} to ${userEmail}`
-    );
-    return res.status(400).send();
-  }
-
-  if (
-    userToUpdateHasGrantPermission &&
-    newPermissionIncludeGrantPermission &&
-    !acu(permissionManagerPermission).canSetPermissionManager(newPermission)
-  ) {
-    logger.warn(
-      '/permissions POST',
-      `${
-        req.session.email
-      } tried to grant permission ${newPermission} to ${userEmail}`
+      } tried to grant permission ${newPermission} to ${userEmail} which is an invalid permission.`
     );
     return res.status(400).send();
   }

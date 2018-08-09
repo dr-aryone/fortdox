@@ -42,11 +42,6 @@ function AccessControllUnit(user) {
         return false;
 
       return true;
-    },
-    canSetPermissionManager(newPermission) {
-      if (!sanityCheck(user, newPermission)) return false;
-      if (!hasPermission(user, permissions.GRANT_PERMISSION)) return false;
-      return true;
     }
   };
 }
