@@ -4,14 +4,11 @@ const db = require('app/models');
 const expect = require('@edgeguideab/expect');
 
 async function promote(req, res) {
-  const expectations = expect(
-    { email: 'string', permission: 'number' },
-    req.body
-  );
+  const expectations = expect({ email: 'string' }, req.body);
 
   if (!expectations.wereMet()) {
     logger.error(
-      '/permissions/promote',
+      '/permissions/admin',
       'Client sent invalid request',
       expectations.errors()
     );
@@ -21,23 +18,12 @@ async function promote(req, res) {
       .end();
   }
 
+  const newAdmin = req.body.email;
+
   logger.info(
-    '/permissions/promote',
-    `${req.session.email} is trying to promote a user to a permission manager`
+    '/permissions/admin',
+    `${req.session.email} is trying to promote ${newAdmin} to a admin`
   );
-
-  const newPermission = req.body.permission;
-  const newPermissionManager = req.body.email;
-
-  if (newPermission !== permissions.GRANT_PERMISSION) {
-    logger.warn(
-      '/permissions/promote',
-      `${
-        req.session.email
-      } tried to promote to an incorrect permission level ${newPermission}`
-    );
-    return res.status(400).send();
-  }
 
   try {
     const userEmail = req.session.email;
@@ -57,7 +43,7 @@ async function promote(req, res) {
       orgJoinUser.owner != orgJoinUser.users[0].id
     ) {
       logger.warn(
-        '/permission/promote',
+        '/permission/admin',
         `${req.session.email} is not the owner of this organization`
       );
 
@@ -65,21 +51,27 @@ async function promote(req, res) {
     }
 
     logger.info(
-      '/permission/promote',
+      '/permission/admin',
       `Organization owner ${orgJoinUser.owner}:${
         orgJoinUser.users[0].email
-      } will promote ${newPermissionManager} to permission manager.`
+      } will promote ${newAdmin} to admin.`
     );
 
+    const maxPermission =
+      permissions.GRANT_PERMISSION |
+      permissions.DELETE_DOCUMENT |
+      permissions.INVITE_USER |
+      permissions.REMOVE_USER;
+
     await db.User.update(
-      { permission: permissions.GRANT_PERMISSION },
-      { where: { email: newPermissionManager } }
+      { permission: maxPermission },
+      { where: { email: newAdmin } }
     );
 
     return res.status(200).send();
   } catch (error) {
     logger.error(
-      '/permissions/promote',
+      '/permissions/admin',
       'Could not query database for permission and owner information',
       error
     );
