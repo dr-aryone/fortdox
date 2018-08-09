@@ -169,14 +169,24 @@ const removeUser = (email, organizationId = null) => {
   return new Promise(async (resolve, reject) => {
     let user;
     try {
-      user = await db.User.findOne({
-        where: {
-          email,
-          organizationId
-        }
+      const orgJoinUser = await db.Organization.findOne({
+        include: [
+          {
+            model: db.User,
+            as: 'users',
+            where: { email: userEmail }
+          }
+        ]
       });
-      if (!user) {
+
+      if (!orgJoinUser || !orgJoinUser.users || !orgJoinUser.users[0]) {
         return reject(404);
+      }
+
+      user = orgJoinUser.users[0];
+
+      if (orgJoinUser.owner === user.id) {
+        return reject(403);
       }
     } catch (error) {
       console.error(error);
