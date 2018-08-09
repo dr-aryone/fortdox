@@ -93,11 +93,21 @@ export function updatePermission(email, userPermission, permission, toggle) {
 
     if (permission === 1) {
       try {
-        if (toggle) await requestor.post(`${config.server}/permissions/admin`);
-        else await requestor.delete(`${config.server}/permissions/admin`);
+        if (toggle)
+          await requestor.post(`${config.server}/permissions/admin`, {
+            body: {
+              email
+            }
+          });
+        else
+          await requestor.delete(`${config.server}/permissions/admin`, {
+            body: {
+              email
+            }
+          });
       } catch (error) {
         console.error(error);
-        dispatch({
+        return dispatch({
           type: 'UPDATE_PERMISSION_ERROR',
           payload: `Unable to update permission for ${email}. Please try again later.`
         });

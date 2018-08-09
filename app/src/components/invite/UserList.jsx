@@ -69,12 +69,14 @@ module.exports = class UserList extends React.Component {
         <span className='pending'>{user.pending ? '(Pending)' : ''}</span>
         {this.props.user !== user.email && (
           <span>
-            <i
-              className='material-icons danger'
-              onClick={() => this.openDeleteDialog(user.email)}
-            >
-              clear
-            </i>
+            {permissions.get('REMOVE_USER') && (
+              <i
+                className='material-icons danger'
+                onClick={() => this.openDeleteDialog(user.email)}
+              >
+                clear
+              </i>
+            )}
             <i
               className='material-icons'
               onClick={() => this.openReinviteDialog(user.email)}
@@ -103,15 +105,13 @@ module.exports = class UserList extends React.Component {
             <button onClick={this.closeDeleteDialog} type='button'>
               Cancel
             </button>
-            {permissions.get('REMOVE_USER') && (
-              <button
-                onClick={() => this.onDelete()}
-                type='button'
-                className='warning'
-              >
-                Delete
-              </button>
-            )}
+            <button
+              onClick={() => this.onDelete()}
+              type='button'
+              className='warning'
+            >
+              Delete
+            </button>
           </div>
         </div>
       </Modal>
