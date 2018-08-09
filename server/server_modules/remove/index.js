@@ -1,5 +1,6 @@
-const users = require('app/users');
+const db = require('app/models');
 const logger = require('app/logger');
+const users = require('app/users');
 
 module.exports = {
   removeUser
@@ -7,10 +8,33 @@ module.exports = {
 
 async function removeUser(req, res) {
   let email = req.params.email;
+  const organizationId = req.session.organizationId;
   let user;
   logger.info('/users/email DELETE', 'Try to delete user with email', email);
   try {
-    user = await users.getUser(email);
+    const orgJoinUser = await db.Organization.findOne({
+      where: { id: organizationId },
+      include: [
+        {
+          model: db.User,
+          as: 'users',
+          where: { email: email }
+        }
+      ]
+    });
+
+    if (!orgJoinUser || !orgJoinUser.users || !orgJoinUser.users[0]) {
+      throw new Error('No user, no Orgnazioatn');
+    }
+
+    user = orgJoinUser.users[0];
+    if (orgJoinUser.owner === user.id) {
+      logger.warn(
+        '/users/email DELETE',
+        `${req.session.email} tried to delete owner of organziation!`
+      );
+      return res.status(403).send();
+    }
   } catch (error) {
     logger.error('/users/email DELETE', `Could not find user ${email}`, error);
     return res.status(error).send();

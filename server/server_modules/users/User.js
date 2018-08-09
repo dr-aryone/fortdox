@@ -2,6 +2,7 @@ const db = require('app/models');
 const {
   decryptMasterPassword
 } = require('app/encryption/keys/cryptMasterPassword');
+const logger = require('app/logger');
 
 const getUser = email => {
   return new Promise(async (resolve, reject) => {
@@ -165,44 +166,6 @@ const setOrganizationId = ({ email, organizationId }) => {
   });
 };
 
-const removeUser = (email, organizationId = null) => {
-  return new Promise(async (resolve, reject) => {
-    let user;
-    try {
-      const orgJoinUser = await db.Organization.findOne({
-        include: [
-          {
-            model: db.User,
-            as: 'users',
-            where: { email: userEmail }
-          }
-        ]
-      });
-
-      if (!orgJoinUser || !orgJoinUser.users || !orgJoinUser.users[0]) {
-        return reject(404);
-      }
-
-      user = orgJoinUser.users[0];
-
-      if (orgJoinUser.owner === user.id) {
-        return reject(403);
-      }
-    } catch (error) {
-      console.error(error);
-      return reject(500);
-    }
-
-    try {
-      await user.destroy();
-      return resolve(200);
-    } catch (error) {
-      console.error(error);
-      return reject(500);
-    }
-  });
-};
-
 const getOrganizationName = email => {
   return new Promise(async (resolve, reject) => {
     let user;
@@ -244,7 +207,6 @@ module.exports = {
   verifyUser,
   verifyNewUser,
   getUser,
-  removeUser,
   getOrganizationName,
   verifyUUID
 };
