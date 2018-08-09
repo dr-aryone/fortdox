@@ -140,3 +140,9 @@ test('You cannot grant permissions outside range', () => {
   access = acu(user).canSet(newPermission);
   expect(access).toBe(false);
 });
+
+test('Permission manager can change another permission manager', () => {
+  const user = 15;
+  const newPermission = 11;
+  expect(acu(user).canSetPermissionManager(newPermission)).toBe(true);
+});
