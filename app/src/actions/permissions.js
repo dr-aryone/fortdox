@@ -92,10 +92,16 @@ export function updatePermission(email, userPermission, permission, toggle) {
     });
 
     let newPermission = toggle
-      ? userPermission & permission
+      ? userPermission | permission
       : userPermission & ~permission;
+
+    const route =
+      permission === 1
+        ? `${config.server}/permissions/promote`
+        : `${config.server}/permissions/users`;
+
     try {
-      await requestor.post(`${config.server}/permissions/users`, {
+      await requestor.post(route, {
         body: {
           email,
           permission: newPermission

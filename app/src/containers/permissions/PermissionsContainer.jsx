@@ -25,8 +25,10 @@ const mapDispatchToProps = dispatch => {
     getPermissionsList: () => {
       dispatch(getPermissionsList());
     },
-    onUpdatePermission: async (email, permission, toggle) => {
-      await dispatch(updatePermission(email, permission, toggle));
+    onUpdatePermission: async (email, userPermission, permission, toggle) => {
+      await dispatch(
+        updatePermission(email, userPermission, permission, toggle)
+      );
       dispatch(getUserPermissionsList());
     },
     showMessage: message => {
