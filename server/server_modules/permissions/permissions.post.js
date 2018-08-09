@@ -21,34 +21,45 @@ async function updateUserPermission(req, res) {
 
   let newPermission = req.body.permission;
   const userEmail = req.body.email;
+  const permissionManagerPermission = req.session.permission;
 
-  const permissionManagerIsUpdatingSelf = req.session.email === userEmail;
-  const newPermissionIncludesGrant =
-    req.body.permission &
-    (permissions.GRANT_PERMISSION === permissions.GRANT_PERMISSION);
+  let userToUpdate;
+  try {
+    userToUpdate = await db.User.findOne({ where: { email: userEmail } });
+    if (!userToUpdate) throw new Error(`No user found with email${userEmail}`);
+  } catch (error) {
+    logger.error(
+      '/permissions POST',
+      `Could not or query db to find ${userEmail} to set permission on`
+    );
+    return res.status(500).send();
+  }
 
-  if (
-    permissionManagerIsUpdatingSelf &&
-    req.session.permission === newPermission
-  ) {
+  const userToUpdateHasGrantPermission =
+    (userToUpdate.permission & permissions.GRANT_PERMISSION) ===
+    permissions.GRANT_PERMISSION;
+
+  const newPermissionIncludeGrantPermission =
+    (newPermission & permissions.GRANT_PERMISSION) ===
+    permissions.GRANT_PERMISSION;
+
+  if (newPermission === userToUpdate.permission) {
     logger.info(
       '/permissions POST',
-      'Permission manager asked to set its own permission to the same value, i.e a noop.'
+      `Permission manager ${
+        req.session.email
+      } want to set the same permission level on user ${
+        userToUpdate.email
+      } that it already has.
+      This is a no op.`
     );
     return res.send();
   }
 
-  if (permissionManagerIsUpdatingSelf && newPermissionIncludesGrant) {
-    logger.info(
-      '/permissions POST',
-      `Permission manager: ${
-        req.session.email
-      } is setting itself to permission ${newPermission}`
-    );
-    newPermission = newPermission & ~permissions.GRANT_PERMISSION;
-  }
-
-  if (!acu(req.session.permission).canSet(newPermission)) {
+  if (
+    !userToUpdateHasGrantPermission &&
+    !acu(permissionManagerPermission).canSet(newPermission)
+  ) {
     logger.warn(
       '/permissions POST',
       `${
@@ -59,19 +70,43 @@ async function updateUserPermission(req, res) {
   }
 
   if (
-    (req.session.permission & permissions.GRANT_PERMISSION) ===
-      permissions.GRANT_PERMISSION &&
-    permissionManagerIsUpdatingSelf &&
-    newPermissionIncludesGrant
+    userToUpdateHasGrantPermission &&
+    !newPermissionIncludeGrantPermission &&
+    !acu(permissionManagerPermission).canSet(newPermission)
   ) {
-    newPermission = newPermission | permissions.GRANT_PERMISSION;
+    logger.warn(
+      '/permissions POST',
+      `${
+        req.session.email
+      } tried to grant permission ${newPermission} to ${userEmail}`
+    );
+    return res.status(400).send();
+  }
+
+  if (
+    userToUpdateHasGrantPermission &&
+    newPermissionIncludeGrantPermission &&
+    !acu(permissionManagerPermission).canSetPermissionManager(newPermission)
+  ) {
+    logger.warn(
+      '/permissions POST',
+      `${
+        req.session.email
+      } tried to grant permission ${newPermission} to ${userEmail}`
+    );
+    return res.status(400).send();
   }
 
   try {
     const update = await db.User.update(
       { permission: newPermission },
       {
-        where: { email: userEmail, organizationId: req.session.organizationId }
+        where: {
+          id: userToUpdate.id,
+          email: userToUpdate.email,
+          permission: userToUpdate.permission,
+          organizationId: req.session.organizationId
+        }
       }
     );
 
