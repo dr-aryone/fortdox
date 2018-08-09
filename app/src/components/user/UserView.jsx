@@ -3,7 +3,7 @@ import CreateDocContainer from 'containers/document/CreateDocContainer';
 import UpdateDocContainer from 'containers/document/UpdateDocContainer';
 import InviteUserContainer from 'containers/invite/InviteUserContainer';
 import DevicesContainer from 'containers/devices/DevicesContainer';
-import AccessContainer from 'containers/access/AccessContainer';
+import PermissionsContainer from 'containers/permissions/PermissionsContainer';
 const React = require('react');
 const HeaderContainer = require('containers/user/HeaderContainer');
 const DownloadManager = require('components/general/DownloadManager');
@@ -39,7 +39,7 @@ const UserView = ({
       page = <DevicesContainer />;
       break;
     case 'ACCESS_VIEW':
-      page = <AccessContainer />;
+      page = <PermissionsContainer />;
       break;
     default:
       console.error(

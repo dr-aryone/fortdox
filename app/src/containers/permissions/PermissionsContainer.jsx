@@ -1,4 +1,4 @@
-import AccessView from 'components/access/AccessView';
+import PermissionsView from 'components/permissions/PermissionsView';
 const { connect } = require('react-redux');
 
 const mapStateToProps = () => {
@@ -9,9 +9,9 @@ const mapDispatchToProps = () => {
   return {};
 };
 
-const SearchViewContainer = connect(
+const PermissionsContainer = connect(
   mapStateToProps,
   mapDispatchToProps
-)(AccessView);
+)(PermissionsView);
 
-export default SearchViewContainer;
+export default PermissionsContainer;

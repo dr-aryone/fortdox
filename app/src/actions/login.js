@@ -25,21 +25,40 @@ export function directLogin() {
       });
 
     if (localStorage.getItem('activeUser')) {
+      let email;
+      let organization;
+      let response;
       try {
-        let response = await requestor.get(`${config.server}/login/check`);
-        return dispatch({
-          type: 'DIRECT_LOGIN_SUCCESS',
-          payload: {
-            email: response.body.email,
-            organization: response.body.organization
-          }
-        });
+        response = await requestor.get(`${config.server}/login/check`);
       } catch (error) {
+        console.error(error);
         localStorage.removeItem('activeUser');
         return dispatch({
           type: 'DIRECT_LOGIN_FAILED'
         });
       }
+
+      email = response.body.email;
+      organization = response.body.organization;
+      try {
+        response = await requestor.get(`${config.server}/permissions/me`);
+      } catch (error) {
+        console.error(error);
+        return dispatch({
+          type: 'DIRECT_LOGIN_FAILED'
+        });
+      }
+      const permission = response.body.permission;
+      const superUser = response.body.owner ? true : false;
+      return dispatch({
+        type: 'DIRECT_LOGIN_SUCCESS',
+        payload: {
+          email,
+          organization,
+          permission,
+          superUser
+        }
+      });
     } else {
       setTimeout(() => {
         return dispatch({
@@ -155,11 +174,27 @@ export function login() {
       writeDeviceIdToStorage(deviceId, organization, email);
     }
 
+    try {
+      response = await requestor.post(`${config.server}/permissions/me`);
+    } catch (error) {
+      switch (error.status) {
+        default:
+          return dispatch({
+            type: 'VERIFY_LOGIN_CREDS_ERROR',
+            payload: 'Unable to login. Please try again later.'
+          });
+      }
+    }
+
+    const permission = response.body.permission;
+    const superUser = response.body.owner ? true : false;
     return dispatch({
       type: 'VERIFY_LOGIN_CREDS_SUCCESS',
       payload: {
         email: email,
-        organization: organization
+        organization: organization,
+        permission,
+        superUser
       }
     });
   };
