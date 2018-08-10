@@ -61,20 +61,21 @@ module.exports = class UserList extends React.Component {
   }
 
   render() {
-    const { users } = this.props;
-
+    const { users, permissions } = this.props;
     const domUsers = users.map(user => (
       <div className={`user ${user.pending ? 'pending' : ''}`} key={user.email}>
         <span className='email'>{user.email}</span>
         <span className='pending'>{user.pending ? '(Pending)' : ''}</span>
         {this.props.user !== user.email && (
           <span>
-            <i
-              className='material-icons danger'
-              onClick={() => this.openDeleteDialog(user.email)}
-            >
-              clear
-            </i>
+            {permissions.get('REMOVE_USER') && (
+              <i
+                className='material-icons danger'
+                onClick={() => this.openDeleteDialog(user.email)}
+              >
+                clear
+              </i>
+            )}
             <i
               className='material-icons'
               onClick={() => this.openReinviteDialog(user.email)}

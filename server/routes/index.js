@@ -10,6 +10,7 @@ const devices = require('./devices');
 const { restrict } = require('app/sessions');
 const update = require('app/update');
 const reinvite = require('./reinvite');
+const permissions = require('./permissions');
 
 router.use('/login', login);
 router.use('/devices', devices);
@@ -20,5 +21,6 @@ router.use('/document', restrict, document);
 router.use('/tags', restrict, tags);
 router.use('/users', restrict, users);
 router.use('/update', update);
+router.use('/permissions', restrict, permissions);
 
 module.exports = router;

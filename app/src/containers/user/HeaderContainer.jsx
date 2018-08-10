@@ -5,7 +5,8 @@ const action = require('actions');
 const mapStateToProps = state => {
   return {
     organization: state.user.get('organization'),
-    email: state.user.get('email')
+    email: state.user.get('email'),
+    permissions: state.user.get('permissions')
   };
 };
 

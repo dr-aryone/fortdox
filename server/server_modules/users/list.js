@@ -1,5 +1,5 @@
 const db = require('app/models');
-const logger = require('winston');
+const logger = require('app/logger');
 
 module.exports = {
   listOrganizationMembers

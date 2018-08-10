@@ -9,7 +9,8 @@ module.exports = function(sequelize, DataTypes) {
         type: DataTypes.INTEGER
       },
       organizationId: {
-        type: DataTypes.INTEGER
+        type: DataTypes.INTEGER,
+        onDelete: 'SET NULL'
       },
       email: {
         unique: true,
@@ -19,6 +20,11 @@ module.exports = function(sequelize, DataTypes) {
       uuid: {
         type: DataTypes.UUID,
         unique: true
+      },
+      permission: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        defaultValue: 0
       }
     },
     {
@@ -26,7 +32,8 @@ module.exports = function(sequelize, DataTypes) {
     }
   );
   User.associate = models => {
-    User.belongsTo(models.Organization);
+    User.belongsTo(models.Organization, { foreignKey: 'organizationId' });
+
     User.hasMany(models.Devices, { foreignKey: 'userid' });
   };
   return User;
