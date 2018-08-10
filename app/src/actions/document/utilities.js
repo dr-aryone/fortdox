@@ -29,7 +29,12 @@ const {
   copyRenderer,
   documentLinkRenderer
 } = require('lib/remarkableExtensions');
-const md = new Remarkable();
+
+const md = new Remarkable({
+  breaks: true,
+  linkify: true
+});
+
 md.block.ruler.before('code', 'privatekey', privateKeyParser);
 md.inline.ruler.push('copy', copyParser);
 md.inline.ruler.push('documentLink', documentLinkParser);

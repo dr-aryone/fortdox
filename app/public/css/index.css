@@ -102,7 +102,7 @@ h3 {
   border-bottom-color: #fe4a49;
   border-width: 10px; }
 
-.box, .link-document, .doc-mode .modal-inner, .link-modal, .main-panel, .access-table, .search-item, .misc .created, .misc .edited, .misc .input-field, .misc .attachments, .preview, .preview .title .private-key, .list-inner {
+.box, .link-document, .doc-mode .modal-inner, .link-modal, .main-panel, .access-table, .search-item, .misc .created, .misc .edited, .misc .input-field, .misc .attachments, .preview, .preview .private-key, .list-inner {
   padding: 15px;
   margin-bottom: 20px;
   box-shadow: 0 2px 2px rgba(0, 0, 0, 0.15), 0 0 2px rgba(0, 0, 0, 0.11);
@@ -110,15 +110,15 @@ h3 {
   border-radius: 1px;
   box-sizing: border-box;
   word-break: break-word; }
-  .box .title, .link-document .title, .doc-mode .modal-inner .title, .link-modal .title, .main-panel .title, .access-table .title, .search-item .title, .misc .created .title, .misc .edited .title, .misc .input-field .title, .misc .attachments .title, .preview .title, .preview .title .private-key .title, .list-inner .title {
+  .box .title, .link-document .title, .doc-mode .modal-inner .title, .link-modal .title, .main-panel .title, .access-table .title, .search-item .title, .misc .created .title, .misc .edited .title, .misc .input-field .title, .misc .attachments .title, .preview .title, .list-inner .title {
     background-color: #f5f3f3;
     padding: 15px; }
-  .box .text, .link-document .text, .doc-mode .modal-inner .text, .link-modal .text, .main-panel .text, .access-table .text, .search-item .text, .misc .created .text, .misc .edited .text, .misc .input-field .text, .misc .attachments .text, .preview .text, .preview .title .private-key .text, .list-inner .text {
+  .box .text, .link-document .text, .doc-mode .modal-inner .text, .link-modal .text, .main-panel .text, .access-table .text, .search-item .text, .misc .created .text, .misc .edited .text, .misc .input-field .text, .misc .attachments .text, .preview .text, .list-inner .text {
     padding: 15px;
     margin: 0px; }
-  .box .hide, .link-document .hide, .doc-mode .modal-inner .hide, .link-modal .hide, .main-panel .hide, .access-table .hide, .search-item .hide, .misc .created .hide, .misc .edited .hide, .misc .input-field .hide, .misc .attachments .hide, .preview .hide, .preview .title .private-key .hide, .list-inner .hide {
+  .box .hide, .link-document .hide, .doc-mode .modal-inner .hide, .link-modal .hide, .main-panel .hide, .access-table .hide, .search-item .hide, .misc .created .hide, .misc .edited .hide, .misc .input-field .hide, .misc .attachments .hide, .preview .hide, .list-inner .hide {
     display: none; }
-  .box.invisible, .invisible.link-document, .doc-mode .invisible.modal-inner, .invisible.link-modal, .invisible.main-panel, .invisible.access-table, .invisible.search-item, .misc .invisible.created, .misc .invisible.edited, .misc .invisible.input-field, .misc .invisible.attachments, .invisible.preview, .preview .title .invisible.private-key, .invisible.list-inner {
+  .box.invisible, .invisible.link-document, .doc-mode .invisible.modal-inner, .invisible.link-modal, .invisible.main-panel, .invisible.access-table, .invisible.search-item, .misc .invisible.created, .misc .invisible.edited, .misc .invisible.input-field, .misc .invisible.attachments, .invisible.preview, .preview .invisible.private-key, .invisible.list-inner {
     visibility: hidden; }
 
 button {
@@ -1304,20 +1304,20 @@ label {
     .preview .title button {
       align-self: flex-start;
       margin-left: 1.67em; }
-    .preview .title .private-key {
+  .preview .private-key {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 270px;
+    margin: 10px auto 30px auto; }
+    .preview .private-key h4 {
+      color: #118ab2;
       display: flex;
-      align-items: center;
-      justify-content: space-between;
-      max-width: 270px;
-      margin: 10px auto 30px auto; }
-      .preview .title .private-key h4 {
-        color: #118ab2;
-        display: flex;
-        align-items: center; }
-        .preview .title .private-key h4 i {
-          color: #0cce6b;
-          margin-left: 5px;
-          font-size: 16px; }
+      align-items: center; }
+      .preview .private-key h4 i {
+        color: #0cce6b;
+        margin-left: 5px;
+        font-size: 16px; }
   .preview .texts {
     padding: 1em;
     padding-bottom: 1px;

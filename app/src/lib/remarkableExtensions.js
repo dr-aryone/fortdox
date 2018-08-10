@@ -10,7 +10,6 @@ module.exports = {
 function privateKeyParser(state, startLine, endLine) {
   let currentLine = state.getLines(startLine, startLine + 1, 1);
   let startMatch = /(.*)?-----BEGIN RSA PRIVATE KEY-----/.exec(currentLine);
-
   if (!startMatch) return false;
 
   let currentLineIndex = startLine + 1;
@@ -101,9 +100,9 @@ function documentLinkParser(state, silent) {
 }
 
 function privateKeyRenderer(tokens) {
-  return `<div class'rich-text-private-key'>${tokens[0].title}${
+  return `<div class='rich-text-private-key'><pre>${tokens[0].title}${
     tokens[0].content
-  }</div>`;
+  }</pre></div>`;
 }
 
 function copyRenderer(tokens) {
