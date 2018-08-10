@@ -14,7 +14,8 @@ const mapStateToProps = state => {
     userList: state.permissions.get('userList'),
     error: state.permissions.get('error'),
     message: state.permissions.get('message'),
-    superUser: state.user.get('superUser')
+    superUser: state.user.get('superUser'),
+    currentUser: state.user.get('email')
   };
 };
 

@@ -3,11 +3,15 @@
     @extend .box;
     display: table;
     width: 100%;
+    color: $charcoal;
   }
 
   &-header {
     font-weight: bold;
     display: table-row;
+    padding: 10px 0px;
+    text-transform: uppercase;
+    font-size: 1.1em;
   }
 
   &-row {
@@ -16,5 +20,18 @@
 
   &-cell {
     display: table-cell;
+    padding: 10px 0;
+
+    & > input {
+      margin: 0;
+    }
+
+    &.centered {
+      text-align: center;
+    }
+
+    &.permission {
+      padding-bottom: 5px;
+    }
   }
 }

@@ -1107,17 +1107,28 @@ label {
 
 .access-table {
   display: table;
-  width: 100%; }
+  width: 100%;
+  color: #3c3c3c; }
 
 .access-header {
   font-weight: bold;
-  display: table-row; }
+  display: table-row;
+  padding: 10px 0px;
+  text-transform: uppercase;
+  font-size: 1.1em; }
 
 .access-row {
   display: table-row; }
 
 .access-cell {
-  display: table-cell; }
+  display: table-cell;
+  padding: 10px 0; }
+  .access-cell > input {
+    margin: 0; }
+  .access-cell.centered {
+    text-align: center; }
+  .access-cell.permission {
+    padding-bottom: 5px; }
 
 .search-container {
   display: flex;
