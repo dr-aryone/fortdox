@@ -1,38 +1,6 @@
 const requestor = require('@edgeguideab/client-request');
 const config = require('config.json');
 
-export default {
-  getUserPermissions,
-  getPermissionsList,
-  getUserPermissionsList
-};
-
-export function getUserPermissions() {
-  return async dispatch => {
-    dispatch({
-      type: 'GET_USER_PERMISSIONS_START'
-    });
-
-    let response;
-    try {
-      response = await requestor.get(`${config.server}/permissions/me`);
-    } catch (error) {
-      console.error(error);
-      switch (error.status) {
-        default:
-          return dispatch({
-            type: 'GET_USER_PERMISSIONS_ERROR'
-          });
-      }
-    }
-
-    dispatch({
-      type: 'GET_USER_PERMISSIONS_SUCCESS',
-      payload: response.body
-    });
-  };
-}
-
 export function getPermissionsList() {
   return async dispatch => {
     dispatch({

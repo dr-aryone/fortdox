@@ -22,32 +22,40 @@ class Header extends React.Component {
         hasBeenClicked: true
       });
 
-    this.setState({
-      show: false
-    });
+    if (event.target.id === '')
+      this.setState({
+        show: false
+      });
     window.removeEventListener('click', this.onClose, true);
   }
 
   clickHandler(event, button, logout) {
-    if (button === 'TOGGLE-NAV' && this.state.hasBeenClicked)
+    if (button === 'TOGGLE-NAV' && this.state.hasBeenClicked) {
       return this.setState({
-        hasBeenClicked: false
+        hasBeenClicked: false,
+        show: !this.state.show
       });
+    }
 
     if (!this.state.show) window.addEventListener('click', this.onClose, true);
 
     if (button && logout) return logout();
 
-    if (button !== 'TOGGLE-NAV') return this.props.changeView(button);
+    if (button !== 'TOGGLE-NAV') {
+      return this.props.changeView(button);
+    }
 
-    return this.setState({ show: !this.state.show });
+    this.setState({ show: !this.state.show });
   }
 
   render() {
     let { organization, email, changeView, logout, permissions } = this.props;
 
     const accessControl = (
-      <li onClick={event => this.clickHandler(event, 'ACCESS_VIEW', null)}>
+      <li
+        onClick={event => this.clickHandler(event, 'ACCESS_VIEW', null)}
+        id='ACCESS_VIEW'
+      >
         <i className='material-icons'>supervisor_account</i> Access Management
       </li>
     );
@@ -106,8 +114,9 @@ class Header extends React.Component {
                     onClick={event =>
                       this.clickHandler(event, 'LOGOUT', logout)
                     }
+                    id='LOGOUT'
                   >
-                    <i className='material-icons'>power_settings_new</i>
+                    <i className='material-icons logout'>power_settings_new</i>
                     Log out
                   </li>
                 </ul>

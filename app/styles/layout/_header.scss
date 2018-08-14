@@ -75,6 +75,10 @@
             color: lighten($text-color, 20%);
 
             .material-icons {
+              color: lighten($primary-color, 20%);
+            }
+
+            .logout {
               color: $pink;
             }
           }

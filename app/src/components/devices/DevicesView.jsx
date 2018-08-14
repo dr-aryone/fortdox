@@ -227,7 +227,11 @@ module.exports = class DevicesView extends React.Component {
             >
               Delete
             </button>
-            <button onClick={this.closeDialog} type='button'>
+            <button
+              onClick={this.closeDialog}
+              type='button'
+              className='neutral'
+            >
               Cancel
             </button>
           </div>

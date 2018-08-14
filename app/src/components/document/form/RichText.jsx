@@ -144,7 +144,7 @@ class RichText extends Component {
     this.state.activeEditor.insertContent(
       `<span class='document-link' data-id='${id}'>${name}</span>`
     );
-    // this.handleEditorChange();
+
     this.setState({
       showLinkDocumentModal: false
     });
@@ -154,7 +154,7 @@ class RichText extends Component {
     let url = this.state.url;
     let urlText = this.state.urlText;
     this.state.activeEditor.insertContent(`<a href='${url}'>${urlText}</a>`);
-    // this.handleEditorChange();
+
     this.setState({
       showLinkModal: false,
       url: '',
