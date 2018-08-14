@@ -3,6 +3,7 @@ import {
   tableRule,
   privateKeyRule,
   copyRule,
+  passwordRule,
   documentLinkRule
 } from 'lib/turndownExtensions';
 const turndownPluginGfm = require('turndown-plugin-gfm');
@@ -18,6 +19,7 @@ turndownService.use([tables]);
 turndownService.addRule('table', tableRule);
 turndownService.addRule('privateKey', privateKeyRule);
 turndownService.addRule('copy', copyRule);
+turndownService.addRule('password', passwordRule);
 turndownService.addRule('documentLink', documentLinkRule);
 
 const Remarkable = require('remarkable');
@@ -26,7 +28,7 @@ const {
   copyParser,
   documentLinkParser,
   privateKeyRenderer,
-  copyRenderer,
+  copyPasswordRenderer,
   documentLinkRenderer
 } = require('lib/remarkableExtensions');
 
@@ -39,7 +41,7 @@ md.block.ruler.before('code', 'privatekey', privateKeyParser);
 md.inline.ruler.push('copy', copyParser);
 md.inline.ruler.push('documentLink', documentLinkParser);
 md.renderer.rules.privatekey = privateKeyRenderer;
-md.renderer.rules.copy = copyRenderer;
+md.renderer.rules.copy = copyPasswordRenderer;
 md.renderer.rules.documentLink = documentLinkRenderer;
 
 export default { getPrefix, htmlToMarkdown, markdownToHtml };

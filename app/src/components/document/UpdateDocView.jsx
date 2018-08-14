@@ -224,7 +224,7 @@ class UpdateDocView extends React.Component {
         onClose={this.closeEditDialog}
         showClose={false}
       >
-        <div className='box dialog warning'>
+        <div className='box dialog danger'>
           <i className='material-icons'>error_outline</i>
           <h2>Document has been changed.</h2>
           <p>Do you want to save your changes?</p>

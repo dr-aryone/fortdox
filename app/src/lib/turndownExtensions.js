@@ -37,6 +37,15 @@ const copyRule = {
     return node.nodeName === 'DIV' && node.className === 'rich-text-copy';
   },
   replacement: function(content) {
+    return `@copy@${content}@copy@`;
+  }
+};
+
+const passwordRule = {
+  filter: function(node) {
+    return node.nodeName === 'DIV' && node.className === 'rich-text-password';
+  },
+  replacement: function(content) {
     return `@password@${content}@password@`;
   }
 };
@@ -50,4 +59,4 @@ const documentLinkRule = {
   }
 };
 
-export { tableRule, copyRule, privateKeyRule, documentLinkRule };
+export { tableRule, copyRule, privateKeyRule, passwordRule, documentLinkRule };
