@@ -116,7 +116,7 @@ class Header extends React.Component {
                     }
                     id='LOGOUT'
                   >
-                    <i className='material-icons'>power_settings_new</i>
+                    <i className='material-icons logout'>power_settings_new</i>
                     Log out
                   </li>
                 </ul>

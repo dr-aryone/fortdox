@@ -682,6 +682,8 @@ label {
         background-color: transparent;
         color: #69676b; }
         .header .container .account .account-icons .dropdown li:hover .material-icons {
+          color: #3dc1ec; }
+        .header .container .account .account-icons .dropdown li:hover .logout {
           color: #ff5964; }
 
 .side-bar {
