@@ -1,5 +1,6 @@
 const logger = require('app/logger');
 const es = require('app/elastic_search');
+const path = require('path');
 
 async function getAttachment(req, res) {
   let id = req.params.id;
@@ -48,7 +49,7 @@ async function getAttachment(req, res) {
       );
       return res.status(500).send();
     }
-    res.sendFile(attachment.path, {}, error => {
+    res.sendFile(path.resolve(attachment.path), {}, error => {
       if (error) {
         logger.error(
           '/document/id/attachment/attachmentIndex',
