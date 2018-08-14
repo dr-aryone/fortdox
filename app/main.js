@@ -323,7 +323,9 @@ app.on('window-all-closed', () => {
 });
 
 ipcMain.on('outdated-client', () => {
-  updateDialog();
+  if (config.autoUpdates) {
+    updateDialog();
+  }
 });
 
 function updateDialog() {
@@ -346,8 +348,10 @@ function updateDialog() {
   });
 }
 
-//const updateFeed = `${config.server}/update/${config.clientVersion}`;
-//autoUpdater.setFeedURL(updateFeed);
+if (config.autoUpdates) {
+  const updateFeed = `${config.server}/update/${config.clientVersion}`;
+  autoUpdater.setFeedURL(updateFeed);
+}
 
 //autoUpdater events
 autoUpdater.on('error', error => {
