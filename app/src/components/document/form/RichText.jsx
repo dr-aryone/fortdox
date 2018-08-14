@@ -6,7 +6,7 @@ import Modal from 'components/general/Modal';
 const plugins = 'lists table';
 
 const toolbar =
-  'styleselect | bold italic | markdownCode blockquote | bullist numlist | link table | privateKey copyPass linkDocument';
+  'styleselect | bold italic | markdownCode blockquote | bullist numlist | link table | privateKey password customCopy linkDocument';
 
 const formats = {
   codeMark: { inline: 'code' },
@@ -18,6 +18,10 @@ const formats = {
   copy: {
     block: 'div',
     classes: 'rich-text-copy'
+  },
+  password: {
+    block: 'div',
+    classes: 'rich-text-password'
   }
 };
 
@@ -54,6 +58,7 @@ class RichText extends Component {
     this.setState({ activeEditor: editor });
     editor.addButton('markdownCode', {
       icon: 'code',
+      tooltip: 'Code',
       onclick: function() {
         editor.execCommand('mceToggleFormat', false, 'codeMark');
       },
@@ -67,7 +72,8 @@ class RichText extends Component {
       }
     });
     editor.addButton('privateKey', {
-      icon: 'lock',
+      icon: 'vpn_key material-icons',
+      tooltip: 'Private Key',
       onclick: function() {
         editor.execCommand('mceToggleFormat', false, 'privateKey');
       },
@@ -80,8 +86,9 @@ class RichText extends Component {
         });
       }
     });
-    editor.addButton('copyPass', {
+    editor.addButton('customCopy', {
       icon: 'copy',
+      tooltip: 'Copy',
       onclick: function() {
         editor.execCommand('mceToggleFormat', false, 'copy');
       },
@@ -94,13 +101,30 @@ class RichText extends Component {
         });
       }
     });
+    editor.addButton('password', {
+      icon: 'lock',
+      tooltip: 'Password',
+      onclick: function() {
+        editor.execCommand('mceToggleFormat', false, 'password');
+      },
+      onpostrender: function() {
+        var btn = this;
+        editor.on('init', function() {
+          editor.formatter.formatChanged('password', function(state) {
+            btn.active(state);
+          });
+        });
+      }
+    });
     editor.addButton('linkDocument', {
-      icon: 'link',
+      icon: 'link-document material-icons',
+      tooltip: 'Link Document',
       onclick: this.onLinkDocumentButtonClick
     });
 
     editor.addButton('link', {
       icon: 'link',
+      tooltip: 'Hyperlink',
       onclick: this.onLinkButtonClick
     });
   }

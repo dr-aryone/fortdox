@@ -3,7 +3,7 @@ module.exports = {
   copyParser,
   documentLinkParser,
   privateKeyRenderer,
-  copyRenderer,
+  copyPasswordRenderer,
   documentLinkRenderer
 };
 
@@ -99,18 +99,20 @@ function documentLinkParser(state, silent) {
   return true;
 }
 
-function privateKeyRenderer(tokens) {
-  return `<div class='rich-text-private-key'><pre>${tokens[0].title}${
-    tokens[0].content
+function privateKeyRenderer(tokens, index) {
+  return `<div class='rich-text-private-key'><pre>${tokens[index].title}${
+    tokens[index].content
   }</pre></div>`;
 }
 
-function copyRenderer(tokens) {
-  return `<div class='rich-text-copy'>${tokens[0].content}</div>`;
+function copyPasswordRenderer(tokens, index) {
+  if (tokens[index].title === 'copy')
+    return `<div class='rich-text-copy'>${tokens[index].content}</div>`;
+  else return `<div class='rich-text-password'>${tokens[index].content}</div>`;
 }
 
-function documentLinkRenderer(tokens) {
-  return `<span class='document-link' data-id='${tokens[0].id}'>${
-    tokens[0].name
+function documentLinkRenderer(tokens, index) {
+  return `<span class='document-link' data-id='${tokens[index].id}'>${
+    tokens[index].name
   }</span>`;
 }

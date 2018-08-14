@@ -401,18 +401,31 @@ label {
 
 #tinymce {
   background-color: white;
-  margin: 0px 1em; }
+  margin: 0px 1em;
+  overflow: scroll; }
   #tinymce .rich-text-private-key {
     padding: 10px;
     margin: 10px;
     background-color: #f5f3f3; }
   #tinymce .rich-text-copy {
+    border: 1px solid #3c3c3c;
+    margin: 1em 5em;
+    padding: 1em; }
+  #tinymce .rich-text-password {
     border: 1px dashed #3c3c3c;
     margin: 1em 5em;
     padding: 1em; }
   #tinymce .document-link {
     color: blue;
     text-decoration: underline; }
+
+i.mce-i-vpn_key:before {
+  content: 'vpn_key';
+  font-family: 'Material Icons'; }
+
+i.mce-i-link-document:before {
+  content: 'link';
+  font-family: 'Material Icons'; }
 
 .link-modal {
   display: flex;
