@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import LoaderOverlay from 'components/general/LoaderOverlay';
 import Toast from 'components/general/Toast';
 import ErrorBox from 'components/general/ErrorBox';
+import config from 'config.json';
+const permissionList = config.permissions;
 
 class PermissionsView extends Component {
   constructor(props) {
@@ -53,24 +55,32 @@ class PermissionsView extends Component {
       for (let i = 0; i < permissionsList.size; i++) {
         const permission = parseInt(permissionsKeys.get(i), 10);
         let isDisabled = false;
-        if (!superUser && permission === 1) isDisabled = true;
-        if (!superUser && (user.get('permission') & 1) === 1) isDisabled = true;
+        if (!superUser && permissionList[permission] === 'ADMIN')
+          isDisabled = true;
+        if (
+          !superUser &&
+          permissionList[user.get('permission') & 1] === 'ADMIN'
+        )
+          isDisabled = true;
         if (superUser && currentUser === user.get('email')) isDisabled = true;
         checkBoxes.push(
           <div className='access-cell centered' key={`${index}-${i}`}>
-            <input
-              type='checkbox'
-              checked={(user.get('permission') & permission) === permission}
-              onChange={e =>
-                this.onCheckBoxChange(
-                  user.get('email'),
-                  user.get('permission'),
-                  permission,
-                  e
-                )
-              }
-              disabled={isDisabled}
-            />
+            <div className='checkbox'>
+              <input
+                type='checkbox'
+                checked={(user.get('permission') & permission) === permission}
+                onChange={e =>
+                  this.onCheckBoxChange(
+                    user.get('email'),
+                    user.get('permission'),
+                    permission,
+                    e
+                  )
+                }
+                disabled={isDisabled}
+              />
+              <label />
+            </div>
           </div>
         );
       }

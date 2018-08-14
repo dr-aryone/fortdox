@@ -1,5 +1,6 @@
 const requestor = require('@edgeguideab/client-request');
 const config = require('config.json');
+const permissions = config.permissions;
 
 export function getPermissionsList() {
   return async dispatch => {
@@ -13,9 +14,11 @@ export function getPermissionsList() {
     } catch (error) {
       console.error(error);
       switch (error.status) {
+        case 500:
         default:
           return dispatch({
-            type: 'GET_PERMISSIONS_LIST_ERROR'
+            type: 'GET_PERMISSIONS_LIST_ERROR',
+            payload: 'Unable to connect to server. Please try again later.'
           });
       }
     }
@@ -39,9 +42,11 @@ export function getUserPermissionsList() {
     } catch (error) {
       console.error(error);
       switch (error.status) {
+        case 500:
         default:
           return dispatch({
-            type: 'GET_USER_PERMISSIONS_LIST_ERROR'
+            type: 'GET_USER_PERMISSIONS_LIST_ERROR',
+            payload: 'Unable to connect to server. Please try again later.'
           });
       }
     }
@@ -59,7 +64,7 @@ export function updatePermission(email, userPermission, permission, toggle) {
       type: 'UPDATE_PERMISSION_START'
     });
 
-    if (permission === 1) {
+    if (permissions[permission] === 'ADMIN') {
       try {
         if (toggle)
           await requestor.post(`${config.server}/permissions/admin`, {
@@ -71,10 +76,20 @@ export function updatePermission(email, userPermission, permission, toggle) {
           await requestor.delete(`${config.server}/permissions/admin/${email}`);
       } catch (error) {
         console.error(error);
-        return dispatch({
-          type: 'UPDATE_PERMISSION_ERROR',
-          payload: `Unable to update permission for ${email}. Please try again later.`
-        });
+        switch (error.status) {
+          case 400:
+          case 403:
+            return dispatch({
+              type: 'UPDATE_PERMISSION_ERROR',
+              payload: `Unable to update permission for ${email}.`
+            });
+          case 500:
+          default:
+            return dispatch({
+              type: 'UPDATE_PERMISSION_ERROR',
+              payload: 'Unable to connect to server. Please try again later.'
+            });
+        }
       }
     } else {
       try {

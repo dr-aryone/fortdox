@@ -56,7 +56,10 @@ class Header extends React.Component {
         onClick={event => this.clickHandler(event, 'ACCESS_VIEW', null)}
         id='ACCESS_VIEW'
       >
-        <i className='material-icons'>supervisor_account</i> Access Management
+        <i className='material-icons' id='ACCESS_VIEW'>
+          supervisor_account
+        </i>{' '}
+        Access Management
       </li>
     );
 
@@ -116,7 +119,9 @@ class Header extends React.Component {
                     }
                     id='LOGOUT'
                   >
-                    <i className='material-icons logout'>power_settings_new</i>
+                    <i className='material-icons logout' id='LOGOUT'>
+                      power_settings_new
+                    </i>
                     Log out
                   </li>
                 </ul>

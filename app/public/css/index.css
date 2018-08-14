@@ -1138,14 +1138,20 @@ i.mce-i-link-document:before {
   padding: 10px 0px;
   text-transform: uppercase;
   font-size: 1.1em; }
+  .access-header .access-cell {
+    padding: 0;
+    padding-bottom: 15px; }
 
 .access-row {
   display: table-row; }
+  .access-row:last-child .access-cell {
+    border-bottom: 0; }
 
 .access-cell {
   display: table-cell;
-  padding: 10px 0; }
-  .access-cell > input {
+  padding: 15px 0;
+  border-bottom: 1px solid #f5f3f3; }
+  .access-cell input {
     margin: 0; }
   .access-cell.centered {
     text-align: center; }
