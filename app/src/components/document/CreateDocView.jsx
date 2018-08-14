@@ -116,7 +116,7 @@ class CreateDocView extends Component {
           <p>Do you want to save your changes?</p>
           <div className='buttons'>
             <button
-              className='first-button'
+              className='first-button warning'
               onClick={() =>
                 this.props.hasChecked(
                   this.state.nextView ? this.state.nextView : 'SEARCH_VIEW'
@@ -132,6 +132,7 @@ class CreateDocView extends Component {
                 this.closeEditDialog();
               }}
               type='button'
+              className='neutral'
             >
               Cancel
             </button>
@@ -156,7 +157,11 @@ class CreateDocView extends Component {
           <ErrorBox errorMsg={error} />
           {editedDialog}
           <h1 className='doc-header'>
-            <button type='button' onClick={() => this.checkEdits(docFields)}>
+            <button
+              type='button'
+              onClick={() => this.checkEdits(docFields)}
+              className='neutral'
+            >
               Back
             </button>
             Create Document
@@ -186,7 +191,11 @@ class CreateDocView extends Component {
             onConvert={onConvert}
           >
             <div className='doc-buttons'>
-              <button onClick={() => this.checkEdits(docFields)} type='button'>
+              <button
+                onClick={() => this.checkEdits(docFields)}
+                type='button'
+                className='neutral'
+              >
                 Cancel
               </button>
               <button

@@ -138,6 +138,12 @@ button {
   box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 6px, rgba(0, 0, 0, 0.12) 0px 1px 4px;
   transition: all 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms;
   user-select: none; }
+  button.neutral {
+    background: white;
+    color: #3c3c3c; }
+    button.neutral:hover {
+      background: #fcfbfb;
+      color: #898989; }
   button.warning {
     background: #fe4a49; }
     button.warning:hover {
@@ -172,6 +178,7 @@ button {
     text-align: center;
     margin-top: 5px; }
   button:disabled {
+    color: #bcbcbc;
     background: #f5f3f3;
     box-shadow: none; }
     button:disabled:active, button:disabled:hover {
@@ -831,11 +838,11 @@ label {
       border: 1px solid #f5f3f3;
       border-top: none; }
     .input-field .toggle-editor button:hover {
-      background-color: #f5f3f3;
-      color: white; }
+      color: #bcbcbc;
+      background-color: #f5f3f3; }
     .input-field .toggle-editor button:disabled {
-      background-color: #f5f3f3;
-      color: white; }
+      color: #bcbcbc;
+      background-color: #f5f3f3; }
   .input-field.warning div.arrow_box {
     display: flex; }
   .input-field.warning input {
@@ -1254,7 +1261,7 @@ label {
     width: 25%;
     padding: 0px; }
     .misc .attachments:only-child {
-      padding: 0px;
+      margin: 0px;
       width: 100%; }
   .misc .tag:hover {
     text-decoration: underline;

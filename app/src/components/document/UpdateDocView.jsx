@@ -203,7 +203,11 @@ class UpdateDocView extends React.Component {
           <h2>Warning</h2>
           <p>Are you sure you want to delete the document?</p>
           <div className='doc-buttons'>
-            <button onClick={this.closeDeleteDialog} type='button'>
+            <button
+              onClick={this.closeDeleteDialog}
+              type='button'
+              className='neutral'
+            >
               Cancel
             </button>
             <button onClick={onDelete} type='button' className='warning'>
@@ -231,7 +235,7 @@ class UpdateDocView extends React.Component {
                   this.state.nextView ? this.state.nextView : 'SEARCH_VIEW'
                 )
               }
-              className='first-button'
+              className='first-button warning'
               type='button'
             >
               {'Don\'t save'}
@@ -242,6 +246,7 @@ class UpdateDocView extends React.Component {
                 this.props.onUnCheckField();
               }}
               type='button'
+              className='neutral'
             >
               Cancel
             </button>
@@ -272,7 +277,11 @@ class UpdateDocView extends React.Component {
           <div className={`${showVersionPanel ? 'document-container' : ''}`}>
             <ErrorBox errorMsg={error} />
             <h1 className='doc-header'>
-              <button type='button' onClick={() => this.checkEdits(docFields)}>
+              <button
+                type='button'
+                onClick={() => this.checkEdits(docFields)}
+                className='neutral'
+              >
                 Back
               </button>
               Update Document
@@ -311,7 +320,7 @@ class UpdateDocView extends React.Component {
                 >
                   {!permissions.get('DELETE_DOCUMENT') && (
                     <span className='tooltiptext'>
-                      You don't have permission to delete document
+                      {'You don\'t have permission to delete document'}
                     </span>
                   )}
                   Delete
@@ -320,6 +329,7 @@ class UpdateDocView extends React.Component {
                   <button
                     type='button'
                     onClick={() => this.checkEdits(docFields)}
+                    className='neutral'
                   >
                     Back
                   </button>

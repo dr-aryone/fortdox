@@ -27,13 +27,13 @@
     }
 
     button:hover {
+      color: lighten($charcoal, 50%);
       background-color: $grey;
-      color: white;
     }
 
     button:disabled {
+      color: lighten($charcoal, 50%);
       background-color: $grey;
-      color: white;
     }
   }
 
