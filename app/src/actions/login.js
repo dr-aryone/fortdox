@@ -18,6 +18,32 @@ export function directLogin() {
       type: 'DIRECT_LOGIN_START'
     });
 
+    //Migrating privatekey from storage to keychain
+    const oldStorage = JSON.parse(window.localStorage.getItem('fortdox'));
+    if (oldStorage) {
+      for (let email in oldStorage) {
+        for (let organization in oldStorage[email]) {
+          const privateKey = oldStorage[email][organization].privateKey;
+          const salt = oldStorage[email][organization].salt;
+          try {
+            await addKey(privateKey, email, organization);
+          } catch (error) {
+            return dispatch({
+              type: 'VERIFY_LOGIN_CREDS_ERROR',
+              payload: 'Unable to migrate privateKey'
+            });
+          }
+          writeStorage(salt, organization, email);
+        }
+      }
+
+      window.localStorage.removeItem('fortdox');
+      return dispatch({
+        type: 'PRIVATE_KEY_MIGRATION_DONE',
+        payload: 'Migration of old data has been completed.'
+      });
+    }
+
     let state = getState();
     if (state.verifyUser.get('forceBack'))
       return dispatch({
@@ -106,24 +132,6 @@ export function login() {
     const email = state.login.get('email');
     const password = state.login.get('password');
     const organization = state.login.get('organization');
-
-    //Migrating privatekey from storage to keychain
-    const oldStorage = window.localStorage.getItem('fortdox');
-    if (oldStorage) {
-      try {
-        await addKey(
-          oldStorage[email][organization].privateKey,
-          email,
-          organization
-        );
-      } catch (error) {
-        return dispatch({
-          type: 'VERIFY_LOGIN_CREDS_ERROR',
-          payload: 'Unable to migrate privateKey'
-        });
-      }
-      writeStorage(salt, organization, email);
-    }
 
     const storage = readStorage();
     const salt = storage[email][organization].salt;
