@@ -23,6 +23,17 @@ const querystring = window.require('querystring');
 let queryParameters = querystring.parse(url.parse(window.location.href).query);
 let loginActions = require('./actions/login');
 
+document.addEventListener('keydown', function(e) {
+  if (e.code === 'KeyI' && e.metaKey && e.shiftKey) {
+    window
+      .require('electron')
+      .remote.getCurrentWindow()
+      .toggleDevTools();
+  } else if (e.which === 116) {
+    window.location.reload();
+  }
+});
+
 request.bind(`${config.server}/*`, middlewareChain);
 
 function middlewareChain(data) {
