@@ -29,26 +29,24 @@ const {
 } = devtools;
 app.setAsDefaultProtocolClient(config.name);
 
-const isSecondInstance = app.makeSingleInstance(
-  (commandLine, workingDirectory) => {
-    pollingJob = setInterval(() => {
-      if (process.platform === 'win32' && commandLine[1] !== undefined) {
-        let url = commandLine[1];
-        redirectParameters = setActivationParams(url);
-        switch (redirectParameters.type) {
-          case 'organization':
-            activateOrganization(redirectParameters.code);
-            break;
-          case 'user':
-            activateUser(url);
-        }
+const isSecondInstance = app.makeSingleInstance(commandLine => {
+  pollingJob = setInterval(() => {
+    if (process.platform === 'win32' && commandLine[1] !== undefined) {
+      let url = commandLine[1];
+      redirectParameters = setActivationParams(url);
+      switch (redirectParameters.type) {
+        case 'organization':
+          activateOrganization(redirectParameters.code);
+          break;
+        case 'user':
+          activateUser(url);
       }
-    }, 1000);
-    if (openWindow) {
-      win.focus();
     }
+  }, 1000);
+  if (openWindow) {
+    win.focus();
   }
-);
+});
 
 if (isSecondInstance) {
   app.quit();
