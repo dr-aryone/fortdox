@@ -13,6 +13,7 @@ module.exports = client => {
           id: query.id
         });
 
+        current._source.versions = current._source.versions || [];
         const versions = current._source.versions;
         const currentAttachments = current._source.attachments;
 
@@ -107,7 +108,7 @@ module.exports = client => {
 
         return resolve(response);
       } catch (error) {
-        console.error(error);
+        logger.error(error);
         return reject(500);
       }
     });
