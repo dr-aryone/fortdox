@@ -106,13 +106,13 @@ export function login() {
     const email = state.login.get('email');
     const password = state.login.get('password');
     const organization = state.login.get('organization');
-    const storage = readStorage();
-    const salt = storage[email][organization].salt;
 
-    if (storage[email][organization].privateKey) {
+    //Migrating privatekey from storage to keychain
+    const oldStorage = window.localStorage.getItem('fortdox');
+    if (oldStorage) {
       try {
         await addKey(
-          storage[email][organization].privateKey,
+          oldStorage[email][organization].privateKey,
           email,
           organization
         );
@@ -122,9 +122,11 @@ export function login() {
           payload: 'Unable to migrate privateKey'
         });
       }
-      writeStorage(salt, email, organization);
+      writeStorage(salt, organization, email);
     }
 
+    const storage = readStorage();
+    const salt = storage[email][organization].salt;
     let encryptedPrivateKey;
     try {
       encryptedPrivateKey = await readKey(email, organization);
@@ -137,7 +139,6 @@ export function login() {
     }
 
     let privateKey;
-    let deviceId = storage[email][organization].deviceId;
     try {
       let paddedPassword = (await aes.generatePaddedKey(
         password,
@@ -156,6 +157,8 @@ export function login() {
         error: true
       });
     }
+
+    let deviceId = storage[email][organization].deviceId;
     let response;
     try {
       response = await requestor.post(`${config.server}/login`, {
@@ -186,6 +189,8 @@ export function login() {
     }
 
     localStorage.setItem('activeUser', response.body.token);
+
+    // Migrating non-existing deviceId
     const serverGaveUsdeviceId = response.body.deviceId !== undefined;
     if (serverGaveUsdeviceId) {
       deviceId = response.body.deviceId;
