@@ -46,6 +46,8 @@ const login = (state = initialState, action) => {
       return state.set('message', fromJS(action.payload.message));
     case 'ACTIVATE_ORGANIZATION_SUCCESS':
       return state.set('message', fromJS(action.payload));
+    case 'PRIVATE_KEY_MIGRATION_DONE':
+      return state.set('message', fromJS(action.payload)).set('error', null);
     default:
       return state;
   }
