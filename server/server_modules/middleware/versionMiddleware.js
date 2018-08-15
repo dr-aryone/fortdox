@@ -36,12 +36,25 @@ const checkVersion = function(req, res, next) {
 };
 
 function correctVersion(version) {
-  if (version) {
-    if (version === config.clientVersion) {
-      return true;
-    }
+  if (typeof version !== 'string') {
+    return false;
   }
-  return false;
+
+  const longest = Math.max(
+    version.split('.').length,
+    config.clientVersion.split('.').length
+  );
+
+  return numerify(version, longest) >= numerify(config.clientVersion, longest);
+
+  function numerify(v, maxLength) {
+    const num = parseInt(v.replace(/\./gi, '').padEnd(maxLength, '0'));
+    if (isNaN(num)) {
+      return -Infinity;
+    }
+
+    return num;
+  }
 }
 
 module.exports = { checkVersion, correctVersion };
