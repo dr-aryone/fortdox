@@ -89,12 +89,13 @@ const DocumentForm = ({
           onPreviewAttachment={onPreviewAttachment}
           onDownloadAttachment={onDownloadAttachment}
         />
-        {versions ? (
-          <MetaData
-            versions={versions}
-            onToggleVersionPanel={onToggleVersionPanel}
-          />
-        ) : null}
+        {versions &&
+          versions.size > 0 && (
+            <MetaData
+              versions={versions}
+              onToggleVersionPanel={onToggleVersionPanel}
+            />
+          )}
       </div>
     </form>
   );

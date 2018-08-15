@@ -74,7 +74,7 @@ export class PreviewDoc extends React.Component {
     ) : null;
 
     let metaData = '';
-    if (docFields.get('versions')) {
+    if (docFields.get('versions') && docFields.get('versions').size > 0) {
       let versions = docFields.get('versions');
       let created = versions.get(0);
       let edited = versions.get(versions.size - 1);
