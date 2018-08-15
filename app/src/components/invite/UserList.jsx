@@ -1,5 +1,7 @@
 const React = require('react');
 const Modal = require('components/general/Modal');
+const config = require('config.json');
+const permissionList = config.permissions;
 
 module.exports = class UserList extends React.Component {
   constructor(props) {
@@ -63,25 +65,24 @@ module.exports = class UserList extends React.Component {
   render() {
     const { users, permissions } = this.props;
     const domUsers = users.map(user => (
-      <div className={`user ${user.pending ? 'pending' : ''}`} key={user.email}>
+      <div key={user.email} className='user'>
         <span className='email'>{user.email}</span>
-        <span className='pending'>{user.pending ? '(Pending)' : ''}</span>
-        {this.props.user !== user.email && (
-          <span>
-            {permissions.get('REMOVE_USER') && (
-              <i
-                className='material-icons danger'
-                onClick={() => this.openDeleteDialog(user.email)}
-              >
-                clear
-              </i>
-            )}
-            <i
-              className='material-icons'
-              onClick={() => this.openReinviteDialog(user.email)}
-            >
-              contact_mail
-            </i>
+        <span className='role'>
+          {permissionList[user.permission & 1] === 'ADMIN' ? 'Admin' : ''}
+        </span>
+        <span className='pending'>{user.pending ? 'Pending' : ''}</span>
+        <span
+          onClick={() => this.openReinviteDialog(user.email)}
+          className='reinvite'
+        >
+          <i className='material-icons'>mail</i> Reinvite
+        </span>
+        {permissions.get('REMOVE_USER') && (
+          <span
+            onClick={() => this.openDeleteDialog(user.email)}
+            className='delete'
+          >
+            <i className='material-icons'>delete</i> Delete
           </span>
         )}
       </div>
@@ -143,15 +144,13 @@ module.exports = class UserList extends React.Component {
     );
 
     return (
-      <div className='user-list'>
+      <div className='user-list preview no-margin-top'>
         {deleteDialog}
         {reinviteDialog}
-        <div className='preview no-margin-top'>
-          <div className='title small'>
-            <h1>Users in organization</h1>
-          </div>
-          <div className='organization-users'>{domUsers}</div>
+        <div className='title small'>
+          <h3>Users in organization</h3>
         </div>
+        <div className='organization-users'>{domUsers}</div>
       </div>
     );
   }

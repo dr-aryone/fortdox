@@ -64,6 +64,14 @@ export function updatePermission(email, userPermission, permission, toggle) {
       type: 'UPDATE_PERMISSION_START'
     });
 
+    if (userPermission & (1 === 1) && permissions[permission] !== 'ADMIN')
+      return dispatch({
+        type: 'UPDATE_PERMISSION_ERROR',
+        payload: `Cannot remove ${
+          permissions[permission]
+        } permission from an admin. `
+      });
+
     if (permissions[permission] === 'ADMIN') {
       try {
         if (toggle)

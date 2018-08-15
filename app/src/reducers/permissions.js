@@ -31,6 +31,8 @@ const permissions = (state = initialState, action) => {
         .set('message', fromJS(action.payload));
     case 'HIDE_TOAST':
       return state.set('message', null);
+    case 'CHANGE_VIEW':
+      return state.set('error', null);
     default:
       return state;
   }

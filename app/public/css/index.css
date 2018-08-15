@@ -586,38 +586,47 @@ i.mce-i-link-document:before {
     border-radius: 16px; }
 
 .user-list {
-  display: flex; }
-  .user-list .alert {
-    margin: 20px; }
-
-.organization-users {
-  display: flex;
-  flex-direction: column; }
-  .organization-users .user {
-    display: flex;
-    align-items: center;
-    margin: 10px 10px 0 10px; }
-    .organization-users .user:last-child {
-      margin-bottom: 10px; }
-    .organization-users .user.pending .email {
-      color: #838085; }
-    .organization-users .user > span.email {
-      padding: 10px;
-      background-color: #f5f3f3;
-      border-radius: 3px; }
-    .organization-users .user > span.pending {
-      font-size: 10px; }
-      .organization-users .user > span.pending:not(:empty) {
-        margin-left: 10px; }
-    .organization-users .user > span {
-      margin-left: 10px; }
-      .organization-users .user > span > i {
-        color: #3c3c3c; }
-        .organization-users .user > span > i.danger {
-          color: #fe4a49;
-          margin-right: 10px; }
-        .organization-users .user > span > i:hover {
-          cursor: pointer; }
+  width: 50%;
+  color: #3c3c3c; }
+  .user-list .organization-users {
+    padding: 5px 20px; }
+    .user-list .organization-users > .user {
+      display: flex;
+      padding: 5px 0px;
+      border-bottom: 1px solid #f5f3f3;
+      align-items: center; }
+      .user-list .organization-users > .user span {
+        flex-grow: 1; }
+      .user-list .organization-users > .user > .email {
+        width: 30%; }
+      .user-list .organization-users > .user > .role,
+      .user-list .organization-users > .user .pending {
+        width: 10%; }
+      .user-list .organization-users > .user > .pending {
+        color: #565656;
+        font-style: italic; }
+      .user-list .organization-users > .user > .reinvite,
+      .user-list .organization-users > .user .delete {
+        display: flex;
+        align-items: center;
+        cursor: pointer; }
+        .user-list .organization-users > .user > .reinvite:hover,
+        .user-list .organization-users > .user .delete:hover {
+          color: #6f6f6f; }
+        .user-list .organization-users > .user > .reinvite > i,
+        .user-list .organization-users > .user .delete > i {
+          margin-right: 5px;
+          font-size: 22px; }
+      .user-list .organization-users > .user > .reinvite > i {
+        color: #118ab2; }
+      .user-list .organization-users > .user > .reinvite:hover > i {
+        color: #15aee1; }
+      .user-list .organization-users > .user > .delete > i {
+        color: #fe4a49; }
+      .user-list .organization-users > .user > .delete:hover > i {
+        color: #fe7c7c; }
+    .user-list .organization-users > .user:last-child {
+      border: 0; }
 
 .wrapper {
   top: 0;

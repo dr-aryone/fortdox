@@ -301,7 +301,7 @@ module.exports = class DevicesView extends React.Component {
                 className='material-icons'
                 onClick={() => this.openDialog(device.get('id'))}
               >
-                clear
+                delete
               </i>
             )}
           </span>
