@@ -868,16 +868,18 @@ i.mce-i-link-document:before {
     justify-content: flex-end; }
     .input-field .toggle-editor button {
       background-color: white;
-      color: #3c3c3c;
+      color: #a2a2a2;
       box-shadow: none;
-      border: 1px solid #f5f3f3;
-      border-top: none; }
-    .input-field .toggle-editor button:hover {
-      color: #bcbcbc;
-      background-color: #f5f3f3; }
-    .input-field .toggle-editor button:disabled {
-      color: #bcbcbc;
-      background-color: #f5f3f3; }
+      border-top: none;
+      border: 1px solid #f5f3f3; }
+      .input-field .toggle-editor button:hover {
+        color: #6f6f6f;
+        box-shadow: none;
+        border-bottom: 1px solid #15aee1; }
+      .input-field .toggle-editor button:disabled {
+        cursor: auto;
+        color: #3c3c3c;
+        border-bottom: 1px solid #118ab2; }
   .input-field.warning div.arrow_box {
     display: flex; }
   .input-field.warning input {

@@ -28,26 +28,51 @@
     }
   }
 
+  // .toggle-editor {
+  //   display: flex;
+  //   justify-content: flex-end;
+  //
+  //   button {
+  //     background-color: white;
+  //     color: $charcoal;
+  //     box-shadow: none;
+  //     border: 1px solid $grey;
+  //     border-top: none;
+  //   }
+  //
+  //   button:hover {
+  //     color: lighten($charcoal, 50%);
+  //     background-color: $grey;
+  //   }
+  //
+  //   button:disabled {
+  //     color: lighten($charcoal, 50%);
+  //     background-color: $grey;
+  //   }
+  // }
+
   .toggle-editor {
     display: flex;
     justify-content: flex-end;
 
     button {
       background-color: white;
-      color: $charcoal;
+      color: lighten($charcoal, 40%);
       box-shadow: none;
-      border: 1px solid $grey;
       border-top: none;
-    }
+      border: 1px solid $grey;
 
-    button:hover {
-      color: lighten($charcoal, 50%);
-      background-color: $grey;
-    }
+      &:hover {
+        color: lighten($charcoal, 20%);
+        box-shadow: none;
+        border-bottom: 1px solid lighten($primary-color, 10%);
+      }
 
-    button:disabled {
-      color: lighten($charcoal, 50%);
-      background-color: $grey;
+      &:disabled {
+        cursor: auto;
+        color: $charcoal;
+        border-bottom: 1px solid $primary-color;
+      }
     }
   }
 
