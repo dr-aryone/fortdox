@@ -48,6 +48,8 @@ const login = (state = initialState, action) => {
       return state.set('message', fromJS(action.payload));
     case 'PRIVATE_KEY_MIGRATION_DONE':
       return state.set('message', fromJS(action.payload)).set('error', null);
+    case 'PRIVATE_KEY_MIGRATION_ERROR':
+      return state.set('error', fromJS(action.payload)).set('message', null);
     default:
       return state;
   }

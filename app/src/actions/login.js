@@ -3,6 +3,7 @@ import {
   readKey,
   readStorage,
   writeStorage,
+  writeStorageWindows,
   writeDeviceIdToStorage
 } from 'actions/utilities/storage';
 const requestor = require('@edgeguideab/client-request');
@@ -19,21 +20,32 @@ export function directLogin() {
     });
 
     //Migrating privatekey from storage to keychain
+    var os = window.process.platform;
     const oldStorage = JSON.parse(window.localStorage.getItem('fortdox'));
     if (oldStorage) {
       for (let email in oldStorage) {
         for (let organization in oldStorage[email]) {
           const privateKey = oldStorage[email][organization].privateKey;
           const salt = oldStorage[email][organization].salt;
-          try {
-            await addKey(privateKey, email, organization);
-          } catch (error) {
+          if (os === 'darwin') {
+            try {
+              await addKey(privateKey, email, organization);
+            } catch (error) {
+              return dispatch({
+                type: 'VERIFY_LOGIN_CREDS_ERROR',
+                payload: 'Unable to migrate privateKey'
+              });
+            }
+            writeStorage(salt, organization, email);
+          } else if (os === 'win32') {
+            writeStorageWindows(salt, organization, email, privateKey);
+          } else {
             return dispatch({
-              type: 'VERIFY_LOGIN_CREDS_ERROR',
-              payload: 'Unable to migrate privateKey'
+              type: 'PRIVATE_KEY_MIGRATION_ERROR',
+              payload:
+                'Unable to migrate old data. Please run FortDox on Mac OS or Windows.'
             });
           }
-          writeStorage(salt, organization, email);
         }
       }
 
@@ -136,13 +148,23 @@ export function login() {
     const storage = readStorage();
     const salt = storage[email][organization].salt;
     let encryptedPrivateKey;
-    try {
-      encryptedPrivateKey = await readKey(email, organization);
-    } catch (error) {
-      console.error(error);
+    const os = window.process.platform;
+    if (os === 'darwin') {
+      try {
+        encryptedPrivateKey = await readKey(email, organization);
+      } catch (error) {
+        console.error(error);
+        return dispatch({
+          type: 'VERIFY_LOGIN_CREDS_ERROR',
+          payload: 'Unable to login.'
+        });
+      }
+    } else if (os === 'win32') {
+      encryptedPrivateKey = storage[email][organization].privateKey;
+    } else {
       return dispatch({
         type: 'VERIFY_LOGIN_CREDS_ERROR',
-        payload: 'Unable to login.'
+        payload: 'Unable to login. Please run FortDox on Mac OS or Windows'
       });
     }
 
