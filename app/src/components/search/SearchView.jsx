@@ -50,7 +50,7 @@ const SearchView = ({
 
   let boxes =
     error || message ? (
-      <div className='alert-boxes'>
+      <div className={`alert-boxes ${showPreview ? 'big' : 'small'}`}>
         <ErrorBox errorMsg={error} />
         <MessageBox message={message} />
       </div>

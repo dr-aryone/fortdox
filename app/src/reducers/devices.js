@@ -28,7 +28,8 @@ const devices = (state = initialState, action) => {
       return state.merge({
         error: fromJS(action.payload),
         message: null,
-        isLoading: false
+        isLoading: false,
+        refresh: false
       });
     case 'GET_QR_CODE_SUCCESS':
       return state
@@ -42,6 +43,7 @@ const devices = (state = initialState, action) => {
         devices: fromJS(action.payload.devices),
         warning: fromJS(action.payload.warningText),
         maximumReached: fromJS(action.payload.maximumReached),
+        error: null,
         refresh: false
       });
     case 'UPDATE_DEVICE_NAME_SUCCESS':

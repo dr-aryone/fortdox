@@ -35,13 +35,15 @@ const invite = (state = initialState, action) => {
             action.payload
           ),
         isLoading: false,
-        error: null
+        error: null,
+        refresh: false
       });
     case 'INVITE_USER_ERROR':
       return state.merge({
         message: null,
         error: fromJS(action.payload),
-        isLoading: false
+        isLoading: false,
+        refresh: false
       });
     case 'INVITE_USER_SUCCESS':
       return initialState.set('message', fromJS(action.payload));
@@ -51,14 +53,18 @@ const invite = (state = initialState, action) => {
       return state.merge({
         message: null,
         isLoading: false,
-        error: fromJS(action.payload)
+        error: fromJS(action.payload),
+        refresh: false
       });
     case 'DELETE_USER_SUCCESS':
       return initialState.set('message', fromJS(action.payload));
     case 'LIST_USERS_START':
       return state.set('isLoading', true);
     case 'LIST_USERS_ERROR':
-      return state.set('isLoading', false).set('error', action.payload);
+      return state
+        .set('isLoading', false)
+        .set('error', action.payload)
+        .set('refesh', false);
     case 'LIST_USERS_SUCCESS':
       return state
         .set('isLoading', false)

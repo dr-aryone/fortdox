@@ -1315,11 +1315,16 @@ i.mce-i-link-document:before {
       margin: 0;
       padding: 0; }
 
-.alert-boxes {
+.alert-boxes .alert {
+  margin-bottom: 0px; }
+
+.alert-boxes.big {
   margin: 0px 30px;
   padding-top: 10px; }
-  .alert-boxes .alert {
-    margin-bottom: 0px; }
+
+.alert-boxes.small {
+  width: 66.66667%;
+  margin-left: 16.66667%; }
 
 .margin-top {
   margin-top: 30px; }

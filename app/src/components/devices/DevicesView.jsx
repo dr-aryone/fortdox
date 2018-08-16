@@ -319,7 +319,7 @@ module.exports = class DevicesView extends React.Component {
           <div className='title small'>
             <h3>Other Devices</h3>
           </div>
-          <div className='deviceList'>{deviceList}</div>
+          <div className='device-list'>{deviceList}</div>
         </div>
       ) : null;
 

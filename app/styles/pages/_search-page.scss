@@ -225,11 +225,17 @@ $search-padding: 30px;
 }
 
 .alert-boxes {
-  margin: 0px 30px;
-  padding-top: 10px;
-
   .alert {
     margin-bottom: 0px;
+  }
+  &.big {
+    margin: 0px 30px;
+    padding-top: 10px;
+  }
+
+  &.small {
+    width: percentage(8/12);
+    margin-left: percentage(2/12);
   }
 }
 
