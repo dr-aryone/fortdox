@@ -1013,9 +1013,10 @@ i.mce-i-link-document:before {
         color: #139cc9;
         background-color: transparent; }
 
-.meta-data .edit:hover {
-  text-decoration: underline;
-  cursor: pointer; }
+.version-history {
+  text-align: center; }
+  .version-history button {
+    margin-top: 15px; }
 
 .tags {
   padding-bottom: 0px; }

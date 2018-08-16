@@ -5,7 +5,6 @@ const Tags = require('./Tags');
 const BottomPanel = require('./BottomPanel');
 const Attachments = require('./Attachments');
 const SimilarDocumentsList = require('./SimilarDocumentsList');
-const MetaData = require('./MetaData');
 
 const DocumentForm = ({
   titleAutofocus,
@@ -91,10 +90,14 @@ const DocumentForm = ({
         />
         {versions &&
           versions.size > 0 && (
-            <MetaData
-              versions={versions}
-              onToggleVersionPanel={onToggleVersionPanel}
-            />
+            <div className='version-history'>
+              <label>
+                <h3>Version History</h3>
+              </label>
+              <button type='button' onClick={() => onToggleVersionPanel(true)}>
+                Version History
+              </button>
+            </div>
           )}
       </div>
     </form>
