@@ -20,11 +20,11 @@ const login = (state = initialState, action) => {
         organization: fromJS(action.payload.organization)
       });
     case 'WRONG_VERSION':
-      return initialState.set('warning', action.payload);
+      return initialState.set('warning', fromJS(action.payload));
     case 'SESSION_EXPIRED':
-      return initialState.set('warning', action.payload);
+      return initialState.set('warning', fromJS(action.payload));
     case 'UNAUTHORIZED':
-      return initialState.set('error', action.payload);
+      return initialState.set('error', fromJS(action.payload));
     case 'VERIFY_LOGIN_CREDS_START':
       return state
         .set('isLoading', true)
@@ -35,6 +35,7 @@ const login = (state = initialState, action) => {
     case 'DIRECT_LOGIN_SUCCESS':
     case 'VERIFY_LOGIN_CREDS_SUCCESS':
       return initialState;
+    case 'GET_PERMISSIONS_ERROR':
     case 'VERIFY_LOGIN_CREDS_ERROR':
     case 'VERIFY_LOGIN_CREDS_FAIL':
       return state.merge({

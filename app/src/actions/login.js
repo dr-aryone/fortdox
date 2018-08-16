@@ -62,10 +62,10 @@ export function directLogin() {
         type: 'FORCE_BACK'
       });
 
+    let response;
     if (localStorage.getItem('activeUser')) {
       let email;
       let organization;
-      let response;
       try {
         response = await requestor.get(`${config.server}/login/check`);
       } catch (error) {
@@ -76,43 +76,14 @@ export function directLogin() {
         });
       }
 
+      await dispatch(getPermissions());
       email = response.body.email;
       organization = response.body.organization;
-      try {
-        response = await requestor.get(`${config.server}/permissions/me`);
-      } catch (error) {
-        console.error(error);
-        return dispatch({
-          type: 'DIRECT_LOGIN_FAILED'
-        });
-      }
-      const permission = response.body.permission;
-      const superUser = response.body.owner ? true : false;
-
-      try {
-        response = await requestor.get(`${config.server}/permissions`);
-      } catch (error) {
-        console.error(error);
-        return dispatch({
-          type: 'DIRECT_LOGIN_FAILED'
-        });
-      }
-
-      const permissions = {};
-      const permissionsList = response.body;
-      for (let p in permissionsList) {
-        const key = permissionsList[p].replace(' ', '_');
-        permissions[key] = (permission & parseInt(p, 10)) === parseInt(p, 10);
-      }
-
       return dispatch({
         type: 'DIRECT_LOGIN_SUCCESS',
         payload: {
           email,
-          organization,
-          permission,
-          superUser,
-          permissions
+          organization
         }
       });
     } else {
@@ -227,13 +198,30 @@ export function login() {
       writeDeviceIdToStorage(deviceId, organization, email);
     }
 
+    await dispatch(getPermissions());
+
+    return dispatch({
+      type: 'VERIFY_LOGIN_CREDS_SUCCESS',
+      payload: {
+        email: email,
+        organization: organization
+      }
+    });
+  };
+}
+
+function getPermissions() {
+  return async dispatch => {
+    dispatch({ type: 'GET_PERMISSIONS_START' });
+
+    let response;
     try {
       response = await requestor.get(`${config.server}/permissions/me`);
     } catch (error) {
       switch (error.status) {
         default:
           return dispatch({
-            type: 'VERIFY_LOGIN_CREDS_ERROR',
+            type: 'GET_PERMISSIONS_ERROR',
             payload: 'Unable to login. Please try again later.'
           });
       }
@@ -246,7 +234,7 @@ export function login() {
     } catch (error) {
       console.error(error);
       return dispatch({
-        type: 'DIRECT_LOGIN_FAILED'
+        type: 'GET_PERMISSIONS_ERROR'
       });
     }
 
@@ -258,10 +246,8 @@ export function login() {
     }
 
     return dispatch({
-      type: 'VERIFY_LOGIN_CREDS_SUCCESS',
+      type: 'GET_PERMISSIONS_SUCCESS',
       payload: {
-        email: email,
-        organization: organization,
         permissions,
         permission,
         superUser
