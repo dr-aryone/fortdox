@@ -10,8 +10,22 @@
   }
 
   .textarea {
-    padding: 15px;
-    padding-bottom: 10px;
+    overflow: hidden;
+
+    &.hidden {
+      max-height: 0;
+      margin-bottom: 10px;
+      transition: max-height 0.5s ease-in, padding 0.1s 0.5s;
+      padding: 0;
+    }
+
+    &.shown {
+      padding: 15px;
+      padding-bottom: 10px;
+      max-height: 700px;
+      transition: max-height 0.5s ease-out 0.1s;
+      padding: 15px;
+    }
   }
 
   .toggle-editor {
@@ -147,11 +161,19 @@
     }
 
     .material-icons {
-      color: $pink;
       cursor: pointer;
+      color: $charcoal;
 
       &:hover {
-        color: lighten($pink, 5%);
+        color: lighten($charcoal, 10%);
+      }
+
+      &.danger {
+        color: $pink;
+
+        &:hover {
+          color: lighten($pink, 5%);
+        }
       }
     }
   }

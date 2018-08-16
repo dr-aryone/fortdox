@@ -6,12 +6,12 @@ $width: percentage(8/12);
     margin-left: 5%;
     width: calc(90% - 300px);
     justify-content: space-between;
-    transition: margin 0.2s, width 0.3s 0.2s;
+    transition: width 0.5s, margin 0.5s;
   }
 
   &.full {
     width: percentage(8/12);
-    transition: width 0.3, margin 0.2s 0.3s;
+    transition: width 0.5s, margin 0.5s;
   }
 }
 
