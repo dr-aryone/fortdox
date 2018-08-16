@@ -142,7 +142,7 @@ const form = (state = initialState, action) => {
     case 'UPDATE_DOC_GET_OLD_TAGS_SUCCESS':
       return state.setIn(['docFields', 'tags', 'old'], fromJS(action.payload));
     case 'UPDATE_DOCUMENT_START':
-      return state.set('isLoading', true).set('showVersionPanel', false);
+      return state.set('isLoading', true);
     case 'UPDATE_DOCUMENT_FAIL': {
       let encryptedTexts = state.getIn(['docFields', 'encryptedTexts']);
       encryptedTexts.forEach((entry, index) => {
@@ -231,7 +231,7 @@ const form = (state = initialState, action) => {
         })
         .setIn(['docFields', 'preview'], fromJS(action.payload));
     case 'UPDATE_DOCUMENT_SUCCESS':
-      return state.set('isLoading', false);
+      return state.set('isLoading', false).set('showVersionPanel', undefined);
     case 'DOCUMENT_TITLE_LOOKUP_DONE': {
       let current = state.getIn(['documentToUpdate', '_id']);
       let hits = action.payload.hits.filter(e => e._id !== current);
@@ -247,7 +247,8 @@ const form = (state = initialState, action) => {
       switch (action.payload) {
         case 'PREVIEW_DOC':
         case 'UPDATE_DOC_VIEW':
-          return state.set('error', null);
+        case 'SEARCH_VIEW':
+          return state.set('error', null).set('showVersionPanel', undefined);
         default:
           return initialState;
       }
@@ -275,6 +276,8 @@ const form = (state = initialState, action) => {
     case 'LOGOUT':
     case 'SESSION_EXPIRED':
       return initialState;
+    case 'ATTACHMENT_DOWNLOAD_STARTED':
+      return state.set('showVersionPanel', false);
     default:
       return state;
   }

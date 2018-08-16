@@ -102,6 +102,8 @@ const download = (state = initialState, action) => {
       }
       return state.update('downloads', list => list.push(updatedDownload));
     }
+    case 'TOGGLE_VERSION_HISTORY':
+      return state.set('show', false);
     default: {
       return state;
     }

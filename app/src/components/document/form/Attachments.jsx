@@ -64,7 +64,8 @@ class Attachments extends React.Component {
       preview,
       onAddAttachment,
       onRemoveAttachment,
-      onPreviewAttachment
+      onPreviewAttachment,
+      disableDownload
     } = this.props;
 
     let content;
@@ -123,14 +124,16 @@ class Attachments extends React.Component {
             {name}
           </span>
           <div className='actions'>
-            <span>
-              <i
-                className='material-icons download'
-                onClick={() => this.downloadHandler(attachment, id)}
-              >
-                file_download
-              </i>
-            </span>
+            {!disableDownload && (
+              <span>
+                <i
+                  className='material-icons download'
+                  onClick={() => this.downloadHandler(attachment, id)}
+                >
+                  file_download
+                </i>
+              </span>
+            )}
             {removeButton}
           </div>
         </div>

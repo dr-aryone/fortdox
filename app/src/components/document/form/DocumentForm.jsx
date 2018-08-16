@@ -87,6 +87,7 @@ const DocumentForm = ({
           onRemoveAttachment={onRemoveAttachment}
           onPreviewAttachment={onPreviewAttachment}
           onDownloadAttachment={onDownloadAttachment}
+          disableDownload={versions === undefined ? true : false}
         />
         {versions &&
           versions.size > 0 && (
