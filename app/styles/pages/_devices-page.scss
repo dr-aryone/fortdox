@@ -1,50 +1,53 @@
-.device {
-  display: flex;
-
-  input {
-    width: 45%;
-  }
-
-  span {
+.device-list {
+  padding: 5px 1.3em;
+  .device {
     display: flex;
-    flex-grow: 1;
-    align-items: center;
-    padding: 0.7em 1.3em;
 
     input {
-      margin: 0;
-    }
-
-    &.pending {
-      color: lighten($charcoal, 30%);
-    }
-
-    &.id {
-      width: 50%;
-    }
-
-    &.name {
       width: 45%;
-
-      .material-icons {
-        font-size: 20px;
-        cursor: pointer;
-        margin-left: 20px;
-        color: $primary-color;
-        padding: 0;
-        flex-grow: 0;
-      }
     }
 
-    &.icon {
-      width: 5%;
-      justify-content: flex-end;
+    span {
+      display: flex;
+      flex-grow: 1;
+      align-items: center;
+      padding: 10px 0px;
 
-      .material-icons {
-        font-size: 20px;
-        color: $red;
-        font-weight: bold;
-        cursor: pointer;
+      input {
+        margin: 0;
+      }
+
+      &.pending {
+        color: lighten($charcoal, 30%);
+      }
+
+      &.id {
+        width: 50%;
+      }
+
+      &.name {
+        width: 45%;
+
+        .material-icons {
+          font-size: 20px;
+          cursor: pointer;
+          margin-left: 20px;
+          color: $primary-color;
+          padding: 0;
+          flex-grow: 0;
+        }
+      }
+
+      &.icon {
+        width: 5%;
+        justify-content: flex-end;
+
+        .material-icons {
+          font-size: 20px;
+          color: $red;
+          font-weight: bold;
+          cursor: pointer;
+        }
       }
     }
   }
@@ -62,11 +65,12 @@
     width: 30vh;
     height: 30vh;
     margin: 20px;
-    font-size: 2em;
+    font-size: 2vw;
     flex-direction: column;
+    overflow: hidden;
 
     .material-icons {
-      font-size: 6.5em;
+      font-size: 12vw;
     }
   }
 }

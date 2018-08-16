@@ -3,7 +3,7 @@ import { Editor } from '@tinymce/tinymce-react';
 import LinkDocument from './LinkDocument';
 import Modal from 'components/general/Modal';
 
-const plugins = 'lists table';
+const plugins = 'lists table autoresize';
 
 const toolbar =
   'styleselect | bold italic | markdownCode blockquote | bullist numlist | link table | privateKey password customCopy linkDocument';
@@ -240,6 +240,8 @@ class RichText extends Component {
         <Editor
           value={this.props.text}
           init={{
+            autoresize_min_height: 200,
+            autoresize_max_height: 550,
             setup: this.setup,
             style_formats,
             formats,

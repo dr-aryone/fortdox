@@ -60,10 +60,11 @@ h3 {
 
 .alert {
   padding: 15px;
-  margin-bottom: 10px;
+  margin: 10px 0px;
   border-radius: 1px;
   position: relative;
-  color: #FFF; }
+  color: #fff;
+  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.15), 0 0 2px rgba(0, 0, 0, 0.11); }
   .alert .material-icons {
     font-size: 15px;
     display: inline-block;
@@ -402,7 +403,7 @@ label {
 #tinymce {
   background-color: white;
   margin: 0px 1em;
-  overflow: scroll; }
+  overflow: auto; }
   #tinymce .rich-text-private-key {
     padding: 10px;
     margin: 10px;
@@ -588,10 +589,10 @@ i.mce-i-link-document:before {
 .user-list {
   color: #3c3c3c; }
   .user-list .organization-users {
-    padding: 5px 20px; }
+    padding: 5px 1.3em; }
     .user-list .organization-users > .user {
       display: flex;
-      padding: 5px 0px;
+      padding: 10px 0px;
       border-bottom: 1px solid #f5f3f3;
       align-items: center; }
       .user-list .organization-users > .user span {
@@ -789,38 +790,40 @@ i.mce-i-link-document:before {
       cursor: pointer;
       color: #041e26; }
 
-.device {
-  display: flex; }
-  .device input {
-    width: 45%; }
-  .device span {
-    display: flex;
-    flex-grow: 1;
-    align-items: center;
-    padding: 0.7em 1.3em; }
-    .device span input {
-      margin: 0; }
-    .device span.pending {
-      color: #898989; }
-    .device span.id {
-      width: 50%; }
-    .device span.name {
+.device-list {
+  padding: 5px 1.3em; }
+  .device-list .device {
+    display: flex; }
+    .device-list .device input {
       width: 45%; }
-      .device span.name .material-icons {
-        font-size: 20px;
-        cursor: pointer;
-        margin-left: 20px;
-        color: #118ab2;
-        padding: 0;
-        flex-grow: 0; }
-    .device span.icon {
-      width: 5%;
-      justify-content: flex-end; }
-      .device span.icon .material-icons {
-        font-size: 20px;
-        color: #fe4a49;
-        font-weight: bold;
-        cursor: pointer; }
+    .device-list .device span {
+      display: flex;
+      flex-grow: 1;
+      align-items: center;
+      padding: 10px 0px; }
+      .device-list .device span input {
+        margin: 0; }
+      .device-list .device span.pending {
+        color: #898989; }
+      .device-list .device span.id {
+        width: 50%; }
+      .device-list .device span.name {
+        width: 45%; }
+        .device-list .device span.name .material-icons {
+          font-size: 20px;
+          cursor: pointer;
+          margin-left: 20px;
+          color: #118ab2;
+          padding: 0;
+          flex-grow: 0; }
+      .device-list .device span.icon {
+        width: 5%;
+        justify-content: flex-end; }
+        .device-list .device span.icon .material-icons {
+          font-size: 20px;
+          color: #fe4a49;
+          font-weight: bold;
+          cursor: pointer; }
 
 .big-button-container {
   display: flex;
@@ -833,10 +836,11 @@ i.mce-i-link-document:before {
     width: 30vh;
     height: 30vh;
     margin: 20px;
-    font-size: 2em;
-    flex-direction: column; }
+    font-size: 2vw;
+    flex-direction: column;
+    overflow: hidden; }
     .big-button-container .big-button .material-icons {
-      font-size: 6.5em; }
+      font-size: 12vw; }
 
 .input-field {
   display: flex;
@@ -1312,9 +1316,10 @@ i.mce-i-link-document:before {
       padding: 0; }
 
 .alert-boxes {
-  width: 83.33333%;
-  margin-left: 8.33333%;
+  margin: 0px 30px;
   padding-top: 10px; }
+  .alert-boxes .alert {
+    margin-bottom: 0px; }
 
 .margin-top {
   margin-top: 30px; }
