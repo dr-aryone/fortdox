@@ -296,7 +296,13 @@ export const verifyUser = () => {
       }
       writeStorage(salt, organization, email, deviceId);
     } else if (os === 'win32') {
-      writeStorageWindows(salt, organization, email, privateKey, deviceId);
+      writeStorageWindows(
+        salt,
+        organization,
+        email,
+        encryptedPrivateKey,
+        deviceId
+      );
     } else {
       dispatch({
         type: 'VERIFY_NEW_USER_ERROR',
