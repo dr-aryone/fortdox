@@ -18,13 +18,17 @@ const mapStateToProps = state => {
     nextViewAfterCheck: state.updateDocument.get('nextViewAfterCheck'),
     showVersionPanel: state.updateDocument.get('showVersionPanel'),
     permissions: state.user.get('permissions'),
-    favoriteDocuments: state.search.get('favoriteDocuments'),
-    id: state.updateDocument.getIn(['documentToUpdate', '_id'])
+    favoritedDocuments: state.search.get('favoriteDocuments'),
+    id: state.updateDocument.getIn(['documentToUpdate', '_id']),
+    refresh: state.updateDocument.get('refreshFavorites')
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
+    getFavoriteDocuments: () => {
+      dispatch(documentActions.getFavoriteDocuments());
+    },
     onAddFavorite: id => {
       dispatch(documentActions.addFavoriteDocument(id));
     },

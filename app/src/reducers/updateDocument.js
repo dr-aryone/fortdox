@@ -33,7 +33,8 @@ let initialState = fromJS({
   isLoading: false,
   similarDocuments: [],
   elementToHide: null,
-  showVersionPanel: undefined
+  showVersionPanel: undefined,
+  refreshFavorites: false
 });
 
 const form = (state = initialState, action) => {
@@ -278,6 +279,11 @@ const form = (state = initialState, action) => {
       return initialState;
     case 'ATTACHMENT_DOWNLOAD_STARTED':
       return state.set('showVersionPanel', false);
+    case 'ADD_FAVORITE_SUCCESS':
+    case 'DELETE_FAVORITE_SUCCESS':
+      return state.set('refreshFavorites', true);
+    case 'GET_FAVORITE_DOCUMENTS_SUCCESS':
+      return state.set('refreshFavorites', false);
     default:
       return state;
   }

@@ -46,6 +46,15 @@ export class PreviewDoc extends React.Component {
     this.holdingModifier = false;
   }
 
+  componentDidUpdate() {
+    if (this.props.refresh) this.props.getFavoriteDocuments();
+  }
+
+  onFavoriteDocument(id, favorited) {
+    if (favorited) return this.props.removeFavoriteDocument(id);
+    else return this.props.addFavoriteDocument(id);
+  }
+
   render() {
     let {
       docFields,
@@ -57,7 +66,9 @@ export class PreviewDoc extends React.Component {
       onPreviewAttachment,
       searchField,
       onSearch,
-      onSearchFieldChange
+      onSearchFieldChange,
+      favoritedDocuments,
+      id
     } = this.props;
     let title = docFields.getIn(['title', 'value']);
     let texts = this.renderTexts(docFields);
@@ -112,6 +123,10 @@ export class PreviewDoc extends React.Component {
           </div>
       ) : null;
 
+    let favorited;
+    if (favoritedDocuments)
+      favorited = favoritedDocuments.find(doc => doc.get('id') === id);
+
     return (
       <div>
         <LoaderOverlay display={isLoading} />
@@ -126,6 +141,12 @@ export class PreviewDoc extends React.Component {
           ) : null}
           <div className='title'>
             <h1>{title}</h1>
+            <i
+              className='material-icons'
+              onClick={() => this.onFavoriteDocument(id, favorited)}
+            >
+              {favorited ? 'star' : 'star_border'}
+            </i>
             <button onClick={onEdit}>Edit</button>
           </div>
           <div className='texts'>{texts}</div>

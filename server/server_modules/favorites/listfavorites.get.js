@@ -1,8 +1,8 @@
 const es = require('app/elastic_search');
 const logger = require('app/logger');
 
-function findFavourites(orgIndex, email) {
-  return es.client.search({
+async function findFavourites(orgIndex, email) {
+  return await es.client.search({
     index: orgIndex,
     _sourceExclude: ['attachments', 'encrypted_texts'],
     body: {

@@ -1,5 +1,10 @@
 import PreviewDoc from 'components/document/PreviewDoc';
-import { previewDocument } from 'actions/document/document';
+import {
+  previewDocument,
+  getFavoriteDocuments,
+  addFavoriteDocument,
+  deleteFavoriteDocument
+} from 'actions/document/document';
 const { connect } = require('react-redux');
 const { tagSearch } = require('actions/search');
 const {
@@ -16,12 +21,22 @@ const mapStateToProps = state => {
     error: state.previewDocument.get('error'),
     isLoading: state.previewDocument.get('isLoading'),
     searchField: state.previewDocument.get('searchField'),
-    favoriteDocuments: state.search.get('favoriteDocuments')
+    favoritedDocuments: state.search.get('favoriteDocuments'),
+    id: state.updateDocument.getIn(['documentToUpdate', '_id'])
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
+    addFavoriteDocument: id => {
+      dispatch(addFavoriteDocument(id));
+    },
+    removeFavoriteDocument: id => {
+      dispatch(deleteFavoriteDocument(id));
+    },
+    getFavoriteDocuments: () => {
+      dispatch(getFavoriteDocuments());
+    },
     onEdit: () => {
       dispatch(action.changeView('UPDATE_DOC_VIEW'));
     },

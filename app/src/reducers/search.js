@@ -10,7 +10,7 @@ const initialState = fromJS({
   searchedString: null,
   totalHits: null,
   isLoading: false,
-  favoriteDocuments: []
+  favoritedDocuments: []
 });
 
 const search = (state = initialState, action) => {
@@ -72,7 +72,7 @@ const search = (state = initialState, action) => {
         .set('message', null)
         .set('error', null)
         .set('isLoading', false)
-        .set('favoriteDocuments', fromJS(action.payload));
+        .set('favoritedDocuments', fromJS(action.payload));
     default:
       return state;
   }

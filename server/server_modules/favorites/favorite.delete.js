@@ -12,7 +12,7 @@ async function removeFavoriteDocument(orgIndex, documentId, email) {
     favorite.push(email);
     favorite = favorite.filter(f => f !== email);
 
-    return es.client.update({
+    return await es.client.update({
       index: orgIndex,
       type: 'fortdox_document',
       id: documentId,

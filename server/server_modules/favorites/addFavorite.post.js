@@ -12,7 +12,7 @@ async function updateDocument(orgIndex, documentId, email) {
     let favorite = current._source.favorite || [];
     favorite.push(email);
 
-    return es.client.update({
+    return await es.client.update({
       index: orgIndex,
       type: 'fortdox_document',
       id: documentId,

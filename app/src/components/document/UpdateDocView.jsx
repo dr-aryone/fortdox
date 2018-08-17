@@ -41,6 +41,10 @@ class UpdateDocView extends React.Component {
       });
   }
 
+  componentDidUpdate() {
+    if (this.props.refresh) this.props.getFavoriteDocuments();
+  }
+
   componentWillMount() {
     if (this.props.onMount) {
       this.props.onMount(this.props);
@@ -161,8 +165,8 @@ class UpdateDocView extends React.Component {
   }
 
   onFavoriteDocument(id, favorited) {
-    if (favorited) this.props.onRemoveFavorite(id);
-    else this.props.onAddFavorite(id);
+    if (favorited) return this.props.onRemoveFavorite(id);
+    else return this.props.onAddFavorite(id);
   }
 
   render() {
@@ -195,7 +199,7 @@ class UpdateDocView extends React.Component {
       onInsertDocumentVersion,
       onConvert,
       permissions,
-      favoriteDocuments,
+      favoritedDocuments,
       id
     } = this.props;
 
@@ -271,8 +275,7 @@ class UpdateDocView extends React.Component {
       </Modal>
     );
 
-    const favorited = favoriteDocuments.find(doc => doc === id);
-
+    const favorited = favoritedDocuments.find(doc => doc.get('id') === id);
     return (
       <div className='container-fluid'>
         <LoaderOverlay display={isLoading} />

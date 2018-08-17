@@ -436,7 +436,15 @@
 
 .doc-header {
   display: flex;
+  align-items: center;
   button {
     margin-right: 15px;
+  }
+
+  & > .material-icons {
+    cursor: pointer;
+    margin-left: 10px;
+    font-size: 35px;
+    color: $yellow;
   }
 }

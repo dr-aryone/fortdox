@@ -602,28 +602,28 @@ export function addFavoriteDocument(documentId) {
 
 export function deleteFavoriteDocument(documentId) {
   return async dispatch => {
-    dispatch({ type: 'DELETE_DOCUMENT_START' });
+    dispatch({ type: 'DELETE_FAVORITE_START' });
     try {
-      await requestor.post(`${config.server}/favorites/${documentId}`);
+      await requestor.delete(`${config.server}/favorites/${documentId}`);
     } catch (error) {
       console.error(error);
       switch (error.status) {
         case 404:
           return dispatch({
-            type: 'DELETE_DOCUMENT_ERROR',
+            type: 'DELETE_FAVORITE_ERROR',
             payload: 'Unable to favorite non existing document.'
           });
         case 500:
         default:
           return dispatch({
-            type: 'DELETE_DOCUMENT_ERROR',
+            type: 'DELETE_FAVORITE_ERROR',
             payload: 'Unable to connect to server. Please try again later.'
           });
       }
     }
 
     return dispatch({
-      type: 'DELETE_DOCUMENT_SUCCESS'
+      type: 'DELETE_FAVORITE_SUCCESS'
     });
   };
 }
