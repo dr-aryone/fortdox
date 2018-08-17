@@ -568,9 +568,10 @@ export function getFavoriteDocuments() {
 }
 
 export function addFavoriteDocument(documentId) {
-  return async dispatch => {
+  return async (dispatch, getState) => {
     dispatch({ type: 'ADD_FAVORITE_START' });
-
+    const state = getState();
+    const view = state.navigation.get('currentView');
     try {
       await requestor.post(`${config.server}/favorites`, {
         body: {
@@ -595,14 +596,17 @@ export function addFavoriteDocument(documentId) {
     }
 
     return dispatch({
-      type: 'ADD_FAVORITE_SUCCESS'
+      type: 'ADD_FAVORITE_SUCCESS',
+      payload: view
     });
   };
 }
 
 export function deleteFavoriteDocument(documentId) {
-  return async dispatch => {
+  return async (dispatch, getState) => {
     dispatch({ type: 'DELETE_FAVORITE_START' });
+    const state = getState();
+    const view = state.navigation.get('currentView');
     try {
       await requestor.delete(`${config.server}/favorites/${documentId}`);
     } catch (error) {
@@ -623,7 +627,8 @@ export function deleteFavoriteDocument(documentId) {
     }
 
     return dispatch({
-      type: 'DELETE_FAVORITE_SUCCESS'
+      type: 'DELETE_FAVORITE_SUCCESS',
+      payload: view
     });
   };
 }

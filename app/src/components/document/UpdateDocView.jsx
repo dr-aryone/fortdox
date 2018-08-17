@@ -275,7 +275,9 @@ class UpdateDocView extends React.Component {
       </Modal>
     );
 
-    const favorited = favoritedDocuments.find(doc => doc.get('id') === id);
+    let favorited;
+    if (favorited)
+      favorited = favoritedDocuments.find(doc => doc.get('id') === id);
     return (
       <div className='container-fluid'>
         <LoaderOverlay display={isLoading} />

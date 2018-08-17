@@ -28,7 +28,8 @@ let initialState = fromJS({
   searchField: {
     show: false,
     value: ''
-  }
+  },
+  refreshFavorites: false
 });
 
 const preview = (state = initialState, action) => {
@@ -94,6 +95,13 @@ const preview = (state = initialState, action) => {
         .setIn(['docFields', 'preview'], fromJS(action.payload));
     case 'TAG_SEARCH_SUCCESS':
       return initialState;
+    case 'ADD_FAVORITE_SUCCESS':
+    case 'DELETE_FAVORITE_SUCCESS':
+      if (action.payload === 'PREVIEW_DOC')
+        return state.set('refreshFavorites', true);
+      else return state;
+    case 'GET_FAVORITE_DOCUMENTS_SUCCESS':
+      return state.set('refreshFavorites', false);
     default:
       return state;
   }

@@ -281,7 +281,9 @@ const form = (state = initialState, action) => {
       return state.set('showVersionPanel', false);
     case 'ADD_FAVORITE_SUCCESS':
     case 'DELETE_FAVORITE_SUCCESS':
-      return state.set('refreshFavorites', true);
+      if (action.payload === 'UPDATE_DOC_VIEW')
+        return state.set('refreshFavorites', true);
+      else return state;
     case 'GET_FAVORITE_DOCUMENTS_SUCCESS':
       return state.set('refreshFavorites', false);
     default:
