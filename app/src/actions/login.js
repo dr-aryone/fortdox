@@ -147,8 +147,14 @@ export function login() {
       )).key;
       privateKey = await aes.decrypt(
         new window.Buffer(paddedPassword, 'base64'),
-        new window.Buffer(encryptedPrivateKey.split('"')[1], 'base64')
+        new window.Buffer(
+          os === 'darwin'
+            ? encryptedPrivateKey.split('"')[1]
+            : encryptedPrivateKey,
+          'base64'
+        )
       );
+
       privateKey = Buffer.from(privateKey).toString('base64');
     } catch (error) {
       console.error(error);
