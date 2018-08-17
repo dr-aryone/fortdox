@@ -1,7 +1,11 @@
 import * as requestor from '@edgeguideab/client-request';
 import { encryptPrivateKey } from 'actions/utilities/encryptPrivateKey';
 const passwordCheck = require('actions/utilities/passwordCheck');
-const { addKey, writeStorage } = require('actions/utilities/storage');
+const {
+  addKey,
+  writeStorage,
+  writeStorageWindows
+} = require('actions/utilities/storage');
 const config = require('config.json');
 const checkEmptyFields = require('actions/utilities/checkEmptyFields');
 const { hostname } = require('actions/utilities/hostname');
@@ -108,18 +112,35 @@ export const activateOrganizaton = () => {
           });
       }
     }
-
-    try {
-      await addKey(result.privateKey, email, response.body.organizationName);
-    } catch (error) {
-      console.error(error);
+    const encryptedPrivateKey = result.privateKey;
+    const organization = response.body.organizationName;
+    const salt = result.salt;
+    const os = window.process.platform;
+    if (os === 'darwin') {
+      try {
+        await addKey(encryptedPrivateKey, email, organization);
+      } catch (error) {
+        console.error(error);
+        return dispatch({
+          type: 'ACTIVATE_ORGANIZATION_ERROR',
+          payload: 'Unable to add key.'
+        });
+      }
+      writeStorage(salt, organization, email, deviceId);
+    } else if (os === 'win32') {
+      writeStorageWindows(
+        salt,
+        organization,
+        email,
+        encryptedPrivateKey,
+        deviceId
+      );
+    } else {
       return dispatch({
         type: 'ACTIVATE_ORGANIZATION_ERROR',
-        payload: 'Unable to add key.'
+        payload: 'Unable to register organization.'
       });
     }
-
-    writeStorage(result.salt, response.body.organizationName, email, deviceId);
     return dispatch({
       type: 'ACTIVATE_ORGANIZATION_SUCCESS',
       payload: 'Team registration complete! You can now login.'

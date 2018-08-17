@@ -6,7 +6,8 @@ const {
   addKey,
   writeStorage,
   readKey,
-  deleteKey
+  deleteKey,
+  writeStorageWindows
 } = require('actions/utilities/storage');
 const checkEmptyFields = require('actions/utilities/checkEmptyFields');
 const deviceIdentifier = '@';
@@ -255,25 +256,15 @@ export const verifyUser = () => {
       }
     }
 
-    let salt = result.salt;
-    let organization = response.body.organization;
-    let email = response.body.email;
-    let encryptedPrivateKey = result.privateKey;
-
+    const salt = result.salt;
+    const organization = response.body.organization;
+    const email = response.body.email;
+    const encryptedPrivateKey = result.privateKey;
+    const os = window.process.platform;
     let oldUser;
-    try {
-      oldUser = await readKey(email, organization);
-    } catch (error) {
-      console.error(error);
-      return dispatch({
-        type: 'VERIFY_NEW_USER_ERROR',
-        payload: 'Unable to register. Please try again later.'
-      });
-    }
-
-    if (oldUser.split('"')[0].trim() === 'password:') {
+    if (os === 'darwin') {
       try {
-        await deleteKey(email, organization);
+        oldUser = await readKey(email, organization);
       } catch (error) {
         console.error(error);
         return dispatch({
@@ -281,19 +272,37 @@ export const verifyUser = () => {
           payload: 'Unable to register. Please try again later.'
         });
       }
-    }
 
-    try {
-      await addKey(encryptedPrivateKey, email, organization);
-    } catch (error) {
-      console.error(error);
-      return dispatch({
+      if (oldUser.split('"')[0].trim() === 'password:') {
+        try {
+          await deleteKey(email, organization);
+        } catch (error) {
+          console.error(error);
+          return dispatch({
+            type: 'VERIFY_NEW_USER_ERROR',
+            payload: 'Unable to register. Please try again later.'
+          });
+        }
+      }
+
+      try {
+        await addKey(encryptedPrivateKey, email, organization);
+      } catch (error) {
+        console.error(error);
+        return dispatch({
+          type: 'VERIFY_NEW_USER_ERROR',
+          payload: 'Unable to register. Please try again later.'
+        });
+      }
+      writeStorage(salt, organization, email, deviceId);
+    } else if (os === 'win32') {
+      writeStorageWindows(salt, organization, email, privateKey, deviceId);
+    } else {
+      dispatch({
         type: 'VERIFY_NEW_USER_ERROR',
-        payload: 'Unable to register. Please try again later.'
+        payload: 'Unable to register. Please run FortDox on Mac OS or Windows.'
       });
     }
-
-    writeStorage(salt, organization, email, deviceId);
 
     return dispatch({
       type: 'VERIFY_NEW_USER_SUCCESS',
