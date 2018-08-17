@@ -12,6 +12,13 @@
   .textarea {
     overflow: hidden;
 
+    textarea {
+      min-height: 22em;
+      max-height: 70vh;
+      resize: vertical;
+      overflow: auto;
+    }
+
     &.hidden {
       max-height: 0;
       margin-bottom: 10px;

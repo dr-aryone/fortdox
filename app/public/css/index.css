@@ -852,6 +852,11 @@ i.mce-i-link-document:before {
     margin-bottom: 10px; }
   .input-field .textarea {
     overflow: hidden; }
+    .input-field .textarea textarea {
+      min-height: 22em;
+      max-height: 70vh;
+      resize: vertical;
+      overflow: auto; }
     .input-field .textarea.hidden {
       max-height: 0;
       margin-bottom: 10px;
