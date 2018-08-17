@@ -52,7 +52,8 @@ class TextArea extends Component {
       showDeleteDialog: false,
       format: this.props.field.get('format'),
       id: this.props.field.get('id'),
-      type: this.props.field.get('encrypted') ? 'encryptedText' : 'text'
+      type: this.props.field.get('encrypted') ? 'encryptedText' : 'text',
+      showTextarea: true
     };
   }
 
@@ -80,6 +81,12 @@ class TextArea extends Component {
   toggleEditor() {
     this.setState({
       format: this.state.format === 'html' ? 'markdown' : 'html'
+    });
+  }
+
+  onToggleTextarea() {
+    this.setState({
+      showTextarea: !this.state.showTextarea
     });
   }
 
@@ -156,14 +163,28 @@ class TextArea extends Component {
             {this.state.showDeleteDialog && deleteDialog}
             <label>
               <h3>{field.get('label')}</h3>
-              <i
-                className='material-icons'
-                onClick={() => this.onDeleteField(field)}
-              >
-                delete
-              </i>
+              <span>
+                <i
+                  className='material-icons danger'
+                  onClick={() => this.onDeleteField(field)}
+                >
+                  delete
+                </i>
+                <i
+                  className='material-icons'
+                  onClick={() => this.onToggleTextarea()}
+                >
+                  {this.state.showTextarea
+                    ? 'keyboard_arrow_down'
+                    : 'keyboard_arrow_left'}
+                </i>
+              </span>
             </label>
-            <div className='textarea'>
+            <div
+              className={`textarea ${
+                this.state.showTextarea ? 'shown' : 'hidden'
+              }`}
+            >
               {this.state.format === 'html' ? richText : textArea}
               <div className='toggle-editor'>
                 <button

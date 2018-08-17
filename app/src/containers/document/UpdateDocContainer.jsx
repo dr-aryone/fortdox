@@ -16,7 +16,8 @@ const mapStateToProps = state => {
     elementToHide: state.updateDocument.get('elementToHide'),
     checkFields: state.updateDocument.get('checkFields'),
     nextViewAfterCheck: state.updateDocument.get('nextViewAfterCheck'),
-    showVersionPanel: state.updateDocument.get('showVersionPanel')
+    showVersionPanel: state.updateDocument.get('showVersionPanel'),
+    permissions: state.user.get('permissions')
   };
 };
 

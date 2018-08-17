@@ -29,26 +29,24 @@ const {
 } = devtools;
 app.setAsDefaultProtocolClient(config.name);
 
-const isSecondInstance = app.makeSingleInstance(
-  (commandLine, workingDirectory) => {
-    pollingJob = setInterval(() => {
-      if (process.platform === 'win32' && commandLine[1] !== undefined) {
-        let url = commandLine[1];
-        redirectParameters = setActivationParams(url);
-        switch (redirectParameters.type) {
-          case 'organization':
-            activateOrganization(redirectParameters.code);
-            break;
-          case 'user':
-            activateUser(url);
-        }
+const isSecondInstance = app.makeSingleInstance(commandLine => {
+  pollingJob = setInterval(() => {
+    if (process.platform === 'win32' && commandLine[1] !== undefined) {
+      let url = commandLine[1];
+      redirectParameters = setActivationParams(url);
+      switch (redirectParameters.type) {
+        case 'organization':
+          activateOrganization(redirectParameters.code);
+          break;
+        case 'user':
+          activateUser(url);
       }
-    }, 1000);
-    if (openWindow) {
-      win.focus();
     }
+  }, 1000);
+  if (openWindow) {
+    win.focus();
   }
-);
+});
 
 if (isSecondInstance) {
   app.quit();
@@ -77,7 +75,7 @@ let menu;
 function createBrowserWindow() {
   win = new BrowserWindow({
     width: 1280,
-    height: 720,
+    height: 800,
     icon: path.join(__dirname, config.logo)
   });
   if (devMode) {
@@ -323,7 +321,9 @@ app.on('window-all-closed', () => {
 });
 
 ipcMain.on('outdated-client', () => {
-  updateDialog();
+  if (config.autoUpdates) {
+    updateDialog();
+  }
 });
 
 function updateDialog() {
@@ -346,8 +346,10 @@ function updateDialog() {
   });
 }
 
-//const updateFeed = `${config.server}/update/${config.clientVersion}`;
-//autoUpdater.setFeedURL(updateFeed);
+if (config.autoUpdates) {
+  const updateFeed = `${config.server}/update/${config.clientVersion}`;
+  autoUpdater.setFeedURL(updateFeed);
+}
 
 //autoUpdater events
 autoUpdater.on('error', error => {

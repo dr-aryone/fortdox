@@ -71,7 +71,8 @@ const preview = (state = initialState, action) => {
     case 'CHANGE_VIEW':
       if (
         action.payload === 'UPDATE_DOC_VIEW' ||
-        action.payload === 'PREVIEW_DOC'
+        action.payload === 'PREVIEW_DOC' ||
+        action.payload === 'SEARCH_VIEW'
       )
         return state;
       else return initialState;

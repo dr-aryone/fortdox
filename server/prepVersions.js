@@ -1,6 +1,6 @@
 const sqlConfig = require('app/config.json').sqlConfig;
 const Sequelize = require('sequelize');
-const prompt = require('syncprompt');
+const prompt = require('readline-sync');
 const sequelize = new Sequelize(
   sqlConfig.database,
   sqlConfig.username,
@@ -20,7 +20,7 @@ let orgnaizationIndex;
 
 function run() {
   console.log('Migration started');
-  orgnaizationIndex = prompt('Enter orgnaization index\n');
+  orgnaizationIndex = prompt.question('Enter orgnaization index\n');
   migrate();
 }
 

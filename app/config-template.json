@@ -5,5 +5,12 @@
   "logo": "/resources/logo.png",
   "codeSplitter": "@@",
   "applicationPath": "/Applications/FortDox.app",
-  "clientVersion":"{a version number}"
+  "clientVersion": "{a version number}",
+  "autoUpdates": false,
+  "permissions": {
+    "1": "ADMIN",
+    "2": "DELETE DOCUMENT",
+    "4": "REMOVE USER",
+    "8": "INVITE USER"
+  }
 }

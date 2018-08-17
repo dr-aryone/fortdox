@@ -18,13 +18,13 @@ button {
   transition: all 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms;
   user-select: none;
 
-  &:disabled {
-    background: $grey;
-    box-shadow: none;
+  &.neutral {
+    background: white;
+    color: $charcoal;
 
-    &:active,
     &:hover {
-      background: $grey;
+      background: lighten($grey, 3%);
+      color: lighten($charcoal, 30%);
     }
   }
 
@@ -85,5 +85,52 @@ button {
     width: 100%;
     text-align: center;
     margin-top: 5px;
+  }
+
+  &:disabled {
+    color: lighten($charcoal, 50%);
+    background: $grey;
+    box-shadow: none;
+
+    &:active,
+    &:hover {
+      background: $grey;
+    }
+  }
+
+  &.tooltip {
+    position: relative;
+    display: inline-block;
+  }
+
+  &.tooltip .tooltiptext {
+    text-transform: none;
+    visibility: hidden;
+    width: 120px;
+    background-color: $charcoal;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px;
+    position: absolute;
+    z-index: 1;
+    bottom: calc(100% + 10px);
+    left: 50%;
+    margin-left: -65px;
+  }
+
+  &.tooltip .tooltiptext::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: $charcoal transparent transparent transparent;
+  }
+
+  &.tooltip:hover .tooltiptext {
+    visibility: visible;
   }
 }

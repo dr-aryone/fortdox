@@ -8,6 +8,24 @@ const writeDeviceIdToStorage = (deviceId, organization, email) => {
   window.localStorage.setItem(config.name, JSON.stringify(fortdoxInfo));
 };
 
+const writeStorageWindows = (
+  salt,
+  organization,
+  email,
+  privateKey,
+  deviceId
+) => {
+  let fortdoxInfo = readStorage();
+  fortdoxInfo[email] = {
+    [organization]: {
+      salt,
+      privateKey,
+      deviceId
+    }
+  };
+  window.localStorage.setItem(config.name, JSON.stringify(fortdoxInfo));
+};
+
 const writeStorage = (salt, organization, email, deviceId) => {
   let fortdoxInfo = readStorage();
   fortdoxInfo[email] = {
@@ -18,6 +36,7 @@ const writeStorage = (salt, organization, email, deviceId) => {
   };
   window.localStorage.setItem(config.name, JSON.stringify(fortdoxInfo));
 };
+
 const readStorage = () => {
   let storage;
   storage = window.localStorage.getItem(config.name);
@@ -82,6 +101,7 @@ const deleteKey = (email, organization) => {
 };
 module.exports = {
   writeStorage,
+  writeStorageWindows,
   writeDeviceIdToStorage,
   readStorage,
   addKey,

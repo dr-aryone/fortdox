@@ -227,7 +227,11 @@ module.exports = class DevicesView extends React.Component {
             >
               Delete
             </button>
-            <button onClick={this.closeDialog} type='button'>
+            <button
+              onClick={this.closeDialog}
+              type='button'
+              className='neutral'
+            >
               Cancel
             </button>
           </div>
@@ -297,7 +301,7 @@ module.exports = class DevicesView extends React.Component {
                 className='material-icons'
                 onClick={() => this.openDialog(device.get('id'))}
               >
-                clear
+                delete
               </i>
             )}
           </span>
@@ -315,7 +319,7 @@ module.exports = class DevicesView extends React.Component {
           <div className='title small'>
             <h3>Other Devices</h3>
           </div>
-          {deviceList}
+          <div className='device-list'>{deviceList}</div>
         </div>
       ) : null;
 
@@ -342,7 +346,7 @@ module.exports = class DevicesView extends React.Component {
             <div className='title small'>
               <h3>Current Device</h3>
             </div>
-            {currentDevice}
+            <div className='device-list'>{currentDevice}</div>
           </div>
           {displayDevices}
           <button onClick={() => this.openModal()} disabled={maximumReached}>

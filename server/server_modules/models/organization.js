@@ -21,6 +21,12 @@ module.exports = function(sequelize, DataTypes) {
         unique: true,
         allowNull: true,
         type: DataTypes.STRING
+      },
+      owner: {
+        allowNull: true,
+        type: DataTypes.INTEGER,
+        onDelete: 'SET NULL',
+        onUpdate: 'NO ACTION'
       }
     },
     {

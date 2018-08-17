@@ -46,6 +46,7 @@
 #tinymce {
   background-color: white;
   margin: 0px 1em;
+  overflow: auto;
 
   .rich-text-private-key {
     padding: 10px;
@@ -54,6 +55,12 @@
   }
 
   .rich-text-copy {
+    border: 1px solid $charcoal;
+    margin: 1em 5em;
+    padding: 1em;
+  }
+
+  .rich-text-password {
     border: 1px dashed $charcoal;
     margin: 1em 5em;
     padding: 1em;
@@ -63,6 +70,16 @@
     color: blue;
     text-decoration: underline;
   }
+}
+
+i.mce-i-vpn_key:before {
+  content: 'vpn_key';
+  font-family: 'Material Icons';
+}
+
+i.mce-i-link-document:before {
+  content: 'link';
+  font-family: 'Material Icons';
 }
 
 .link-modal {

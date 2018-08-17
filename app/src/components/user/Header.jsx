@@ -22,28 +22,46 @@ class Header extends React.Component {
         hasBeenClicked: true
       });
 
-    this.setState({
-      show: false
-    });
+    if (event.target.id === '')
+      this.setState({
+        show: false
+      });
     window.removeEventListener('click', this.onClose, true);
   }
 
   clickHandler(event, button, logout) {
-    if (button === 'TOGGLE-NAV' && this.state.hasBeenClicked)
+    if (button === 'TOGGLE-NAV' && this.state.hasBeenClicked) {
       return this.setState({
-        hasBeenClicked: false
+        hasBeenClicked: false,
+        show: !this.state.show
       });
-    if (!this.state.show) {
-      window.addEventListener('click', this.onClose, true);
     }
-    if (button && logout) {
-      return logout();
+
+    if (!this.state.show) window.addEventListener('click', this.onClose, true);
+
+    if (button && logout) return logout();
+
+    if (button !== 'TOGGLE-NAV') {
+      return this.props.changeView(button);
     }
-    return this.setState({ show: !this.state.show });
+
+    this.setState({ show: !this.state.show });
   }
 
   render() {
-    let { organization, email, changeView, logout } = this.props;
+    let { organization, email, changeView, logout, permissions } = this.props;
+
+    const accessControl = (
+      <li
+        onClick={event => this.clickHandler(event, 'ACCESS_VIEW', null)}
+        id='ACCESS_VIEW'
+      >
+        <i className='material-icons' id='ACCESS_VIEW'>
+          supervisor_account
+        </i>{' '}
+        Access Management
+      </li>
+    );
 
     return (
       <div className='header'>
@@ -65,7 +83,7 @@ class Header extends React.Component {
               className='material-icons'
               onClick={() => changeView('INVITE_USER_VIEW')}
             >
-              person_add
+              person
             </i>
             <i
               className='material-icons'
@@ -94,12 +112,16 @@ class Header extends React.Component {
                 className={`dropdown-wrapper ${this.state.show ? 'show' : ''}`}
               >
                 <ul className={`dropdown ${this.state.show ? 'show' : ''}`}>
+                  {permissions.get('ADMIN') && accessControl}
                   <li
                     onClick={event =>
                       this.clickHandler(event, 'LOGOUT', logout)
                     }
+                    id='LOGOUT'
                   >
-                    <i className='material-icons'>power_settings_new</i>
+                    <i className='material-icons logout' id='LOGOUT'>
+                      power_settings_new
+                    </i>
                     Log out
                   </li>
                 </ul>

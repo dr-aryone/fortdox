@@ -5,7 +5,6 @@ const Tags = require('./Tags');
 const BottomPanel = require('./BottomPanel');
 const Attachments = require('./Attachments');
 const SimilarDocumentsList = require('./SimilarDocumentsList');
-const MetaData = require('./MetaData');
 
 const DocumentForm = ({
   titleAutofocus,
@@ -88,13 +87,19 @@ const DocumentForm = ({
           onRemoveAttachment={onRemoveAttachment}
           onPreviewAttachment={onPreviewAttachment}
           onDownloadAttachment={onDownloadAttachment}
+          disableDownload={versions === undefined ? true : false}
         />
-        {versions ? (
-          <MetaData
-            versions={versions}
-            onToggleVersionPanel={onToggleVersionPanel}
-          />
-        ) : null}
+        {versions &&
+          versions.size > 0 && (
+            <div className='version-history'>
+              <label>
+                <h3>Version History</h3>
+              </label>
+              <button type='button' onClick={() => onToggleVersionPanel(true)}>
+                Version History
+              </button>
+            </div>
+          )}
       </div>
     </form>
   );

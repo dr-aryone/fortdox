@@ -1,48 +1,75 @@
 .user-list {
-  display: flex;
-  .alert {
-    margin: 20px;
-  }
-}
+  color: $charcoal;
 
-.organization-users {
-  display: flex;
-  flex-direction: column;
-  .user {
-    display: flex;
-    align-items: center;
-    margin: 10px 10px 0 10px;
-    &:last-child {
-      margin-bottom: 10px;
-    }
-    &.pending .email {
-      color: lighten($text-color, 30%);
-    }
-    > span.email {
-      padding: 10px;
-      background-color: $grey;
-      border-radius: 3px;
-    }
-    > span.pending {
-      font-size: 10px;
-      &:not(:empty) {
-        margin-left: 10px;
+  & .organization-users {
+    padding: 5px 1.3em;
+
+    & > .user {
+      display: flex;
+      padding: 10px 0px;
+      border-bottom: 1px solid $grey;
+      align-items: center;
+
+      & span {
+        flex-grow: 1;
       }
-    }
 
-    > span {
-      margin-left: 10px;
-      > i {
-        color: $charcoal;
-        &.danger {
-          color: $red;
-          margin-right: 10px;
+      & > .email {
+        width: 30%;
+      }
+
+      & > .role,
+      .pending {
+        width: 10%;
+      }
+
+      & > .pending {
+        color: lighten($charcoal, 10%);
+        font-style: italic;
+      }
+
+      & > .reinvite,
+      .delete {
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+
+        &:hover {
+          color: lighten($charcoal, 20%);
+        }
+
+        & > i {
+          margin-right: 5px;
+          font-size: 22px;
+        }
+      }
+
+      & > .reinvite {
+        & > i {
+          color: $primary-color;
         }
 
         &:hover {
-          cursor: pointer;
+          & > i {
+            color: lighten($primary-color, 10%);
+          }
         }
       }
+
+      & > .delete {
+        & > i {
+          color: $red;
+        }
+        &:hover {
+          & > i {
+            color: lighten($red, 10%);
+          }
+        }
+      }
+    }
+
+    & > .user:last-child {
+      border: 0;
     }
   }
 }

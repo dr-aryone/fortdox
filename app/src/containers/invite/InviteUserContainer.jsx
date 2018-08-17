@@ -10,7 +10,8 @@ const mapStateToProps = state => {
     isLoading: state.invite.get('isLoading'),
     message: state.invite.get('message'),
     error: state.invite.get('error'),
-    refresh: state.invite.get('refresh')
+    refresh: state.invite.get('refresh'),
+    permissions: state.user.get('permissions')
   };
 };
 

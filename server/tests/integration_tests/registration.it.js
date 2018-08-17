@@ -3,7 +3,7 @@ let request = require('request-promise').defaults({
   headers: { 'x-fortdox-version': config.clientVersion }
 });
 
-const prompt = require('syncprompt');
+const prompt = require('readline-sync');
 const fs = require('fs-extra');
 
 const steps = 3;
@@ -62,7 +62,7 @@ async function test() {
     throw error;
   }
 
-  const activationCode = prompt('Enter activaiton code\n');
+  const activationCode = prompt.question('Enter activaiton code\n');
   console.log(activationCode);
 
   let credentials;

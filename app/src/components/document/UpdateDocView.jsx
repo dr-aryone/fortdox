@@ -188,7 +188,8 @@ class UpdateDocView extends React.Component {
       showVersionPanel,
       onToggleVersionPanel,
       onInsertDocumentVersion,
-      onConvert
+      onConvert,
+      permissions
     } = this.props;
 
     const deleteDialog = (
@@ -202,7 +203,11 @@ class UpdateDocView extends React.Component {
           <h2>Warning</h2>
           <p>Are you sure you want to delete the document?</p>
           <div className='doc-buttons'>
-            <button onClick={this.closeDeleteDialog} type='button'>
+            <button
+              onClick={this.closeDeleteDialog}
+              type='button'
+              className='neutral'
+            >
               Cancel
             </button>
             <button onClick={onDelete} type='button' className='warning'>
@@ -219,7 +224,7 @@ class UpdateDocView extends React.Component {
         onClose={this.closeEditDialog}
         showClose={false}
       >
-        <div className='box dialog warning'>
+        <div className='box dialog danger'>
           <i className='material-icons'>error_outline</i>
           <h2>Document has been changed.</h2>
           <p>Do you want to save your changes?</p>
@@ -230,7 +235,7 @@ class UpdateDocView extends React.Component {
                   this.state.nextView ? this.state.nextView : 'SEARCH_VIEW'
                 )
               }
-              className='first-button'
+              className='first-button warning'
               type='button'
             >
               {'Don\'t save'}
@@ -241,6 +246,7 @@ class UpdateDocView extends React.Component {
                 this.props.onUnCheckField();
               }}
               type='button'
+              className='neutral'
             >
               Cancel
             </button>
@@ -271,7 +277,11 @@ class UpdateDocView extends React.Component {
           <div className={`${showVersionPanel ? 'document-container' : ''}`}>
             <ErrorBox errorMsg={error} />
             <h1 className='doc-header'>
-              <button type='button' onClick={() => this.checkEdits(docFields)}>
+              <button
+                type='button'
+                onClick={() => this.checkEdits(docFields)}
+                className='neutral'
+              >
                 Back
               </button>
               Update Document
@@ -305,14 +315,21 @@ class UpdateDocView extends React.Component {
                 <button
                   onClick={this.openDeleteDialog}
                   type='button'
-                  className='warning'
+                  className='warning tooltip'
+                  disabled={!permissions.get('DELETE_DOCUMENT')}
                 >
+                  {!permissions.get('DELETE_DOCUMENT') && (
+                    <span className='tooltiptext'>
+                      {'You don\'t have permission to delete document'}
+                    </span>
+                  )}
                   Delete
                 </button>
                 <span>
                   <button
                     type='button'
                     onClick={() => this.checkEdits(docFields)}
+                    className='neutral'
                   >
                     Back
                   </button>
