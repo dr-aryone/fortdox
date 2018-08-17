@@ -1,6 +1,7 @@
 import { openDocument, previewDocument } from 'actions/document/document';
 import search from 'actions/search';
 import SearchView from 'components/search/SearchView';
+const documentAction = require('actions/document/document');
 const { connect } = require('react-redux');
 const action = require('actions');
 
@@ -14,12 +15,16 @@ const mapStateToProps = state => {
     totalHits: state.search.get('totalHits'),
     isLoading: state.search.get('isLoading'),
     showPreview: state.previewDocument.get('showPreview'),
-    documentToUpdate: state.updateDocument.get('documentToUpdate')
+    documentToUpdate: state.updateDocument.get('documentToUpdate'),
+    favoriteDocuments: state.search.get('favoriteDocuments')
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
+    getFavoriteDocuments: () => {
+      dispatch(documentAction.getFavoriteDocuments());
+    },
     onSearch: args => {
       dispatch(search.search(args));
     },

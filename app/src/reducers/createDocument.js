@@ -189,7 +189,7 @@ const form = (state = initialState, action) => {
       return state.set('isLoading', true);
     case 'CREATE_DOC_PREVIEW_ATTACHMENT_FAIL':
       return state.merge({
-        error: fromJS(action.payload.error),
+        error: fromJS(action.payload),
         isLoading: false
       });
     case 'CREATE_DOC_PREVIEW_ATTACHMENT_SUCCESS':

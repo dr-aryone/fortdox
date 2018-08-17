@@ -160,6 +160,11 @@ class UpdateDocView extends React.Component {
     });
   }
 
+  onFavoriteDocument(id, favorited) {
+    if (favorited) this.props.onRemoveFavorite(id);
+    else this.props.onAddFavorite(id);
+  }
+
   render() {
     let {
       docFields,
@@ -189,7 +194,9 @@ class UpdateDocView extends React.Component {
       onToggleVersionPanel,
       onInsertDocumentVersion,
       onConvert,
-      permissions
+      permissions,
+      favoriteDocuments,
+      id
     } = this.props;
 
     const deleteDialog = (
@@ -264,6 +271,8 @@ class UpdateDocView extends React.Component {
       </Modal>
     );
 
+    const favorited = favoriteDocuments.find(doc => doc === id);
+
     return (
       <div className='container-fluid'>
         <LoaderOverlay display={isLoading} />
@@ -285,6 +294,12 @@ class UpdateDocView extends React.Component {
                 Back
               </button>
               Update Document
+              <i
+                className='material-icons'
+                onClick={() => this.onFavoriteDocument(id, favorited)}
+              >
+                {favorited ? 'star' : 'star_border'}
+              </i>
             </h1>
             <DocumentForm
               onUpdateId={onUpdateId}

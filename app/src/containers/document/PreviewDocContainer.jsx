@@ -15,7 +15,8 @@ const mapStateToProps = state => {
     docFields: state.previewDocument.get('docFields'),
     error: state.previewDocument.get('error'),
     isLoading: state.previewDocument.get('isLoading'),
-    searchField: state.previewDocument.get('searchField')
+    searchField: state.previewDocument.get('searchField'),
+    favoriteDocuments: state.search.get('favoriteDocuments')
   };
 };
 

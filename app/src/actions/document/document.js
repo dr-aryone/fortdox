@@ -13,7 +13,10 @@ export default {
   hasChecked,
   unCheck,
   toggleVersionPanel,
-  insertDocumentVersion
+  insertDocumentVersion,
+  getFavoriteDocuments,
+  addFavoriteDocument,
+  deleteFavoriteDocument
 };
 
 export function createDocument() {
@@ -534,6 +537,93 @@ export function insertDocumentVersion(version) {
         tags,
         nextID: nextID + 1
       }
+    });
+  };
+}
+
+export function getFavoriteDocuments() {
+  return async dispatch => {
+    dispatch({ type: 'GET_FAVORITE_DOCUMENTS_START' });
+
+    let response;
+    try {
+      response = await requestor.get(`${config.server}/favorites`);
+    } catch (error) {
+      console.error(error);
+      switch (error.status) {
+        case 500:
+        default:
+          return dispatch({
+            type: 'GET_FAVORITE_DOCUMENTS_ERROR',
+            payload: 'Unable to connect to server. Please try again later.'
+          });
+      }
+    }
+
+    return dispatch({
+      type: 'GET_FAVORITE_DOCUMENTS_SUCCESS',
+      payload: response.body
+    });
+  };
+}
+
+export function addFavoriteDocument(documentId) {
+  return async dispatch => {
+    dispatch({ type: 'ADD_FAVORITE_START' });
+
+    try {
+      await requestor.post(`${config.server}/favorites`, {
+        body: {
+          document: documentId
+        }
+      });
+    } catch (error) {
+      console.error(error);
+      switch (error.status) {
+        case 404:
+          return dispatch({
+            type: 'ADD_FAVORITE_ERROR',
+            payload: 'Unable to favorite non existing document.'
+          });
+        case 500:
+        default:
+          return dispatch({
+            type: 'ADD_FAVORITE_ERROR',
+            payload: 'Unable to connect to server. Please try again later.'
+          });
+      }
+    }
+
+    return dispatch({
+      type: 'ADD_FAVORITE_SUCCESS'
+    });
+  };
+}
+
+export function deleteFavoriteDocument(documentId) {
+  return async dispatch => {
+    dispatch({ type: 'DELETE_DOCUMENT_START' });
+    try {
+      await requestor.post(`${config.server}/favorites/${documentId}`);
+    } catch (error) {
+      console.error(error);
+      switch (error.status) {
+        case 404:
+          return dispatch({
+            type: 'DELETE_DOCUMENT_ERROR',
+            payload: 'Unable to favorite non existing document.'
+          });
+        case 500:
+        default:
+          return dispatch({
+            type: 'DELETE_DOCUMENT_ERROR',
+            payload: 'Unable to connect to server. Please try again later.'
+          });
+      }
+    }
+
+    return dispatch({
+      type: 'DELETE_DOCUMENT_SUCCESS'
     });
   };
 }
