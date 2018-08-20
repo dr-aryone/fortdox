@@ -2,11 +2,11 @@
   top: 0;
   left: 0;
   width: 100%;
-  height: calc(100vh - #{$header-height});
+  height: calc(100vh - #{$header-height + bookmark-height});
 }
 
 .container-fluid {
-  margin-top: $header-height;
+  margin-top: $header-height + $bookmark-height;
   height: 100%;
   overflow-y: auto;
 

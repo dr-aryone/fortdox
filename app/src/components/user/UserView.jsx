@@ -4,6 +4,7 @@ import UpdateDocContainer from 'containers/document/UpdateDocContainer';
 import InviteUserContainer from 'containers/invite/InviteUserContainer';
 import DevicesContainer from 'containers/devices/DevicesContainer';
 import PermissionsContainer from 'containers/permissions/PermissionsContainer';
+import BookmarkContainer from 'containers/user/BookmarkContainer';
 const React = require('react');
 const HeaderContainer = require('containers/user/HeaderContainer');
 const DownloadManager = require('components/general/DownloadManager');
@@ -54,6 +55,7 @@ const UserView = ({
     <div className='wrapper'>
       <SplashScreen show={splashScreen} />
       <HeaderContainer />
+      <BookmarkContainer />
       {page}
       <DownloadManager
         show={show}

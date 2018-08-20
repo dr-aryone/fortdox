@@ -75,7 +75,7 @@ let menu;
 function createBrowserWindow() {
   win = new BrowserWindow({
     width: 1280,
-    height: 800,
+    height: 820,
     icon: path.join(__dirname, config.logo)
   });
   if (devMode) {

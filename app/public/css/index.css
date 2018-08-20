@@ -628,14 +628,33 @@ i.mce-i-link-document:before {
     .user-list .organization-users > .user:last-child {
       border: 0; }
 
+.bookmarks {
+  width: 100%;
+  position: fixed;
+  top: 55px;
+  display: flex;
+  background-color: white;
+  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.15), 0 0 2px rgba(0, 0, 0, 0.11);
+  height: 35px;
+  align-items: center;
+  padding: 0 40px; }
+  .bookmarks .bookmark {
+    margin-right: 20px;
+    color: #3c3c3c; }
+    .bookmarks .bookmark:hover {
+      text-decoration: underline;
+      cursor: pointer; }
+    .bookmarks .bookmark:last-child {
+      margin-right: 0; }
+
 .wrapper {
   top: 0;
   left: 0;
   width: 100%;
-  height: calc(100vh - 55px); }
+  height: calc(100vh - 55pxbookmark-height); }
 
 .container-fluid {
-  margin-top: 55px;
+  margin-top: 90px;
   height: 100%;
   overflow-y: auto; }
   .container-fluid.center-middle {

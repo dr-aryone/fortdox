@@ -1,0 +1,25 @@
+.bookmarks {
+  width: 100%;
+  position: fixed;
+  top: $header-height;
+  display: flex;
+  background-color: white;
+  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.15), 0 0 2px rgba(0, 0, 0, 0.11);
+  height: $bookmark-height;
+  align-items: center;
+  padding: 0 40px;
+
+  .bookmark {
+    margin-right: 20px;
+    color: $charcoal;
+
+    &:hover {
+      text-decoration: underline;
+      cursor: pointer;
+    }
+
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+}
