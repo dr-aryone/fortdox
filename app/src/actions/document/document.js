@@ -584,7 +584,12 @@ export function addFavoriteDocument(documentId) {
         case 404:
           return dispatch({
             type: 'ADD_FAVORITE_ERROR',
-            payload: 'Unable to favorite non existing document.'
+            payload: 'Unable to favorite a non existing document.'
+          });
+        case 409:
+          return dispatch({
+            type: 'ADD_FAVORITE_ERROR',
+            payload: 'Document has already been favorited.'
           });
         case 500:
         default:
@@ -615,7 +620,7 @@ export function deleteFavoriteDocument(documentId) {
         case 404:
           return dispatch({
             type: 'DELETE_FAVORITE_ERROR',
-            payload: 'Unable to favorite non existing document.'
+            payload: 'Unable to remove favorite from a non existing document.'
           });
         case 500:
         default:

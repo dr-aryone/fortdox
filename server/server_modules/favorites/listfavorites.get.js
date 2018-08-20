@@ -1,33 +1,40 @@
-const es = require('app/elastic_search');
+const db = require('app/models');
+const userUtil = require('app/users/User');
 const logger = require('app/logger');
-
-async function findFavourites(orgIndex, email) {
-  return await es.client.search({
-    index: orgIndex,
-    _sourceExclude: ['attachments', 'encrypted_texts'],
-    body: {
-      query: {
-        match: {
-          favorite: email
-        }
-      }
-    }
-  });
-}
+const es = require('app/elastic_search');
 
 async function listFavorites(req, res) {
   try {
     const email = req.session.email;
-    let fav = await findFavourites(req.session.organizationIndex, email);
+    const organizationIndex = req.session.organizationIndex;
+    const user = await userUtil.getUser(email);
+    let favorites = await db.Favorites.findAll({
+      where: {
+        userid: user.id
+      }
+    });
 
     logger.info('/favorites', `${email} lists favorites`);
+    let result = [];
+    try {
+      result = await Promise.all(
+        favorites.map(async favorite => {
+          const doc = await es.getDocument({
+            organizationIndex,
+            documentId: favorite.elasticSearchId
+          });
+          return {
+            id: favorite.elasticSearchId,
+            title: doc._source.title
+          };
+        })
+      );
+    } catch (error) {
+      logger.error(error);
+      return res.status(500).send();
+    }
 
-    fav = fav.hits.hits.map(h => {
-      return { id: h._id, ...h._source };
-    });
-    fav = fav.filter(f => f.favorite.includes(email));
-
-    return res.send(fav);
+    return res.send(result);
   } catch (error) {
     logger.error(error);
     return res.status(500).send();

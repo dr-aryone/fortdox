@@ -1,4 +1,3 @@
-const changelog = require('app/changelog');
 const fs = require('fs');
 const es = require('app/elastic_search');
 const checkEmptyFields = require('app/utilities/checkEmptyFields');
