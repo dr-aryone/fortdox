@@ -103,7 +103,7 @@ h3 {
   border-bottom-color: #fe4a49;
   border-width: 10px; }
 
-.box, .link-document, .doc-mode .modal-inner, .link-modal, .main-panel, .access-table, .search-item, .misc .created, .misc .edited, .misc .input-field, .misc .attachments, .preview, .preview .private-key, .list-inner {
+.box, .link-document, .doc-mode .modal-inner, .link-modal, .main-panel, .access-table, .favorites-panel, .search-item, .misc .created, .misc .edited, .misc .input-field, .misc .attachments, .preview, .preview .private-key, .list-inner {
   padding: 15px;
   margin-bottom: 20px;
   box-shadow: 0 2px 2px rgba(0, 0, 0, 0.15), 0 0 2px rgba(0, 0, 0, 0.11);
@@ -111,15 +111,15 @@ h3 {
   border-radius: 1px;
   box-sizing: border-box;
   word-break: break-word; }
-  .box .title, .link-document .title, .doc-mode .modal-inner .title, .link-modal .title, .main-panel .title, .access-table .title, .search-item .title, .misc .created .title, .misc .edited .title, .misc .input-field .title, .misc .attachments .title, .preview .title, .list-inner .title {
+  .box .title, .link-document .title, .doc-mode .modal-inner .title, .link-modal .title, .main-panel .title, .access-table .title, .favorites-panel .title, .search-item .title, .misc .created .title, .misc .edited .title, .misc .input-field .title, .misc .attachments .title, .preview .title, .list-inner .title {
     background-color: #f5f3f3;
     padding: 15px; }
-  .box .text, .link-document .text, .doc-mode .modal-inner .text, .link-modal .text, .main-panel .text, .access-table .text, .search-item .text, .misc .created .text, .misc .edited .text, .misc .input-field .text, .misc .attachments .text, .preview .text, .list-inner .text {
+  .box .text, .link-document .text, .doc-mode .modal-inner .text, .link-modal .text, .main-panel .text, .access-table .text, .favorites-panel .text, .search-item .text, .misc .created .text, .misc .edited .text, .misc .input-field .text, .misc .attachments .text, .preview .text, .list-inner .text {
     padding: 15px;
     margin: 0px; }
-  .box .hide, .link-document .hide, .doc-mode .modal-inner .hide, .link-modal .hide, .main-panel .hide, .access-table .hide, .search-item .hide, .misc .created .hide, .misc .edited .hide, .misc .input-field .hide, .misc .attachments .hide, .preview .hide, .list-inner .hide {
+  .box .hide, .link-document .hide, .doc-mode .modal-inner .hide, .link-modal .hide, .main-panel .hide, .access-table .hide, .favorites-panel .hide, .search-item .hide, .misc .created .hide, .misc .edited .hide, .misc .input-field .hide, .misc .attachments .hide, .preview .hide, .list-inner .hide {
     display: none; }
-  .box.invisible, .invisible.link-document, .doc-mode .invisible.modal-inner, .invisible.link-modal, .invisible.main-panel, .invisible.access-table, .invisible.search-item, .misc .invisible.created, .misc .invisible.edited, .misc .invisible.input-field, .misc .invisible.attachments, .invisible.preview, .preview .invisible.private-key, .invisible.list-inner {
+  .box.invisible, .invisible.link-document, .doc-mode .invisible.modal-inner, .invisible.link-modal, .invisible.main-panel, .invisible.access-table, .invisible.favorites-panel, .invisible.search-item, .misc .invisible.created, .misc .invisible.edited, .misc .invisible.input-field, .misc .invisible.attachments, .invisible.preview, .preview .invisible.private-key, .invisible.list-inner {
     visibility: hidden; }
 
 button {
@@ -1259,6 +1259,36 @@ i.mce-i-link-document:before {
   bottom: 0;
   right: 0;
   margin: 5%; }
+
+.favorites {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  margin: 5%; }
+  .favorites-panel {
+    min-width: 20vh;
+    padding: 0px;
+    z-index: 1;
+    margin-bottom: 20px; }
+    .favorites-panel .title {
+      padding: 10px 15px; }
+  .favorites-list {
+    padding: 5px 15px; }
+  .favorites-item {
+    padding: 15px 0px;
+    border-bottom: 1px solid #f5f3f3;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    color: #3c3c3c; }
+    .favorites-item:hover > span {
+      text-decoration: underline;
+      color: #565656; }
+    .favorites-item .material-icons {
+      color: #3c3c3c; }
+    .favorites-item:last-child {
+      border-bottom: 0; }
 
 .search-item {
   padding: 0px;

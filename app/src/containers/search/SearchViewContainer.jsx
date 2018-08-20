@@ -16,7 +16,7 @@ const mapStateToProps = state => {
     isLoading: state.search.get('isLoading'),
     showPreview: state.previewDocument.get('showPreview'),
     documentToUpdate: state.updateDocument.get('documentToUpdate'),
-    favoriteDocuments: state.search.get('favoriteDocuments')
+    favoritedDocuments: state.search.get('favoritedDocuments')
   };
 };
 
