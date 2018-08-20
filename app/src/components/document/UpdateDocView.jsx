@@ -151,7 +151,7 @@ class UpdateDocView extends React.Component {
 
   checkEdits(docFields) {
     if (!this.hasBeenEdited(docFields))
-      return this.props.hasChecked('SEARCH_VIEW');
+      return this.props.hasChecked('PREVIEW_DOC');
     return this.setState({
       showEditDialog: true
     });
@@ -276,7 +276,7 @@ class UpdateDocView extends React.Component {
     );
 
     let favorited;
-    if (favorited)
+    if (favoritedDocuments)
       favorited = favoritedDocuments.find(doc => doc.get('id') === id);
     return (
       <div className='container-fluid'>

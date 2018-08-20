@@ -40,6 +40,10 @@ let initialState = fromJS({
 const form = (state = initialState, action) => {
   switch (action.type) {
     case 'OPEN_DOCUMENT_START':
+    case 'UPDATE_DOC_VIEW_GET_FAVORITE_DOCUMENTS_START':
+      return state.set('isLoading', true).set('refreshFavorites', false);
+    case 'UPDATE_DOC_VIEW_ADD_FAVORITE_START':
+    case 'UPDATE_DOC_VIEW_DELETE_FAVORITE_START':
       return state.set('isLoading', true);
     case 'OPEN_DOCUMENT_DONE':
       return state.merge({
@@ -86,6 +90,9 @@ const form = (state = initialState, action) => {
         })
       });
     case 'OPEN_DOCUMENT_ERROR':
+    case 'UPDATE_DOC_VIEW_GET_FAVORITE_DOCUMENTS_ERROR':
+    case 'UPDATE_DOC_VIEW_ADD_FAVORITE_ERROR':
+    case 'UPDATE_DOC_VIEW_DELETE_FAVORITE_ERROR':
       return state.set('isLoading', false).set('error', fromJS(action.payload));
     case 'UPDATE_DOC_INPUT_CHANGE_TITLE':
       return state
@@ -279,13 +286,11 @@ const form = (state = initialState, action) => {
       return initialState;
     case 'ATTACHMENT_DOWNLOAD_STARTED':
       return state.set('showVersionPanel', false);
-    case 'ADD_FAVORITE_SUCCESS':
-    case 'DELETE_FAVORITE_SUCCESS':
-      if (action.payload === 'UPDATE_DOC_VIEW')
-        return state.set('refreshFavorites', true);
-      else return state;
-    case 'GET_FAVORITE_DOCUMENTS_SUCCESS':
-      return state.set('refreshFavorites', false);
+    case 'UPDATE_DOC_VIEW_ADD_FAVORITE_SUCCESS':
+    case 'UPDATE_DOC_VIEW_DELETE_FAVORITE_SUCCESS':
+      return state.set('refreshFavorites', true).set('isLoading', false);
+    case 'UPDATE_DOC_VIEW_GET_FAVORITE_DOCUMENTS_SUCCESS':
+      return state.set('isLoading', false);
     default:
       return state;
   }

@@ -542,8 +542,10 @@ export function insertDocumentVersion(version) {
 }
 
 export function getFavoriteDocuments() {
-  return async dispatch => {
-    dispatch({ type: 'GET_FAVORITE_DOCUMENTS_START' });
+  return async (dispatch, getState) => {
+    const state = getState();
+    const view = state.navigation.get('currentView');
+    dispatch({ type: `${view}_GET_FAVORITE_DOCUMENTS_START` });
 
     let response;
     try {
@@ -554,14 +556,14 @@ export function getFavoriteDocuments() {
         case 500:
         default:
           return dispatch({
-            type: 'GET_FAVORITE_DOCUMENTS_ERROR',
+            type: `${view}_GET_FAVORITE_DOCUMENTS_ERROR`,
             payload: 'Unable to connect to server. Please try again later.'
           });
       }
     }
 
     return dispatch({
-      type: 'GET_FAVORITE_DOCUMENTS_SUCCESS',
+      type: `${view}_GET_FAVORITE_DOCUMENTS_SUCCESS`,
       payload: response.body
     });
   };
@@ -569,9 +571,9 @@ export function getFavoriteDocuments() {
 
 export function addFavoriteDocument(documentId) {
   return async (dispatch, getState) => {
-    dispatch({ type: 'ADD_FAVORITE_START' });
     const state = getState();
     const view = state.navigation.get('currentView');
+    dispatch({ type: `${view}_ADD_FAVORITE_START` });
     try {
       await requestor.post(`${config.server}/favorites`, {
         body: {
@@ -583,25 +585,25 @@ export function addFavoriteDocument(documentId) {
       switch (error.status) {
         case 404:
           return dispatch({
-            type: 'ADD_FAVORITE_ERROR',
+            type: `${view}_ADD_FAVORITE_ERROR`,
             payload: 'Unable to favorite a non existing document.'
           });
         case 409:
           return dispatch({
-            type: 'ADD_FAVORITE_ERROR',
+            type: `${view}_ADD_FAVORITE_ERROR`,
             payload: 'Document has already been favorited.'
           });
         case 500:
         default:
           return dispatch({
-            type: 'ADD_FAVORITE_ERROR',
+            type: `${view}_ADD_FAVORITE_ERROR`,
             payload: 'Unable to connect to server. Please try again later.'
           });
       }
     }
 
     return dispatch({
-      type: 'ADD_FAVORITE_SUCCESS',
+      type: `${view}_ADD_FAVORITE_SUCCESS`,
       payload: view
     });
   };
@@ -609,9 +611,9 @@ export function addFavoriteDocument(documentId) {
 
 export function deleteFavoriteDocument(documentId) {
   return async (dispatch, getState) => {
-    dispatch({ type: 'DELETE_FAVORITE_START' });
     const state = getState();
     const view = state.navigation.get('currentView');
+    dispatch({ type: `${view}_DELETE_FAVORITE_START` });
     try {
       await requestor.delete(`${config.server}/favorites/${documentId}`);
     } catch (error) {
@@ -619,20 +621,20 @@ export function deleteFavoriteDocument(documentId) {
       switch (error.status) {
         case 404:
           return dispatch({
-            type: 'DELETE_FAVORITE_ERROR',
+            type: `${view}_DELETE_FAVORITE_ERROR`,
             payload: 'Unable to remove favorite from a non existing document.'
           });
         case 500:
         default:
           return dispatch({
-            type: 'DELETE_FAVORITE_ERROR',
+            type: `${view}_DELETE_FAVORITE_ERROR`,
             payload: 'Unable to connect to server. Please try again later.'
           });
       }
     }
 
     return dispatch({
-      type: 'DELETE_FAVORITE_SUCCESS',
+      type: `${view}_DELETE_FAVORITE_SUCCESS`,
       payload: view
     });
   };

@@ -23,12 +23,14 @@ const search = (state = initialState, action) => {
         .set('searchString', action.payload.searchString);
     case 'OPEN_DOCUMENT_START':
     case 'TAG_SEARCH_START':
-    case 'GET_FAVORITE_DOCUMENTS_START':
+    case 'SEARCH_VIEW_GET_FAVORITE_DOCUMENTS_START':
+    case 'USER_VIEW_GET_FAVORITE_DOCUMENTS_START':
       return state.set('isLoading', true);
     case 'OPEN_DOCUMENT_DONE':
       return state.set('isLoading', false);
     case 'OPEN_DOCUMENT_ERROR':
-    case 'GET_FAVORITE_DOCUMENTS_ERROR':
+    case 'SEARCH_VIEW_GET_FAVORITE_DOCUMENTS_ERROR':
+    case 'USER_VIEW_GET_FAVORITE_DOCUMENTS_ERROR':
       return state
         .set('isLoading', false)
         .set('error', fromJS(action.payload))
@@ -67,9 +69,11 @@ const search = (state = initialState, action) => {
       return initialState;
     case 'PREVIEW_DOC_PREVIEW_ATTACHMENT_FAIL':
       return state.set('message', null);
-    case 'GET_FAVORITE_DOCUMENTS_SUCCESS':
+    case 'SEARCH_VIEW_GET_FAVORITE_DOCUMENTS_SUCCESS':
+    case 'USER_VIEW_GET_FAVORITE_DOCUMENTS_SUCCESS':
+    case 'PREVIEW_DOC_GET_FAVORITE_DOCUMENTS_SUCCESS':
+    case 'UPDATE_DOC_VIEW_GET_FAVORITE_DOCUMENTS_SUCCESS':
       return state
-        .set('message', null)
         .set('error', null)
         .set('isLoading', false)
         .set('favoritedDocuments', fromJS(action.payload));

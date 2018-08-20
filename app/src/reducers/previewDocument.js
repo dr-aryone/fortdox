@@ -44,6 +44,10 @@ const preview = (state = initialState, action) => {
         })
         .setIn(['docFields', 'encryptedTexts'], action.payload.encryptedTexts)
         .setIn(['docFields', 'texts'], action.payload.texts);
+    case 'PREVIEW_DOC_GET_FAVORITE_DOCUMENTS_START':
+      return state.set('isLoading', true).set('refreshFavorites', false);
+    case 'PREVIEW_DOC_ADD_FAVORITE_START':
+    case 'PREVIEW_DOC_DELETE_FAVORITE_START':
     case 'PREVIEW_DOCUMENT_START':
       return state.set('isLoading', true);
     case 'PREVIEW_DOCUMENT_SUCCESS':
@@ -67,6 +71,9 @@ const preview = (state = initialState, action) => {
         fromJS(action.payload.value)
       );
     case 'OPEN_DOCUMENT_ERROR':
+    case 'PREVIEW_DOC_ADD_FAVORITE_ERROR':
+    case 'PREVIEW_DOC_DELETE_FAVORITE_ERROR':
+    case 'PREVIEW_DOC_GET_FAVORITE_DOCUMENTS_ERROR':
       return state.set('isLoading', false).set('error', fromJS(action.payload));
     case 'SEARCH_SUCCESS':
     case 'CHANGE_VIEW':
@@ -95,13 +102,11 @@ const preview = (state = initialState, action) => {
         .setIn(['docFields', 'preview'], fromJS(action.payload));
     case 'TAG_SEARCH_SUCCESS':
       return initialState;
-    case 'ADD_FAVORITE_SUCCESS':
-    case 'DELETE_FAVORITE_SUCCESS':
-      if (action.payload === 'PREVIEW_DOC')
-        return state.set('refreshFavorites', true);
-      else return state;
-    case 'GET_FAVORITE_DOCUMENTS_SUCCESS':
-      return state.set('refreshFavorites', false);
+    case 'PREVIEW_DOC_ADD_FAVORITE_SUCCESS':
+    case 'PREVIEW_DOC_DELETE_FAVORITE_SUCCESS':
+      return state.set('refreshFavorites', true).set('isLoading', false);
+    case 'PREVIEW_DOC_GET_FAVORITE_DOCUMENTS_SUCCESS':
+      return state.set('isLoading', false);
     default:
       return state;
   }

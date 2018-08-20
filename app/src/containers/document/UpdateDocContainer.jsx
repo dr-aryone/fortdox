@@ -18,7 +18,7 @@ const mapStateToProps = state => {
     nextViewAfterCheck: state.updateDocument.get('nextViewAfterCheck'),
     showVersionPanel: state.updateDocument.get('showVersionPanel'),
     permissions: state.user.get('permissions'),
-    favoritedDocuments: state.search.get('favoriteDocuments'),
+    favoritedDocuments: state.search.get('favoritedDocuments'),
     id: state.updateDocument.getIn(['documentToUpdate', '_id']),
     refresh: state.updateDocument.get('refreshFavorites')
   };
