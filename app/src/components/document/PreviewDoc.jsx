@@ -47,7 +47,6 @@ export class PreviewDoc extends React.Component {
   }
 
   componentDidUpdate() {
-    console.log(this.props.refresh);
     if (this.props.refresh) this.props.getFavoriteDocuments();
   }
 

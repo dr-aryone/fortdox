@@ -46,7 +46,7 @@ async function addFavorite(req, res) {
   }
 
   logger.log(
-    '/favorite POSt',
+    '/favorite POST',
     `${req.session.email} adds ${req.body.document} as favorite`
   );
 

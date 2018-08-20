@@ -21,7 +21,7 @@ const mapStateToProps = state => {
     error: state.previewDocument.get('error'),
     isLoading: state.previewDocument.get('isLoading'),
     searchField: state.previewDocument.get('searchField'),
-    favoritedDocuments: state.search.get('favoriteDocuments'),
+    favoritedDocuments: state.search.get('favoritedDocuments'),
     id: state.updateDocument.getIn(['documentToUpdate', '_id']),
     refresh: state.previewDocument.get('refreshFavorites')
   };

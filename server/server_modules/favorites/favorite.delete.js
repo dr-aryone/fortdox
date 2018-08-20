@@ -41,7 +41,7 @@ async function deleteFavorite(req, res) {
 
   logger.log(
     '/favorite DELETE',
-    `${req.session.email} remvoes ${req.body.document} as favorite`
+    `${req.session.email} removes ${req.body.document} as favorite`
   );
 
   res.send();
