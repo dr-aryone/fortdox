@@ -23,7 +23,10 @@ class Bookmark extends Component {
         onPreviewDocument={onPreviewDocument}
       />
     ));
-    return <div className='bookmarks'>{favorites}</div>;
+
+    return favorites.size !== 0 ? (
+      <div className='bookmarks'>{favorites}</div>
+    ) : null;
   }
 }
 
