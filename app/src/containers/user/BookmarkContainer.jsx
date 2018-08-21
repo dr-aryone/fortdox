@@ -1,4 +1,5 @@
 import Bookmark from 'components/user/Bookmark';
+import { deleteFavoriteDocument } from 'actions/document/document';
 const { connect } = require('react-redux');
 
 const mapStateToProps = state => {
@@ -9,8 +10,11 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    previewDocument: documentId => {
+    onPreviewDocument: documentId => {
       dispatch(documentId);
+    },
+    onRemoveBookmark: documentId => {
+      dispatch(deleteFavoriteDocument(documentId));
     }
   };
 };

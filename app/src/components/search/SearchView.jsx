@@ -35,7 +35,6 @@ class SearchView extends Component {
       isLoading,
       documentToUpdate,
       showPreview,
-      favoritedDocuments,
       onSearch,
       onUpdate,
       toDocView,
@@ -80,31 +79,6 @@ class SearchView extends Component {
       <div className='doc-button'>
         <button className='round large material-icons' onClick={toDocView}>
           add
-        </button>
-      </div>
-    );
-
-    const favoritedList = favoritedDocuments.map(doc => {
-      return (
-        <div key={doc.get('id')} className='favorites-item'>
-          <span>{doc.get('title')}</span>
-          <i className='material-icons'>keyboard_arrow_right</i>
-        </div>
-      );
-    });
-    const favoritesPanel = (
-      <div className='favorites'>
-        <div className='favorites-panel'>
-          <div className='title'>
-            <h3>Favorited Documents</h3>
-          </div>
-          <div className='favorites-list'>{favoritedList}</div>
-        </div>
-        <button
-          className='round large material-icons'
-          onClick={() => this.toggleFavoritesPanel()}
-        >
-          star
         </button>
       </div>
     );
@@ -179,7 +153,6 @@ class SearchView extends Component {
             </div>
             {pagination}
             {!documentToUpdate && docButton}
-            {!documentToUpdate && favoritesPanel}
           </div>
           <div className={`right ${showPreview ? 'show' : 'hide'}`}>
             <PreviewDocContainer />

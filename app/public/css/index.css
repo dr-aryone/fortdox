@@ -639,13 +639,31 @@ i.mce-i-link-document:before {
   align-items: center;
   padding: 0 40px; }
   .bookmarks .bookmark {
-    margin-right: 20px;
-    color: #3c3c3c; }
-    .bookmarks .bookmark:hover {
-      text-decoration: underline;
-      cursor: pointer; }
+    color: #3c3c3c;
+    cursor: pointer;
+    position: relative;
+    display: inline-block;
+    margin-right: 20px; }
+    .bookmarks .bookmark > .text {
+      display: flex; }
+      .bookmarks .bookmark > .text > .material-icons {
+        color: #ffe74c;
+        font-size: 16px;
+        margin-right: 5px; }
+      .bookmarks .bookmark > .text > .document-title:hover {
+        text-decoration: underline; }
     .bookmarks .bookmark:last-child {
       margin-right: 0; }
+    .bookmarks .bookmark > .dropdown {
+      position: absolute;
+      background-color: white;
+      box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+      z-index: 1;
+      margin-top: 5px; }
+      .bookmarks .bookmark > .dropdown .dropdown-item {
+        padding: 12px 16px; }
+        .bookmarks .bookmark > .dropdown .dropdown-item:hover {
+          background: #fcfbfb; }
 
 .wrapper {
   top: 0;

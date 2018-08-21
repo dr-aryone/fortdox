@@ -64,7 +64,8 @@ export function updatePermission(email, userPermission, permission, toggle) {
       type: 'UPDATE_PERMISSION_START'
     });
 
-    if (userPermission & (1 === 1) && permissions[permission] !== 'ADMIN')
+    const maskedPermission = userPermission & 1;
+    if (maskedPermission === 1 && permissions[permission] !== 'ADMIN')
       return dispatch({
         type: 'UPDATE_PERMISSION_ERROR',
         payload: `Cannot remove ${

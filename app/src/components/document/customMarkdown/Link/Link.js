@@ -2,10 +2,6 @@ import React, { Component } from 'react';
 const { Wrapper } = require('./styled');
 
 class Link extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   onClick() {
     this.props.onClickDocumentLink(this.props.id);
   }

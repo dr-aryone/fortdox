@@ -1,18 +1,27 @@
 import React, { Component } from 'react';
+import BookmarkItem from './BookmarkItem';
 
 class Bookmark extends Component {
   constructor(props) {
     super(props);
-
     this.props = props;
   }
 
   render() {
-    const { favoritedDocuments } = this.props;
+    const {
+      favoritedDocuments,
+      onRemoveBookmark,
+      onPreviewDocument
+    } = this.props;
+
     const favorites = favoritedDocuments.map(favorite => (
-      <span key={favorite.get('id')} className='bookmark'>
-        {favorite.get('title')}
-      </span>
+      <BookmarkItem
+        key={favorite.get('id')}
+        id={favorite.get('id')}
+        title={favorite.get('title')}
+        onRemoveBookmark={onRemoveBookmark}
+        onPreviewDocument={onPreviewDocument}
+      />
     ));
     return <div className='bookmarks'>{favorites}</div>;
   }
