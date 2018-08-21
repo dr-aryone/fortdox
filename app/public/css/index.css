@@ -671,7 +671,7 @@ i.mce-i-link-document:before {
   width: 100%;
   height: calc(100vh - 55px); }
   .wrapper.show-bookmark-bar {
-    height: calc(100vh - 55pxbookmark-height); }
+    height: calc(100vh - 90px); }
 
 .container-fluid {
   margin-top: 55px;
