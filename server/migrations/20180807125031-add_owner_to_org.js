@@ -1,10 +1,11 @@
 'use strict';
 
 module.exports = {
-  up: function(queryInterface, Sequelize) {
+  up(queryInterface, Sequelize) {
     return queryInterface.addColumn('Organizations', 'owner', {
       allowNull: true,
       type: Sequelize.INTEGER,
+      onDelete: 'SET NULL',
       references: {
         model: 'Users',
         key: 'id'
@@ -12,7 +13,7 @@ module.exports = {
     });
   },
 
-  down: function(queryInterface, Sequelize) {
+  down(queryInterface) {
     return queryInterface.removeColumn('Organizations', 'owner');
   }
 };

@@ -1,14 +1,14 @@
 const db = require('app/models');
 const logger = require('app/logger');
-const es = require('app/elastic_search');
-const THIRTY_MINUTES = 1800000;
+const moment = require('moment');
+const TWO_HOURS = 7200000;
 
 module.exports = async () => {
   logger.info('Running cleanup');
   const currentTime = new Date();
-  const birthTimeToDelete = new Date(currentTime - THIRTY_MINUTES);
+  const birthTimeToDelete = moment(new Date(currentTime - TWO_HOURS));
   let inactiveOrganizations;
-  let tempKeysOfInActivateUsers;
+  let tempKeysOfInactivateUsers;
   try {
     inactiveOrganizations = await db.Organization.findAll({
       where: {
@@ -19,14 +19,17 @@ module.exports = async () => {
     console.error(error);
     throw 404;
   }
+
   const organizationCleanupPromises = inactiveOrganizations.map(async entry => {
-    if (entry.createdAt < birthTimeToDelete) {
+    const createdAt = moment(entry.createdAt);
+    if (createdAt.isBefore(birthTimeToDelete)) {
       try {
         let users = await db.User.findAll({
           where: {
             organizationId: entry.id
           }
         });
+
         const userPromises = users.map(async user => {
           await db.TempKeys.destroy({
             where: {
@@ -41,18 +44,12 @@ module.exports = async () => {
         console.error(error);
         throw 500;
       }
-      try {
-        await es.deleteIndex(entry.name);
-      } catch (error) {
-        console.error(error);
-        throw 404;
-      }
     }
   });
 
   try {
     await Promise.all(organizationCleanupPromises);
-    tempKeysOfInActivateUsers = await db.TempKeys.findAll({
+    tempKeysOfInactivateUsers = await db.TempKeys.findAll({
       where: {
         activated: false
       }
@@ -62,21 +59,21 @@ module.exports = async () => {
     throw 500;
   }
 
-  const tempKeysDeletionPromises = tempKeysOfInActivateUsers.map(
+  const tempKeysDeletionPromises = tempKeysOfInactivateUsers.map(
     async tempKey => {
-      if (tempKey.createdAt < birthTimeToDelete) {
-        return;
-      }
-      try {
-        await tempKey.destroy();
-        await db.User.destroy({
-          where: {
-            uuid: tempKey.uuid
-          }
-        });
-      } catch (error) {
-        console.error(error);
-        throw 500;
+      const createdAt = moment(tempKey.createdAt);
+      if (createdAt.isBefore(birthTimeToDelete)) {
+        try {
+          await tempKey.destroy();
+          await db.User.destroy({
+            where: {
+              uuid: tempKey.uuid
+            }
+          });
+        } catch (error) {
+          console.error(error);
+          throw 500;
+        }
       }
     }
   );
@@ -87,9 +84,33 @@ module.exports = async () => {
     throw 500;
   }
 
-  db.Devices.destroy({
-    where: {
-      activated: false
+  let inactiveDevices;
+  try {
+    inactiveDevices = await db.Devices.findAll({
+      where: {
+        activated: false
+      }
+    });
+  } catch (error) {
+    logger.error(error);
+    throw 500;
+  }
+
+  const inactiveDevicesPromises = inactiveDevices.map(async device => {
+    const createdAt = moment(device.createdAt);
+    if (createdAt.isBefore(birthTimeToDelete)) {
+      try {
+        await device.destroy();
+      } catch (error) {
+        logger.error(error);
+      }
     }
   });
+
+  try {
+    await Promise.all(inactiveDevicesPromises);
+  } catch (error) {
+    logger.error(error);
+    throw 500;
+  }
 };
