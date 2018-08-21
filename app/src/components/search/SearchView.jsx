@@ -137,7 +137,7 @@ class SearchView extends Component {
     }
 
     return (
-      <div className='container-fluid'>
+      <div>
         <LoaderOverlay display={isLoading} />
         {boxes}
         <div className={`search-container ${showPreview ? 'big' : 'small'}`}>

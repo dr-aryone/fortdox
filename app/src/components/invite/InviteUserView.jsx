@@ -41,43 +41,41 @@ const InviteUserView = props => {
   ) : null;
 
   return (
-    <div className='container-fluid'>
-      <div className='inner-container'>
-        <LoaderOverlay display={isLoading} />
-        <MessageBox message={msg} />
-        <ErrorBox errorMsg={error} />
-        <div className='title'>
-          <h1>Users</h1>
-        </div>
-        {permissions.get('INVITE_USER') && (
-          <div className='no-margin-top preview'>
-            <div className='title small'>
-              <h3>Invite User</h3>
-            </div>
-            <div className='texts'>
-              <p>Invite a new user to the organization.</p>
-              <form onSubmit={onInvite} className='input-bar'>
-                <input
-                  name='email'
-                  type='text'
-                  value={fields.getIn(['email', 'value'])}
-                  onChange={onChange}
-                  placeholder='Email'
-                  className='block'
-                  autoFocus
-                />
-                <button onClick={onInvite}>Send</button>
-              </form>
-              {errorMsg}
-            </div>
-          </div>
-        )}
-        <UserList
-          onDeleteUser={onDeleteUser}
-          onInvite={onInvite}
-          permissions={permissions}
-        />
+    <div className='inner-container'>
+      <LoaderOverlay display={isLoading} />
+      <MessageBox message={msg} />
+      <ErrorBox errorMsg={error} />
+      <div className='title'>
+        <h1>Users</h1>
       </div>
+      {permissions.get('INVITE_USER') && (
+        <div className='no-margin-top preview'>
+          <div className='title small'>
+            <h3>Invite User</h3>
+          </div>
+          <div className='texts'>
+            <p>Invite a new user to the organization.</p>
+            <form onSubmit={onInvite} className='input-bar'>
+              <input
+                name='email'
+                type='text'
+                value={fields.getIn(['email', 'value'])}
+                onChange={onChange}
+                placeholder='Email'
+                className='block'
+                autoFocus
+              />
+              <button onClick={onInvite}>Send</button>
+            </form>
+            {errorMsg}
+          </div>
+        </div>
+      )}
+      <UserList
+        onDeleteUser={onDeleteUser}
+        onInvite={onInvite}
+        permissions={permissions}
+      />
     </div>
   );
 };

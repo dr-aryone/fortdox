@@ -279,7 +279,7 @@ class UpdateDocView extends React.Component {
     if (favoritedDocuments)
       favorited = favoritedDocuments.find(doc => doc.get('id') === id);
     return (
-      <div className='container-fluid'>
+      <div>
         <LoaderOverlay display={isLoading} />
         {deleteDialog}
         {editedDialog}

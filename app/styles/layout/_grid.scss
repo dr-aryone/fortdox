@@ -2,13 +2,21 @@
   top: 0;
   left: 0;
   width: 100%;
-  height: calc(100vh - #{$header-height + bookmark-height});
+  height: calc(100vh - #{$header-height});
+
+  &.show-bookmark-bar {
+    height: calc(100vh - #{$header-height + bookmark-height});
+  }
 }
 
 .container-fluid {
-  margin-top: $header-height + $bookmark-height;
+  margin-top: $header-height;
   height: 100%;
   overflow-y: auto;
+
+  &.show-bookmark-bar {
+    margin-top: $header-height + $bookmark-height;
+  }
 
   &.center-middle {
     display: flex;

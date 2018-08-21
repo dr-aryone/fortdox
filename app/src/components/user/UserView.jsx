@@ -18,7 +18,8 @@ const UserView = ({
   onOpenAttachment,
   onClearDownload,
   onClearAllDownloads,
-  onCloseDownloadPane
+  onCloseDownloadPane,
+  favoritedDocuments
 }) => {
   let page;
   switch (currentView) {
@@ -51,12 +52,20 @@ const UserView = ({
       break;
   }
 
+  const showBookmarkBar = favoritedDocuments.size !== 0;
+
   return (
-    <div className='wrapper'>
+    <div className={`wrapper ${showBookmarkBar ? 'show-bookmark-bar' : ''}`}>
       <SplashScreen show={splashScreen} />
       <HeaderContainer />
       <BookmarkContainer />
-      {page}
+      <div
+        className={`container-fluid ${
+          showBookmarkBar ? 'show-bookmark-bar' : ''
+        }`}
+      >
+        {page}
+      </div>
       <DownloadManager
         show={show}
         downloads={downloads}

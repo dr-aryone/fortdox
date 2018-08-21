@@ -151,63 +151,61 @@ class CreateDocView extends Component {
     );
 
     return (
-      <div className='container-fluid'>
-        <div className='inner-container'>
-          <LoaderOverlay display={isLoading} />
-          <ErrorBox errorMsg={error} />
-          {editedDialog}
-          <h1 className='doc-header'>
+      <div className='inner-container'>
+        <LoaderOverlay display={isLoading} />
+        <ErrorBox errorMsg={error} />
+        {editedDialog}
+        <h1 className='doc-header'>
+          <button
+            type='button'
+            onClick={() => this.checkEdits(docFields)}
+            className='neutral'
+          >
+            Back
+          </button>
+          Create Document
+        </h1>
+        <DocumentForm
+          titleAutofocus
+          onUpdateId={onUpdateId}
+          docFields={docFields}
+          elementToHide={elementToHide}
+          similarDocuments={similarDocuments}
+          onCloseSimilarDocuments={onCloseSimilarDocuments}
+          onSimilarDocumentClick={onSimilarDocumentClick}
+          onChange={onChange}
+          onTitleChange={onTitleChange}
+          onAddTag={onAddTag}
+          onRemoveTag={onRemoveTag}
+          onSuggestTags={onSuggestTags}
+          onSubmit={onCreate}
+          onAddField={onAddField}
+          onRemoveField={onRemoveField}
+          onAddAttachment={onAddAttachment}
+          onRemoveAttachment={onRemoveAttachment}
+          onPreviewAttachment={onPreviewAttachment}
+          onDownloadAttachment={onDownloadAttachment}
+          onDrop={onDrop}
+          onHideElement={onHideElement}
+          onConvert={onConvert}
+        >
+          <div className='doc-buttons'>
             <button
-              type='button'
               onClick={() => this.checkEdits(docFields)}
+              type='button'
               className='neutral'
             >
-              Back
+              Cancel
             </button>
-            Create Document
-          </h1>
-          <DocumentForm
-            titleAutofocus
-            onUpdateId={onUpdateId}
-            docFields={docFields}
-            elementToHide={elementToHide}
-            similarDocuments={similarDocuments}
-            onCloseSimilarDocuments={onCloseSimilarDocuments}
-            onSimilarDocumentClick={onSimilarDocumentClick}
-            onChange={onChange}
-            onTitleChange={onTitleChange}
-            onAddTag={onAddTag}
-            onRemoveTag={onRemoveTag}
-            onSuggestTags={onSuggestTags}
-            onSubmit={onCreate}
-            onAddField={onAddField}
-            onRemoveField={onRemoveField}
-            onAddAttachment={onAddAttachment}
-            onRemoveAttachment={onRemoveAttachment}
-            onPreviewAttachment={onPreviewAttachment}
-            onDownloadAttachment={onDownloadAttachment}
-            onDrop={onDrop}
-            onHideElement={onHideElement}
-            onConvert={onConvert}
-          >
-            <div className='doc-buttons'>
-              <button
-                onClick={() => this.checkEdits(docFields)}
-                type='button'
-                className='neutral'
-              >
-                Cancel
-              </button>
-              <button
-                onClick={onCreate}
-                type='submit'
-                disabled={!this.hasBeenEdited(docFields)}
-              >
-                Create
-              </button>
-            </div>
-          </DocumentForm>
-        </div>
+            <button
+              onClick={onCreate}
+              type='submit'
+              disabled={!this.hasBeenEdited(docFields)}
+            >
+              Create
+            </button>
+          </div>
+        </DocumentForm>
       </div>
     );
   }

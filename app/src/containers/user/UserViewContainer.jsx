@@ -7,7 +7,8 @@ const mapStateToProps = state => {
   return {
     currentView: state.navigation.get('currentView'),
     downloads: state.download.get('downloads'),
-    show: state.download.get('show')
+    show: state.download.get('show'),
+    favoritedDocuments: state.search.get('favoritedDocuments')
   };
 };
 
