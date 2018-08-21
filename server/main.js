@@ -22,7 +22,7 @@ if (verboseMode || devMode) {
   logger.transports.console.level = 'verbose';
 }
 
-const job = new CronJob('*/1 * * * * *', async () => {
+const job = new CronJob('0 */2 * * *', async () => {
   try {
     await cleanup();
   } catch (error) {
