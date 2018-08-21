@@ -105,7 +105,7 @@ const preview = (state = initialState, action) => {
     case 'PREVIEW_DOC_ADD_FAVORITE_SUCCESS':
     case 'PREVIEW_DOC_DELETE_FAVORITE_SUCCESS':
       return state.set('refreshFavorites', true).set('isLoading', false);
-    case 'PREVIEW_DOC_GET_FAVORITE_DOCUMENTS_SUCCESS':
+    case 'GET_FAVORITE_DOCUMENTS_SUCCESS':
       return state.set('isLoading', false);
     default:
       return state;

@@ -563,7 +563,7 @@ export function getFavoriteDocuments() {
     }
 
     return dispatch({
-      type: `${view}_GET_FAVORITE_DOCUMENTS_SUCCESS`,
+      type: 'GET_FAVORITE_DOCUMENTS_SUCCESS',
       payload: response.body
     });
   };

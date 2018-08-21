@@ -69,10 +69,7 @@ const search = (state = initialState, action) => {
       return initialState;
     case 'PREVIEW_DOC_PREVIEW_ATTACHMENT_FAIL':
       return state.set('message', null);
-    case 'SEARCH_VIEW_GET_FAVORITE_DOCUMENTS_SUCCESS':
-    case 'USER_VIEW_GET_FAVORITE_DOCUMENTS_SUCCESS':
-    case 'PREVIEW_DOC_GET_FAVORITE_DOCUMENTS_SUCCESS':
-    case 'UPDATE_DOC_VIEW_GET_FAVORITE_DOCUMENTS_SUCCESS':
+    case 'GET_FAVORITE_DOCUMENTS_SUCCESS':
       return state
         .set('error', null)
         .set('isLoading', false)

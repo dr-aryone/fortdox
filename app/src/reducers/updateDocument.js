@@ -289,7 +289,7 @@ const form = (state = initialState, action) => {
     case 'UPDATE_DOC_VIEW_ADD_FAVORITE_SUCCESS':
     case 'UPDATE_DOC_VIEW_DELETE_FAVORITE_SUCCESS':
       return state.set('refreshFavorites', true).set('isLoading', false);
-    case 'UPDATE_DOC_VIEW_GET_FAVORITE_DOCUMENTS_SUCCESS':
+    case 'GET_FAVORITE_DOCUMENTS_SUCCESS':
       return state.set('isLoading', false);
     default:
       return state;
