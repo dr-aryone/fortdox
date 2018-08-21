@@ -93,21 +93,19 @@ class PermissionsView extends Component {
     });
 
     return (
-      <div className='container-fluid'>
-        <div className='inner-container'>
-          <LoaderOverlay display={isLoading} />
-          <Toast />
-          <ErrorBox errorMsg={error} />
-          <div className='title'>
-            <h1>Access Management</h1>
+      <div className='inner-container'>
+        <LoaderOverlay display={isLoading} />
+        <Toast />
+        <ErrorBox errorMsg={error} />
+        <div className='title'>
+          <h1>Access Management</h1>
+        </div>
+        <div className='access-table'>
+          <div className='access-header'>
+            <div className='access-cell'>User / Permission</div>
+            {permissions}
           </div>
-          <div className='access-table'>
-            <div className='access-header'>
-              <div className='access-cell'>User / Permission</div>
-              {permissions}
-            </div>
-            {users}
-          </div>
+          {users}
         </div>
       </div>
     );

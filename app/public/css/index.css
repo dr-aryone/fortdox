@@ -103,7 +103,7 @@ h3 {
   border-bottom-color: #fe4a49;
   border-width: 10px; }
 
-.box, .link-document, .doc-mode .modal-inner, .link-modal, .main-panel, .access-table, .search-item, .misc .created, .misc .edited, .misc .input-field, .misc .attachments, .preview, .preview .private-key, .list-inner {
+.box, .link-document, .doc-mode .modal-inner, .link-modal, .main-panel, .access-table, .favorites-panel, .search-item, .misc .created, .misc .edited, .misc .input-field, .misc .attachments, .preview, .preview .private-key, .list-inner {
   padding: 15px;
   margin-bottom: 20px;
   box-shadow: 0 2px 2px rgba(0, 0, 0, 0.15), 0 0 2px rgba(0, 0, 0, 0.11);
@@ -111,15 +111,15 @@ h3 {
   border-radius: 1px;
   box-sizing: border-box;
   word-break: break-word; }
-  .box .title, .link-document .title, .doc-mode .modal-inner .title, .link-modal .title, .main-panel .title, .access-table .title, .search-item .title, .misc .created .title, .misc .edited .title, .misc .input-field .title, .misc .attachments .title, .preview .title, .list-inner .title {
+  .box .title, .link-document .title, .doc-mode .modal-inner .title, .link-modal .title, .main-panel .title, .access-table .title, .favorites-panel .title, .search-item .title, .misc .created .title, .misc .edited .title, .misc .input-field .title, .misc .attachments .title, .preview .title, .list-inner .title {
     background-color: #f5f3f3;
     padding: 15px; }
-  .box .text, .link-document .text, .doc-mode .modal-inner .text, .link-modal .text, .main-panel .text, .access-table .text, .search-item .text, .misc .created .text, .misc .edited .text, .misc .input-field .text, .misc .attachments .text, .preview .text, .list-inner .text {
+  .box .text, .link-document .text, .doc-mode .modal-inner .text, .link-modal .text, .main-panel .text, .access-table .text, .favorites-panel .text, .search-item .text, .misc .created .text, .misc .edited .text, .misc .input-field .text, .misc .attachments .text, .preview .text, .list-inner .text {
     padding: 15px;
     margin: 0px; }
-  .box .hide, .link-document .hide, .doc-mode .modal-inner .hide, .link-modal .hide, .main-panel .hide, .access-table .hide, .search-item .hide, .misc .created .hide, .misc .edited .hide, .misc .input-field .hide, .misc .attachments .hide, .preview .hide, .list-inner .hide {
+  .box .hide, .link-document .hide, .doc-mode .modal-inner .hide, .link-modal .hide, .main-panel .hide, .access-table .hide, .favorites-panel .hide, .search-item .hide, .misc .created .hide, .misc .edited .hide, .misc .input-field .hide, .misc .attachments .hide, .preview .hide, .list-inner .hide {
     display: none; }
-  .box.invisible, .invisible.link-document, .doc-mode .invisible.modal-inner, .invisible.link-modal, .invisible.main-panel, .invisible.access-table, .invisible.search-item, .misc .invisible.created, .misc .invisible.edited, .misc .invisible.input-field, .misc .invisible.attachments, .invisible.preview, .preview .invisible.private-key, .invisible.list-inner {
+  .box.invisible, .invisible.link-document, .doc-mode .invisible.modal-inner, .invisible.link-modal, .invisible.main-panel, .invisible.access-table, .invisible.favorites-panel, .invisible.search-item, .misc .invisible.created, .misc .invisible.edited, .misc .invisible.input-field, .misc .invisible.attachments, .invisible.preview, .preview .invisible.private-key, .invisible.list-inner {
     visibility: hidden; }
 
 button {
@@ -628,16 +628,57 @@ i.mce-i-link-document:before {
     .user-list .organization-users > .user:last-child {
       border: 0; }
 
+.bookmarks {
+  width: 100%;
+  position: fixed;
+  top: 55px;
+  display: flex;
+  background-color: white;
+  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.15), 0 0 2px rgba(0, 0, 0, 0.11);
+  height: 35px;
+  align-items: center;
+  padding: 0 40px; }
+  .bookmarks .bookmark {
+    color: #3c3c3c;
+    cursor: pointer;
+    position: relative;
+    display: inline-block;
+    margin-right: 20px; }
+    .bookmarks .bookmark > .text {
+      display: flex; }
+      .bookmarks .bookmark > .text > .material-icons {
+        color: #ffe74c;
+        font-size: 16px;
+        margin-right: 5px; }
+      .bookmarks .bookmark > .text > .document-title:hover {
+        text-decoration: underline; }
+    .bookmarks .bookmark:last-child {
+      margin-right: 0; }
+    .bookmarks .bookmark > .dropdown {
+      position: absolute;
+      background-color: white;
+      box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+      z-index: 1;
+      margin-top: 5px; }
+      .bookmarks .bookmark > .dropdown .dropdown-item {
+        padding: 12px 16px; }
+        .bookmarks .bookmark > .dropdown .dropdown-item:hover {
+          background: #fcfbfb; }
+
 .wrapper {
   top: 0;
   left: 0;
   width: 100%;
   height: calc(100vh - 55px); }
+  .wrapper.show-bookmark-bar {
+    height: calc(100vh - 90px); }
 
 .container-fluid {
   margin-top: 55px;
   height: 100%;
   overflow-y: auto; }
+  .container-fluid.show-bookmark-bar {
+    margin-top: 90px; }
   .container-fluid.center-middle {
     display: flex;
     justify-content: center;
@@ -1125,9 +1166,15 @@ i.mce-i-link-document:before {
     border-bottom: none; }
 
 .doc-header {
-  display: flex; }
+  display: flex;
+  align-items: center; }
   .doc-header button {
     margin-right: 15px; }
+  .doc-header > .material-icons {
+    cursor: pointer;
+    margin-left: 10px;
+    font-size: 35px;
+    color: #ffe74c; }
 
 .full-page {
   height: 100vh;
@@ -1254,6 +1301,36 @@ i.mce-i-link-document:before {
   right: 0;
   margin: 5%; }
 
+.favorites {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  margin: 5%; }
+  .favorites-panel {
+    min-width: 20vh;
+    padding: 0px;
+    z-index: 1;
+    margin-bottom: 20px; }
+    .favorites-panel .title {
+      padding: 10px 15px; }
+  .favorites-list {
+    padding: 5px 15px; }
+  .favorites-item {
+    padding: 15px 0px;
+    border-bottom: 1px solid #f5f3f3;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    color: #3c3c3c; }
+    .favorites-item:hover > span {
+      text-decoration: underline;
+      color: #565656; }
+    .favorites-item .material-icons {
+      color: #3c3c3c; }
+    .favorites-item:last-child {
+      border-bottom: 0; }
+
 .search-item {
   padding: 0px;
   cursor: pointer;
@@ -1358,7 +1435,13 @@ i.mce-i-link-document:before {
     padding: 0px 10px 5px; }
   .preview .title {
     padding: 1.3em;
-    display: flex; }
+    display: flex;
+    align-items: center; }
+    .preview .title > .material-icons {
+      font-size: 3em;
+      margin-left: 10px;
+      cursor: pointer;
+      color: #ffe74c; }
     .preview .title.small h1 {
       font-size: 20px; }
     .preview .title.small h3 {

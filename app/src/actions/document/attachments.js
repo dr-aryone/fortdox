@@ -99,9 +99,7 @@ export const previewAttachment = (attachmentData, attachmentIndex) => {
       } catch (error) {
         return dispatch({
           type: `${prefix}_PREVIEW_ATTACHMENT_FAIL`,
-          payload: {
-            error: `Unable to preview ${name}.`
-          }
+          payload: `Unable to preview ${name}.`
         });
       }
       data =

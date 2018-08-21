@@ -90,6 +90,54 @@ $search-padding: 30px;
   margin: 5%;
 }
 
+.favorites {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  margin: 5%;
+
+  &-panel {
+    @extend .box;
+    min-width: 20vh;
+    padding: 0px;
+    z-index: 1;
+    margin-bottom: 20px;
+
+    .title {
+      padding: 10px 15px;
+    }
+  }
+
+  &-list {
+    padding: 5px 15px;
+  }
+
+  &-item {
+    padding: 15px 0px;
+    border-bottom: 1px solid $grey;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    color: $charcoal;
+
+    &:hover {
+      & > span {
+        text-decoration: underline;
+        color: lighten($charcoal, 10%);
+      }
+    }
+
+    .material-icons {
+      color: $charcoal;
+    }
+
+    &:last-child {
+      border-bottom: 0;
+    }
+  }
+}
+
 .search-item {
   @extend .box;
   padding: 0px;
@@ -255,6 +303,15 @@ $search-padding: 30px;
   .title {
     padding: 1.3em;
     display: flex;
+    align-items: center;
+
+    & > .material-icons {
+      font-size: 3em;
+      margin-left: 10px;
+      cursor: pointer;
+      color: $yellow;
+    }
+
     &.small {
       h1 {
         font-size: 20px;

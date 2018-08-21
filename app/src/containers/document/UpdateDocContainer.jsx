@@ -2,7 +2,7 @@ import documentActions from 'actions/document/document';
 import tagActions from 'actions/document/tags';
 import fieldActions from 'actions/document/fields';
 import attachmentActions from 'actions/document/attachments';
-import UpdateDocView from '../../components/document/UpdateDocView';
+import UpdateDocView from 'components/document/UpdateDocView';
 
 const { connect } = require('react-redux');
 
@@ -17,12 +17,24 @@ const mapStateToProps = state => {
     checkFields: state.updateDocument.get('checkFields'),
     nextViewAfterCheck: state.updateDocument.get('nextViewAfterCheck'),
     showVersionPanel: state.updateDocument.get('showVersionPanel'),
-    permissions: state.user.get('permissions')
+    permissions: state.user.get('permissions'),
+    favoritedDocuments: state.search.get('favoritedDocuments'),
+    id: state.updateDocument.getIn(['documentToUpdate', '_id']),
+    refresh: state.updateDocument.get('refreshFavorites')
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
+    getFavoriteDocuments: () => {
+      dispatch(documentActions.getFavoriteDocuments());
+    },
+    onAddFavorite: id => {
+      dispatch(documentActions.addFavoriteDocument(id));
+    },
+    onRemoveFavorite: id => {
+      dispatch(documentActions.deleteFavoriteDocument(id));
+    },
     onConvert: (id, type, format) => {
       dispatch(fieldActions.convertFormat(id, type, format));
     },

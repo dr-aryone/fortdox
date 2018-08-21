@@ -33,12 +33,17 @@ let initialState = fromJS({
   isLoading: false,
   similarDocuments: [],
   elementToHide: null,
-  showVersionPanel: undefined
+  showVersionPanel: undefined,
+  refreshFavorites: false
 });
 
 const form = (state = initialState, action) => {
   switch (action.type) {
     case 'OPEN_DOCUMENT_START':
+    case 'UPDATE_DOC_VIEW_GET_FAVORITE_DOCUMENTS_START':
+      return state.set('isLoading', true).set('refreshFavorites', false);
+    case 'UPDATE_DOC_VIEW_ADD_FAVORITE_START':
+    case 'UPDATE_DOC_VIEW_DELETE_FAVORITE_START':
       return state.set('isLoading', true);
     case 'OPEN_DOCUMENT_DONE':
       return state.merge({
@@ -85,6 +90,9 @@ const form = (state = initialState, action) => {
         })
       });
     case 'OPEN_DOCUMENT_ERROR':
+    case 'UPDATE_DOC_VIEW_GET_FAVORITE_DOCUMENTS_ERROR':
+    case 'UPDATE_DOC_VIEW_ADD_FAVORITE_ERROR':
+    case 'UPDATE_DOC_VIEW_DELETE_FAVORITE_ERROR':
       return state.set('isLoading', false).set('error', fromJS(action.payload));
     case 'UPDATE_DOC_INPUT_CHANGE_TITLE':
       return state
@@ -220,7 +228,7 @@ const form = (state = initialState, action) => {
       return state.set('isLoading', true);
     case 'UPDATE_DOC_PREVIEW_ATTACHMENT_FAIL':
       return state.merge({
-        error: fromJS(action.payload.error),
+        error: fromJS(action.payload),
         isLoading: false
       });
     case 'UPDATE_DOC_PREVIEW_ATTACHMENT_SUCCESS':
@@ -278,6 +286,11 @@ const form = (state = initialState, action) => {
       return initialState;
     case 'ATTACHMENT_DOWNLOAD_STARTED':
       return state.set('showVersionPanel', false);
+    case 'UPDATE_DOC_VIEW_ADD_FAVORITE_SUCCESS':
+    case 'UPDATE_DOC_VIEW_DELETE_FAVORITE_SUCCESS':
+      return state.set('refreshFavorites', true).set('isLoading', false);
+    case 'GET_FAVORITE_DOCUMENTS_SUCCESS':
+      return state.set('isLoading', false);
     default:
       return state;
   }

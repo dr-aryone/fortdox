@@ -331,30 +331,26 @@ module.exports = class DevicesView extends React.Component {
     );
 
     return (
-      <div className='container-fluid'>
-        <div className='inner-container'>
-          <LoaderOverlay display={isLoading} />
-          <MessageBox message={message} />
-          <ErrorBox errorMsg={error} />
-          {warning && warningBox}
-          {modal}
-          {QRCodeDialog}
-          {deleteDeviceDialog}
-          {inputChangeDialog}
-          <h1>Your Registered Devices</h1>
-          <div className='no-margin-top preview'>
-            <div className='title small'>
-              <h3>Current Device</h3>
-            </div>
-            <div className='device-list'>{currentDevice}</div>
+      <div className='inner-container'>
+        <LoaderOverlay display={isLoading} />
+        <MessageBox message={message} />
+        <ErrorBox errorMsg={error} />
+        {warning && warningBox}
+        {modal}
+        {QRCodeDialog}
+        {deleteDeviceDialog}
+        {inputChangeDialog}
+        <h1>Your Registered Devices</h1>
+        <div className='no-margin-top preview'>
+          <div className='title small'>
+            <h3>Current Device</h3>
           </div>
-          {displayDevices}
-          <button onClick={() => this.openModal()} disabled={maximumReached}>
-            {maximumReached
-              ? 'Maximum number of devices reached'
-              : 'Add device'}
-          </button>
+          <div className='device-list'>{currentDevice}</div>
         </div>
+        {displayDevices}
+        <button onClick={() => this.openModal()} disabled={maximumReached}>
+          {maximumReached ? 'Maximum number of devices reached' : 'Add device'}
+        </button>
       </div>
     );
   }
