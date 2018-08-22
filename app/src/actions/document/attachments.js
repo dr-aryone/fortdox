@@ -28,22 +28,19 @@ export const addAttachment = files => {
         continue;
       }
 
-      try {
+      const reader = new FileReader();
+      reader.onload = function() {
+        const result = reader.result;
+        const data = result.split(',')[1];
         dispatch({
           type: `${prefix}_ADD_ATTACHMENT`,
           fileType: file.type,
           name: file.name,
-          actualFile: file
+          actualFile: file,
+          file: data
         });
-      } catch (error) {
-        console.error(error);
-        dispatch({
-          type: `${prefix}_ADD_ATTACHMENT_ERROR`,
-          payload: {
-            error
-          }
-        });
-      }
+      };
+      reader.readAsDataURL(file);
     }
   };
 };
@@ -74,12 +71,13 @@ export const previewAttachment = (attachmentData, attachmentIndex) => {
     dispatch({
       type: `${prefix}_PREVIEW_ATTACHMENT_START`
     });
+
     let name;
     let data;
     let type = attachmentData.get('type');
     if (attachmentData.get('file')) {
-      data = attachmentData.get('file');
       name = attachmentData.get('name');
+      data = attachmentData.get('file');
     } else {
       let currentDocumentId = state.updateDocument.getIn([
         'documentToUpdate',

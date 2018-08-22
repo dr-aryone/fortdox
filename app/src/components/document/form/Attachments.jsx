@@ -11,9 +11,19 @@ class Attachments extends React.Component {
 
     this.state = {
       showModal: false,
-      content: null,
+      contentType: null,
       showClose: true
     };
+  }
+
+  static getDerivedStateFromProps(props, state) {
+    const { preview } = props;
+    if (preview.get('data') && state.contentType)
+      return {
+        showModal: true
+      };
+
+    return null;
   }
 
   clickHandler() {
@@ -27,15 +37,13 @@ class Attachments extends React.Component {
       case 'image/png':
       case 'image/gif':
         this.setState({
-          showModal: true,
-          content: 'image'
+          contentType: 'image'
         });
-        onPreviewAttachment(attachment, index);
-        return;
+        return onPreviewAttachment(attachment, index);
       default:
         this.setState({
           showModal: true,
-          content: 'default',
+          contentType: 'default',
           showClose: false
         });
     }
@@ -48,7 +56,7 @@ class Attachments extends React.Component {
       file: null,
       type: null,
       showClose: true,
-      content: null
+      contentType: null
     });
   }
 
@@ -64,12 +72,11 @@ class Attachments extends React.Component {
       preview,
       onAddAttachment,
       onRemoveAttachment,
-      onPreviewAttachment,
-      disableDownload
+      onPreviewAttachment
     } = this.props;
 
     let content;
-    switch (this.state.content) {
+    switch (this.state.contentType) {
       case 'image':
         content = [
           <img
@@ -124,16 +131,14 @@ class Attachments extends React.Component {
             {name}
           </span>
           <div className='actions'>
-            {!disableDownload && (
-              <span>
-                <i
-                  className='material-icons download'
-                  onClick={() => this.downloadHandler(attachment, id)}
-                >
-                  file_download
-                </i>
-              </span>
-            )}
+            <span>
+              <i
+                className='material-icons download'
+                onClick={() => this.downloadHandler(attachment, id)}
+              >
+                file_download
+              </i>
+            </span>
             {removeButton}
           </div>
         </div>

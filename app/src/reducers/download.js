@@ -66,7 +66,9 @@ const download = (state = initialState, action) => {
           () => updatedDownload
         );
       }
-      return state.update('downloads', list => list.push(updatedDownload));
+      return state
+        .update('downloads', list => list.push(updatedDownload))
+        .set('show', true);
     }
     case 'ATTACHMENT_DOWNLOAD_CLEAR': {
       let downloadListIndex = state
