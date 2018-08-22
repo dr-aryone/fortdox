@@ -1,11 +1,11 @@
 {
   "name": "FortDox",
   "productName": "FortDox",
-  "server": "https://fortdox.edgeguide.se",
+  "server": "http://192.168.1.26:8000",
   "logo": "/resources/logo.png",
-  "codeSplitter": "@@",
   "applicationPath": "/Applications/FortDox.app",
-  "clientVersion": "{a version number}",
+  "codeSplitter": "@@",
+  "clientVersion": "2.0.0",
   "autoUpdates": false,
   "permissions": {
     "1": "ADMIN",

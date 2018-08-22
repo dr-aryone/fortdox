@@ -1,7 +1,7 @@
 import AppContainer from './containers/AppContainer';
 import { logout } from './actions';
 const React = require('react');
-const config = require('config.json');
+const config = require('config');
 const request = require('@edgeguideab/client-request');
 const ReactDOM = require('react-dom');
 const Redux = require('redux');

@@ -1,6 +1,6 @@
 import { getPrefix } from './utilities';
 const requestor = require('@edgeguideab/client-request');
-const config = require('config.json');
+const config = require('config');
 const fs = window.require('fs');
 const attachmentUtils = require('../utilities/attachments');
 const globalUtils = require('../utilities/global');

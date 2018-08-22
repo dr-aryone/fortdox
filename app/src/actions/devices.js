@@ -1,5 +1,5 @@
 import requestor from '@edgeguideab/client-request';
-import config from 'config.json';
+import config from 'config';
 import QRCode from 'qrcode';
 import { readStorage } from 'actions/utilities/storage';
 

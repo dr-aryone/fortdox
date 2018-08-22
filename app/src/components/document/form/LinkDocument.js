@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import requestor from '@edgeguideab/client-request';
-import config from 'config.json';
+import config from 'config';
 
 class LinkDocument extends Component {
   constructor(props) {

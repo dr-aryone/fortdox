@@ -1,6 +1,6 @@
 const React = require('react');
 const Modal = require('components/general/Modal');
-const config = require('config.json');
+const config = require('config');
 const permissionList = config.permissions;
 
 module.exports = class UserList extends React.Component {

@@ -6,7 +6,7 @@ const {
   writeStorage,
   writeStorageWindows
 } = require('actions/utilities/storage');
-const config = require('config.json');
+const config = require('config');
 const checkEmptyFields = require('actions/utilities/checkEmptyFields');
 const { hostname } = require('actions/utilities/hostname');
 

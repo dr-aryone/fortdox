@@ -2,7 +2,7 @@ import { getPrefix, htmlToMarkdown, markdownToHtml } from './utilities';
 import { changeView } from 'actions';
 const { fromJS } = require('immutable');
 const requestor = require('@edgeguideab/client-request');
-const config = require('config.json');
+const config = require('config');
 
 export default {
   createDocument,

@@ -1,7 +1,7 @@
 import { encryptPrivateKey } from 'actions/utilities/encryptPrivateKey';
 const requestor = require('@edgeguideab/client-request');
 const passwordCheck = require('actions/utilities/passwordCheck');
-const config = require('config.json');
+const config = require('config');
 const {
   addKey,
   writeStorage,

@@ -1,6 +1,6 @@
 const React = require('react');
 const { readStorage } = require('actions/utilities/storage');
-const config = require('config.json');
+const config = require('config');
 const MessageBox = require('components/general/MessageBox');
 
 class LoginView extends React.Component {

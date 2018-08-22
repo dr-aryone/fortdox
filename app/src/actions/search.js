@@ -1,5 +1,5 @@
 const requestor = require('@edgeguideab/client-request');
-const config = require('config.json');
+const config = require('config');
 export const HITS_PER_PAGE = 12;
 
 export const search = ({

@@ -1,4 +1,4 @@
-const config = require('config.json');
+const config = require('config');
 const { spawn } = window.require('child_process');
 const keyChainPath = '/usr/bin/security';
 

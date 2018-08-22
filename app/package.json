@@ -104,7 +104,7 @@
     "files": [
       "build",
       "main.js",
-      "src/config.json",
+      "src/config/config.json",
       "aes.js",
       "package.json"
     ],

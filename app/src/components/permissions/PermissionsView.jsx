@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import LoaderOverlay from 'components/general/LoaderOverlay';
 import Toast from 'components/general/Toast';
 import ErrorBox from 'components/general/ErrorBox';
-import config from 'config.json';
+import config from 'config';
 const permissionList = config.permissions;
 
 class PermissionsView extends Component {
