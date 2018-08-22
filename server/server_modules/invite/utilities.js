@@ -44,7 +44,7 @@ async function createDevice(
   }
 }
 
-function mailAndLog(newUser, sender, tempPassword) {
+async function mailAndLog(newUser, sender, tempPassword) {
   let mail = mailer.newUserRegistration({
     to: newUser.email,
     organization: sender.Organization.name,
@@ -61,7 +61,7 @@ function mailAndLog(newUser, sender, tempPassword) {
     tempPassword.toString('base64')
   );
   try {
-    mailer.send(mail);
+    await mailer.send(mail);
     logger.log(
       'info',
       `User ${sender.email} invited ${newUser.email} to join ${

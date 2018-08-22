@@ -81,9 +81,10 @@ async function reinvite(req, res) {
       })
       .end();
   } catch (error) {
+    if (error.code === 'EENVELOPE') return res.send(400).send();
     logger.error('/reinvite', error);
+    res.status(500).send();
   }
-  res.status(500).send();
 }
 
 async function deleteDevices(user) {

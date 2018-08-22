@@ -68,6 +68,7 @@ async function user(req, res) {
       newEncryptedMasterPassword,
       encryptedPrivateKey
     );
+
     await mailAndLog(newUser, sender, tempPassword);
 
     return res
@@ -78,8 +79,9 @@ async function user(req, res) {
       .end();
   } catch (error) {
     logger.error('/invite', error);
+    if (error.code === 'EENVELOPE') return res.send(400).send();
+    res.status(500).send();
   }
-  res.status(500).send();
 }
 
 async function verify(req, res) {
