@@ -33,35 +33,37 @@
         display: flex;
         align-items: center;
         cursor: pointer;
+        width: 10%;
 
         &:hover {
           color: lighten($charcoal, 20%);
         }
 
-        & > i {
+        i {
           margin-right: 5px;
           font-size: 22px;
         }
       }
 
       & > .reinvite {
-        & > i {
+        i {
           color: $primary-color;
         }
 
         &:hover {
-          & > i {
+          i {
             color: lighten($primary-color, 10%);
           }
         }
       }
 
       & > .delete {
-        & > i {
+        i {
           color: $red;
         }
+
         &:hover {
-          & > i {
+          i {
             color: lighten($red, 10%);
           }
         }

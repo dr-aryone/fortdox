@@ -64,26 +64,40 @@ module.exports = class UserList extends React.Component {
   }
 
   render() {
-    const { users, permissions } = this.props;
-    const domUsers = users.map(user => (
-      <div key={user.email} className='user'>
-        <span className='email'>{user.email}</span>
+    const { user, users, permissions } = this.props;
+    const domUsers = users.map(member => (
+      <div key={member.email} className='user'>
+        <span className='email'>{member.email}</span>
         <span className='role'>
-          {permissionList[user.permission & 1] === 'ADMIN' ? 'Admin' : ''}
+          {permissionList[member.permission & 1] === 'ADMIN' ? 'Admin' : ''}
         </span>
-        <span className='pending'>{user.pending ? 'Pending' : ''}</span>
-        <span
-          onClick={() => this.openReinviteDialog(user.email)}
-          className='reinvite'
-        >
-          <i className='material-icons'>mail</i> Reinvite
+        <span className='pending'>{member.pending ? 'Pending' : ''}</span>
+        <span className='reinvite'>
+          {user !== member.email && (
+            <span>
+              <i
+                className='material-icons'
+                onClick={() => this.openReinviteDialog(member.email)}
+              >
+                mail
+              </i>
+              Reinvite
+            </span>
+          )}
         </span>
         {permissions.get('REMOVE_USER') && (
-          <span
-            onClick={() => this.openDeleteDialog(user.email)}
-            className='delete'
-          >
-            <i className='material-icons'>delete</i> Delete
+          <span className='delete'>
+            {user !== member.email && (
+              <span>
+                <i
+                  className='material-icons'
+                  onClick={() => this.openDeleteDialog(member.email)}
+                >
+                  delete
+                </i>
+                Delete
+              </span>
+            )}
           </span>
         )}
       </div>

@@ -609,21 +609,22 @@ i.mce-i-link-document:before {
       .user-list .organization-users > .user .delete {
         display: flex;
         align-items: center;
-        cursor: pointer; }
+        cursor: pointer;
+        width: 10%; }
         .user-list .organization-users > .user > .reinvite:hover,
         .user-list .organization-users > .user .delete:hover {
           color: #6f6f6f; }
-        .user-list .organization-users > .user > .reinvite > i,
-        .user-list .organization-users > .user .delete > i {
+        .user-list .organization-users > .user > .reinvite i,
+        .user-list .organization-users > .user .delete i {
           margin-right: 5px;
           font-size: 22px; }
-      .user-list .organization-users > .user > .reinvite > i {
+      .user-list .organization-users > .user > .reinvite i {
         color: #118ab2; }
-      .user-list .organization-users > .user > .reinvite:hover > i {
+      .user-list .organization-users > .user > .reinvite:hover i {
         color: #15aee1; }
-      .user-list .organization-users > .user > .delete > i {
+      .user-list .organization-users > .user > .delete i {
         color: #fe4a49; }
-      .user-list .organization-users > .user > .delete:hover > i {
+      .user-list .organization-users > .user > .delete:hover i {
         color: #fe7c7c; }
     .user-list .organization-users > .user:last-child {
       border: 0; }
