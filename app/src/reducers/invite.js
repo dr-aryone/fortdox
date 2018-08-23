@@ -74,7 +74,7 @@ const invite = (state = initialState, action) => {
       if (action.payload === 'INVITE_USER_VIEW') {
         return state.set('refresh', true);
       } else {
-        return state;
+        return state.set('error', null).set('message', null);
       }
     default:
       return state;

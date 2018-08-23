@@ -80,7 +80,7 @@ const verifyUser = (email, privateKey, deviceId) => {
     let result = decryptMasterPassword(privateKey, encryptedMasterPassword);
 
     try {
-      await user.updateAttributes({ uuid: null });
+      await user.updateAttributes({ uuid: null, activated: true });
     } catch (error) {
       console.error(error);
       return reject(500);
@@ -121,10 +121,13 @@ const verifyNewUser = (deviceId, deviceName, uuid, privateKey) => {
       return reject(500);
     }
     decryptMasterPassword(privateKey, encryptedMasterPassword);
+    console.log('uppdaterar databasen');
     try {
       await user.updateAttributes({
-        uuid: null
+        uuid: null,
+        activated: true
       });
+
       await db.Devices.update(
         {
           activated: true,

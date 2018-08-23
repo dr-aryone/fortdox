@@ -40,7 +40,8 @@ const verifyUser = (state = initialState, action) => {
       return state.merge({
         privateKey: fromJS(action.payload.privateKey),
         deviceId: fromJS(action.payload.deviceId),
-        isLoading: false
+        isLoading: false,
+        error: null
       });
     case 'RECEIVE_PRIVATE_KEY_FAIL':
       return state.merge({

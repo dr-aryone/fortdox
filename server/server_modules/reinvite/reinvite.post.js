@@ -63,17 +63,14 @@ async function reinvite(req, res) {
 
   user.uuid = uuidv1();
   await db.User.update({ uuid: user.uuid }, { where: { id: user.id } });
-
   try {
     let {
       newEncryptedMasterPassword,
       encryptedPrivateKey,
       tempPassword
     } = await createPasswords(privateKey, encryptedMasterPassword);
-
     await createDevice(user, newEncryptedMasterPassword, encryptedPrivateKey);
     await mailAndLog(user, sender, tempPassword);
-
     return res
       .send({
         uuid: user.uuid,

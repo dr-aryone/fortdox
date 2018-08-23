@@ -1,22 +1,22 @@
 module.exports = function(sequelize, DataTypes) {
-  var TempKeys = sequelize.define('TempKeys', {
-    uuid: {
-      allowNull: false,
-      autoIncrement: false,
-      primaryKey: true,
-      unique: true,
-      type: DataTypes.UUID
+  var TempKeys = sequelize.define(
+    'TempKeys',
+    {
+      uuid: {
+        allowNull: false,
+        autoIncrement: false,
+        primaryKey: true,
+        unique: true,
+        type: DataTypes.UUID
+      },
+      privateKey: {
+        allowNull: false,
+        type: DataTypes.BLOB
+      }
     },
-    privateKey: {
-      allowNull: false,
-      type: DataTypes.BLOB
-    },
-    activated: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: false
+    {
+      updatedAt: false
     }
-  },{
-    updatedAt: false
-  });
+  );
   return TempKeys;
 };
