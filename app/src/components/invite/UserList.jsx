@@ -8,6 +8,7 @@ module.exports = class UserList extends React.Component {
     super(props);
     this.openDeleteDialog = this.openDeleteDialog.bind(this);
     this.closeDeleteDialog = this.closeDeleteDialog.bind(this);
+    this.closeReinviteDialog = this.closeReinviteDialog.bind(this);
     this.state = {
       showDeleteDialog: false,
       showReinviteDialog: false
@@ -111,7 +112,11 @@ module.exports = class UserList extends React.Component {
             the organization?
           </p>
           <div className='buttons'>
-            <button onClick={this.closeDeleteDialog} type='button'>
+            <button
+              onClick={this.closeDeleteDialog}
+              type='button'
+              className='neutral'
+            >
               Cancel
             </button>
             <button
@@ -141,7 +146,11 @@ module.exports = class UserList extends React.Component {
           </p>
           <p>All devices connected to the user will be deleted.</p>
           <div className='buttons'>
-            <button onClick={e => this.closeReinviteDialog(e)} type='button'>
+            <button
+              onClick={e => this.closeReinviteDialog(e)}
+              type='button'
+              className='neutral'
+            >
               Cancel
             </button>
             <button onClick={e => this.onReinvite(e)} type='button'>

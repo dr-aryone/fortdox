@@ -49,11 +49,7 @@ module.exports = async () => {
 
   try {
     await Promise.all(organizationCleanupPromises);
-    tempKeysOfInactivateUsers = await db.TempKeys.findAll({
-      where: {
-        activated: false
-      }
-    });
+    tempKeysOfInactivateUsers = await db.TempKeys.findAll();
   } catch (error) {
     logger.error(error);
     throw 500;
@@ -67,7 +63,8 @@ module.exports = async () => {
           await tempKey.destroy();
           await db.User.destroy({
             where: {
-              uuid: tempKey.uuid
+              uuid: tempKey.uuid,
+              activated: false
             }
           });
         } catch (error) {
