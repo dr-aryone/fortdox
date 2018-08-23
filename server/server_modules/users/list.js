@@ -19,7 +19,7 @@ async function listOrganizationMembers(req, res) {
           {
             model: db.User,
             as: 'users',
-            attributes: ['email', 'uuid', 'permission']
+            attributes: ['email', 'uuid', 'permission', 'id']
           }
         ]
       }),
@@ -32,19 +32,22 @@ async function listOrganizationMembers(req, res) {
     res.status(500).send();
     return;
   }
+
   if (!organization) {
     logger.warn('/users', 'Could not find organization', organizationId);
     res.status(404).send('noSuchOrganization');
     return;
   }
   tempKeys = tempKeys || [];
+  const ownerId = organization.owner;
   res.send(
     organization.users.map(user => {
       const pending = tempKeys.find(k => k.uuid === user.uuid);
       return {
         email: user.email,
         pending: !!pending, //This is not a typo, it is a type conversion
-        permission: user.permission
+        permission: user.permission,
+        owner: ownerId === user.id
       };
     })
   );

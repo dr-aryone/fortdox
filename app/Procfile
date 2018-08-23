@@ -1,3 +1,3 @@
-react: npm run react
-electron: npm run electron-start 
+react: NODE_ENV=development npm run react
+electron: npm run electron-start
 css: npm run watch-css

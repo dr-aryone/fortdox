@@ -4,7 +4,7 @@
   "main": "main.js",
   "scripts": {
     "start": "node main.js",
-    "forever": "forever start main.js",
+    "forever": "NODE_ENV=production forever start main.js",
     "dev": "nodemon --inspect main.js --dev",
     "migrate": "sequelize db:migrate",
     "test": "jest",

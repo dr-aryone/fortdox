@@ -65,43 +65,37 @@ module.exports = class UserList extends React.Component {
 
   render() {
     const { user, users, permissions } = this.props;
-    const domUsers = users.map(member => (
-      <div key={member.email} className='user'>
-        <span className='email'>{member.email}</span>
-        <span className='role'>
-          {permissionList[member.permission & 1] === 'ADMIN' ? 'Admin' : ''}
-        </span>
-        <span className='pending'>{member.pending ? 'Pending' : ''}</span>
-        <span className='reinvite'>
-          {user !== member.email && (
-            <span>
-              <i
-                className='material-icons'
-                onClick={() => this.openReinviteDialog(member.email)}
-              >
-                mail
-              </i>
-              Reinvite
-            </span>
-          )}
-        </span>
-        {permissions.get('REMOVE_USER') && (
-          <span className='delete'>
+    const domUsers = users.map(member => {
+      const memberIsAdmin = permissionList[member.permission & 1] === 'ADMIN';
+      const memberIsOwner = member.owner;
+      return (
+        <div key={member.email} className='user'>
+          <span className='email'>{member.email}</span>
+          <span className='role'>
+            {memberIsOwner ? 'Owner' : memberIsAdmin ? 'Admin' : ''}
+          </span>
+          <span className='pending'>{member.pending ? 'Pending' : ''}</span>
+          <span className='reinvite'>
             {user !== member.email && (
-              <span>
-                <i
-                  className='material-icons'
-                  onClick={() => this.openDeleteDialog(member.email)}
-                >
-                  delete
-                </i>
-                Delete
+              <span onClick={() => this.openReinviteDialog(member.email)}>
+                <i className='material-icons'>mail</i>
+                Reinvite
               </span>
             )}
           </span>
-        )}
-      </div>
-    ));
+          <span className='delete'>
+            {!memberIsOwner &&
+              permissions.get('REMOVE_USER') &&
+              user !== member.email && (
+                <span onClick={() => this.openDeleteDialog(member.email)}>
+                  <i className='material-icons'>delete</i>
+                  Delete
+                </span>
+              )}
+          </span>
+        </div>
+      );
+    });
 
     const deleteDialog = (
       <Modal

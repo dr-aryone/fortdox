@@ -105,6 +105,7 @@
       "build",
       "main.js",
       "src/config/config.json",
+      "src/config/index.js",
       "aes.js",
       "package.json"
     ],

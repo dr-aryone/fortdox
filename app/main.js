@@ -10,7 +10,7 @@ const {
 const path = require('path');
 const urlParser = require('url');
 const querystring = require('querystring');
-let config = require('./src/config/config.json');
+let config = require('./src/config');
 const log = require('electron-log');
 log.transports.file.level = 'info';
 let win;
@@ -21,7 +21,6 @@ const devMode = process.argv[2] === '--dev' ? true : false;
 let devtools = {};
 if (devMode) {
   devtools = require('electron-devtools-installer');
-  config = require('./src/config/config-dev.json');
 }
 const {
   default: installExtension,
