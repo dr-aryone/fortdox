@@ -15,7 +15,7 @@ module.exports = client => {
 
         current._source.versions = current._source.versions || [];
         const versions = current._source.versions;
-        const currentAttachments = current._source.attachments;
+        const currentAttachments = current._source.attachments || [];
 
         //First check all attachments that are equal and give them
         const unchangedAttachments = [];
@@ -48,7 +48,7 @@ module.exports = client => {
         //collect all attachments in all versions..
         let allAttachments = [];
         versions.forEach(v => {
-          allAttachments = allAttachments.concat(v.attachments);
+          allAttachments = allAttachments.concat(v.attachments || []);
         });
         //Unique
         allAttachments = allAttachments.filter(
