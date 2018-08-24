@@ -8,6 +8,7 @@ const initialState = fromJS({
 const navigation = (state = initialState, action) => {
   switch (action.type) {
     case 'CHANGE_VIEW':
+    case 'RESTORE_TO_OLD_DOCUMENT':
       return state.set('currentView', fromJS(action.payload));
     case 'VERIFY_LOGIN_CREDS_SUCCESS':
     case 'DIRECT_LOGIN_SUCCESS':

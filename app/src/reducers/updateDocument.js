@@ -34,7 +34,8 @@ let initialState = fromJS({
   similarDocuments: [],
   elementToHide: null,
   showVersionPanel: undefined,
-  refreshFavorites: false
+  refreshFavorites: false,
+  checkFields: false
 });
 
 const form = (state = initialState, action) => {
@@ -249,6 +250,21 @@ const form = (state = initialState, action) => {
     }
     case 'DOCUMENT_TITLE_LOOKUP_CLEAR':
       return state.set('similarDocuments', List());
+    case 'RESTORE_TO_OLD_DOCUMENT':
+      return state.merge({
+        docFields: state.get('docFields').merge({
+          title: state.getIn(['oldDocFields', 'title']),
+          encryptedTexts: state.getIn(['oldDocFields', 'encryptedTexts']),
+          texts: state.getIn(['oldDocFields', 'texts']),
+          tags: state
+            .getIn(['docFields', 'tags'])
+            .set('list', state.getIn(['oldDocFields', 'tags', 'list'])),
+          attachments: state.getIn(['oldDocFields', 'attachments']),
+          files: state.getIn(['oldDocFields', 'files']),
+          versions: state.getIn(['oldDocFields', 'versions']),
+          nextID: state.getIn(['oldDocFields', 'nextID'])
+        })
+      });
     case 'CHANGE_VIEW':
     case 'SEARCH_SUCCESS':
     case 'TAG_SEARCH_SUCCESS':
@@ -256,7 +272,10 @@ const form = (state = initialState, action) => {
         case 'PREVIEW_DOC':
         case 'UPDATE_DOC_VIEW':
         case 'SEARCH_VIEW':
-          return state.set('error', null).set('showVersionPanel', undefined);
+          return state
+            .set('error', null)
+            .set('showVersionPanel', undefined)
+            .set('fieldsChecked', false);
         default:
           return initialState;
       }

@@ -451,7 +451,12 @@ export function hasChecked(nextView) {
       type: `${prefix}_FIELDS_CHECKED`
     });
 
-    dispatch(
+    // nextViewAfterCheck is the view the user has clicked from header.
+    if (currentView === 'UPDATE_DOC_VIEW')
+      return dispatch(
+        restoreToOldDocument(state[view].get('nextViewAfterCheck'))
+      );
+    return dispatch(
       changeView(nextView ? nextView : state[view].get('nextViewAfterCheck'))
     );
   };
@@ -636,6 +641,15 @@ export function deleteFavoriteDocument(documentId) {
     return dispatch({
       type: `${view}_DELETE_FAVORITE_SUCCESS`,
       payload: view
+    });
+  };
+}
+
+export function restoreToOldDocument(nextView) {
+  return async dispatch => {
+    return dispatch({
+      type: 'RESTORE_TO_OLD_DOCUMENT',
+      payload: nextView ? nextView : 'PREVIEW_DOC'
     });
   };
 }

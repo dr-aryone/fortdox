@@ -121,7 +121,6 @@ const verifyNewUser = (deviceId, deviceName, uuid, privateKey) => {
       return reject(500);
     }
     decryptMasterPassword(privateKey, encryptedMasterPassword);
-    console.log('uppdaterar databasen');
     try {
       await user.updateAttributes({
         uuid: null,

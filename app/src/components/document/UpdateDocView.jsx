@@ -150,8 +150,7 @@ class UpdateDocView extends React.Component {
   }
 
   checkEdits(docFields) {
-    if (!this.hasBeenEdited(docFields))
-      return this.props.hasChecked('PREVIEW_DOC');
+    if (!this.hasBeenEdited(docFields)) return this.props.hasChecked();
     return this.setState({
       showEditDialog: true
     });
@@ -241,11 +240,7 @@ class UpdateDocView extends React.Component {
           <p>Do you want to save your changes?</p>
           <div className='buttons'>
             <button
-              onClick={() =>
-                this.props.hasChecked(
-                  this.state.nextView ? this.state.nextView : 'SEARCH_VIEW'
-                )
-              }
+              onClick={() => this.props.hasChecked()}
               className='first-button warning'
               type='button'
             >
