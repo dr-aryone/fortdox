@@ -2,13 +2,13 @@ const config = require('config');
 const { spawn } = window.require('child_process');
 const keyChainPath = '/usr/bin/security';
 
-const writeDeviceIdToStorage = (deviceId, organization, email) => {
+export const writeDeviceIdToStorage = (deviceId, organization, email) => {
   let fortdoxInfo = readStorage();
   fortdoxInfo[email][organization].deviceId = deviceId;
   window.localStorage.setItem(config.name, JSON.stringify(fortdoxInfo));
 };
 
-const writeStorageWindows = (
+export const writeStorageWindows = (
   salt,
   organization,
   email,
@@ -26,7 +26,7 @@ const writeStorageWindows = (
   window.localStorage.setItem(config.name, JSON.stringify(fortdoxInfo));
 };
 
-const writeStorage = (salt, organization, email, deviceId) => {
+export const writeStorage = (salt, organization, email, deviceId) => {
   let fortdoxInfo = readStorage();
   fortdoxInfo[email] = {
     [organization]: {
@@ -37,7 +37,7 @@ const writeStorage = (salt, organization, email, deviceId) => {
   window.localStorage.setItem(config.name, JSON.stringify(fortdoxInfo));
 };
 
-const readStorage = () => {
+export const readStorage = () => {
   let storage;
   storage = window.localStorage.getItem(config.name);
   if (!storage) {
@@ -47,7 +47,7 @@ const readStorage = () => {
   return JSON.parse(storage);
 };
 
-const addKey = (privateKey, email, organization) =>
+export const addKey = (privateKey, email, organization) =>
   new Promise((resolve, reject) =>
     spawn(keyChainPath, [
       'add-generic-password',
@@ -66,7 +66,7 @@ const addKey = (privateKey, email, organization) =>
       .on('error', reject)
   );
 
-const readKey = (email, organization) =>
+export const readKey = (email, organization) =>
   new Promise((resolve, reject) => {
     const pwd = [];
     spawn(keyChainPath, [
@@ -84,7 +84,7 @@ const readKey = (email, organization) =>
       });
   });
 
-const deleteKey = (email, organization) => {
+export const deleteKey = (email, organization) => {
   new Promise((resolve, reject) => {
     spawn(keyChainPath, [
       'delete-generic-password',
